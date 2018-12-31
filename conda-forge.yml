@@ -12,3 +12,12 @@ travis:
 # https://conda-forge.org/docs/ciservices.html#using-circle-for-both-linux-and-osx
 provider:
   osx: circle
+
+
+provider:
+  win: azure
+  osx: azure
+
+azure:
+  upload_packages: True
+  force: False
