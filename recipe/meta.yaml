@@ -37,6 +37,8 @@ build:
     - {{ export }} PYTORCH_BUILD_VERSION={{ PKG_VERSION }}
     - {{ export }} PYTORCH_BUILD_NUMBER={{ PKG_BUILDNUM }}
     - {{ export }} BUILD_CUSTOM_PROTOBUF=OFF
+    # Use ninja as the build just won't finish on windows
+    - {{ export }} CMAKE_GENERATOR=Ninja
     # I'm pretty sure I only need this flag because I don't include the
     # package that provides unix-like headers for windows.
     # I forget its name now.
@@ -52,6 +54,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
+    - ninja
   host:
     - python
     - pip
