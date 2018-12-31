@@ -13,6 +13,8 @@ source:
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: v{{ version }}
   patches:
+    # Accepted and will be in 1.0.1
+    # https://github.com/pytorch/pytorch/commit/4047cdc6906c6e5c5e1fb837f7f479e0af149fa7
     - mac_osx_clock_getttime.patch  # [osx]
 
 # The build needs to set many environment variables
@@ -22,17 +24,10 @@ source:
 
 build:
   number: 1001
-  # To iterate on the CI's quickly, we should skip operating systems all together.
-  skip: true  # [linux]
   {% if 'toolchain' in compiler('cxx') %}skip: True{% endif %}  # Only build with modern compilers.
   # Support for Windows and Python 2.7 is very experimental
   # https://ci.appveyor.com/project/conda-forge/staged-recipes/builds/21220961#L972
-  #skip: true  # [win and py27]
-  # But we actually need MSVC2017 to compile pytorch
-  skip: true  # [win]
-  # Requires XCode 8 or later, not yet supported by conda-forge???
-  # https://travis-ci.org/conda-forge/staged-recipes/builds/471999130#L1998
-  #skip: true  # [osx]
+  skip: true  # [win and py27]
   script:
     # Most of this script is adapted from the pytorch/pythorch-cpu
     # meta.yaml.template build.sh and bld.bat scripts
@@ -75,6 +70,7 @@ requirements:
 test:
   imports:
     - torch
+    # Maybe we should have a test for a simple Neural Network???
 
 about:
   home: https://pytorch.org/
