@@ -16,7 +16,7 @@ jobs:
     # TODO: Fast finish on azure pipelines?
     - script: |
         ECHO ON
-        
+
 
     - script: |
         choco install vcpython27 -fdv -y --debug
@@ -64,12 +64,11 @@ jobs:
 
     # Configure the VM
     - script: setup_conda_rc .\ .\recipe .\.ci_support\%CONFIG%.yaml
-    
+
     # Configure the VM.
     - script: |
         run_conda_forge_build_setup
       displayName: conda-forge build setup
-    run_conda_forge_build_setup
 
     # Special cased version setting some more things!
     - script: |
@@ -85,4 +84,4 @@ jobs:
       displayName: Build recipe
       condition: not(contains(variables['CONFIG'], 'vs2008'))
 
-    
+
