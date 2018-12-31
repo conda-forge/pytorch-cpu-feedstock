@@ -16,9 +16,8 @@ Summary: PyTorch is an optimized tensor library for deep learning using GPUs and
 Current build status
 ====================
 
-[![OSX](https://img.shields.io/travis/conda-forge/pytorch-cpu-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/pytorch-cpu-feedstock)
-![Linux disabled](https://img.shields.io/badge/linux-disabled-lightgrey.svg)
-![Windows disabled](https://img.shields.io/badge/Windows-disabled-lightgrey.svg)
+[![Linux,OSX](https://img.shields.io/circleci/project/github/conda-forge/pytorch-cpu-feedstock/master.svg?label=Linux,OSX)](https://circleci.com/gh/conda-forge/pytorch-cpu-feedstock)
+[![Windows](https://img.shields.io/appveyor/ci/conda-forge/pytorch-cpu-feedstock/master.svg?label=Windows)](https://ci.appveyor.com/project/conda-forge/pytorch-cpu-feedstock/branch/master)
 
 Current release info
 ====================
