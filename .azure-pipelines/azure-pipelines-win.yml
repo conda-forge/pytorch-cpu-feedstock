@@ -69,6 +69,7 @@ jobs:
     - script: |
         run_conda_forge_build_setup
       displayName: conda-forge build setup
+    
 
     # Special cased version setting some more things!
     - script: |
@@ -85,3 +86,5 @@ jobs:
       condition: not(contains(variables['CONFIG'], 'vs2008'))
 
     
+    - script: |
+        upload_package .\ .\recipe .ci_support\%CONFIG%.yaml

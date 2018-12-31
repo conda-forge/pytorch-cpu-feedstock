@@ -76,3 +76,9 @@ jobs:
     displayName: Build recipe
 
   
+  - script: |
+      export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
+      set -x -e
+      upload_package ./ ./recipe ./.ci_support/${CONFIG}.yaml
+    displayName: Upload recipe
+  

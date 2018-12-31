@@ -1,6 +1,7 @@
 appveyor:
   secure: {BINSTAR_TOKEN: tumuXLL8PU75WMnRDemRy02ruEq2RpNxeK3dz0MjFssnosPm2v4EFjfNB4PTotA1}
-  # We need visual studio 2017 to build pytorch
+  # We need visual studio 2017 to build pytorch (kept for reference)
+  # not that it matters since we build on Azure anyway
   image: Visual Studio 2017
 compiler_stack: comp7
 max_py_ver: '37'
@@ -12,12 +13,12 @@ travis:
 # https://conda-forge.org/docs/ciservices.html#using-circle-for-both-linux-and-osx
 provider:
   osx: circle
-
-
-provider:
+  # Appveyor can't complete the job for windows
   win: azure
-  osx: azure
 
 azure:
+  # Windows packages are only built on Azure
   upload_packages: True
+  # Force is OK, but I don't want to upload packages from multiple CIs at once
+  # That said, the linux builds seem to fail
   force: False
