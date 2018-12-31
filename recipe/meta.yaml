@@ -21,14 +21,9 @@ source:
 {% set export = "set" %}     # [win]
 
 build:
-  number: 2000
-  # Thiss recipe needs a few things to build a useful output:
-  # 1. New compilers. Not available on staged-recipes
-  # 2. Extra time on Travis. Will need to request this seperately for the feedstock anyway
-  #    Alternatively, we can build OSX on Azure.
-  # 3. VS2017 for Windows (Pytorch refuses to build with MSVC2015 due to poor C++11 support)
-  skip: true  # [not linux]
-  # Needs modern GCC, the ones in conda-forge are too old
+  number: 1001
+  # To iterate on the CI's quickly, we should skip operating systems all together.
+  skip: true  # [linux]
   {% if 'toolchain' in compiler('cxx') %}skip: True{% endif %}  # Only build with modern compilers.
   # Support for Windows and Python 2.7 is very experimental
   # https://ci.appveyor.com/project/conda-forge/staged-recipes/builds/21220961#L972
