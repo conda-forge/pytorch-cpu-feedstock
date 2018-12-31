@@ -21,7 +21,7 @@ source:
 {% set export = "set" %}     # [win]
 
 build:
-  number: 1000
+  number: 2000
   # Thiss recipe needs a few things to build a useful output:
   # 1. New compilers. Not available on staged-recipes
   # 2. Extra time on Travis. Will need to request this seperately for the feedstock anyway
