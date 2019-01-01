@@ -42,7 +42,7 @@ build:
     # I'm pretty sure I only need this flag because I don't include the
     # package that provides unix-like headers for windows.
     # I forget its name now.
-    - {{ export }} GEN_TO_SOURCE=1                          # [win]
+    #- {{ export }} GEN_TO_SOURCE=1                          # [win]
     # Why are all warnings treated as errors???
     - export CXXFLAGS="-Wno-error=unused-result $CXXFLAGS"  # [linux]
     - export CFLAGS="-Wno-error=unused-result $CFLAGS"      # [linux]
@@ -55,6 +55,7 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake
     - ninja
+    - msinttypes        # [win]
   host:
     - python
     - pip
