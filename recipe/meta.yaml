@@ -74,7 +74,7 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake
     # Ninja seems to make windows builds go off into a build loop
-    # - ninja
+    - ninja
     - make  # [unix]
   host:
     - python
