@@ -39,7 +39,7 @@ build:
     - {{ export }} PYTORCH_BUILD_NUMBER={{ PKG_BUILDNUM }}
     - {{ export }} BUILD_CUSTOM_PROTOBUF=OFF
     # Use ninja as the build just won't finish on windows
-    # - {{ export }} CMAKE_GENERATOR=Ninja
+    - {{ export }} CMAKE_GENERATOR=Ninja
     # I have no idea what this flag does, but they recommend turning it on
     # when we don't find three of their headers.
     # It seemed to be required on Appveyor, but not azure, strange???
@@ -63,9 +63,11 @@ build:
     # --   Protobuf libraries    : /home/mark2/miniconda3/envs/compile/lib/libprotobuf.so;-lpthread
     - export CXXFLAGS="-I{{ PREFIX }}/include/ $CXXFLAGS"  # [unix]
     - export CFLAGS="-I{{ PREFIX }}/include/ $CFLAGS"  # [unix]
+    # How do we add /std:c++11 to windows CFLAGS
     # There is an other weird python package called ninja
     # which is their preferred method of building
-    - pip install ninja
+    # that said, it does nothing but call "ninja"
+    # - pip install ninja
     - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"
 
 requirements:
@@ -73,7 +75,6 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
-    # Ninja seems to make windows builds go off into a build loop
     - ninja
     - make  # [unix]
   host:
