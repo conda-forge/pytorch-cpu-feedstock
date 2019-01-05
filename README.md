@@ -17,6 +17,7 @@ Current build status
 ====================
 
 [![Linux,OSX](https://img.shields.io/circleci/project/github/conda-forge/pytorch-cpu-feedstock/master.svg?label=Linux,OSX)](https://circleci.com/gh/conda-forge/pytorch-cpu-feedstock)
+![Windows disabled](https://img.shields.io/badge/Windows-disabled-lightgrey.svg)
 
 Current release info
 ====================
