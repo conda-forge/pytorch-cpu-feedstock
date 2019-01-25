@@ -1,3 +1,7 @@
+# This file was generated automatically from conda-smithy. To update this configuration,
+# update the conda-forge.yml and/or the recipe/meta.yaml.
+# -*- mode: yaml -*-
+
 jobs:
 - job: win_64
   pool:
@@ -9,9 +13,11 @@ jobs:
       win_python3.6:
         CONFIG: win_python3.6
         CONDA_BLD_PATH: D:\\bld\\
+        UPLOAD_PACKAGES: True
       win_python3.7:
         CONFIG: win_python3.7
         CONDA_BLD_PATH: D:\\bld\\
+        UPLOAD_PACKAGES: True
   steps:
     # TODO: Fast finish on azure pipelines?
     - script: |
@@ -26,7 +32,6 @@ jobs:
     # Cygwin's git breaks conda-build. (See https://github.com/conda-forge/conda-smithy-feedstock/pull/2.)
     # - script: rmdir C:\cygwin /s /q
     #   continueOnError: true
-
 
     - powershell: |
         Set-PSDebug -Trace 1
@@ -68,6 +73,7 @@ jobs:
     # Configure the VM.
     - script: |
         run_conda_forge_build_setup
+
       displayName: conda-forge build setup
     
 
@@ -85,6 +91,6 @@ jobs:
       displayName: Build recipe
       condition: not(contains(variables['CONFIG'], 'vs2008'))
 
-    
     - script: |
         upload_package .\ .\recipe .ci_support\%CONFIG%.yaml
+      condition: not(eq(variables['UPLOAD_PACKAGES'], 'False'))
