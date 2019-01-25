@@ -38,7 +38,7 @@ build:
     - {{ export }} NO_CUDA=1
     - {{ export }} PYTORCH_BUILD_VERSION={{ PKG_VERSION }}
     - {{ export }} PYTORCH_BUILD_NUMBER={{ PKG_BUILDNUM }}
-    - {{ export }} BUILD_CUSTOM_PROTOBUF=OFF
+    - {{ export }} BUILD_CUSTOM_PROTOBUF=ON
     # Use ninja as the build just won't finish on windows
     - {{ export }} CMAKE_GENERATOR=Ninja
     # I have no idea what this flag does, but they recommend turning it on
@@ -91,7 +91,7 @@ requirements:
     - pybind11
     # They seem to be pinned to something like protobuf 3.5
     # maybe we can remove this pin?
-    - protobuf  #  3.5
+    # - protobuf  #  3.5
   run:
     - python
     - {{ pin_compatible('numpy') }}
