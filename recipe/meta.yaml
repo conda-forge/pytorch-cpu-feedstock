@@ -25,7 +25,6 @@ source:
 
 build:
   number: 1001
-  {% if 'toolchain' in compiler('cxx') %}skip: True{% endif %}  # Only build with modern compilers.
   # Support for Windows and Python 2.7 is very experimental
   # https://ci.appveyor.com/project/conda-forge/staged-recipes/builds/21220961#L972
   skip: true  # [win and py27]
@@ -50,6 +49,7 @@ build:
     - export CFLAGS="-Wno-error=unused-result $CFLAGS"      # [linux]
     # Disable this other 3rd party binary
     - {{ export }} NO_MKLDNN=1
+    - {{ export }} NO_TEST=1
     # I couldn't find any documentation on this, but eventually they call
     # a script tools/build_pytorch_libs.sh
     # whcih passes EXTRA_CAFFE2_CMAKE_FLAGS at the end of the cmake command
@@ -69,7 +69,8 @@ build:
     # which is their preferred method of building
     # that said, it does nothing but call "ninja"
     # - pip install ninja
-    - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"
+    # - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"
+    - "{{ PYTHON }} setup.py install --single-version-externally-managed --record record.txt"
 
 requirements:
   build:
