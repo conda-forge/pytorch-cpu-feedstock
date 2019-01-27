@@ -69,8 +69,8 @@ build:
     # which is their preferred method of building
     # that said, it does nothing but call "ninja"
     # - pip install ninja
-    # - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"
-    - "{{ PYTHON }} setup.py install --single-version-externally-managed --record record.txt"
+    - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"
+    # - "{{ PYTHON }} setup.py install --single-version-externally-managed --record record.txt"
 
 requirements:
   build:
