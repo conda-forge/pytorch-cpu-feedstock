@@ -54,7 +54,7 @@ build:
     # a script tools/build_pytorch_libs.sh
     # whcih passes EXTRA_CAFFE2_CMAKE_FLAGS at the end of the cmake command
     # to all 3rd party libraries.
-    - {{ export }} EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_MPI=OFF -DUSE_NUMA=OFF -DUSE_NCCL=OFF"
+    - {{ export }} EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_MPI=OFF -DUSE_NUMA=OFF -DUSE_NCCL=OFF -DATEN_NO_TEST=OFF"
     # Why do I need to export these?
     #
     # The CMake for onnx reports:
