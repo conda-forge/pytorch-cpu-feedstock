@@ -1,0 +1,22 @@
+From 804104beb00f73a9062be42b090e0d12c0b3c140 Mon Sep 17 00:00:00 2001
+From: peter <peterghost86@gmail.com>
+Date: Sat, 22 Dec 2018 16:02:46 +0800
+Subject: [PATCH] Fix the iterator category for torch::data::Iterator
+
+---
+ torch/csrc/api/include/torch/data/iterator.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/torch/csrc/api/include/torch/data/iterator.h b/torch/csrc/api/include/torch/data/iterator.h
+index bf5b7429bf4..21e2d3d3d59 100644
+--- a/torch/csrc/api/include/torch/data/iterator.h
++++ b/torch/csrc/api/include/torch/data/iterator.h
+@@ -136,7 +136,7 @@ class Iterator {
+   using value_type = Batch;
+   using pointer = Batch*;
+   using reference = Batch&;
+-  using iterator_category = std::output_iterator_tag;
++  using iterator_category = std::input_iterator_tag;
+ 
+   explicit Iterator(std::unique_ptr<detail::IteratorImpl<Batch>> impl)
+       : impl_(std::move(impl)) {}
