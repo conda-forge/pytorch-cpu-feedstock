@@ -25,11 +25,10 @@ source:
 {% set export = "set" %}     # [win]
 
 build:
-  number: 1001
+  number: 1002
   # Support for Windows and Python 2.7 is very experimental
   # https://ci.appveyor.com/project/conda-forge/staged-recipes/builds/21220961#L972
   skip: true  # [win and py27]
-  skip: true  # [not win]
   script:
     # Most of this script is adapted from the pytorch/pythorch-cpu
     # meta.yaml.template build.sh and bld.bat scripts
