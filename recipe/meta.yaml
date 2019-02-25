@@ -12,7 +12,6 @@ source:
   # sha256: f360b7954e441bc5c4b36c49e711697a5c351de8b146c2982809385e3b3cfdcb
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: v{{ version }}
-  #path: ../pytorch
   patches:
     # Accepted and will be in 1.0.1
     # https://github.com/pytorch/pytorch/commit/4047cdc6906c6e5c5e1fb837f7f479e0af149fa7
@@ -70,7 +69,6 @@ build:
     # that said, it does nothing but call "ninja"
     # - pip install ninja
     - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"
-    # - "{{ PYTHON }} setup.py install --single-version-externally-managed --record record.txt"
 
 requirements:
   build:
@@ -96,6 +94,7 @@ requirements:
   run:
     - python
     - {{ pin_compatible('numpy') }}
+    # ninja and cffi are included in
     - ninja
     - cffi
 
