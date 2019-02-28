@@ -16,7 +16,6 @@ source:
     # Accepted and will be in 1.0.1
     # https://github.com/pytorch/pytorch/commit/4047cdc6906c6e5c5e1fb837f7f479e0af149fa7
     - mac_osx_clock_getttime.patch  # [osx]
-    - 15500.patch
 
 # The build needs to set many environment variables
 # This is an easy way to do it cross platform
