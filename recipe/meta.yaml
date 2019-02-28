@@ -12,10 +12,6 @@ source:
   # sha256: f360b7954e441bc5c4b36c49e711697a5c351de8b146c2982809385e3b3cfdcb
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: v{{ version }}
-  patches:
-    # Accepted and will be in 1.0.1
-    # https://github.com/pytorch/pytorch/commit/4047cdc6906c6e5c5e1fb837f7f479e0af149fa7
-    - mac_osx_clock_getttime.patch  # [osx]
 
 # The build needs to set many environment variables
 # This is an easy way to do it cross platform
