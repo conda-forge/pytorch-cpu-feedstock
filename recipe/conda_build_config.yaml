@@ -1,4 +1,4 @@
-# Windows builds of pytorch with python 2.7 are very experimental.
+  # Windows builds of pytorch with python 2.7 are very experimental.
 # Finally, pytorch requires MSVC2017
 # As of making this recipe, it only exists on defaults.
 # Leave conda_build_config.yaml alone unless it is windows
@@ -14,3 +14,15 @@ vc:                            # [win]
 python:                        # [win]
   - 3.6                        # [win]
   - 3.7                        # [win]
+
+
+variant_version:
+  - 0.0
+# - 1.0
+variant_str:
+  - gpu
+# - cpu
+    # zip_keys:
+    # - pytorch_variant
+    # - variant_version
+    # - variant_str
