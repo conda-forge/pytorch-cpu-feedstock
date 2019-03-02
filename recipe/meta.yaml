@@ -64,8 +64,8 @@ build:
     # which is their preferred method of building
     # that said, it does nothing but call "ninja"
     # - pip install ninja
-    - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"
-
+    # gpu version is just a stub
+    - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"  # [variant_str == 'cpu']
 requirements:
   build:
     - {{ compiler('c') }}
@@ -96,7 +96,7 @@ requirements:
 
 test:
   imports:
-    - torch
+    - torch  # [variant_str == 'cpu']
     # Maybe we should have a test for a simple Neural Network???
 
 outputs:
@@ -109,7 +109,7 @@ outputs:
         - pytorch-gpu   # [variant_str == 'gpu']
     test:
       imports:
-        - pytorch
+        - pytorch  # [variant == 'gpu']
     extra:
       pytorch_variant: {{ variant_str }}
   - name: _pytorch_variant
