@@ -12,6 +12,10 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - '3.6'
+variant_str:
+- gpu
+variant_version:
+- '0.0'
 zip_keys:
 - - python
   - c_compiler

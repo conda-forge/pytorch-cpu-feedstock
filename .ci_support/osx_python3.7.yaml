@@ -18,3 +18,7 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - '3.7'
+variant_str:
+- gpu
+variant_version:
+- '0.0'
