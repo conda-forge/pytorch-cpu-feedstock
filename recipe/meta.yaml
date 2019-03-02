@@ -100,23 +100,23 @@ test:
     # Maybe we should have a test for a simple Neural Network???
 
 outputs:
-  -name: pytorch-{{ variant_str }}
-  -name: pytorch
-   requirements:
-     run:
-       - _pytorch_variant ==0={{ variant_str }}
-       - pytorch-cpu   # [variant_str == 'cpu']
-       - pytorch-gpu   # [variant_str == 'gpu']
-   test:
-     imports:
-       - pytorch
-   extra:
-     pytorch_variant: {{ variant_str }}
-  -name: _pytorch_variant
-   version: {{ variant_version }}
-   build:
-     number: 0
-     string: {{ variant_str }}
+  - name: pytorch-{{ variant_str }}
+  - name: pytorch
+    requirements:
+      run:
+        - _pytorch_variant ==0={{ variant_str }}
+        - pytorch-cpu   # [variant_str == 'cpu']
+        - pytorch-gpu   # [variant_str == 'gpu']
+    test:
+      imports:
+        - pytorch
+    extra:
+      pytorch_variant: {{ variant_str }}
+  - name: _pytorch_variant
+    version: {{ variant_version }}
+    build:
+      number: 0
+      string: {{ variant_str }}
 
 about:
   home: https://pytorch.org/
