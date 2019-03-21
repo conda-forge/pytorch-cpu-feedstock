@@ -25,6 +25,7 @@ build:
   skip: true  # [win and py27]
   # remove this when we settle on the actual organization
   skip: true  # [variant_str == 'cpu']
+  skip: true  # [variant_str == 'gpu']
   script:
     # Most of this script is adapted from the pytorch/pythorch-cpu
     # meta.yaml.template build.sh and bld.bat scripts
