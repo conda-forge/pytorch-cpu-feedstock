@@ -1,7 +1,7 @@
 {% set version = "1.0.1" %}
 
 package:
-  name: pytorch-{{ variant_str }}
+  name: pytorch
   version: {{ version }}
 
 source:
@@ -23,6 +23,7 @@ build:
   # Support for Windows and Python 2.7 is very experimental
   # https://ci.appveyor.com/project/conda-forge/staged-recipes/builds/21220961#L972
   skip: true  # [win and py27]
+  # remove this when we settle on the actual organization
   skip: true  # [variant_str == 'cpu']
   script:
     # Most of this script is adapted from the pytorch/pythorch-cpu
@@ -33,7 +34,6 @@ build:
     - {{ export }} PYTORCH_BUILD_VERSION={{ PKG_VERSION }}
     - {{ export }} PYTORCH_BUILD_NUMBER={{ PKG_BUILDNUM }}
     - {{ export }} BUILD_CUSTOM_PROTOBUF=ON
-    # Use ninja as the build just won't finish on windows
     - {{ export }} CMAKE_GENERATOR=Ninja
     # I have no idea what this flag does, but they recommend turning it on
     # when we don't find three of their headers.
@@ -93,6 +93,8 @@ requirements:
     # ninja and cffi are included in
     - ninja
     - cffi
+    - pytorch-cpu   # [variant_str == 'cpu']
+    - pytorch-gpu   # [variant_str == 'gpu']
 
 test:
   imports:
@@ -100,16 +102,15 @@ test:
     # Maybe we should have a test for a simple Neural Network???
 
 outputs:
-  - name: pytorch-{{ variant_str }}
   - name: pytorch
+  - name: pytorch-{{ variant_str }}
     requirements:
       run:
         - _pytorch_variant ==0={{ variant_str }}
-        - pytorch-cpu   # [variant_str == 'cpu']
-        - pytorch-gpu   # [variant_str == 'gpu']
     test:
       imports:
-        - pytorch  # [variant == 'gpu']
+        # For now, gpu is only built using the pytorch channel
+        - pytorch  # [variant == 'cpu']
     extra:
       pytorch_variant: {{ variant_str }}
   - name: _pytorch_variant
