@@ -7,15 +7,15 @@
 
 set -xeuo pipefail
 export PYTHONUNBUFFERED=1
-export FEEDSTOCK_ROOT=/home/conda/feedstock_root
-export RECIPE_ROOT=/home/conda/recipe_root
-export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
+export FEEDSTOCK_ROOT="${FEEDSTOCK_ROOT:-/home/conda/feedstock_root}"
+export RECIPE_ROOT="${RECIPE_ROOT:-/home/conda/recipe_root}"
+export CI_SUPPORT="${FEEDSTOCK_ROOT}/.ci_support"
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 
 cat >~/.condarc <<CONDARC
 
 conda-build:
- root-dir: /home/conda/feedstock_root/build_artifacts
+ root-dir: ${FEEDSTOCK_ROOT}/build_artifacts
 
 CONDARC
 
@@ -24,15 +24,16 @@ conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
-# A lock sometimes occurs with incomplete builds. The lock file is stored in build_artifacts.
-conda clean --lock
+source run_conda_forge_build_setup
 
-run_conda_forge_build_setup# make the build number clobber
+# make the build number clobber
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
 
+if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
+    upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
+fi
 
-
-touch "/home/conda/feedstock_root/build_artifacts/conda-forge-build-done-${CONFIG}"
+touch "${FEEDSTOCK_ROOT}/build_artifacts/conda-forge-build-done-${CONFIG}"
