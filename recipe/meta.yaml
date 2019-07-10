@@ -1,4 +1,4 @@
-{% set version = "1.0.1" %}
+{% set version = "1.1.0" %}
 
 package:
   name: pytorch-cpu
@@ -92,6 +92,7 @@ requirements:
     # ninja and cffi are included in
     - ninja
     - cffi
+    - future  # [py==27]
 
 test:
   imports:
