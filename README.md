@@ -16,10 +16,10 @@ Current build status
 
 
 <table><tr>
-    <td>CircleCI</td>
+    <td>Appveyor</td>
     <td>
-      <a href="https://circleci.com/gh/conda-forge/pytorch-cpu-feedstock">
-        <img alt="OSX" src="https://img.shields.io/circleci/project/github/conda-forge/pytorch-cpu-feedstock/master.svg?label=OSX">
+      <a href="https://ci.appveyor.com/project/conda-forge/pytorch-cpu-feedstock/branch/master">
+        <img alt="windows" src="https://img.shields.io/appveyor/ci/conda-forge/pytorch-cpu-feedstock/master.svg?label=Windows">
       </a>
     </td>
   </tr>
