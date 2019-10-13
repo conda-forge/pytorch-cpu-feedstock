@@ -15,14 +15,7 @@ Current build status
 ====================
 
 
-<table><tr>
-    <td>CircleCI</td>
-    <td>
-      <a href="https://circleci.com/gh/conda-forge/pytorch-cpu-feedstock">
-        <img alt="OSX" src="https://img.shields.io/circleci/project/github/conda-forge/pytorch-cpu-feedstock/master.svg?label=OSX">
-      </a>
-    </td>
-  </tr>
+<table>
     
   <tr>
     <td>Azure</td>
@@ -97,7 +90,12 @@ Current build status
       </details>
     </td>
   </tr>
-![ppc64le disabled](https://img.shields.io/badge/ppc64le-disabled-lightgrey.svg)
+  <tr>
+    <td>Linux_ppc64le</td>
+    <td>
+      <img src="https://img.shields.io/badge/ppc64le-disabled-lightgrey.svg" alt="ppc64le disabled">
+    </td>
+  </tr>
 </table>
 
 Current release info
