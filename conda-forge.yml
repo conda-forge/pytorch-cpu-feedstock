@@ -9,16 +9,10 @@ max_r_ver: '35'
 travis:
   secure: {BINSTAR_TOKEN: FdQUTwWxz9QD350vPgck9v+THL6+qphek2OFXsP/NHMLTTy4q7k77w5MmAZpwPMTyw3maxDljzXkj1Wcs/F1+0lMRU5AfaE5Jjr8hJ/YTKjtAB6XOyNaRUh+WzA/qi6YorryHb9Vv1ZJie15Zwzv7ge0LXlfEpZqaSbFMWv8r3e/fhEiIA8Hs8aFvv4ei/RFCp+Zo4Iu80TORxrDpYmoKJwmZXATCyBZt9wHVZuPE65dyF84ffxB49K+0G0Ggt860iq27DT0zDw5Mj0D5TMRiTb6Y8Rvj7OUXeTzlSbYFMAVnyZ7tJObdjv2IYW1mEIXw0k1utoxuiONNeED4vhCH1QoZ2dDZo5tnmgvd+C9zVZq7gcNrIjZXalClidBvzjqGd7np/fCUU1ga8MSLQnWHAcGEyIo12XzYGsogiRLQWq0qgBND5oFv6ePKK/tlALp7I5XdGbNwrlmXbseDoTVVnBml64QqDjWsd29yHBqxe7EpA6i+VQjZYxP41mhu/kbRYHCNKK9Hldr8ywhpvgTVYOFT+y9P5S3zUOAeJFcHmIYsdqTpMgd/fU2qNwfcazmGNgycxTHYRTBw8gya0Leof7QEINKijDjWBJqKpTW341oyGaB/uvxExE2PABmesOU3sFJHicrQKn3BdDmonE7agY3r5MU55dqEv5lCGjXXd8=}
 
-# Enable Circle for OSX for increased time
-# https://conda-forge.org/docs/ciservices.html#using-circle-for-both-linux-and-osx
 provider:
-  osx: circle
   # Appveyor can't complete the job for windows
   win: azure
 
 azure:
   # Windows packages are only built on Azure
   upload_packages: True
-  # Force is OK, but I don't want to upload packages from multiple CIs at once
-  # That said, the linux builds seem to fail
-  force: False
