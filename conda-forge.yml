@@ -22,3 +22,4 @@ azure:
   # Force is OK, but I don't want to upload packages from multiple CIs at once
   # That said, the linux builds seem to fail
   force: False
+provider: {linux_aarch64: default, linux_ppc64le: default}
