@@ -5,12 +5,12 @@
 version: 2
 
 jobs:
-  build_osx_python2.7:
+  build_osx_python3.6.____73_pypy:
     working_directory: ~/test
     macos:
       xcode: "9.0"
     environment:
-      - CONFIG: "osx_python2.7"
+      - CONFIG: "osx_python3.6.____73_pypy"
     steps:
       - checkout
       - run:
@@ -23,12 +23,12 @@ jobs:
           command: |
             export CI=circle
             ./.circleci/run_osx_build.sh
-  build_osx_python3.6:
+  build_osx_python3.6.____cpython:
     working_directory: ~/test
     macos:
       xcode: "9.0"
     environment:
-      - CONFIG: "osx_python3.6"
+      - CONFIG: "osx_python3.6.____cpython"
     steps:
       - checkout
       - run:
@@ -41,12 +41,30 @@ jobs:
           command: |
             export CI=circle
             ./.circleci/run_osx_build.sh
-  build_osx_python3.7:
+  build_osx_python3.7.____cpython:
     working_directory: ~/test
     macos:
       xcode: "9.0"
     environment:
-      - CONFIG: "osx_python3.7"
+      - CONFIG: "osx_python3.7.____cpython"
+    steps:
+      - checkout
+      - run:
+          name: Fast finish outdated PRs and merge PRs
+          command: |
+            ./.circleci/fast_finish_ci_pr_build.sh
+            ./.circleci/checkout_merge_commit.sh
+      - run:
+          # Run, test and (if we have a BINSTAR_TOKEN) upload the distributions.
+          command: |
+            export CI=circle
+            ./.circleci/run_osx_build.sh
+  build_osx_python3.8.____cpython:
+    working_directory: ~/test
+    macos:
+      xcode: "9.0"
+    environment:
+      - CONFIG: "osx_python3.8.____cpython"
     steps:
       - checkout
       - run:
@@ -64,6 +82,7 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - build_osx_python2.7
-      - build_osx_python3.6
-      - build_osx_python3.7
+      - build_osx_python3.6.____73_pypy
+      - build_osx_python3.6.____cpython
+      - build_osx_python3.7.____cpython
+      - build_osx_python3.8.____cpython
