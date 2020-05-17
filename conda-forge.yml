@@ -18,7 +18,8 @@ provider:
 
 azure:
   # Windows packages are only built on Azure
-  upload_packages: True
+  upload_packages: true
   # Force is OK, but I don't want to upload packages from multiple CIs at once
   # That said, the linux builds seem to fail
-  force: False
+  force: false
+conda_forge_output_validation: true
