@@ -19,7 +19,7 @@ source:
 {% set export = "set" %}     # [win]
 
 build:
-  number: 0
+  number: 1
   # Support for Windows and Python 2.7 is very experimental
   # https://ci.appveyor.com/project/conda-forge/staged-recipes/builds/21220961#L972
   skip: true  # [win and py27]
