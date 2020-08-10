@@ -5,12 +5,13 @@
 version: 2
 
 jobs:
-  build_osx_python2.7:
+  build_osx_64_python3.6.____73_pypy:
     working_directory: ~/test
     macos:
       xcode: "9.0"
     environment:
-      - CONFIG: "osx_python2.7"
+      - CONFIG: "osx_64_python3.6.____73_pypy"
+      - UPLOAD_PACKAGES: "True"
     steps:
       - checkout
       - run:
@@ -22,13 +23,15 @@ jobs:
           # Run, test and (if we have a BINSTAR_TOKEN) upload the distributions.
           command: |
             export CI=circle
-            ./.circleci/run_osx_build.sh
-  build_osx_python3.6:
+            export FEEDSTOCK_NAME=$(basename ${CIRCLE_PROJECT_REPONAME})
+            ./.scripts/run_osx_build.sh
+  build_osx_64_python3.6.____cpython:
     working_directory: ~/test
     macos:
       xcode: "9.0"
     environment:
-      - CONFIG: "osx_python3.6"
+      - CONFIG: "osx_64_python3.6.____cpython"
+      - UPLOAD_PACKAGES: "True"
     steps:
       - checkout
       - run:
@@ -40,13 +43,15 @@ jobs:
           # Run, test and (if we have a BINSTAR_TOKEN) upload the distributions.
           command: |
             export CI=circle
-            ./.circleci/run_osx_build.sh
-  build_osx_python3.7:
+            export FEEDSTOCK_NAME=$(basename ${CIRCLE_PROJECT_REPONAME})
+            ./.scripts/run_osx_build.sh
+  build_osx_64_python3.7.____cpython:
     working_directory: ~/test
     macos:
       xcode: "9.0"
     environment:
-      - CONFIG: "osx_python3.7"
+      - CONFIG: "osx_64_python3.7.____cpython"
+      - UPLOAD_PACKAGES: "True"
     steps:
       - checkout
       - run:
@@ -58,12 +63,34 @@ jobs:
           # Run, test and (if we have a BINSTAR_TOKEN) upload the distributions.
           command: |
             export CI=circle
-            ./.circleci/run_osx_build.sh
+            export FEEDSTOCK_NAME=$(basename ${CIRCLE_PROJECT_REPONAME})
+            ./.scripts/run_osx_build.sh
+  build_osx_64_python3.8.____cpython:
+    working_directory: ~/test
+    macos:
+      xcode: "9.0"
+    environment:
+      - CONFIG: "osx_64_python3.8.____cpython"
+      - UPLOAD_PACKAGES: "True"
+    steps:
+      - checkout
+      - run:
+          name: Fast finish outdated PRs and merge PRs
+          command: |
+            ./.circleci/fast_finish_ci_pr_build.sh
+            ./.circleci/checkout_merge_commit.sh
+      - run:
+          # Run, test and (if we have a BINSTAR_TOKEN) upload the distributions.
+          command: |
+            export CI=circle
+            export FEEDSTOCK_NAME=$(basename ${CIRCLE_PROJECT_REPONAME})
+            ./.scripts/run_osx_build.sh
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build_osx_python2.7
-      - build_osx_python3.6
-      - build_osx_python3.7
+      - build_osx_64_python3.6.____73_pypy
+      - build_osx_64_python3.6.____cpython
+      - build_osx_64_python3.7.____cpython
+      - build_osx_64_python3.8.____cpython
