@@ -88,7 +88,7 @@ requirements:
     # ninja and cffi are included in
     - ninja
     - cffi
-    - future  # [py==27]
+    - typing_extensions
 
 test:
   imports:
