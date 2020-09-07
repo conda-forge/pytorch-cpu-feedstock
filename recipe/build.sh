@@ -12,8 +12,8 @@ export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 export BUILD_CUSTOM_PROTOBUF=ON
 export CMAKE_GENERATOR=Ninja
 # Why are all warnings treated as errors???
-- export CXXFLAGS="-Wno-error=unused-result $CXXFLAGS"  # [linux]
-- export CFLAGS="-Wno-error=unused-result $CFLAGS"      # [linux]
+export CXXFLAGS="-Wno-error=unused-result $CXXFLAGS"
+export CFLAGS="-Wno-error=unused-result $CFLAGS"
 # Disable this other 3rd party binary
 export NO_MKLDNN=1
 export NO_TEST=1
