@@ -27,14 +27,14 @@ build:
   detect_binary_files_with_prefix: False
 
 requirements:
-  build:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
+  #build:
     # For some reason things don't work with git
     # - patch    # [not win]
     # - m2-patch  # [win]
     # - git
   host:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - cmake
     - make  # [unix]
     # GPU requirements
