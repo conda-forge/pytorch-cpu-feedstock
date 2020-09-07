@@ -22,8 +22,8 @@ build:
   number: 0
   # Build only for python 3.7 to identify problems
   skip: True  # [not py==37]
-  string: cuda{{ cudatoolkit | replace('.', '') }}py{{ CONDA_PY }}h{{PKG_HASH}}_{{ PKG_BUILDNUM }}  # [pytorch_variant == "gpu"]
-  string: cpu_py{{ CONDA_PY }}h{{PKG_HASH}}_{{ PKG_BUILDNUM }}                                      # [pytorch_variant == "cpu"]
+  string: cuda{{ cudatoolkit | replace('.', '') }}py{{ CONDA_PY }}h{{PKG_HASH}}_{{ PKG_BUILDNUM }}  # [pytorch_variant=="gpu"]
+  string: cpu_py{{ CONDA_PY }}h{{PKG_HASH}}_{{ PKG_BUILDNUM }}                                      # [pytorch_variant=="cpu"]
   detect_binary_files_with_prefix: False
 
 requirements:
@@ -92,8 +92,13 @@ test:
     - python ./test/run_test.py  # [win]
 
 about:
-  home: http://pytorch.org/
-  license: BSD 3-Clause
+  home: https://pytorch.org/
+  license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
   summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
+
+extra:
+  recipe-maintainers:
+    - hmaarrfk
+    - sodre
