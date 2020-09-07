@@ -1,9 +1,9 @@
 About pytorch-cpu
 =================
 
-Home: http://pytorch.org/
+Home: https://pytorch.org/
 
-Package license: BSD 3-Clause
+Package license: BSD-3-Clause
 
 Feedstock license: BSD-3-Clause
 
@@ -149,4 +149,6 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
+* [@hmaarrfk](https://github.com/hmaarrfk/)
+* [@sodre](https://github.com/sodre/)
 

@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - gcc
 c_compiler_version:
-- '7.3'
+- '7'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -13,7 +13,7 @@ cudatoolkit:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '7.3'
+- '7'
 docker_image:
 - condaforge/linux-anvil-comp7
 mkl:
