@@ -36,6 +36,7 @@ requirements:
     # - git
   host:
     - cmake
+    - make  # [unix]
     # GPU requirements
     #- cudatoolkit {{ cudatoolkit }}*  # [pytorch_variant == "gpu"]
     #- cudnn {{ cudnn }}*              # [pytorch_variant == "gpu"]

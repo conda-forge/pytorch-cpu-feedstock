@@ -11,6 +11,10 @@ rm -rf build
 export LDFLAGS="-Wl,-pie -Wl,-headerpad_max_install_names -Wl,-rpath,$PREFIX/lib -L$PREFIX/lib"
 export LDFLAGS_LD="-Wl,-pie -Wl,-headerpad_max_install_names -Wl,-rpath,$PREFIX/lib -L$PREFIX/lib"
 
+# Do we need this?
+export CXXFLAGS="-Wno-error=unused-result $CXXFLAGS"
+export CFLAGS="-Wno-error=unused-result $CFLAGS"
+
 re='^(.*)-Wl,--as-needed(.*)$'
 if [[ ${LDFLAGS} =~ $re ]]; then
   export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
@@ -28,11 +32,14 @@ export CMAKE_SYSROOT=$CONDA_BUILD_SYSROOT
 export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
 export CMAKE_PREFIX_PATH=$PREFIX
 export TH_BINARY_BUILD=1
+# Do we still need pytorch binary build?
+export PYTORCH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 
 export USE_NINJA=OFF
 export NO_TEST=1
+export USE_TEST=0
 export INSTALL_TEST=0
 
 # MacOS build is simple, and will not be for CUDA
@@ -50,6 +57,7 @@ CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++14}"
 
 if [[ ${pytorch_variant} = "gpu" ]]; then
     export USE_CUDA=1
+    export NO_CUDA=0
     export TORCH_CUDA_ARCH_LIST="3.5;5.0+PTX"
     if [[ ${cudatoolkit} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;7.0"
@@ -68,6 +76,7 @@ if [[ ${pytorch_variant} = "gpu" ]]; then
 else
     export BLAS="MKL"
     export USE_CUDA=0
+    export NO_CUDA=1
     export USE_MKLDNN=1
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
