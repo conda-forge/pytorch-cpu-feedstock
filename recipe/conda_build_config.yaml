@@ -23,8 +23,6 @@ openblas:
   - 0.3.3
 mkl:
   - 2019
-numpy:
-  - 1.11
 MACOSX_DEPLOYMENT_TARGET:
   - 10.10
 pytorch_variant:
