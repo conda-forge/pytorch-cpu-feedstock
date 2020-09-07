@@ -1,18 +1,28 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.10'
 c_compiler:
 - vs2017
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
+cudatoolkit:
+- '10.1'
 cxx_compiler:
 - vs2017
+mkl:
+- '2019'
 numpy:
-- '1.16'
+- '1.11'
 pin_run_as_build:
+  mkl:
+    max_pin: x
   python:
     min_pin: x.x
     max_pin: x.x
 python:
 - 3.6.* *_cpython
+pytorch_variant:
+- cpu
 target_platform:
 - win-64
