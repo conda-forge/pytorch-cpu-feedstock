@@ -2,7 +2,7 @@
 {% set commit = "b31f58de6fa8bbda5353b3c77d9be4914399724d" %}
 
 package:
-  name: pytorch
+  name: pytorch-cpu
   version: {{ version }}
 
 source:
@@ -35,9 +35,9 @@ requirements:
     - cmake
     - git
     # GPU requirements
-    - cudatoolkit {{ cudatoolkit }}*  # [pytorch_variant == "gpu"]
-    - cudnn {{ cudnn }}*              # [pytorch_variant == "gpu"]
-    - magma                           # [pytorch_variant == "gpu"]
+    #- cudatoolkit {{ cudatoolkit }}*  # [pytorch_variant == "gpu"]
+    #- cudnn {{ cudnn }}*              # [pytorch_variant == "gpu"]
+    #- magma                           # [pytorch_variant == "gpu"]
     # other requirements
     - python
     - numpy
@@ -60,18 +60,16 @@ requirements:
     - libmklml
     - intel-openmp   # [osx]
     - llvm-openmp    # [osx]
-    - _pytorch_select ==0.1             # [pytorch_variant == "cpu"]
-    - _pytorch_select ==0.2             # [pytorch_variant == "gpu"]
+    #- _pytorch_select ==0.1             # [pytorch_variant == "cpu"]
+    #- _pytorch_select ==0.2             # [pytorch_variant == "gpu"]
     # GPU requirements
-    - {{ pin_compatible('cudatoolkit', max_pin='x.x') }}  # [pytorch_variant == "gpu"]
-    - {{ pin_compatible('cudnn') }}                       # [pytorch_variant == "gpu"]
+    #- {{ pin_compatible('cudatoolkit', max_pin='x.x') }}  # [pytorch_variant == "gpu"]
+    #- {{ pin_compatible('cudnn') }}                       # [pytorch_variant == "gpu"]
     # other requirements
     - python
     - {{ pin_compatible('numpy') }}
     - cffi
     - ninja
-    - future  # [py2k]
-    - typing  # [py2k]
 
 test:
   requires:
