@@ -32,6 +32,7 @@ export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 
 export USE_NINJA=OFF
+export NO_TEST=1
 export INSTALL_TEST=0
 
 # MacOS build is simple, and will not be for CUDA
