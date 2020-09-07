@@ -1,30 +1,46 @@
-# Most of this script is adapted from the pytorch/pythorch-cpu
-# meta.yaml.template build.sh and bld.bat scripts
-set TN_BINARY_BUILD=1
-set PYTORCH_BINARY_BUILD=1
-set NO_CUDA=1
+@echo On
+
+set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 set PYTORCH_BUILD_NUMBER=%PKG_BUILDNUM%
-set BUILD_CUSTOM_PROTOBUF=ON
-# Use ninja as the build just won't finish on windows
+
+if "%pytorch_variant%" == "gpu" (
+    set build_with_cuda=1
+    set desired_cuda=%CUDA_VERSION:~0,-1%.%CUDA_VERSION:~-1,1%
+) else (
+    set build_with_cuda=
+    set USE_CUDA=0
+)
+
+if "%build_with_cuda%" == "" goto cuda_flags_end
+
+set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
+set CUDA_BIN_PATH=%CUDA_PATH%\bin
+set TORCH_CUDA_ARCH_LIST=3.5;5.0+PTX
+if "%desired_cuda%" == "9.0" set TORCH_CUDA_ARCH_LIST=%TORCH_CUDA_ARCH_LIST%;6.0;7.0
+if "%desired_cuda%" == "9.2" set TORCH_CUDA_ARCH_LIST=%TORCH_CUDA_ARCH_LIST%;6.0;6.1;7.0
+if "%desired_cuda%" == "10.0" set TORCH_CUDA_ARCH_LIST=%TORCH_CUDA_ARCH_LIST%;6.0;6.1;7.0;7.5
+set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
+
+:cuda_flags_end
+
+set DISTUTILS_USE_SDK=1
+
+set CMAKE_INCLUDE_PATH=%LIBRARY_PREFIX%\include
+set LIB=%LIBRARY_PREFIX%\lib;%LIB%
+
+IF "%build_with_cuda%" == "" goto cuda_end
+
+set MAGMA_HOME=%LIBRARY_PREFIX%
+
+set "PATH=%CUDA_BIN_PATH%;%PATH%"
+
+set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
+
+:cuda_end
+
 set CMAKE_GENERATOR=Ninja
-# I have no idea what this flag does, but they recommend turning it on
-# when we don't find three of their headers.
-# It seemed to be required on Appveyor, but not azure, strange???
-# set GEN_TO_SOURCE=1
-# Why are all warnings treated as errors???
-# Disable this other 3rd party binary
-set NO_MKLDNN=1
-# set NO_TEST=1
-# I couldn't find any documentation on this, but eventually they call
-# a script tools/build_pytorch_libs.sh
-# whcih passes EXTRA_CAFFE2_CMAKE_FLAGS at the end of the cmake command
-# to all 3rd party libraries.
-set EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_MPI=OFF -DUSE_NUMA=OFF -DUSE_NCCL=OFF -DATEN_NO_TEST=OFF"
-# Why do I need to export these?
-# How do we add /std:c++11 to windows CFLAGS
-# There is an other weird python package called ninja
-# which is their preferred method of building
-# that said, it does nothing but call "ninja"
-# - pip install ninja
-%PYTHON% -m pip install . -vv
+set CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%
+
+%PYTHON% -m pip install . --no-deps -vv
+if errorlevel 1 exit /b 1

@@ -1,38 +1,77 @@
-export CFLAGS="-D__STDC_LIMIT_MACROS=1 -D__STDC_CONSTANT_MACROS=1 -D__STDC_FORMAT_MACROS=1 $CFLAGS"
-export CXXFLAGS="-D__STDC_LIMIT_MACROS=1 -D__STDC_CONSTANT_MACROS=1 -D__STDC_FORMAT_MACROS=1 $CXXFLAGS"
+#!/bin/bash
 
-# Most of this script is adapted from the pytorch/pythorch-cpu
-# During verion 1.1. Maybe it is time to update it?
-# meta.yaml.template build.sh and bld.bat scripts
-export TN_BINARY_BUILD=1
-export PYTORCH_BINARY_BUILD=1
-export NO_CUDA=1
+set -ex
+
+# clean up an existing cmake build directory
+rm -rf build
+
+# uncomment to debug cmake build
+#export CMAKE_VERBOSE_MAKEFILE=1
+
+export LDFLAGS="-Wl,-pie -Wl,-headerpad_max_install_names -Wl,-rpath,$PREFIX/lib -L$PREFIX/lib"
+export LDFLAGS_LD="-Wl,-pie -Wl,-headerpad_max_install_names -Wl,-rpath,$PREFIX/lib -L$PREFIX/lib"
+
+re='^(.*)-Wl,--as-needed(.*)$'
+if [[ ${LDFLAGS} =~ $re ]]; then
+  export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+fi
+re='^(.*)-Wl,-dead_strip_dylins(.*)$'
+if [[ ${LDFLAGS} =~ $re ]]; then
+  export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+fi
+
+# Dynamic libraries need to be lazily loaded so that torch
+# can be imported on system without a GPU
+LDFLAGS="${LDFLAGS//-Wl,-z,now/-Wl,-z,lazy}"
+
+export CMAKE_SYSROOT=$CONDA_BUILD_SYSROOT
+export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
+export CMAKE_PREFIX_PATH=$PREFIX
+export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
-export BUILD_CUSTOM_PROTOBUF=ON
-export CMAKE_GENERATOR=Ninja
-# Why are all warnings treated as errors???
-export CXXFLAGS="-Wno-error=unused-result $CXXFLAGS"
-export CFLAGS="-Wno-error=unused-result $CFLAGS"
-# Disable this other 3rd party binary
-export NO_MKLDNN=1
-export NO_TEST=1
-# I couldn't find any documentation on this, but eventually they call
-# a script tools/build_pytorch_libs.sh
-# whcih passes EXTRA_CAFFE2_CMAKE_FLAGS at the end of the cmake command
-# to all 3rd party libraries.
-export EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_MPI=OFF -DUSE_NUMA=OFF -DUSE_NCCL=OFF -DATEN_NO_TEST=OFF"
-# Why do I need to export these?
-#
-# The CMake for onnx reports:
-# therefore, it clearly has a bug somewhere
-# --   Protobuf compiler     : /home/mark2/miniconda3/envs/compile/bin/protoc
-# --   Protobuf includes     : /usr/include
-# --   Protobuf libraries    : /home/mark2/miniconda3/envs/compile/lib/libprotobuf.so;-lpthread
-# export CXXFLAGS="-I{{ PREFIX }}/include/ $CXXFLAGS"  # [unix]
-# export CFLAGS="-I{{ PREFIX }}/include/ $CFLAGS"  # [unix]
-# How do we add /std:c++11 to windows CFLAGS
-# There is an other weird python package called ninja
-# which is their preferred method of building
-# that said, it does nothing but call "ninja"
-$PYTHON -m pip install . -vv
+
+export USE_NINJA=OFF
+export INSTALL_TEST=0
+
+# MacOS build is simple, and will not be for CUDA
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    export MACOSX_DEPLOYMENT_TARGET=10.10
+    export CMAKE_OSX_SYSROOT=/opt/MacOSX10.10.sdk
+    python -m pip install . --no-deps -vv
+    exit 0
+fi
+
+# std=c++11 is required to compile some .cu files
+CPPFLAGS="${CPPFLAGS//-std=c++17/-std=c++14}"
+CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++14}"
+
+
+if [[ ${pytorch_variant} = "gpu" ]]; then
+    export USE_CUDA=1
+    export TORCH_CUDA_ARCH_LIST="3.5;5.0+PTX"
+    if [[ ${cudatoolkit} == 9.0* ]]; then
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;7.0"
+    elif [[ ${cudatoolkit} == 9.2* ]]; then
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0"
+    elif [[ ${cudatoolkit} == 10.0* ]]; then
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5"
+    elif [[ ${cudatoolkit} == 10.1* ]]; then
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5"
+    fi
+    export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+    export NCCL_ROOT_DIR=/usr/local/cuda
+    export USE_STATIC_NCCL=1
+    export CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
+    export MAGMA_HOME="${PREFIX}"
+else
+    export BLAS="MKL"
+    export USE_CUDA=0
+    export USE_MKLDNN=1
+    export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
+fi
+
+export CMAKE_BUILD_TYPE=Release
+export CMAKE_CXX_STANDARD=14
+
+python  -m pip install . --no-deps -vvv
