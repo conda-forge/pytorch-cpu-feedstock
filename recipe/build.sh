@@ -1,3 +1,6 @@
+export CFLAGS="-D__STDC_LIMIT_MACROS=1 -D__STDC_CONSTANT_MACROS=1 -D__STDC_FORMAT_MACROS=1 $CFLAGS"
+export CXXFLAGS="-D__STDC_LIMIT_MACROS=1 -D__STDC_CONSTANT_MACROS=1 -D__STDC_FORMAT_MACROS=1 $CXXFLAGS"
+
 # Most of this script is adapted from the pytorch/pythorch-cpu
 # During verion 1.1. Maybe it is time to update it?
 # meta.yaml.template build.sh and bld.bat scripts
