@@ -6,6 +6,8 @@ channel_targets:
 - conda-forge main
 cxx_compiler:
 - vs2017
+numpy:
+- '1.16'
 pin_run_as_build:
   python:
     min_pin: x.x
