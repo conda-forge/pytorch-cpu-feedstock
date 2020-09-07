@@ -3,15 +3,15 @@
 set TN_BINARY_BUILD=1
 set PYTORCH_BINARY_BUILD=1
 set NO_CUDA=1
-set PYTORCH_BUILD_VERSION={{ PKG_VERSION }}
-set PYTORCH_BUILD_NUMBER={{ PKG_BUILDNUM }}
+set PYTORCH_BUILD_VERSION=%PKG_VERSION%
+set PYTORCH_BUILD_NUMBER=%PKG_BUILDNUM%
 set BUILD_CUSTOM_PROTOBUF=ON
 # Use ninja as the build just won't finish on windows
 set CMAKE_GENERATOR=Ninja
 # I have no idea what this flag does, but they recommend turning it on
 # when we don't find three of their headers.
 # It seemed to be required on Appveyor, but not azure, strange???
-# set GEN_TO_SOURCE=1                          # [win]
+# set GEN_TO_SOURCE=1
 # Why are all warnings treated as errors???
 # Disable this other 3rd party binary
 set NO_MKLDNN=1
