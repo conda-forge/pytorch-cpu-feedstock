@@ -19,7 +19,7 @@ macos_machine:
 mkl:
 - '2019'
 numpy:
-- '1.11'
+- '1.16'
 pin_run_as_build:
   mkl:
     max_pin: x
