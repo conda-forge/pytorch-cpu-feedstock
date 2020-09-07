@@ -73,10 +73,9 @@ requirements:
     - python
     - pip
     - pyyaml
-    - numpy 1.11
+    - numpy
     - setuptools
     - cffi
-    - typing  # [py <= 35]
     - ninja
     # 3rd party libraries that we are unbundling
     - pybind11
