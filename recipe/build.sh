@@ -8,9 +8,6 @@ rm -rf build
 # uncomment to debug cmake build
 #export CMAKE_VERBOSE_MAKEFILE=1
 
-export LDFLAGS="-Wl,-pie -Wl,-headerpad_max_install_names -Wl,-rpath,$PREFIX/lib -L$PREFIX/lib"
-export LDFLAGS_LD="-Wl,-pie -Wl,-headerpad_max_install_names -Wl,-rpath,$PREFIX/lib -L$PREFIX/lib"
-
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
