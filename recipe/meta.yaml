@@ -27,12 +27,14 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - patch    # [not win]
+    - patch     # [not win]
     - m2-patch  # [win]
-    - git
+    - git       # [not win]
+    - m2-git    # [win]
   host:
     - cmake
-    - git
+    - git       # [not win]
+    - m2-git    # [win]
     # GPU requirements
     #- cudatoolkit {{ cudatoolkit }}*  # [pytorch_variant == "gpu"]
     #- cudnn {{ cudnn }}*              # [pytorch_variant == "gpu"]
