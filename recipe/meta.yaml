@@ -105,3 +105,4 @@ extra:
   recipe-maintainers:
     - hmaarrfk
     - sodre
+  feedstock-name: pytorch-cpu
