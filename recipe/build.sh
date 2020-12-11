@@ -10,6 +10,7 @@ rm -rf build
 
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
+export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
@@ -18,15 +19,6 @@ export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
-fi
-
-re='^(.*)-Wl,--as-needed(.*)$'
-if [[ ${LDFLAGS} =~ $re ]]; then
-  export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
-fi
-re='^(.*)-Wl,-dead_strip_dylins(.*)$'
-if [[ ${LDFLAGS} =~ $re ]]; then
-  export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
 fi
 
 # Dynamic libraries need to be lazily loaded so that torch
