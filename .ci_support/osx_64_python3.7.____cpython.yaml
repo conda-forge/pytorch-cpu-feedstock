@@ -8,8 +8,8 @@ channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
-cudatoolkit:
-- '10.1'
+cuda_compiler_version:
+- None
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
@@ -28,8 +28,6 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.7.* *_cpython
-pytorch_variant:
-- cpu
 target_platform:
 - osx-64
 zip_keys:
