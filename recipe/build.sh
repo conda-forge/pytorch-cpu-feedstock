@@ -56,15 +56,15 @@ CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++14}"
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
     export TORCH_CUDA_ARCH_LIST="3.5;5.0+PTX"
-    if [[ ${cudatoolkit} == 9.0* ]]; then
+    if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;7.0"
-    elif [[ ${cudatoolkit} == 9.2* ]]; then
+    elif [[ ${cuda_compiler_version} == 9.2* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0"
-    elif [[ ${cudatoolkit} == 10.* ]]; then
+    elif [[ ${cuda_compiler_version} == 10.* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5"
-    elif [[ $CUDA_VERSION == 11.0* ]]; then
+    elif [[ ${cuda_compiler_version} == 11.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5;8.0"
-    elif [[ $CUDA_VERSION == 11.1* ]]; then
+    elif [[ ${cuda_compiler_version} == 11.1* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5;8.0;8.6"
     else
         echo "unsupported cuda version. edit build.sh"
