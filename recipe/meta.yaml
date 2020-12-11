@@ -51,6 +51,7 @@ requirements:
     - cffi
     - mkl-devel {{ mkl }}
     - mkl {{ mkl }}
+    - libblas * *_mkl
     - typing
     - ninja
     - libuv       # [unix]
@@ -58,6 +59,7 @@ requirements:
     #- intel-openmp  # [osx]
   run:
     - mkl {{ mkl }}
+    - libblas * *_mkl
     #- intel-openmp   # [osx]
     - llvm-openmp    # [osx]
     #- _pytorch_select ==0.1             # [pytorch_variant == "cpu"]
