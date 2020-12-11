@@ -2,7 +2,8 @@
 {% set commit = "b31f58de6fa8bbda5353b3c77d9be4914399724d" %}
 
 package:
-  name: pytorch-{{ pytorch_variant }}
+  name: pytorch-cpu  # [cuda_compiler_version == "None"]
+  name: pytorch-gpu  # [cuda_compiler_version != "None"]
   version: {{ version }}
 
 source:
@@ -19,14 +20,15 @@ source:
 
 build:
   number: 0
-  string: cuda{{ cudatoolkit | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [pytorch_variant == "gpu"]
-  string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [pytorch_variant == "cpu"]
+  string: cuda{{ cudatoolkit | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+  string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: False
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}
     - patch     # [not win]
     - m2-patch  # [win]
     - git       # [not win]
@@ -36,9 +38,9 @@ requirements:
     - git       # [not win]
     - m2-git    # [win]
     # GPU requirements
-    #- cudatoolkit {{ cudatoolkit }}*  # [pytorch_variant == "gpu"]
-    #- cudnn {{ cudnn }}*              # [pytorch_variant == "gpu"]
-    #- magma                           # [pytorch_variant == "gpu"]
+    - cudnn                           # [cuda_compiler_version != "None"]
+    - nccl                            # [cuda_compiler_version != "None"]
+    - magma                           # [cuda_compiler_version != "None"]
     # other requirements
     - python
     - numpy
@@ -62,11 +64,10 @@ requirements:
     - libblas * *_mkl
     #- intel-openmp   # [osx]
     - llvm-openmp    # [osx]
-    #- _pytorch_select ==0.1             # [pytorch_variant == "cpu"]
-    #- _pytorch_select ==0.2             # [pytorch_variant == "gpu"]
-    # GPU requirements
-    #- {{ pin_compatible('cudatoolkit', max_pin='x.x') }}  # [pytorch_variant == "gpu"]
-    #- {{ pin_compatible('cudnn') }}                       # [pytorch_variant == "gpu"]
+    #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
+    #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
+    # GPU requirements without run_exports
+    - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
     # other requirements
     - python
     - {{ pin_compatible('numpy') }}
