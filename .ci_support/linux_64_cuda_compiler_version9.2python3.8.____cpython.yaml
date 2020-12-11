@@ -17,7 +17,7 @@ cudnn:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '9'
+- '7'
 docker_image:
 - quay.io/condaforge/linux-anvil-cuda:9.2
 mkl:
