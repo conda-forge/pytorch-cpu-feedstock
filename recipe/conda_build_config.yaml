@@ -4,5 +4,5 @@ mkl:
   - 2020
 c_compiler_version:  # [linux64]
   - 7                # [linux64]
-c_compiler_version:  # [linux64]
+cxx_compiler_version:  # [linux64]
   - 7                # [linux64]
