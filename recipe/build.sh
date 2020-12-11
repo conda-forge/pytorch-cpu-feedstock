@@ -16,6 +16,11 @@ export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 
+if [[ "$target_platform" == "osx-64" ]]; then
+  export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
+  export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
+fi
+
 re='^(.*)-Wl,--as-needed(.*)$'
 if [[ ${LDFLAGS} =~ $re ]]; then
   export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
