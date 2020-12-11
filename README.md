@@ -5,11 +5,9 @@ Home: https://pytorch.org/
 
 Package license: BSD-3-Clause
 
-Feedstock license: BSD-3-Clause
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/pytorch-cpu-feedstock/blob/master/LICENSE.txt)
 
 Summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
-
-
 
 Current build status
 ====================

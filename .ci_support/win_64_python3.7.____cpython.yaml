@@ -26,3 +26,6 @@ pytorch_variant:
 - cpu
 target_platform:
 - win-64
+zip_keys:
+- - python
+  - numpy
