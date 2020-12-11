@@ -27,16 +27,16 @@ build:
   detect_binary_files_with_prefix: False
 
 requirements:
-  #build:
+  build:
     # For some reason things don't work with git
     # - patch    # [not win]
     # - m2-patch  # [win]
     # - git
-  host:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
     - make  # [unix]
+  host:
     # GPU requirements
     #- cudatoolkit {{ cudatoolkit }}*  # [pytorch_variant == "gpu"]
     #- cudnn {{ cudnn }}*              # [pytorch_variant == "gpu"]
@@ -57,11 +57,10 @@ requirements:
     - ninja
     - libuv       # [unix]
     - pkg-config  # [unix]
-    - intel-openmp  # [osx]
+    - llvm-openmp  # [osx]
   run:
     - mkl {{ mkl }}
     - libmklml
-    - intel-openmp   # [osx]
     - llvm-openmp    # [osx]
     #- _pytorch_select ==0.1             # [pytorch_variant == "cpu"]
     #- _pytorch_select ==0.2             # [pytorch_variant == "gpu"]
