@@ -2,7 +2,7 @@
 {% set commit = "b31f58de6fa8bbda5353b3c77d9be4914399724d" %}
 
 package:
-  name: pytorch
+  name: pytorch-{{ pytorch_variant }}
   version: {{ version }}
 
 source:
