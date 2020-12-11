@@ -2,8 +2,7 @@
 {% set commit = "b31f58de6fa8bbda5353b3c77d9be4914399724d" %}
 
 package:
-  name: pytorch-cpu  # [cuda_compiler_version == "None"]
-  name: pytorch-gpu  # [cuda_compiler_version != "None"]
+  name: pytorch-recipe
   version: {{ version }}
 
 source:
@@ -20,79 +19,98 @@ source:
 
 build:
   number: 0
-  string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-  string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
-  detect_binary_files_with_prefix: False
 
-requirements:
-  build:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
-    - patch     # [not win]
-    - m2-patch  # [win]
-    - git       # [not win]
-    - m2-git    # [win]
-  host:
-    - cmake
-    - git       # [not win]
-    - m2-git    # [win]
-    # GPU requirements
-    - cudnn                           # [cuda_compiler_version != "None"]
-    - nccl                            # [cuda_compiler_version != "None"]
-    - magma                           # [cuda_compiler_version != "None"]
-    # other requirements
-    - python
-    - numpy
-    - pip
-    - setuptools
-    - pyyaml
-    - requests
-    - future
-    - six
-    - cffi
-    - mkl-devel {{ mkl }}
-    - mkl {{ mkl }}
-    - libblas * *_mkl
-    - typing
-    - ninja
-    - libuv       # [unix]
-    - pkg-config  # [unix]
-    #- intel-openmp  # [osx]
-  run:
-    - mkl {{ mkl }}
-    - libblas * *_mkl
-    #- intel-openmp   # [osx]
-    - llvm-openmp    # [osx]
-    #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
-    #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
-    # GPU requirements without run_exports
-    - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
-    # other requirements
-    - python
-    - {{ pin_compatible('numpy') }}
-    - cffi
-    - ninja
-    - future  # [py2k]
-    - typing  # [py2k]
+outputs:
+  - name: pytorch
+    build:
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+      detect_binary_files_with_prefix: False
 
-test:
-  requires:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - setuptools
-    - hypothesis
-    - pytest
-    - tabulate
-    - pydot
-    - mock  # [linux]
-  imports:
-    - torch
-  source_files:
-    - test
-  commands:
-    - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
-    - python ./test/run_test.py  # [win]
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+        - patch     # [not win]
+        - m2-patch  # [win]
+        - git       # [not win]
+        - m2-git    # [win]
+      host:
+        - cmake
+        - git       # [not win]
+        - m2-git    # [win]
+        # GPU requirements
+        - cudnn                           # [cuda_compiler_version != "None"]
+        - nccl                            # [cuda_compiler_version != "None"]
+        - magma                           # [cuda_compiler_version != "None"]
+        # other requirements
+        - python
+        - numpy
+        - pip
+        - setuptools
+        - pyyaml
+        - requests
+        - future
+        - six
+        - cffi
+        - mkl-devel {{ mkl }}
+        - mkl {{ mkl }}
+        - libblas * *_mkl
+        - typing
+        - ninja
+        - libuv       # [unix]
+        - pkg-config  # [unix]
+        #- intel-openmp  # [osx]
+      run:
+        - mkl {{ mkl }}
+        - libblas * *_mkl
+        #- intel-openmp   # [osx]
+        - llvm-openmp    # [osx]
+        #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
+        #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
+        # GPU requirements without run_exports
+        - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
+        # other requirements
+        - python
+        - {{ pin_compatible('numpy') }}
+        - cffi
+        - ninja
+        - future  # [py2k]
+        - typing  # [py2k]
+
+    test:
+      requires:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - setuptools
+        - hypothesis
+        - pytest
+        - tabulate
+        - pydot
+        - mock  # [linux]
+      imports:
+        - torch
+      source_files:
+        - test
+      commands:
+        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
+        - python ./test/run_test.py  # [win]
+
+  - name: pytorch-cpu   # [cuda_compiler_version == 'None']
+  - name: pytorch-gpu   # [cuda_compiler_version == 'None']
+    build:
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+      detect_binary_files_with_prefix: False
+      # weigh down cpu implementation and give cuda preference
+      track_features: pytorch-cpu                                      # [cuda_compiler_version == "None"]
+    requirements:
+      run:
+        - {{ pin_subpackage("pytorch", exact=True) }}
+    test:
+      commands:
+        - echo "hello world"
 
 about:
   home: http://pytorch.org/
