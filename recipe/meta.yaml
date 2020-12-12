@@ -27,12 +27,17 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    # Dec 2020: it seems that git is broken on windows, so we use m2-git
     - patch     # [not win]
     - m2-patch  # [win]
     - git       # [not win]
     - m2-git    # [win]
   host:
+    # For some reason cmake and ninja need to be installed
+    # alongside python in the host
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/21#discussion_r541397252
     - cmake
+    - ninja
     - git       # [not win]
     - m2-git    # [win]
     # GPU requirements
@@ -53,7 +58,6 @@ requirements:
     - mkl {{ mkl }}
     - libblas * *_mkl
     - typing
-    - ninja
     - libuv       # [unix]
     - pkg-config  # [unix]
     #- intel-openmp  # [osx]
@@ -71,6 +75,8 @@ requirements:
     - python
     - {{ pin_compatible('numpy') }}
     - cffi
+    # TODO: check if ninja is required in the run section, but it seems like
+    # it might be
     - ninja
     - future  # [py2k]
     - typing  # [py2k]
@@ -94,7 +100,7 @@ test:
     - python ./test/run_test.py  # [win]
 
 about:
-  home: http://pytorch.org/
+  home: https://pytorch.org/
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
