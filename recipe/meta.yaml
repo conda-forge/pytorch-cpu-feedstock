@@ -10,12 +10,18 @@ source:
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: {{ commit }}
   patches:
-    - nccl_socket.patch
-    - remove_shared_linker_flag_override.patch
+    # https://github.com/pytorch/pytorch/pull/49281
     - fix_std_stdint.patch
+    # cpp_extension patch does not apply cleanly on master
+    # we should try to upstream again on the next version
+    - cpp_extension.patch
+    # It is unclear that upstream will allow us to integrate the 
+    # shared linker path bellow until their intel compiler issues
+    # are resolved.
+    - remove_shared_linker_flag_override.patch
+    - nccl_socket.patch
     - fix_dispatch_apply_auto.patch
     - fix_map_anonymous.patch
-    - cpp_extension.patch
 
 build:
   number: 0
