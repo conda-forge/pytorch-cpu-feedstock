@@ -75,9 +75,6 @@ requirements:
     - python
     - {{ pin_compatible('numpy') }}
     - cffi
-    # TODO: check if ninja is required in the run section, but it seems like
-    # it might be
-    - ninja
     - future  # [py2k]
     - typing  # [py2k]
 
