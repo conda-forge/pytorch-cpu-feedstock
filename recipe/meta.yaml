@@ -1,110 +1,113 @@
-{% set version = "1.1.0" %}
+{% set version = "1.6.0" %}
+{% set commit = "b31f58de6fa8bbda5353b3c77d9be4914399724d" %}
 
 package:
-  name: pytorch-cpu
+  name: pytorch-{{ pytorch_variant }}
   version: {{ version }}
 
 source:
-  # The tar source needs serious patching since it is trying to build
-  # all 3rd party modules
-  # url: https://github.com/pytorch/pytorch/archive/v{{ version }}.tar.gz
-  # fn: pytorch-v{{ version }}.tar.gz
-  # sha256: f360b7954e441bc5c4b36c49e711697a5c351de8b146c2982809385e3b3cfdcb
+  # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
-  git_tag: v{{ version }}
-
-# The build needs to set many environment variables
-# This is an easy way to do it cross platform
-{% set export = "export" %}  # [not win]
-{% set export = "set" %}     # [win]
+  git_tag: {{ commit }}
+  patches:
+    # https://github.com/pytorch/pytorch/pull/49281
+    - fix_std_stdint.patch
+    # cpp_extension patch does not apply cleanly on master
+    # we should try to upstream again on the next version
+    - cpp_extension.patch
+    # It is unclear that upstream will allow us to integrate the 
+    # shared linker path bellow until their intel compiler issues
+    # are resolved.
+    - remove_shared_linker_flag_override.patch
+    - nccl_socket.patch
+    - fix_dispatch_apply_auto.patch
+    - fix_map_anonymous.patch
 
 build:
   number: 0
-  # Support for Windows and Python 2.7 is very experimental
-  # https://ci.appveyor.com/project/conda-forge/staged-recipes/builds/21220961#L972
-  skip: true  # [win and py27]
-  script:
-    # Most of this script is adapted from the pytorch/pythorch-cpu
-    # meta.yaml.template build.sh and bld.bat scripts
-    - {{ export }} TN_BINARY_BUILD=1
-    - {{ export }} PYTORCH_BINARY_BUILD=1
-    - {{ export }} NO_CUDA=1
-    - {{ export }} PYTORCH_BUILD_VERSION={{ PKG_VERSION }}
-    - {{ export }} PYTORCH_BUILD_NUMBER={{ PKG_BUILDNUM }}
-    - {{ export }} BUILD_CUSTOM_PROTOBUF=ON
-    # Use ninja as the build just won't finish on windows
-    - {{ export }} CMAKE_GENERATOR=Ninja
-    # I have no idea what this flag does, but they recommend turning it on
-    # when we don't find three of their headers.
-    # It seemed to be required on Appveyor, but not azure, strange???
-    # - {{ export }} GEN_TO_SOURCE=1                          # [win]
-    # Why are all warnings treated as errors???
-    - export CXXFLAGS="-Wno-error=unused-result $CXXFLAGS"  # [linux]
-    - export CFLAGS="-Wno-error=unused-result $CFLAGS"      # [linux]
-    # Disable this other 3rd party binary
-    - {{ export }} NO_MKLDNN=1
-    # - {{ export }} NO_TEST=1
-    # I couldn't find any documentation on this, but eventually they call
-    # a script tools/build_pytorch_libs.sh
-    # whcih passes EXTRA_CAFFE2_CMAKE_FLAGS at the end of the cmake command
-    # to all 3rd party libraries.
-    - {{ export }} EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_MPI=OFF -DUSE_NUMA=OFF -DUSE_NCCL=OFF -DATEN_NO_TEST=OFF"
-    # Why do I need to export these?
-    #
-    # The CMake for onnx reports:
-    # therefore, it clearly has a bug somewhere
-    # --   Protobuf compiler     : /home/mark2/miniconda3/envs/compile/bin/protoc
-    # --   Protobuf includes     : /usr/include
-    # --   Protobuf libraries    : /home/mark2/miniconda3/envs/compile/lib/libprotobuf.so;-lpthread
-    - export CXXFLAGS="-I{{ PREFIX }}/include/ $CXXFLAGS"  # [unix]
-    - export CFLAGS="-I{{ PREFIX }}/include/ $CFLAGS"  # [unix]
-    # How do we add /std:c++11 to windows CFLAGS
-    # There is an other weird python package called ninja
-    # which is their preferred method of building
-    # that said, it does nothing but call "ninja"
-    # - pip install ninja
-    - "{{ PYTHON }} -m pip install . --no-deps -vv --disable-pip-version-check"
+  string: cuda{{ cudatoolkit | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [pytorch_variant == "gpu"]
+  string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [pytorch_variant == "cpu"]
+  detect_binary_files_with_prefix: False
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    # Dec 2020: it seems that git is broken on windows, so we use m2-git
+    - patch     # [not win]
+    - m2-patch  # [win]
+    - git       # [not win]
+    - m2-git    # [win]
+  host:
+    # For some reason cmake and ninja need to be installed
+    # alongside python in the host
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/21#discussion_r541397252
     - cmake
     - ninja
-    - make  # [unix]
-  host:
+    - git       # [not win]
+    - m2-git    # [win]
+    # GPU requirements
+    #- cudatoolkit {{ cudatoolkit }}*  # [pytorch_variant == "gpu"]
+    #- cudnn {{ cudnn }}*              # [pytorch_variant == "gpu"]
+    #- magma                           # [pytorch_variant == "gpu"]
+    # other requirements
     - python
+    - numpy
     - pip
-    - pyyaml
-    - numpy 1.11
     - setuptools
+    - pyyaml
+    - requests
+    - future
+    - six
     - cffi
-    - typing  # [py <= 35]
-    - ninja
-    # 3rd party libraries that we are unbundling
-    - pybind11
-    # They seem to be pinned to something like protobuf 3.5
-    # maybe we can remove this pin?
-    # - protobuf  #  3.5
+    - mkl-devel {{ mkl }}
+    - mkl {{ mkl }}
+    - libblas * *_mkl
+    - typing
+    - libuv       # [unix]
+    - pkg-config  # [unix]
+    #- intel-openmp  # [osx]
   run:
+    - mkl {{ mkl }}
+    - libblas * *_mkl
+    #- intel-openmp   # [osx]
+    - llvm-openmp    # [osx]
+    #- _pytorch_select ==0.1             # [pytorch_variant == "cpu"]
+    #- _pytorch_select ==0.2             # [pytorch_variant == "gpu"]
+    # GPU requirements
+    #- {{ pin_compatible('cudatoolkit', max_pin='x.x') }}  # [pytorch_variant == "gpu"]
+    #- {{ pin_compatible('cudnn') }}                       # [pytorch_variant == "gpu"]
+    # other requirements
     - python
     - {{ pin_compatible('numpy') }}
-    # ninja and cffi are included in
-    - ninja
     - cffi
-    - future  # [py==27]
+    - future  # [py2k]
+    - typing  # [py2k]
 
 test:
+  requires:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - setuptools
+    - hypothesis
+    - pytest
+    - tabulate
+    - pydot
+    - mock  # [linux]
   imports:
     - torch
-    # Maybe we should have a test for a simple Neural Network???
+  source_files:
+    - test
+  commands:
+    - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
+    - python ./test/run_test.py  # [win]
 
 about:
   home: https://pytorch.org/
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
-  summary: "PyTorch is an optimized tensor library for deep learning using GPUs and CPUs."
+  summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
 
 extra:
   recipe-maintainers:

@@ -3,22 +3,37 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 c_compiler_version:
-- '4'
+- '11'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
+cudatoolkit:
+- '10.1'
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '4'
+- '11'
 macos_machine:
 - x86_64-apple-darwin13.4.0
-macos_min_version:
-- '10.9'
+mkl:
+- '2020'
+numpy:
+- '1.16'
 pin_run_as_build:
+  mkl:
+    max_pin: x
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- '3.7'
+- 3.8.* *_cpython
+pytorch_variant:
+- cpu
+target_platform:
+- osx-64
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
+- - python
+  - numpy

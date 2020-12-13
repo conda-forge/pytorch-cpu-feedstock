@@ -13,6 +13,10 @@ PROVIDER_DIR="$(basename $THISDIR)"
 FEEDSTOCK_ROOT=$(cd "$(dirname "$0")/.."; pwd;)
 RECIPE_ROOT="${FEEDSTOCK_ROOT}/recipe"
 
+if [ -z ${FEEDSTOCK_NAME} ]; then
+    export FEEDSTOCK_NAME=$(basename ${FEEDSTOCK_ROOT})
+fi
+
 docker info
 
 # In order for the conda-build process in the container to write to the mounted
@@ -39,7 +43,7 @@ if [ -z "$CONFIG" ]; then
 fi
 
 if [ -z "${DOCKER_IMAGE}" ]; then
-    SHYAML_INSTALLED="$(shyaml --version || echo NO)"
+    SHYAML_INSTALLED="$(shyaml -h || echo NO)"
     if [ "${SHYAML_INSTALLED}" == "NO" ]; then
         echo "WARNING: DOCKER_IMAGE variable not set and shyaml not installed. Falling back to condaforge/linux-anvil-comp7"
         DOCKER_IMAGE="condaforge/linux-anvil-comp7"
@@ -52,19 +56,29 @@ mkdir -p "$ARTIFACTS"
 DONE_CANARY="$ARTIFACTS/conda-forge-build-done-${CONFIG}"
 rm -f "$DONE_CANARY"
 
+# Allow people to specify extra default arguments to `docker run` (e.g. `--rm`)
+DOCKER_RUN_ARGS="${CONDA_FORGE_DOCKER_RUN_ARGS}"
 if [ -z "${CI}" ]; then
-    DOCKER_RUN_ARGS="-it "
+    DOCKER_RUN_ARGS="-it ${DOCKER_RUN_ARGS}"
 fi
 
 export UPLOAD_PACKAGES="${UPLOAD_PACKAGES:-True}"
 docker run ${DOCKER_RUN_ARGS} \
-           -v "${RECIPE_ROOT}":/home/conda/recipe_root:ro,z \
+           -v "${RECIPE_ROOT}":/home/conda/recipe_root:rw,z \
            -v "${FEEDSTOCK_ROOT}":/home/conda/feedstock_root:rw,z \
            -e CONFIG \
-           -e BINSTAR_TOKEN \
            -e HOST_USER_ID \
            -e UPLOAD_PACKAGES \
+           -e GIT_BRANCH \
+           -e UPLOAD_ON_BRANCH \
            -e CI \
+           -e FEEDSTOCK_NAME \
+           -e CPU_COUNT \
+           -e BUILD_WITH_CONDA_DEBUG \
+           -e BUILD_OUTPUT_ID \
+           -e BINSTAR_TOKEN \
+           -e FEEDSTOCK_TOKEN \
+           -e STAGING_BINSTAR_TOKEN \
            $DOCKER_IMAGE \
            bash \
            /home/conda/feedstock_root/${PROVIDER_DIR}/build_steps.sh
