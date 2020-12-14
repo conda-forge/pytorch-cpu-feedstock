@@ -41,7 +41,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     exit 0
 fi
 
-# std=c++11 is required to compile some .cu files
+# std=c++14 is required to compile some .cu files
 CPPFLAGS="${CPPFLAGS//-std=c++17/-std=c++14}"
 CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++14}"
 

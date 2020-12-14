@@ -10,12 +10,18 @@ source:
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: {{ commit }}
   patches:
-    - nccl_socket.patch
-    - remove_shared_linker_flag_override.patch
+    # https://github.com/pytorch/pytorch/pull/49281
     - fix_std_stdint.patch
+    # cpp_extension patch does not apply cleanly on master
+    # we should try to upstream again on the next version
+    - cpp_extension.patch
+    # It is unclear that upstream will allow us to integrate the 
+    # shared linker path bellow until their intel compiler issues
+    # are resolved.
+    - remove_shared_linker_flag_override.patch
+    - nccl_socket.patch
     - fix_dispatch_apply_auto.patch
     - fix_map_anonymous.patch
-    - cpp_extension.patch
 
 build:
   number: 0
@@ -33,6 +39,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+        # Dec 2020: it seems that git is broken on windows, so we use m2-git
         - patch     # [not win]
         - m2-patch  # [win]
         - git       # [not win]
@@ -40,9 +47,13 @@ outputs:
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
       host:
+        # For some reason cmake and ninja need to be installed
+        # alongside python in the host
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/21#discussion_r541397252
         - cmake
         - git       # [not win]
         - m2-git    # [win]
+        - ninja
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None"]
@@ -61,7 +72,6 @@ outputs:
         - mkl {{ mkl }}
         - libblas * *_mkl
         - typing
-        - ninja
         - libuv       # [unix]
         - pkg-config  # [unix]
       run:
@@ -77,7 +87,6 @@ outputs:
         - python
         - {{ pin_compatible('numpy') }}
         - cffi
-        - ninja
         - future  # [py2k]
         - typing  # [py2k]
 
@@ -116,7 +125,7 @@ outputs:
         - echo "hello world"
 
 about:
-  home: http://pytorch.org/
+  home: https://pytorch.org/
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
