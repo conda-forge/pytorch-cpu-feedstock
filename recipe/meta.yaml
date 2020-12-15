@@ -81,7 +81,9 @@ requirements:
     - python
     - {{ pin_compatible('numpy') }}
     - cffi
-    - future  # [py2k]
+    # if future isn't installed on python 3, `pip check` can give
+    # the user an error
+    - future
     - typing  # [py2k]
 
 test:
@@ -101,6 +103,9 @@ test:
   commands:
     - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
     - python ./test/run_test.py  # [win]
+    # Run pip check so as to ensure that all pytorch packages are installed
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
+    - pip check
 
 about:
   home: https://pytorch.org/
