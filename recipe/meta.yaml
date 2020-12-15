@@ -24,7 +24,7 @@ source:
     - fix_map_anonymous.patch
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: pytorch
@@ -87,8 +87,12 @@ outputs:
         - python
         - {{ pin_compatible('numpy') }}
         - cffi
-        - future  # [py2k]
+        # if future isn't installed on python 3, `pip check` can give
+        # the user an error
+        - future
         - typing  # [py2k]
+        # Need ninja to load C++ extensions
+        - ninja
 
     test:
       requires:
@@ -100,6 +104,7 @@ outputs:
         - tabulate
         - pydot
         - mock  # [linux]
+        - pip
       imports:
         - torch
       source_files:
@@ -107,6 +112,9 @@ outputs:
       commands:
         - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
         - python ./test/run_test.py  # [win]
+        # Run pip check so as to ensure that all pytorch packages are installed
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
+        - pip check
 
   - name: pytorch-cpu   # [cuda_compiler_version == "None"]
   - name: pytorch-gpu   # [cuda_compiler_version != "None"]
