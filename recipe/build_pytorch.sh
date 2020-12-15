@@ -45,6 +45,8 @@ fi
 CPPFLAGS="${CPPFLAGS//-std=c++17/-std=c++14}"
 CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++14}"
 
+export MAX_JOBS=${CPU_COUNT}
+
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
     export TORCH_CUDA_ARCH_LIST="3.5;5.0+PTX"
