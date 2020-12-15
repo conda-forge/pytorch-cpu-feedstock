@@ -24,7 +24,7 @@ source:
     - fix_map_anonymous.patch
 
 build:
-  number: 0
+  number: 1
   string: cuda{{ cudatoolkit | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [pytorch_variant == "gpu"]
   string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [pytorch_variant == "cpu"]
   detect_binary_files_with_prefix: False
@@ -81,8 +81,12 @@ requirements:
     - python
     - {{ pin_compatible('numpy') }}
     - cffi
-    - future  # [py2k]
+    # if future isn't installed on python 3, `pip check` can give
+    # the user an error
+    - future
     - typing  # [py2k]
+    # Need ninja to load C++ extensions
+    - ninja
 
 test:
   requires:
@@ -94,6 +98,7 @@ test:
     - tabulate
     - pydot
     - mock  # [linux]
+    - pip
   imports:
     - torch
   source_files:
@@ -101,6 +106,9 @@ test:
   commands:
     - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
     - python ./test/run_test.py  # [win]
+    # Run pip check so as to ensure that all pytorch packages are installed
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
+    - pip check
 
 about:
   home: https://pytorch.org/
