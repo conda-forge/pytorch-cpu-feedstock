@@ -10,6 +10,7 @@ rm -rf build
 
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
+export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
@@ -18,15 +19,6 @@ export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
-fi
-
-re='^(.*)-Wl,--as-needed(.*)$'
-if [[ ${LDFLAGS} =~ $re ]]; then
-  export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
-fi
-re='^(.*)-Wl,-dead_strip_dylins(.*)$'
-if [[ ${LDFLAGS} =~ $re ]]; then
-  export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
 fi
 
 # Dynamic libraries need to be lazily loaded so that torch
@@ -53,22 +45,30 @@ fi
 CPPFLAGS="${CPPFLAGS//-std=c++17/-std=c++14}"
 CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++14}"
 
-if [[ ${pytorch_variant} = "gpu" ]]; then
+export MAX_JOBS=${CPU_COUNT}
+
+if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
     export TORCH_CUDA_ARCH_LIST="3.5;5.0+PTX"
-    if [[ ${cudatoolkit} == 9.0* ]]; then
+    if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;7.0"
-    elif [[ ${cudatoolkit} == 9.2* ]]; then
+    elif [[ ${cuda_compiler_version} == 9.2* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0"
-    elif [[ ${cudatoolkit} == 10.0* ]]; then
+    elif [[ ${cuda_compiler_version} == 10.* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5"
-    elif [[ ${cudatoolkit} == 10.1* ]]; then
-        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5"
+    elif [[ ${cuda_compiler_version} == 11.0* ]]; then
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5;8.0"
+    elif [[ ${cuda_compiler_version} == 11.1* ]]; then
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5;8.0;8.6"
+    else
+        echo "unsupported cuda version. edit build.sh"
+        exit 1
     fi
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-    export NCCL_ROOT_DIR=/usr/local/cuda
-    export USE_STATIC_NCCL=1
-    export CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
+    export NCCL_ROOT_DIR=$PREFIX
+    export USE_STATIC_NCCL=0
+    export USE_STATIC_CUDNN=0
+    export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
     export MAGMA_HOME="${PREFIX}"
 else
     export BLAS="MKL"
