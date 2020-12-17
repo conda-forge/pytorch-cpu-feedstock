@@ -1,5 +1,5 @@
-{% set version = "1.6.0" %}
-{% set commit = "b31f58de6fa8bbda5353b3c77d9be4914399724d" %}
+{% set version = "1.7.1" %}
+{% set commit = "57bffc3a8e4fee0cce31e1ff1f662ccf7b16db57" %}
 
 package:
   name: pytorch-recipe
