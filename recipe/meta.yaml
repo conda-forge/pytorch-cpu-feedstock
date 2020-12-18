@@ -61,6 +61,8 @@ outputs:
         # other requirements
         - python
         - numpy
+        # OSX Build for Python 3.6 seems to require dataclasses
+        - dataclasses
         - pip
         - setuptools
         - pyyaml
