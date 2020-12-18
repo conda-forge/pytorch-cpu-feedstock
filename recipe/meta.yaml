@@ -61,8 +61,8 @@ outputs:
         # other requirements
         - python
         - numpy
-        # OSX Build for Python 3.6 seems to require dataclasses
-        - dataclasses
+        # dataclasses is a backport of python 3.7 module
+        - dataclasses   # [py==36]
         - pip
         - setuptools
         - pyyaml
@@ -87,6 +87,7 @@ outputs:
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
         - python
+        - dataclasses   # [py==36]
         - {{ pin_compatible('numpy') }}
         - cffi
         # if future isn't installed on python 3, `pip check` can give
