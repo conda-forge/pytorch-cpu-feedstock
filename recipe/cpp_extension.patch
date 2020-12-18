@@ -6,8 +6,8 @@ index 1178fcd..3276e00 100644
          else:
              original_compile = self.compiler._compile
  
--        def append_std14_if_no_std_present(cflags):
-+        def append_std14_if_no_std_present(cflags, with_cuda):
+-        def append_std14_if_no_std_present(cflags) -> None:
++        def append_std14_if_no_std_present(cflags, with_cuda) -> None:
              # NVCC does not allow multiple -std to be passed, so we avoid
              # overriding the option if the user explicitly passed it.
 +            if with_cuda:
