@@ -28,6 +28,16 @@ LDFLAGS="${LDFLAGS//-Wl,-z,now/-Wl,-z,lazy}"
 export CMAKE_SYSROOT=$CONDA_BUILD_SYSROOT
 export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
 export CMAKE_PREFIX_PATH=$PREFIX
+for ARG in $CMAKE_ARGS; do
+  if [[ "$ARG" == "-DCMAKE_"* ]]; then
+    cmake_arg=$(echo $ARG | cut -d= -f1)
+    cmake_arg=$(echo $cmake_arg| cut -dD -f2-)
+    cmake_val=$(echo $ARG | cut -d= -f2-)
+    printf -v $cmake_arg "$cmake_val"
+    export ${cmake_arg}
+  fi
+done
+unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
@@ -35,9 +45,22 @@ export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 export USE_NINJA=OFF
 export INSTALL_TEST=0
 
+export USE_SYSTEM_SLEEF=1
+export BUILD_CUSTOM_PROTOBUF=OFF
+rm -rf $PREFIX/bin/protoc
+
+if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
+    export COMPILER_WORKS_EXITCODE=0
+    export COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT=""
+fi
+
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    python -m pip install . --no-deps -vv
+    if [[ "$target_platform" == "osx-arm64" ]]; then
+        export BLAS=OpenBLAS
+        export USE_MKLDNN=0
+    fi
+    python -m pip install -e . --no-deps -vv
     exit 0
 fi
 
@@ -71,7 +94,9 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
     export MAGMA_HOME="${PREFIX}"
 else
-    export BLAS="MKL"
+    if [[ "$target_platform" == *-64 ]]; then
+      export BLAS="MKL"
+    fi
     export USE_CUDA=0
     export USE_MKLDNN=1
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
@@ -80,4 +105,4 @@ fi
 export CMAKE_BUILD_TYPE=Release
 export CMAKE_CXX_STANDARD=14
 
-python  -m pip install . --no-deps -vvv
+python  -m pip install -e . --no-deps -vvv --no-clean

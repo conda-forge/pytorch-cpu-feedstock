@@ -42,6 +42,8 @@ set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
 set CMAKE_GENERATOR=Ninja
 set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
 set "libuv_ROOT=%LIBRARY_PREFIX%"
+set "USE_SYSTEM_SLEEF=OFF"
+set "BUILD_CUSTOM_PROTOBUF=OFF"
 
 %PYTHON% -m pip install . --no-deps -vv
 if errorlevel 1 exit /b 1
