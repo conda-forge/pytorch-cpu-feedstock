@@ -46,8 +46,12 @@ export USE_NINJA=OFF
 export INSTALL_TEST=0
 
 export USE_SYSTEM_SLEEF=1
+# use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
+
+# I don't know where this folder comes from, but it's interfering with the build in osx-64
+rm -rf $PREFIX/git
 
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export COMPILER_WORKS_EXITCODE=0
