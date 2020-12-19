@@ -60,7 +60,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export BLAS=OpenBLAS
         export USE_MKLDNN=0
     fi
-    python -m pip install -e . --no-deps -vv
+    $PYTHON -m pip install -e . --no-deps -vv
     exit 0
 fi
 
@@ -105,4 +105,4 @@ fi
 export CMAKE_BUILD_TYPE=Release
 export CMAKE_CXX_STANDARD=14
 
-python  -m pip install -e . --no-deps -vvv --no-clean
+$PYTHON -m pip install -e . --no-deps -vvv --no-clean
