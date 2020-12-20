@@ -46,6 +46,7 @@ outputs:
         - m2-git    # [win]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
+        - clang     # [win]
       host:
         # For some reason cmake and ninja need to be installed
         # alongside python in the host
