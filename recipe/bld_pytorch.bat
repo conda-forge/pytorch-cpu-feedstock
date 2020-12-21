@@ -28,8 +28,6 @@ set DISTUTILS_USE_SDK=1
 
 set CMAKE_INCLUDE_PATH=%LIBRARY_PREFIX%\include
 set LIB=%LIBRARY_PREFIX%\lib;%LIB%
-set CC=clang-cl.exe
-set CXX=clang-cl.exe
 
 IF "%build_with_cuda%" == "" goto cuda_end
 
