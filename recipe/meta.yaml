@@ -22,6 +22,7 @@ source:
     - nccl_socket.patch
     - fix_dispatch_apply_auto.patch
     - fix_map_anonymous.patch
+    - fix_msvc_build_issue.diff
 
 build:
   number: 1
