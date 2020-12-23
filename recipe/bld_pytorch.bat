@@ -40,7 +40,8 @@ set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
 :cuda_end
 
 set CMAKE_GENERATOR=Ninja
-set CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%
+set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
+set "libuv_ROOT=%LIBRARY_PREFIX%"
 
 %PYTHON% -m pip install . --no-deps -vv
 if errorlevel 1 exit /b 1

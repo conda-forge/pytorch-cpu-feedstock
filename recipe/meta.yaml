@@ -1,5 +1,5 @@
-{% set version = "1.6.0" %}
-{% set commit = "b31f58de6fa8bbda5353b3c77d9be4914399724d" %}
+{% set version = "1.7.1" %}
+{% set commit = "57bffc3a8e4fee0cce31e1ff1f662ccf7b16db57" %}
 
 package:
   name: pytorch-recipe
@@ -22,6 +22,7 @@ source:
     - nccl_socket.patch
     - fix_dispatch_apply_auto.patch
     - fix_map_anonymous.patch
+    - fix_msvc_build_issue.diff
 
 build:
   number: 1
@@ -61,6 +62,8 @@ outputs:
         # other requirements
         - python
         - numpy
+        # dataclasses is a backport of python 3.7 module
+        - dataclasses   # [py==36]
         - pip
         - setuptools
         - pyyaml
@@ -72,7 +75,7 @@ outputs:
         - mkl {{ mkl }}
         - libblas * *_mkl
         - typing
-        - libuv       # [unix]
+        - libuv
         - pkg-config  # [unix]
       run:
         - mkl {{ mkl }}
@@ -85,6 +88,7 @@ outputs:
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
         - python
+        - dataclasses   # [py==36]
         - {{ pin_compatible('numpy') }}
         - cffi
         # if future isn't installed on python 3, `pip check` can give
