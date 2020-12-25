@@ -1,0 +1,16 @@
+# Part of https://github.com/pytorch/pytorch/commit/1eed54d17a8ae686c79ce716db35bc6ead97c4cd
+
+diff --git a/aten/src/ATen/native/CompositeRandomAccessorCommon.h b/aten/src/ATen/native/CompositeRandomAccessorCommon.h
+index 256ae5b0d98fb..683af2b4d4264 100644
+--- a/aten/src/ATen/native/CompositeRandomAccessorCommon.h
++++ b/aten/src/ATen/native/CompositeRandomAccessorCommon.h
+@@ -129,7 +129,7 @@ class CompositeRandomAccessor {
+ 
+   // Pointer-like operations {
+   C10_HOST_DEVICE
+-  reference operator*() {
++  reference operator*() const {
+     return TupleInfo::tie(*keys, *values);
+   }
+ 
+
