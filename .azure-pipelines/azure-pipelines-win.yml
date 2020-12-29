@@ -5,7 +5,7 @@
 jobs:
 - job: win
   pool:
-    vmImage: vs2017-win2016
+    vmImage: windows-2019
   strategy:
     matrix:
       win_64_cuda_compiler_version10.0numpy1.16python3.6.____cpython:
