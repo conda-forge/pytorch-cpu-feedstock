@@ -1,4 +1,6 @@
 azure:
   store_build_artifacts: true
+  settings_win:
+    pool:
+      vmImage: windows-2019
 conda_forge_output_validation: true
-channel_priority: flexible
