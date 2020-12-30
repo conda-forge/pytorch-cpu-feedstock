@@ -26,6 +26,8 @@ source:
 
 build:
   number: 1
+  # We need vs2019 because of a compiler error, but 10.0 doesn't support vs2019
+  skip: True   # [win and cuda_compiler_version=="10.0"]
 
 outputs:
   - name: pytorch
@@ -57,7 +59,7 @@ outputs:
         - ninja
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None"]
+        - nccl                            # [cuda_compiler_version != "None" and (not win)]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
         - python
