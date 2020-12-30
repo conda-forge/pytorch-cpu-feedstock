@@ -20,6 +20,11 @@ if "%cuda_compiler_version%" == "11.0" set TORCH_CUDA_ARCH_LIST=%TORCH_CUDA_ARCH
 if "%cuda_compiler_version%" == "11.1" set TORCH_CUDA_ARCH_LIST=%TORCH_CUDA_ARCH_LIST%;6.0;6.1;7.0;7.5;8.0;8.6
 set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
 
+REM these are set by nvcc activation and interferes with the build
+unset CFLAGS
+unset CXXFLAGS
+unset CPPFLAGS
+
 :cuda_flags_end
 
 set CMAKE_INCLUDE_PATH=%LIBRARY_PREFIX%\include
