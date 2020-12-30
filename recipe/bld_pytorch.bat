@@ -21,9 +21,9 @@ if "%cuda_compiler_version%" == "11.1" set TORCH_CUDA_ARCH_LIST=%TORCH_CUDA_ARCH
 set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
 
 REM these are set by nvcc activation and interferes with the build
-unset CFLAGS
-unset CXXFLAGS
-unset CPPFLAGS
+set CFLAGS=
+set CXXFLAGS=
+set CPPFLAGS=
 
 :cuda_flags_end
 
