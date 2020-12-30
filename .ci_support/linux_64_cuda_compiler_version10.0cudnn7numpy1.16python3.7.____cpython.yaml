@@ -13,7 +13,7 @@ cuda_compiler:
 cuda_compiler_version:
 - '10.0'
 cudnn:
-- 7.6.5
+- '7'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -25,24 +25,22 @@ mkl:
 nccl:
 - 2.7.8.1
 numpy:
-- '1.19'
+- '1.16'
 pin_run_as_build:
-  cudnn:
-    min_pin: x.x
-    max_pin: x
   mkl:
     max_pin: x
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.7.* *_cpython
 target_platform:
 - linux-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
 - - cuda_compiler_version
+  - cudnn
   - docker_image
-- - python
-  - numpy
+- - numpy
+  - python
