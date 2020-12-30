@@ -7,21 +7,16 @@ channel_targets:
 cuda_compiler:
 - nvcc
 cuda_compiler_version:
-- '10.0'
+- '10.2'
 cudnn:
-- 7.6.5
+- '7'
 cxx_compiler:
 - vs2019
 mkl:
 - '2020'
-nccl:
-- 2.7.8.1
 numpy:
 - '1.16'
 pin_run_as_build:
-  cudnn:
-    min_pin: x.x
-    max_pin: x
   mkl:
     max_pin: x
   python:
@@ -32,5 +27,7 @@ python:
 target_platform:
 - win-64
 zip_keys:
-- - python
-  - numpy
+- - cuda_compiler_version
+  - cudnn
+- - numpy
+  - python
