@@ -25,7 +25,9 @@ source:
     - fix_msvc_build_issue.diff
 
 build:
-  number: 2
+  number: 1
+  # We need vs2019 because of a compiler error, but 10.0 doesn't support vs2019
+  skip: True   # [win and cuda_compiler_version=="10.0"]
 
 outputs:
   - name: pytorch
