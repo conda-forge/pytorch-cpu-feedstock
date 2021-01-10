@@ -95,6 +95,7 @@ outputs:
         # the user an error
         - future
         - typing  # [py2k]
+        - typing_extensions
         # Need ninja to load C++ extensions
         - ninja
 
