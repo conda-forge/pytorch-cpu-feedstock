@@ -25,7 +25,7 @@ source:
     - fix_msvc_build_issue.diff
 
 build:
-  number: 2
+  number: 3
 
 outputs:
   - name: pytorch
