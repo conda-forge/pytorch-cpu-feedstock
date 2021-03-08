@@ -12,8 +12,6 @@ source:
   patches:
     # https://github.com/pytorch/pytorch/pull/49281
     - fix_std_stdint.patch
-    # https://github.com/pytorch/pytorch/pull/49620
-    - remove_shared_linker_flag_override.patch
     - fix_dispatch_apply_auto.patch
     # https://github.com/pytorch/pytorch/pull/49646
     - fix_cross_compile.patch
@@ -21,7 +19,7 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 2
+  number: 0
 
 outputs:
   - name: pytorch
