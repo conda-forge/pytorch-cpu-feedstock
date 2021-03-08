@@ -19,6 +19,8 @@ export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
+  # workaround for SDK<10.13
+  sed -i.bak 's/UINT8_C(no)/no/g' third_party/ideep/mkl-dnn/src/cpu/x64/jit_avx512_core_amx_conv_kernel.cpp
 fi
 
 # Dynamic libraries need to be lazily loaded so that torch
