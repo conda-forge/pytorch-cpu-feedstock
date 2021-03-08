@@ -8,6 +8,8 @@ cuda_compiler_version:
 - None
 cxx_compiler:
 - vs2019
+libprotobuf:
+- '3.15'
 mkl:
 - '2020'
 numpy:

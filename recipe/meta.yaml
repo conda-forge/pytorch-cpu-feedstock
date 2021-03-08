@@ -36,6 +36,7 @@ outputs:
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
         - cffi                                   # [build_platform != target_platform]
+        - sysroot_linux-64  2.17  # [linux64]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
