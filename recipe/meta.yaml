@@ -80,6 +80,7 @@ outputs:
         - typing
         - libuv
         - pkg-config  # [unix]
+        - typing_extensions
       run:
         - mkl {{ mkl }}     # [x86]
         - libblas * *_mkl   # [x86]
