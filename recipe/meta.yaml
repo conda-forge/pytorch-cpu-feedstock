@@ -52,6 +52,7 @@ outputs:
         - m2-git    # [win]
         - ninja
         - protobuf
+        - make      # [linux]
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
