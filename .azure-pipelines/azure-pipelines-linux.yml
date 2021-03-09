@@ -20,6 +20,10 @@ jobs:
         CONFIG: linux_64_cuda_compiler_version10.2cudnn7numpy1.16python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
+      linux_64_cuda_compiler_version10.2cudnn7numpy1.19python3.7.____73_pypy:
+        CONFIG: linux_64_cuda_compiler_version10.2cudnn7numpy1.19python3.7.____73_pypy
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
       linux_64_cuda_compiler_version10.2cudnn7numpy1.19python3.9.____cpython:
         CONFIG: linux_64_cuda_compiler_version10.2cudnn7numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -36,6 +40,10 @@ jobs:
         CONFIG: linux_64_cuda_compiler_version11.0cudnn8numpy1.16python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
+      linux_64_cuda_compiler_version11.0cudnn8numpy1.19python3.7.____73_pypy:
+        CONFIG: linux_64_cuda_compiler_version11.0cudnn8numpy1.19python3.7.____73_pypy
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
       linux_64_cuda_compiler_version11.0cudnn8numpy1.19python3.9.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.0cudnn8numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -50,6 +58,10 @@ jobs:
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
       linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.16python3.8.____cpython:
         CONFIG: linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.16python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.19python3.7.____73_pypy:
+        CONFIG: linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.19python3.7.____73_pypy
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
       linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.19python3.9.____cpython:
