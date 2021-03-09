@@ -1,5 +1,5 @@
-{% set version = "1.7.1" %}
-{% set commit = "57bffc3a8e4fee0cce31e1ff1f662ccf7b16db57" %}
+{% set version = "1.8.0" %}
+{% set commit = "v1.8.0" %}
 
 package:
   name: pytorch-recipe
@@ -12,20 +12,14 @@ source:
   patches:
     # https://github.com/pytorch/pytorch/pull/49281
     - fix_std_stdint.patch
-    # cpp_extension patch does not apply cleanly on master
-    # we should try to upstream again on the next version
-    - cpp_extension.patch
-    # It is unclear that upstream will allow us to integrate the 
-    # shared linker path bellow until their intel compiler issues
-    # are resolved.
-    - remove_shared_linker_flag_override.patch
-    - nccl_socket.patch
     - fix_dispatch_apply_auto.patch
-    - fix_map_anonymous.patch
-    - fix_msvc_build_issue.diff
+    # https://github.com/pytorch/pytorch/pull/49646
+    - fix_cross_compile.patch
+    # https://github.com/pytorch/pytorch/pull/49647
+    - fix_blas_lapack.patch
 
 build:
-  number: 2
+  number: 0
 
 outputs:
   - name: pytorch
@@ -35,8 +29,14 @@ outputs:
       detect_binary_files_with_prefix: False
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
+    activate_in_script: true
     requirements:
       build:
+        - python                                 # [build_platform != target_platform]
+        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+        - numpy                                  # [build_platform != target_platform]
+        - cffi                                   # [build_platform != target_platform]
+        - sysroot_linux-64  2.17  # [linux64]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
@@ -47,14 +47,13 @@ outputs:
         - m2-git    # [win]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-      host:
-        # For some reason cmake and ninja need to be installed
-        # alongside python in the host
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/21#discussion_r541397252
         - cmake
         - git       # [not win]
         - m2-git    # [win]
         - ninja
+        - protobuf
+        - make      # [linux]
+      host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None"]
@@ -71,15 +70,25 @@ outputs:
         - future
         - six
         - cffi
-        - mkl-devel {{ mkl }}
-        - mkl {{ mkl }}
-        - libblas * *_mkl
+        - mkl-devel {{ mkl }}   # [x86]
+        - mkl {{ mkl }}         # [x86]
+        - libblas * *_mkl       # [x86]
+        - libblas               # [not x86]
+        - libblas               # [not x86]
+        - liblapack             # [not x86]
+        - openblas              # [not x86]
+        - libprotobuf
+        - sleef
         - typing
         - libuv
         - pkg-config  # [unix]
+        - typing_extensions
       run:
-        - mkl {{ mkl }}
-        - libblas * *_mkl
+        - mkl {{ mkl }}     # [x86]
+        - libblas * *_mkl   # [x86]
+        - libblas   # [not x86]
+        - libcblas   # [not x86]
+        - liblapack   # [not x86]
         - llvm-openmp    # [osx]
         #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
         #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]

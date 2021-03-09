@@ -27,62 +27,6 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_cuda_compiler_version10.0cudnn7numpy1.16python3.6.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version10.0cudnn7numpy1.16python3.6.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version10.0cudnn7numpy1.16python3.7.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version10.0cudnn7numpy1.16python3.7.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version10.0cudnn7numpy1.16python3.8.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version10.0cudnn7numpy1.16python3.8.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version10.0cudnn7numpy1.19python3.9.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version10.0cudnn7numpy1.19python3.9.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version10.1cudnn7numpy1.16python3.6.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version10.1cudnn7numpy1.16python3.6.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version10.1cudnn7numpy1.16python3.7.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version10.1cudnn7numpy1.16python3.7.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version10.1cudnn7numpy1.16python3.8.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version10.1cudnn7numpy1.16python3.8.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version10.1cudnn7numpy1.19python3.9.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version10.1cudnn7numpy1.19python3.9.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
               <td>linux_64_cuda_compiler_version10.2cudnn7numpy1.16python3.6.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
@@ -136,34 +80,6 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version11.0cudnn8numpy1.19python3.9.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version9.2cudnn7numpy1.16python3.6.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version9.2cudnn7numpy1.16python3.6.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version9.2cudnn7numpy1.16python3.7.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version9.2cudnn7numpy1.16python3.7.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version9.2cudnn7numpy1.16python3.8.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version9.2cudnn7numpy1.16python3.8.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cuda_compiler_version9.2cudnn7numpy1.19python3.9.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=linux&configuration=linux_64_cuda_compiler_version9.2cudnn7numpy1.19python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -223,6 +139,20 @@ Current build status
                 </a>
               </td>
             </tr><tr>
+              <td>osx_arm64_python3.8.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=osx&configuration=osx_arm64_python3.8.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_python3.9.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=master&jobName=osx&configuration=osx_arm64_python3.9.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
               <td>win_64_numpy1.16python3.6.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=master">
@@ -265,7 +195,6 @@ Current release info
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch-green.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--cpu-green.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--gpu-green.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) |
 
 Installing pytorch-cpu
 ======================
@@ -276,10 +205,10 @@ Installing `pytorch-cpu` from the `conda-forge` channel can be achieved by addin
 conda config --add channels conda-forge
 ```
 
-Once the `conda-forge` channel has been enabled, `pytorch, pytorch-cpu, pytorch-gpu` can be installed with:
+Once the `conda-forge` channel has been enabled, `pytorch, pytorch-cpu` can be installed with:
 
 ```
-conda install pytorch pytorch-cpu pytorch-gpu
+conda install pytorch pytorch-cpu
 ```
 
 It is possible to list all of the versions of `pytorch` available on your platform with:
@@ -344,9 +273,9 @@ build distinct package versions.
 
 In order to produce a uniquely identifiable distribution:
  * If the version of a package **is not** being increased, please add or increase
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string).
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string).
  * If the version of a package **is** being increased, please remember to return
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string)
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string)
    back to 0.
 
 Feedstock Maintainers
