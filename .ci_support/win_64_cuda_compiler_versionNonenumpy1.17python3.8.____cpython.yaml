@@ -6,14 +6,18 @@ channel_targets:
 - conda-forge main
 cuda_compiler_version:
 - None
+cudnn:
+- undefined
 cxx_compiler:
 - vs2019
 libprotobuf:
 - '3.15'
 mkl:
 - '2020'
+nccl:
+- '2'
 numpy:
-- '1.16'
+- '1.17'
 pin_run_as_build:
   mkl:
     max_pin: x
