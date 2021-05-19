@@ -11,7 +11,7 @@ cxx_compiler:
 mkl:
 - '2020'
 numpy:
-- '1.16'
+- '1.17'
 pin_run_as_build:
   mkl:
     max_pin: x

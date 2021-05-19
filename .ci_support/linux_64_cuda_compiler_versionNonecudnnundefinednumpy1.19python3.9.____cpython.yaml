@@ -23,7 +23,7 @@ docker_image:
 mkl:
 - '2020'
 nccl:
-- 2.7.8.1
+- '2'
 numpy:
 - '1.19'
 pin_run_as_build:
