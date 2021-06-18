@@ -157,4 +157,5 @@ extra:
   recipe-maintainers:
     - hmaarrfk
     - sodre
+    - benjaminrwilson
   feedstock-name: pytorch-cpu
