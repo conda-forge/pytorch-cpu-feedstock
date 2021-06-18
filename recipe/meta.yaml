@@ -1,5 +1,5 @@
-{% set version = "1.8.0" %}
-{% set commit = "v1.8.0" %}
+{% set version = "1.9.0" %}
+{% set commit = "v1.9.0" %}
 
 package:
   name: pytorch-recipe
@@ -19,7 +19,7 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 1
+  number: 0
 
 outputs:
   - name: pytorch
