@@ -11,21 +11,27 @@ jobs:
       osx_64_numpy1.17python3.6.____cpython:
         CONFIG: osx_64_numpy1.17python3.6.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: osx_64_numpy1.17python3.6.____cpython
       osx_64_numpy1.17python3.7.____cpython:
         CONFIG: osx_64_numpy1.17python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: osx_64_numpy1.17python3.7.____cpython
       osx_64_numpy1.17python3.8.____cpython:
         CONFIG: osx_64_numpy1.17python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: osx_64_numpy1.17python3.8.____cpython
       osx_64_numpy1.19python3.9.____cpython:
         CONFIG: osx_64_numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: osx_64_numpy1.19python3.9.____cpython
       osx_arm64_python3.8.____cpython:
         CONFIG: osx_arm64_python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: osx_arm64_python3.8.____cpython
       osx_arm64_python3.9.____cpython:
         CONFIG: osx_arm64_python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: osx_arm64_python3.9.____cpython
   timeoutInMinutes: 360
 
   steps:
@@ -42,8 +48,7 @@ jobs:
       FEEDSTOCK_TOKEN: $(FEEDSTOCK_TOKEN)
       STAGING_BINSTAR_TOKEN: $(STAGING_BINSTAR_TOKEN)
   - script: |
-        full_artifact_name="conda_artifacts_$(build.BuildId)_$(CONFIG)"
-        artifact_name=`echo "$full_artifact_name" | head -c 80`
+        artifact_name="conda_artifacts_$(build.BuildId)_$(SHORT_CONFIG_NAME)"
         echo "##vso[task.setVariable variable=ARTIFACT_NAME]$artifact_name"
         if [ -d /Users/runner/miniforge3/conda-bld/ ]; then
           echo "##vso[task.setVariable variable=CONDA_BLD_DIR_EXISTS]true"
