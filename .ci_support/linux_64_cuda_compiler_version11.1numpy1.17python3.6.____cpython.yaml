@@ -11,7 +11,7 @@ channel_targets:
 cuda_compiler:
 - nvcc
 cuda_compiler_version:
-- '11.0'
+- '11.1'
 cudnn:
 - '8'
 cxx_compiler:
@@ -19,9 +19,9 @@ cxx_compiler:
 cxx_compiler_version:
 - '7'
 docker_image:
-- quay.io/condaforge/linux-anvil-cuda:11.0
+- quay.io/condaforge/linux-anvil-cuda:11.1
 libprotobuf:
-- '3.15'
+- '3.16'
 mkl:
 - '2020'
 nccl:
