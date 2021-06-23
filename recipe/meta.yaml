@@ -19,7 +19,7 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 1
+  number: 2
 
 outputs:
   - name: pytorch
