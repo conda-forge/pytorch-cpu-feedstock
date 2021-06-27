@@ -16,7 +16,7 @@ source:
     # https://github.com/pytorch/pytorch/pull/49646
     - fix_cross_compile.patch
     # https://github.com/pytorch/pytorch/pull/49647
-    - fix_blas_lapack.patch
+    # - fix_blas_lapack.patch
 
 build:
   number: 0
