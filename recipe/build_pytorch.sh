@@ -62,6 +62,13 @@ fi
 
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Produce macOS builds with torch.distributed support.
+    # This is enabled by default on Linux, but disabled by default on macOS,
+    # because it requires an non-bundled compile-time dependency (libuv
+    # through gloo). This dependency is made available through meta.yaml, so
+    # we can override the default and set USE_DISTRIBUTED=1.
+    export USE_DISTRIBUTED=1
+
     if [[ "$target_platform" == "osx-arm64" ]]; then
         export BLAS=OpenBLAS
         export USE_MKLDNN=0
