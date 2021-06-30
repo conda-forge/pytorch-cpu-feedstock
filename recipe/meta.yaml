@@ -51,7 +51,8 @@ outputs:
         - git       # [not win]
         - m2-git    # [win]
         - ninja
-        - protobuf
+        # caffe2 doesn't compile with newer protobuf, so pinning it here
+        - protobuf  3.15.8
         - make      # [linux]
       host:
         # GPU requirements
