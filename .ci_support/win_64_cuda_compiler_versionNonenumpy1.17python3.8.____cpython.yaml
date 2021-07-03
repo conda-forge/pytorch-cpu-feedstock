@@ -13,7 +13,7 @@ cxx_compiler:
 libprotobuf:
 - '3.15'
 mkl:
-- '2020'
+- '2021'
 nccl:
 - '2'
 numpy:
