@@ -11,39 +11,51 @@ jobs:
       win_64_cuda_compiler_version11.1numpy1.17python3.6.____cpython:
         CONFIG: win_64_cuda_compiler_version11.1numpy1.17python3.6.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.1num_hdb5a1f4feb
       win_64_cuda_compiler_version11.1numpy1.17python3.7.____cpython:
         CONFIG: win_64_cuda_compiler_version11.1numpy1.17python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.1num_h6ca61e298c
       win_64_cuda_compiler_version11.1numpy1.17python3.8.____cpython:
         CONFIG: win_64_cuda_compiler_version11.1numpy1.17python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.1num_h0e6945a710
       win_64_cuda_compiler_version11.1numpy1.19python3.9.____cpython:
         CONFIG: win_64_cuda_compiler_version11.1numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.1num_hceadb1a9ac
       win_64_cuda_compiler_version11.2numpy1.17python3.6.____cpython:
         CONFIG: win_64_cuda_compiler_version11.2numpy1.17python3.6.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.2num_hd088dbeb33
       win_64_cuda_compiler_version11.2numpy1.17python3.7.____cpython:
         CONFIG: win_64_cuda_compiler_version11.2numpy1.17python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.2num_h27586b91af
       win_64_cuda_compiler_version11.2numpy1.17python3.8.____cpython:
         CONFIG: win_64_cuda_compiler_version11.2numpy1.17python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.2num_hffa9937742
       win_64_cuda_compiler_version11.2numpy1.19python3.9.____cpython:
         CONFIG: win_64_cuda_compiler_version11.2numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.2num_h9e115fdbdb
       win_64_cuda_compiler_versionNonenumpy1.17python3.6.____cpython:
         CONFIG: win_64_cuda_compiler_versionNonenumpy1.17python3.6.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_versionNonenum_h56d5886eae
       win_64_cuda_compiler_versionNonenumpy1.17python3.7.____cpython:
         CONFIG: win_64_cuda_compiler_versionNonenumpy1.17python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_versionNonenum_h13f33d3fcc
       win_64_cuda_compiler_versionNonenumpy1.17python3.8.____cpython:
         CONFIG: win_64_cuda_compiler_versionNonenumpy1.17python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_versionNonenum_h05bc4bfb40
       win_64_cuda_compiler_versionNonenumpy1.19python3.9.____cpython:
         CONFIG: win_64_cuda_compiler_versionNonenumpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_versionNonenum_h9200a65eb7
   timeoutInMinutes: 360
   variables:
     CONDA_BLD_PATH: D:\\bld\\
@@ -125,8 +137,7 @@ jobs:
         PYTHONUNBUFFERED: 1
       condition: not(contains(variables['CONFIG'], 'vs2008'))
     - script: |
-        set full_artifact_name=conda_artifacts_$(build.BuildID)_$(CONFIG)
-        set artifact_name=%full_artifact_name:~0,80%
+        set artifact_name=conda_artifacts_$(build.BuildID)_$(SHORT_CONFIG_NAME)
         echo ##vso[task.setVariable variable=ARTIFACT_NAME]%artifact_name%
         if exist $(CONDA_BLD_PATH)\\ (
           echo ##vso[task.setVariable variable=CONDA_BLD_DIR_EXISTS]true
