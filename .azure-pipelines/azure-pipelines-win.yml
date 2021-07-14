@@ -8,6 +8,38 @@ jobs:
     vmImage: windows-2019
   strategy:
     matrix:
+      win_64_cuda_compiler_version10.2numpy1.17python3.6.____cpython:
+        CONFIG: win_64_cuda_compiler_version10.2numpy1.17python3.6.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version10.2num_h20ea5a26fc
+      win_64_cuda_compiler_version10.2numpy1.17python3.7.____cpython:
+        CONFIG: win_64_cuda_compiler_version10.2numpy1.17python3.7.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version10.2num_h408bc469df
+      win_64_cuda_compiler_version10.2numpy1.17python3.8.____cpython:
+        CONFIG: win_64_cuda_compiler_version10.2numpy1.17python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version10.2num_h4ae23b8ce5
+      win_64_cuda_compiler_version10.2numpy1.19python3.9.____cpython:
+        CONFIG: win_64_cuda_compiler_version10.2numpy1.19python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version10.2num_hfd851b7be2
+      win_64_cuda_compiler_version11.0numpy1.17python3.6.____cpython:
+        CONFIG: win_64_cuda_compiler_version11.0numpy1.17python3.6.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.0num_hbf18570239
+      win_64_cuda_compiler_version11.0numpy1.17python3.7.____cpython:
+        CONFIG: win_64_cuda_compiler_version11.0numpy1.17python3.7.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.0num_h44e5d7700f
+      win_64_cuda_compiler_version11.0numpy1.17python3.8.____cpython:
+        CONFIG: win_64_cuda_compiler_version11.0numpy1.17python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.0num_h70eeebabe9
+      win_64_cuda_compiler_version11.0numpy1.19python3.9.____cpython:
+        CONFIG: win_64_cuda_compiler_version11.0numpy1.19python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG_NAME: win_64_cuda_compiler_version11.0num_h70fffaf8a7
       win_64_cuda_compiler_version11.1numpy1.17python3.6.____cpython:
         CONFIG: win_64_cuda_compiler_version11.1numpy1.17python3.6.____cpython
         UPLOAD_PACKAGES: 'True'
