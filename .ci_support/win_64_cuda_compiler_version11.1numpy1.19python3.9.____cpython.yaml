@@ -12,8 +12,6 @@ cxx_compiler:
 - vs2019
 mkl:
 - '2020'
-nccl:
-- '2'
 numpy:
 - '1.19'
 pin_run_as_build:
