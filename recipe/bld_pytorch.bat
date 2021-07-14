@@ -50,5 +50,7 @@ set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
 set "libuv_ROOT=%LIBRARY_PREFIX%"
 set "USE_SYSTEM_SLEEF=OFF"
 
+set "MAX_JOBS=%CPU_COUNT%"
+
 %PYTHON% -m pip install . --no-deps -vv
 if errorlevel 1 exit /b 1
