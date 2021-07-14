@@ -54,7 +54,7 @@ outputs:
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None"]
+        - nccl                            # [cuda_compiler_version != "None" and not win]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
         - python
