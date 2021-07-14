@@ -73,7 +73,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
         export BLAS=OpenBLAS
-        export USE_MKLDNN=0
+        export CMAKE_OSX_ARCHITECTURES=arm64
+        export USE_MKLDNN=OFF
+        export USE_NNPACK=OFF
+        export USE_QNNPACK=OFF
         # There is a problem with pkg-config
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
