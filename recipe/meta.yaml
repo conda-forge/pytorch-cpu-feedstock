@@ -50,8 +50,6 @@ outputs:
         - git       # [not win]
         - m2-git    # [win]
         - ninja
-        # caffe2 doesn't compile with newer protobuf, so pinning it here
-        - protobuf  3.15.8
         - make      # [linux]
       host:
         # GPU requirements
@@ -77,7 +75,6 @@ outputs:
         - libblas               # [not x86]
         - liblapack             # [not x86]
         - openblas              # [not x86]
-        - libprotobuf
         - sleef
         - typing
         - libuv

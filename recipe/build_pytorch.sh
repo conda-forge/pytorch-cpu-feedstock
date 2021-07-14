@@ -48,9 +48,11 @@ export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 export INSTALL_TEST=0
 
 export USE_SYSTEM_SLEEF=1
-# use our protobuf
-export BUILD_CUSTOM_PROTOBUF=OFF
-rm -rf $PREFIX/bin/protoc
+
+# Caffe2 uses protobuf internally and it doesn't work with latest version
+# Let it use own protobuf instead of pinning in the recipe file
+# See the discussion https://github.com/conda-forge/pytorch-cpu-feedstock/pull/47#issuecomment-872196725
+export BUILD_CUSTOM_PROTOBUF=ON
 
 # I don't know where this folder comes from, but it's interfering with the build in osx-64
 rm -rf $PREFIX/git
