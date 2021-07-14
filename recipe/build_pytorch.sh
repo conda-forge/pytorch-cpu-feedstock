@@ -90,7 +90,7 @@ export MAX_JOBS=${CPU_COUNT}
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
-    export TORCH_CUDA_ARCH_LIST="3.7+PTX;5.0"
+    export TORCH_CUDA_ARCH_LIST="3.7+PTX"
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;7.0"
     elif [[ ${cuda_compiler_version} == 9.2* ]]; then
