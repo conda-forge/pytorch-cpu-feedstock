@@ -72,6 +72,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     if [[ "$target_platform" == "osx-arm64" ]]; then
         export BLAS=OpenBLAS
         export USE_MKLDNN=0
+        # There is a problem with pkg-config
+        # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
+        export USE_DISTRIBUTED=0
     fi
     $PYTHON -m pip install . --no-deps -vv
     exit 0
