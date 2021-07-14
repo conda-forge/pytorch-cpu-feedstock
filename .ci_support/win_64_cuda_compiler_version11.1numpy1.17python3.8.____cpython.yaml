@@ -11,7 +11,7 @@ cudnn:
 cxx_compiler:
 - vs2019
 libprotobuf:
-- '3.15'
+- '3.16'
 mkl:
 - '2020'
 nccl:
