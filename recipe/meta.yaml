@@ -51,8 +51,9 @@ outputs:
         - git       # [not win]
         - m2-git    # [win]
         - ninja
-        - protobuf
         - make      # [linux]
+
+        - protobuf {{ libprotobuf }}
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
