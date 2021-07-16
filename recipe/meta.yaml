@@ -1,5 +1,5 @@
-{% set version = "1.8.0" %}
-{% set commit = "v1.8.0" %}
+{% set version = "1.9.0" %}
+{% set commit = "v1.9.0" %}
 
 package:
   name: pytorch-recipe
@@ -19,7 +19,7 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 1
+  number: 0
 
 outputs:
   - name: pytorch
@@ -51,8 +51,9 @@ outputs:
         - git       # [not win]
         - m2-git    # [win]
         - ninja
-        - protobuf
         - make      # [linux]
+
+        - protobuf {{ libprotobuf }}
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
@@ -157,4 +158,5 @@ extra:
   recipe-maintainers:
     - hmaarrfk
     - sodre
+    - benjaminrwilson
   feedstock-name: pytorch-cpu

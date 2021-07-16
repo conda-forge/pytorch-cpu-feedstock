@@ -9,7 +9,6 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/pytorch-cpu-fee
 
 Summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
 
-
 Current build status
 ====================
 
@@ -317,6 +316,7 @@ Installing `pytorch-cpu` from the `conda-forge` channel can be achieved by addin
 
 ```
 conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
 
 Once the `conda-forge` channel has been enabled, `pytorch, pytorch-cpu, pytorch-gpu` can be installed with:
@@ -395,6 +395,7 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
+* [@benjaminrwilson](https://github.com/benjaminrwilson/)
 * [@hmaarrfk](https://github.com/hmaarrfk/)
 * [@sodre](https://github.com/sodre/)
 
