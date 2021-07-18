@@ -45,14 +45,13 @@ export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 
+export USE_NINJA=OFF
 export INSTALL_TEST=0
 
 export USE_SYSTEM_SLEEF=1
-
-# Caffe2 uses protobuf internally and it doesn't work with latest version
-# Let it use own protobuf instead of pinning in the recipe file
-# See the discussion https://github.com/conda-forge/pytorch-cpu-feedstock/pull/47#issuecomment-872196725
-export BUILD_CUSTOM_PROTOBUF=ON
+# use our protobuf
+export BUILD_CUSTOM_PROTOBUF=OFF
+rm -rf $PREFIX/bin/protoc
 
 # I don't know where this folder comes from, but it's interfering with the build in osx-64
 rm -rf $PREFIX/git
@@ -73,10 +72,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
         export BLAS=OpenBLAS
-        export CMAKE_OSX_ARCHITECTURES=arm64
-        export USE_MKLDNN=OFF
-        export USE_NNPACK=OFF
-        export USE_QNNPACK=OFF
+        export USE_MKLDNN=0
         # There is a problem with pkg-config
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
@@ -93,19 +89,19 @@ export MAX_JOBS=${CPU_COUNT}
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
-    export TORCH_CUDA_ARCH_LIST="3.7+PTX"
+    export TORCH_CUDA_ARCH_LIST="3.5;5.0+PTX"
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
-        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;7.0"
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;7.0"
     elif [[ ${cuda_compiler_version} == 9.2* ]]; then
-        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;7.0"
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0"
     elif [[ ${cuda_compiler_version} == 10.* ]]; then
-        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;7.0;7.5"
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5"
     elif [[ ${cuda_compiler_version} == 11.0* ]]; then
-        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;7.0;7.5;8.0"
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5;8.0"
     elif [[ ${cuda_compiler_version} == 11.1 ]]; then
-        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;7.0;7.5;8.0;8.6"
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5;8.0;8.6"
     elif [[ ${cuda_compiler_version} == 11.2 ]]; then
-        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;7.0;7.5;8.0;8.6"
+        export TORCH_CUDA_ARCH_LIST="$TORCH_CUDA_ARCH_LIST;6.0;6.1;7.0;7.5;8.0;8.6"
     else
         echo "unsupported cuda version. edit build_pytorch.sh"
         exit 1

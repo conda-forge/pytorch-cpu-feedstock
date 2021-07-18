@@ -10,13 +10,3 @@ c_compiler:    # [win]
   - vs2019     # [win]
 cxx_compiler:  # [win]
   - vs2019     # [win]
-cuda_compiler: # [linux64 or win]
-  - nvcc       # [linux64 or win]
-cudnn:  # [win]
-  - '8' # [win]
-cuda_compiler_version:
-  - None
-  - 10.2   # [win]
-  - 11.0   # [win]
-  - 11.1   # [win]
-  - 11.2   # [win]

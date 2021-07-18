@@ -50,11 +50,12 @@ outputs:
         - git       # [not win]
         - m2-git    # [win]
         - ninja
+        - protobuf
         - make      # [linux]
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None" and not win]
+        - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
         - python
@@ -75,6 +76,7 @@ outputs:
         - libblas               # [not x86]
         - liblapack             # [not x86]
         - openblas              # [not x86]
+        - libprotobuf
         - sleef
         - typing
         - libuv
