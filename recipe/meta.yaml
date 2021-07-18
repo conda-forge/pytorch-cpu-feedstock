@@ -50,7 +50,7 @@ outputs:
         - git       # [not win]
         - m2-git    # [win]
         - ninja
-        - protobuf
+        - protobuf {{ libprotobuf }}
         - make      # [linux]
       host:
         # GPU requirements
