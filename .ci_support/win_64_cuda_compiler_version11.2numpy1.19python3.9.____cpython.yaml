@@ -4,16 +4,18 @@ channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
-cuda_compiler:
-- nvcc
 cuda_compiler_version:
 - '11.2'
 cudnn:
-- '8'
+- undefined
 cxx_compiler:
 - vs2019
+libprotobuf:
+- '3.16'
 mkl:
 - '2020'
+nccl:
+- '2'
 numpy:
 - '1.19'
 pin_run_as_build:
