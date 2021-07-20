@@ -19,7 +19,7 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 1
+  number: 2
 
 outputs:
   - name: pytorch
@@ -51,7 +51,7 @@ outputs:
         - git       # [not win]
         - m2-git    # [win]
         - ninja
-        - protobuf
+        - protobuf {{ libprotobuf }}
         - make      # [linux]
       host:
         # GPU requirements
