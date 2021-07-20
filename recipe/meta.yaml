@@ -19,7 +19,9 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 2
+  number: 3
+  run_exports:
+    - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
 
 outputs:
   - name: pytorch
