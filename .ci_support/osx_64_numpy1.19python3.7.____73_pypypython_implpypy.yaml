@@ -1,23 +1,27 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.9'
 c_compiler:
-- vs2019
+- clang
+c_compiler_version:
+- '11'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
 cuda_compiler_version:
 - None
-cudnn:
-- undefined
 cxx_compiler:
-- vs2019
+- clangxx
+cxx_compiler_version:
+- '11'
 libprotobuf:
 - '3.16'
+macos_machine:
+- x86_64-apple-darwin13.4.0
 mkl:
 - '2020'
-nccl:
-- '2'
 numpy:
-- '1.17'
+- '1.19'
 pin_run_as_build:
   mkl:
     max_pin: x
@@ -25,9 +29,14 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.7.* *_73_pypy
+python_impl:
+- pypy
 target_platform:
-- win-64
+- osx-64
 zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
 - - python
   - numpy
+  - python_impl
