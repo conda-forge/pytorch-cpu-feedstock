@@ -23,6 +23,7 @@ source:
 build:
   number: 2
   skip: true  # [python_impl == 'cpython']
+  skip: true  # [cuda_compiler_version != "None"]
 
 outputs:
   - name: pytorch
@@ -31,6 +32,7 @@ outputs:
       string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: False
       skip: true  # [python_impl == 'cpython']
+      skip: true  # [cuda_compiler_version != "None"]
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
     activate_in_script: true
@@ -138,6 +140,7 @@ outputs:
   - name: pytorch-gpu   # [cuda_compiler_version != "None"]
     build:
       skip: true  # [python_impl == 'cpython']
+      skip: true  # [cuda_compiler_version != "None"]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: False
