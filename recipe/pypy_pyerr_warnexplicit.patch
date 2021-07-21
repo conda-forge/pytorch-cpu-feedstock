@@ -1,0 +1,22 @@
+diff --git a/torch/csrc/Exceptions.cpp b/torch/csrc/Exceptions.cpp
+index d008643f70..bce2d78747 100644
+--- a/torch/csrc/Exceptions.cpp
++++ b/torch/csrc/Exceptions.cpp
+@@ -206,6 +206,9 @@ PyWarningHandler::~PyWarningHandler() noexcept(false) {
+         // Note: PyErr_WarnExplicit will disregard Python's warning filter
+         // and always appear. This is in contrast to PyErr_WarnEx,
+         // which respects the warning filter.
++#if 1
++        result = PyErr_WarnEx(PyExc_RuntimeWarning, msg.c_str(), 1);
++#else
+         result = PyErr_WarnExplicit(
+             /*category=*/PyExc_UserWarning,
+             /*message=*/msg.c_str(),
+@@ -213,6 +216,7 @@ PyWarningHandler::~PyWarningHandler() noexcept(false) {
+             /*lineno=*/source_location.line,
+             /*module=*/nullptr,
+             /*registry=*/nullptr);
++#endif
+       } else {
+         // Lets Python set the source location and puts the C++ warning
+         // location into the message.

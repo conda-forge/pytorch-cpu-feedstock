@@ -17,6 +17,8 @@ source:
     - fix_cross_compile.patch
     # https://github.com/pytorch/pytorch/pull/49647
     - fix_blas_lapack.patch
+    # Avoid PyErr_WarnExplicit in PyPy
+    - pypy_pyerr_warnexplicit.patch  # [python_impl == 'pypy']
 
 build:
   number: 2
