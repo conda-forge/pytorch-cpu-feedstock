@@ -1,0 +1,13 @@
+diff --git a/torch/csrc/jit/python/init.cpp b/torch/csrc/jit/python/init.cpp
+index 23aa92f222..ce19ce20ec 100644
+--- a/torch/csrc/jit/python/init.cpp
++++ b/torch/csrc/jit/python/init.cpp
+@@ -396,7 +396,7 @@ void initJITBindings(PyObject* module) {
+             ArgumentSpecCreator arg_spec_creator(*graph);
+             Stack stack;
+             stack.reserve(inputs.size()); // captures?
+-            for (auto& obj : inputs) {
++            for (const auto& obj : inputs) {
+               stack.push_back(toTypeInferredIValue(obj));
+             }
+             ArgumentSpec spec = arg_spec_creator.create(with_grad, stack);

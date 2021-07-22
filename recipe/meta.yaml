@@ -17,8 +17,10 @@ source:
     - fix_cross_compile.patch
     # https://github.com/pytorch/pytorch/pull/49647
     - fix_blas_lapack.patch
-    # Avoid PyErr_WarnExplicit in PyPy
+    # https://foss.heptapod.net/pypy/pypy/-/issues/3521
     - pypy_pyerr_warnexplicit.patch  # [python_impl == 'pypy']
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/50#issuecomment-884632815
+    - const_auto_in_jit.patch        # [python_impl == 'pypy']
 
 build:
   number: 2
