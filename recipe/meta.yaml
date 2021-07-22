@@ -55,8 +55,8 @@ outputs:
         - make      # [linux]
       host:
         # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None" and (not win)]
-        - nccl                            # [cuda_compiler_version != "None" and (not win)]
+        - cudnn                           # [cuda_compiler_version != "None"]
+        - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
         - python
