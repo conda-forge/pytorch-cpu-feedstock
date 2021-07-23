@@ -20,3 +20,49 @@ index 23aa92f222..169af229f5 100644
                stack.push_back(toTypeInferredIValue(obj));
              }
              auto g_inputs = graph->inputs();
+diff --git a/torch/csrc/jit/python/python_tracer.cpp b/torch/csrc/jit/python/python_tracer.cpp
+index 550ba12a46..369c1b7ac6 100644
+--- a/torch/csrc/jit/python/python_tracer.cpp
++++ b/torch/csrc/jit/python/python_tracer.cpp
+@@ -28,8 +28,11 @@ std::vector<StackEntry> _pythonCallstack() {
+   PyFrameObject* frame = PyEval_GetFrame();
+   std::vector<StackEntry> entries;
+ 
++#if 0
++  // PyPy doesn't handle many of these features
+   while (nullptr != frame) {
+     size_t line = PyCode_Addr2Line(frame->f_code, frame->f_lasti);
++    size_t line = 1;
+     std::string filename = THPUtils_unpackString(frame->f_code->co_filename);
+     std::string funcname = THPUtils_unpackString(frame->f_code->co_name);
+     auto source = std::make_shared<Source>(funcname, filename, line);
+@@ -37,6 +40,7 @@ std::vector<StackEntry> _pythonCallstack() {
+         StackEntry{funcname, SourceRange(source, 0, funcname.size())});
+     frame = frame->f_back;
+   }
++#endif
+   return entries;
+ }
+ 
+diff --git a/torch/csrc/jit/python/script_init.cpp b/torch/csrc/jit/python/script_init.cpp
+index 7cf53b6c6e..2b0b09a593 100644
+--- a/torch/csrc/jit/python/script_init.cpp
++++ b/torch/csrc/jit/python/script_init.cpp
+@@ -1109,7 +1109,7 @@ void initJitScriptBindings(PyObject* module) {
+              const std::string& method_name,
+              const py::tuple& input_tuple) {
+             Stack stack;
+-            for (auto& input : input_tuple) {
++            for (const auto& input : input_tuple) {
+               stack.push_back(toTypeInferredIValue(input));
+             }
+             return m.get_method(method_name)(stack);
+@@ -1120,7 +1120,7 @@ void initJitScriptBindings(PyObject* module) {
+           "forward",
+           [](mobile::Module& m, const py::tuple& input_tuple) {
+             Stack stack;
+-            for (auto& input : input_tuple) {
++            for (const auto& input : input_tuple) {
+               stack.push_back(toTypeInferredIValue(input));
+             }
+             return m.get_method("forward")(stack);
