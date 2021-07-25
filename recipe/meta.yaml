@@ -133,9 +133,6 @@ outputs:
         - pip check
 
   - name: pytorch-cpu   # [cuda_compiler_version == "None"]
-    test:
-      imports:
-        - torch
   - name: pytorch-gpu   # [cuda_compiler_version != "None"]
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
