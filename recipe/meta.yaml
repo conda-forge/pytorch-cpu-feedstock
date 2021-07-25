@@ -1,5 +1,5 @@
-{% set version = "1.8.0" %}
-{% set commit = "v1.8.0" %}
+{% set version = "1.9.0" %}
+{% set commit = "v1.9.0" %}
 
 package:
   name: pytorch-recipe
@@ -19,19 +19,19 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 3
+  number: 0
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
+  skip: true  # [win]
 
 outputs:
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
-      detect_binary_files_with_prefix: False
+      detect_binary_files_with_prefix: false
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
-    activate_in_script: true
     requirements:
       build:
         - python                                 # [build_platform != target_platform]
@@ -145,8 +145,8 @@ outputs:
       run:
         - {{ pin_subpackage("pytorch", exact=True) }}
     test:
-      commands:
-        - echo "hello world"
+      imports:
+        - torch
 
 about:
   home: https://pytorch.org/
@@ -159,4 +159,5 @@ extra:
   recipe-maintainers:
     - hmaarrfk
     - sodre
+    - benjaminrwilson
   feedstock-name: pytorch-cpu
