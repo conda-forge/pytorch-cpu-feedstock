@@ -17,13 +17,13 @@ bash $MINIFORGE_FILE -b -p ${MINIFORGE_HOME}
 
 ( startgroup "Configuring conda" ) 2> /dev/null
 
-BUILD_CMD=build
+BUILD_CMD=mambabuild
 
 source ${MINIFORGE_HOME}/etc/profile.d/conda.sh
 conda activate base
 
 echo -e "\n\nInstalling conda-forge-ci-setup=3 and conda-build."
-conda install -n base --quiet --yes "conda-forge-ci-setup=3" conda-build pip ${GET_BOA:-}
+conda install -n base --quiet --yes "conda-forge-ci-setup=3" conda-build pip boa
 
 
 
