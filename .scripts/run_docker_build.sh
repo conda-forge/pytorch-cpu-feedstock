@@ -75,6 +75,8 @@ fi
 ( startgroup "Start Docker" ) 2> /dev/null
 
 export UPLOAD_PACKAGES="${UPLOAD_PACKAGES:-True}"
+export CPU_COUNT="${CPU_COUNT:-4}"
+echo Using $CPU_COUNT CPUs
 docker run ${DOCKER_RUN_ARGS} \
            -v "${RECIPE_ROOT}":/home/conda/recipe_root:rw,z,delegated \
            -v "${FEEDSTOCK_ROOT}":/home/conda/feedstock_root:rw,z,delegated \
