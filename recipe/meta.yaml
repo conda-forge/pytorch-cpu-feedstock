@@ -9,6 +9,7 @@ source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: {{ commit }}
+  git_depth: 1 # (Defaults to -1/not shallow)
   patches:
     # https://github.com/pytorch/pytorch/pull/49281
     - fix_std_stdint.patch
@@ -19,7 +20,7 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
   skip: true  # [win]
