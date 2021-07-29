@@ -9,7 +9,8 @@ source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: {{ commit }}
-  git_depth: 5000 # (Defaults to -1/not shallow)
+  # Does not seem to be able to checkout the branch...
+  # git_depth: 5000 # (Defaults to -1/not shallow)
   patches:
     # https://github.com/pytorch/pytorch/pull/49281
     - fix_std_stdint.patch
