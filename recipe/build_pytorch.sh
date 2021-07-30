@@ -47,6 +47,7 @@ export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 
 export USE_NINJA=OFF
 export INSTALL_TEST=0
+export BUILD_TEST=0
 
 export USE_SYSTEM_SLEEF=1
 # use our protobuf
