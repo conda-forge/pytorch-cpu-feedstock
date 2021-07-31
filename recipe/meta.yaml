@@ -22,13 +22,15 @@ build:
   number: 1
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
+    - pytorch =*=cpu*   # [cuda_compiler_version == "None"]
+    - pytorch =*=cuda*  # [cuda_compiler_version != "None"]
   skip: true  # [win]
 
 outputs:
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
