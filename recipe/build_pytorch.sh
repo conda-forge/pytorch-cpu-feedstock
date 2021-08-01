@@ -109,6 +109,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     fi
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
     export NCCL_ROOT_DIR=$PREFIX
+    export USE_SYSTEM_NCCL=1
     export USE_STATIC_NCCL=0
     export USE_STATIC_CUDNN=0
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
