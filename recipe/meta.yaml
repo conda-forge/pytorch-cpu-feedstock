@@ -136,7 +136,7 @@ outputs:
   # While this seems like a roundabout way of defining the package name
   # It helps the linter avoid errors on a package not having tests.
   {% set pytorch_cpu_gpu = "pytorch-cpu" %}   # [cuda_compiler_version == "None"]
-  {% set pytorch_cpu_gpu = "pytorch-gpy" %}   # [cuda_compiler_version != "None"]
+  {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
