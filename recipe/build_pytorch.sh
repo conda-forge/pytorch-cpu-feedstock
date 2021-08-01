@@ -47,6 +47,7 @@ export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 
 export USE_NINJA=OFF
 export INSTALL_TEST=0
+export BUILD_TEST=0
 
 export USE_SYSTEM_SLEEF=1
 # use our protobuf
@@ -108,6 +109,8 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     fi
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
     export NCCL_ROOT_DIR=$PREFIX
+    export NCCL_INCLUDE_DIR=$PREFIX/include
+    export USE_SYSTEM_NCCL=1
     export USE_STATIC_NCCL=0
     export USE_STATIC_CUDNN=0
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
