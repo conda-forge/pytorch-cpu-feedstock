@@ -26,9 +26,6 @@ set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
 
 set DISTUTILS_USE_SDK=1
 
-set CMAKE_INCLUDE_PATH=%LIBRARY_PREFIX%\include
-set LIB=%LIBRARY_PREFIX%\lib;%LIB%
-
 IF "%build_with_cuda%" == "" goto cuda_end
 
 set MAGMA_HOME=%LIBRARY_PREFIX%
@@ -42,9 +39,20 @@ set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
 set CMAKE_GENERATOR=Ninja
 set "CMAKE_GENERATOR_PLATFORM="
 set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
+set "CMAKE_INCLUDE_PATH=%LIBRARY_INC%"
+set "CMAKE_LIBRARY_PATH=%LIBRARY_LIB%"
 set "libuv_ROOT=%LIBRARY_PREFIX%"
-set "USE_SYSTEM_SLEEF=OFF"
-set "BUILD_CUSTOM_PROTOBUF=OFF"
+set "USE_SYSTEM_SLEEF=ON"
+set "INSTALL_TEST=0"
+set "BUILD_TEST=0"
+set "MAX_JOBS=%CPU_COUNT%"
 
-%PYTHON% -m pip install . --no-deps -vv
+@REM There are link errors because of conflicting symbols with caffe2_protos.lib
+set "BUILD_CUSTOM_PROTOBUF=ON"
+
+@REM There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
+set "USE_OPENMP=0"
+set "USE_MKLDNN=0"
+
+%PYTHON% setup.py install
 if errorlevel 1 exit /b 1
