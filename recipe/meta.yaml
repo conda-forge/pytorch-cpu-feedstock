@@ -23,6 +23,7 @@ build:
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
   skip: true  # [win]
+  skip: true  # [osx]
 
 outputs:
   - name: pytorch
