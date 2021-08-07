@@ -88,6 +88,10 @@ CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++14}"
 
 export MAX_JOBS=${CPU_COUNT}
 
+# Caffe2 operators are mostly replaced with ATen operators in PyTorch
+# so they are not needed
+export BUILD_CAFFE2_OPS=OFF
+
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
     export TORCH_CUDA_ARCH_LIST="3.5;5.0+PTX"
