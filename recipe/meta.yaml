@@ -34,7 +34,7 @@ outputs:
     script: bld_pytorch.bat   # [win]
     requirements:
       build:
-        - python                                 # [build_platform != target_platform]
+        - python   3.8                           # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
         - cffi                                   # [build_platform != target_platform]
@@ -61,7 +61,7 @@ outputs:
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
-        - python
+        - python   3.8
         - numpy
         # dataclasses is a backport of python 3.7 module
         - dataclasses   # [py==36]
@@ -98,7 +98,7 @@ outputs:
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
-        - python
+        - python  3.8
         - dataclasses   # [py==36]
         - {{ pin_compatible('numpy') }}
         - cffi
