@@ -90,7 +90,8 @@ export MAX_JOBS=${CPU_COUNT}
 
 # Caffe2 operators are mostly replaced with ATen operators in PyTorch
 # so they are not needed
-export BUILD_CAFFE2_OPS=OFF
+export BUILD_CAFFE2_OPS=0
+export BUILD_CAFFE2=0
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
