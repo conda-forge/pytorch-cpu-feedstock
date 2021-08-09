@@ -112,10 +112,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
         echo "unsupported cuda version. edit build_pytorch.sh"
         exit 1
     fi
-    # threads only exists in Cuda 11.2
-    #  --threads 2 
-    # Trying not to compress to see if this speeds things up
-    # export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+    export TORCH_NVCC_FLAGS="-Xfatbin -compress-all --threads 2"
     export NCCL_ROOT_DIR=$PREFIX
     export NCCL_INCLUDE_DIR=$PREFIX/include
     export USE_SYSTEM_NCCL=1
