@@ -23,19 +23,17 @@ docker_image:
 libprotobuf:
 - '3.16'
 mkl:
-- '2021'
+- '2020'
 nccl:
 - '2'
 numpy:
-- '1.18'
+- '1.19'
 pin_run_as_build:
-  mkl:
-    max_pin: x
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.7.* *_cpython
+- 3.7.* *_73_pypy
 target_platform:
 - linux-64
 zip_keys:

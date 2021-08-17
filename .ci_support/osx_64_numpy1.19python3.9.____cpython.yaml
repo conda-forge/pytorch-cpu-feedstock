@@ -21,12 +21,10 @@ llvm_openmp:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 mkl:
-- '2021'
+- '2020'
 numpy:
 - '1.19'
 pin_run_as_build:
-  mkl:
-    max_pin: x
   python:
     min_pin: x.x
     max_pin: x.x
