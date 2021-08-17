@@ -1,5 +1,5 @@
 {% set version = "1.9.0" %}
-{% set commit = "v1.9.0" %}
+{% set commit = "v" + version %}
 
 package:
   name: pytorch-recipe
@@ -19,7 +19,7 @@ source:
     - fix_blas_lapack.patch
 
 build:
-  number: 1
+  number: 2
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
   skip: true  # [win]
@@ -109,6 +109,15 @@ outputs:
         - typing_extensions
         # Need ninja to load C++ extensions
         - ninja
+      run_constrained:
+        # These constraints ensure conflict between pytorch and
+        # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
+        # built into place.
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
+        - pytorch-cpu = {{ version }}  # [cuda_compiler_version == "None"]
+        - pytorch-gpu = 99999999       # [cuda_compiler_version == "None"]
+        - pytorch-gpu = {{ version }}  # [cuda_compiler_version != "None"]
+        - pytorch-cpu = 99999999       # [cuda_compiler_version != "None"]
 
     test:
       requires:
@@ -132,8 +141,12 @@ outputs:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
 
-  - name: pytorch-cpu   # [cuda_compiler_version == "None"]
-  - name: pytorch-gpu   # [cuda_compiler_version != "None"]
+  # 2021/08/01, hmaarrfk
+  # While this seems like a roundabout way of defining the package name
+  # It helps the linter avoid errors on a package not having tests.
+  {% set pytorch_cpu_gpu = "pytorch-cpu" %}   # [cuda_compiler_version == "None"]
+  {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
+  - name: {{ pytorch_cpu_gpu }}
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
