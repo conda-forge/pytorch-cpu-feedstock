@@ -1,0 +1,32 @@
+From 659cbe4e495b6374693a9a6d652b0ea63ea17ad8 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Tue, 17 Aug 2021 20:12:48 -0400
+Subject: [PATCH] Avoid PyErrWarn_Explicit
+
+---
+ torch/csrc/Exceptions.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/torch/csrc/Exceptions.cpp b/torch/csrc/Exceptions.cpp
+index d008643f70..2a215bd53a 100644
+--- a/torch/csrc/Exceptions.cpp
++++ b/torch/csrc/Exceptions.cpp
+@@ -201,6 +201,7 @@ PyWarningHandler::~PyWarningHandler() noexcept(false) {
+       const auto& msg = processErrorMsg(warning.msg_);
+       if (source_location.file == nullptr) {
+         result = PyErr_WarnEx(PyExc_RuntimeWarning, msg.c_str(), 1);
++#if 0
+       } else if (warning.verbatim_) {
+         // Sets the source location from the warning
+         // Note: PyErr_WarnExplicit will disregard Python's warning filter
+@@ -213,6 +214,7 @@ PyWarningHandler::~PyWarningHandler() noexcept(false) {
+             /*lineno=*/source_location.line,
+             /*module=*/nullptr,
+             /*registry=*/nullptr);
++#endif
+       } else {
+         // Lets Python set the source location and puts the C++ warning
+         // location into the message.
+-- 
+2.30.2
+
