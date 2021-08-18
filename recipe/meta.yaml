@@ -18,7 +18,7 @@ source:
     # https://github.com/pytorch/pytorch/pull/49647
     - fix_blas_lapack.patch
     # https://foss.heptapod.net/pypy/pypy/-/issues/3521
-    - 0001-Avoid-PyErrWarn_Explicit.patch
+    - 0001-Avoid-PyErrWarn_Explicit.patch  # [python_impl == 'pypy']
 
 build:
   number: 2
