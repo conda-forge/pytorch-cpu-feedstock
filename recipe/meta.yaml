@@ -19,6 +19,8 @@ source:
     - fix_blas_lapack.patch
     # https://foss.heptapod.net/pypy/pypy/-/issues/3521
     - 0001-Avoid-PyErrWarn_Explicit.patch  # [python_impl == 'pypy']
+    # https://github.com/pytorch/pytorch/pull/63473
+    - 0002-Add-const-keyword-in-jit-python-init.cpp.patch  # [python_impl == 'pypy']
 
 build:
   number: 2

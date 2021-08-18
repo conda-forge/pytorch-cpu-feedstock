@@ -1,0 +1,34 @@
+From d79cec6dfeb81ba61c0de6fa2c4626a2fbc7f89b Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Wed, 18 Aug 2021 07:55:17 -0400
+Subject: [PATCH 2/2] Add const keyword in jit/python/init.cpp
+
+---
+ torch/csrc/jit/python/init.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/torch/csrc/jit/python/init.cpp b/torch/csrc/jit/python/init.cpp
+index 58637ef5a9..cd6d0c6bc7 100644
+--- a/torch/csrc/jit/python/init.cpp
++++ b/torch/csrc/jit/python/init.cpp
+@@ -413,7 +413,7 @@ void initJITBindings(PyObject* module) {
+             ArgumentSpecCreator arg_spec_creator(*graph);
+             Stack stack;
+             stack.reserve(inputs.size()); // captures?
+-            for (auto& obj : inputs) {
++            for (const auto& obj : inputs) {
+               stack.push_back(toTypeInferredIValue(obj));
+             }
+             ArgumentSpec spec = arg_spec_creator.create(with_grad, stack);
+@@ -434,7 +434,7 @@ void initJITBindings(PyObject* module) {
+           [](std::shared_ptr<Graph>& graph, const py::tuple& inputs) {
+             Stack stack;
+             stack.reserve(inputs.size()); // captures?
+-            for (auto& obj : inputs) {
++            for (const auto& obj : inputs) {
+               stack.push_back(toTypeInferredIValue(obj));
+             }
+             auto g_inputs = graph->inputs();
+-- 
+2.32.0
+
