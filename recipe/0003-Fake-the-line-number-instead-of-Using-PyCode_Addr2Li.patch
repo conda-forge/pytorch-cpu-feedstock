@@ -1,0 +1,38 @@
+From bf0f10c32ff9b7d9134773c143f4b399ac0e2517 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Thu, 19 Aug 2021 07:30:52 -0400
+Subject: [PATCH 4/4] Fake the line number instead of Using PyCode_Addr2Line
+
+---
+ torch/csrc/jit/python/python_tracer.cpp | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/torch/csrc/jit/python/python_tracer.cpp b/torch/csrc/jit/python/python_tracer.cpp
+index 4f2d983c02..54ac2c665e 100644
+--- a/torch/csrc/jit/python/python_tracer.cpp
++++ b/torch/csrc/jit/python/python_tracer.cpp
+@@ -30,13 +30,21 @@ std::vector<StackEntry> _pythonCallstack() {
+   std::vector<StackEntry> entries;
+ 
+   while (nullptr != frame) {
++#if !defined(PYPY_VERSION_NUM)
+     size_t line = PyCode_Addr2Line(frame->f_code, frame->f_lasti);
++#else
++    size_t line = 1;
++#endif
+     std::string filename = THPUtils_unpackString(frame->f_code->co_filename);
+     std::string funcname = THPUtils_unpackString(frame->f_code->co_name);
+     auto source = std::make_shared<Source>(funcname, filename, line);
+     entries.emplace_back(
+         StackEntry{funcname, SourceRange(source, 0, funcname.size())});
++#if defined(PYPY_VERSION_NUM)
++    frame == nullptr;
++#else
+     frame = frame->f_back;
++#endif
+   }
+   return entries;
+ }
+-- 
+2.30.2
+
