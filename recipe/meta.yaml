@@ -22,6 +22,7 @@ source:
     # https://github.com/pytorch/pytorch/pull/63473
     - 0002-Add-const-keyword-in-jit-python-init.cpp.patch  # [python_impl == 'pypy']
     - 0003-Fake-the-line-number-instead-of-Using-PyCode_Addr2Li.patch  # [python_impl == 'pypy']
+    - 0004-const-keyword-in-init.patch  # [python_impl == 'pypy']
 
 build:
   number: 2
