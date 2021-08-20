@@ -26,7 +26,7 @@ index 4f2d983c02..54ac2c665e 100644
      entries.emplace_back(
          StackEntry{funcname, SourceRange(source, 0, funcname.size())});
 +#if defined(PYPY_VERSION_NUM)
-+    frame == nullptr;
++    frame = nullptr;
 +#else
      frame = frame->f_back;
 +#endif
