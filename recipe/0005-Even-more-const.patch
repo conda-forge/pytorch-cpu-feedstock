@@ -1,0 +1,22 @@
+diff --git a/torch/csrc/jit/tensorexpr/tensorexpr_init.cpp b/torch/csrc/jit/tensorexpr/tensorexpr_init.cpp
+index 593f07a836..e243260f25 100644
+--- a/torch/csrc/jit/tensorexpr/tensorexpr_init.cpp
++++ b/torch/csrc/jit/tensorexpr/tensorexpr_init.cpp
+@@ -590,7 +590,7 @@ void initTensorExprBindings(PyObject* module) {
+           [](TensorExprKernel& self, const py::tuple& inputs) {
+             Stack stack;
+             stack.reserve(inputs.size()); // captures?
+-            for (auto& obj : inputs) {
++            for (const auto& obj : inputs) {
+               stack.push_back(toTypeInferredIValue(obj));
+             }
+             auto g_inputs = self.graph()->inputs();
+@@ -607,7 +607,7 @@ void initTensorExprBindings(PyObject* module) {
+           [](TensorExprKernel& self, const py::tuple& inputs) {
+             Stack stack;
+             stack.reserve(inputs.size()); // captures?
+-            for (auto& obj : inputs) {
++            for (const auto& obj : inputs) {
+               stack.push_back(toTypeInferredIValue(obj));
+             }
+             auto g_inputs = self.graph()->inputs();
