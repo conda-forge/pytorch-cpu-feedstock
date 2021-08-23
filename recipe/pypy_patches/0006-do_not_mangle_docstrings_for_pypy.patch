@@ -1,0 +1,16 @@
+diff --git a/torch/distributed/rpc/api.py b/torch/distributed/rpc/api.py
+index 08a69f91ab..74b79a1585 100644
+--- a/torch/distributed/rpc/api.py
++++ b/torch/distributed/rpc/api.py
+@@ -425,7 +425,11 @@ def method_factory(method_name, docstring):
+     return method
+ 
+ 
++import platform
+ for method_name, method in inspect.getmembers(PyRRef):
++    # Do not do any mangling for PyPy
++    if platform.python_implementation() == 'PyPy':
++        continue
+     # Ignore magic methods, except "__str__".
+     if method_name.startswith("_") and method_name != "__str__":
+         continue

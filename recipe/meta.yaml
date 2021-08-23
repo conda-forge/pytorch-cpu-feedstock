@@ -18,12 +18,13 @@ source:
     # https://github.com/pytorch/pytorch/pull/49647
     - fix_blas_lapack.patch
     # https://foss.heptapod.net/pypy/pypy/-/issues/3521
-    - 0001-Avoid-PyErrWarn_Explicit.patch  # [python_impl == 'pypy']
+    - pypy_patches/0001-Avoid-PyErrWarn_Explicit.patch  # [python_impl == 'pypy']
     # https://github.com/pytorch/pytorch/pull/63473
-    - 0002-Add-const-keyword-in-jit-python-init.cpp.patch  # [python_impl == 'pypy']
-    - 0003-Fake-the-line-number-instead-of-Using-PyCode_Addr2Li.patch  # [python_impl == 'pypy']
-    - 0004-const-keyword-in-init.patch  # [python_impl == 'pypy']
-    - 0005-Even-more-const.patch        # [python_impl == 'pypy']
+    - pypy_patches/0002-Add-const-keyword-in-jit-python-init.cpp.patch  # [python_impl == 'pypy']
+    - pypy_patches/0003-Fake-the-line-number-instead-of-Using-PyCode_Addr2Li.patch  # [python_impl == 'pypy']
+    - pypy_patches/0004-const-keyword-in-init.patch  # [python_impl == 'pypy']
+    - pypy_patches/0005-Even-more-const.patch        # [python_impl == 'pypy']
+    - pypy_patches/0006-do_not_mangle_docstrings_for_pypy.patch  # [python_impl == 'pypy']
 
 build:
   number: 2
