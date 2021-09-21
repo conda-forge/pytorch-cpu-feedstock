@@ -17,7 +17,9 @@ source:
     - fix_cross_compile.patch
     # https://github.com/pytorch/pytorch/pull/49647
     - fix_blas_lapack.patch
-    - protocol_buffers_3_11.patch
+    # 20210920 hmaarrfk:
+    # This patch is necessary, but it is applied in the build script
+    # - protocol_buffers_3_11.patch
 
 build:
   number: 3

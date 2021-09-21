@@ -5,6 +5,11 @@ set -ex
 # clean up an existing cmake build directory
 rm -rf build
 
+# 20210920 hmaarrfk: I'm really not sure why i can't apply this in the
+# conda recipe itself.
+# I think it is due to some submodule stuff in git....
+patch  -p 1 third_party/onnx/onnx/proto_utils.h ${RECIPE_DIR}/protocol_buffers_3_11.patch -f
+
 # uncomment to debug cmake build
 #export CMAKE_VERBOSE_MAKEFILE=1
 
