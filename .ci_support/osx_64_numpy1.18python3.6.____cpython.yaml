@@ -21,7 +21,7 @@ llvm_openmp:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 mkl:
-- '2020'
+- '2021'
 numpy:
 - '1.18'
 pin_run_as_build:
