@@ -1,4 +1,4 @@
-{% set version = "1.9.0" %}
+{% set version = "1.9.1" %}
 {% set commit = "v" + version %}
 
 package:
@@ -17,9 +17,12 @@ source:
     - fix_cross_compile.patch
     # https://github.com/pytorch/pytorch/pull/49647
     - fix_blas_lapack.patch
+    # 20210920 hmaarrfk:
+    # This patch is necessary, but it is applied in the build script
+    # - protocol_buffers_3_11.patch
 
 build:
-  number: 2
+  number: 3
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
   skip: true  # [win]
