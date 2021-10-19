@@ -58,6 +58,7 @@ outputs:
         - ninja
         - protobuf {{ libprotobuf }}
         - make      # [linux]
+        - ccache    # [linux or osx]
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]

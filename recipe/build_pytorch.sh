@@ -132,4 +132,15 @@ fi
 export CMAKE_BUILD_TYPE=Release
 export CMAKE_CXX_STANDARD=14
 
-$PYTHON -m pip install . --no-deps -vvv --no-clean
+# set this variable because conda builds everytime in different folders
+export CCACHE_BASEDIR=$HOME
+# reccomentations from https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md#use-ccache
+# max size of cache
+ccache -M 25Gi  # -M 0 for unlimited
+# unlimited number of files
+ccache -F 0
+ccache --show-config
+
+# Azure Pipelines have limit of 6h, let's limit the build time to 5h
+timeout -s INT 5h $PYTHON -m pip install . --no-deps -vvv --no-clean
+ccache --print-stats
