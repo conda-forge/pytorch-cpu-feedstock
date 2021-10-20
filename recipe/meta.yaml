@@ -33,6 +33,8 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
+      script_env:
+        - CCACHE_DIR  # [osx]
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
     requirements:

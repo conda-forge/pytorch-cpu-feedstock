@@ -92,8 +92,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
     fi
-    export CCACHE_DIR=$HOME/ccache
-    ccache --show-config
     $PYTHON -m pip install . --no-deps -vv
     ccache --print-stats
     exit 0
