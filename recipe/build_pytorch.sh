@@ -93,7 +93,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export USE_DISTRIBUTED=0
     fi
     export CCACHE_DIR=$HOME/ccache
-    timeout -s SIGTERM 5h $PYTHON -m pip install . --no-deps -vv
+    ccache --show-config
+    $PYTHON -m pip install . --no-deps -vv
     ccache --print-stats
     exit 0
 fi
