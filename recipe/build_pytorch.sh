@@ -67,6 +67,15 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT=""
 fi
 
+# set this variable because conda builds everytime in different folders
+export CCACHE_BASEDIR=$HOME
+# reccomentations from https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md#use-ccache
+# max size of cache
+ccache -M 25Gi  # -M 0 for unlimited
+# unlimited number of files
+ccache -F 0
+ccache --show-config
+
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Produce macOS builds with torch.distributed support.
@@ -83,7 +92,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
     fi
-    $PYTHON -m pip install . --no-deps -vv
+    export CCACHE_DIR=$HOME/ccache
+    timeout -s SIGTERM 5h $PYTHON -m pip install . --no-deps -vv
+    ccache --print-stats
     exit 0
 fi
 
@@ -131,15 +142,6 @@ fi
 
 export CMAKE_BUILD_TYPE=Release
 export CMAKE_CXX_STANDARD=14
-
-# set this variable because conda builds everytime in different folders
-export CCACHE_BASEDIR=$HOME
-# reccomentations from https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md#use-ccache
-# max size of cache
-ccache -M 25Gi  # -M 0 for unlimited
-# unlimited number of files
-ccache -F 0
-ccache --show-config
 
 # Azure Pipelines have limit of 6h, let's limit the build time to 5h
 # INT signal (Ctlr+C) is too kind and doesn't actually destroy the process.
