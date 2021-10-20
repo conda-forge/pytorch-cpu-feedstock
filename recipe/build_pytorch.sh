@@ -142,5 +142,7 @@ ccache -F 0
 ccache --show-config
 
 # Azure Pipelines have limit of 6h, let's limit the build time to 5h
-timeout -s INT 5h $PYTHON -m pip install . --no-deps -vvv --no-clean
+# INT signal (Ctlr+C) is too kind and doesn't actually destroy the process.
+# Use the mean SIGTERM which will stop the process for sure
+timeout -s SIGTERM 5h $PYTHON -m pip install . --no-deps -vvv --no-clean
 ccache --print-stats
