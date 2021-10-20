@@ -90,10 +90,10 @@ jobs:
   steps:
   - task: Cache@2
     inputs:
-      key: 'ccache | "$(Agent.OS)" | "$(DOCKER_IMAGE)"'
+      key: 'ccache | "$(Agent.OS)" | "$(DOCKER_IMAGE)" | version2'
       path: $(CCACHE_DIR)
       restoreKeys: |
-        ccache | "$(Agent.OS)" | "$(DOCKER_IMAGE)"
+        ccache | "$(Agent.OS)" | "$(DOCKER_IMAGE)" | version2
     displayName: Cache ccache directory
   - script: |
          rm -rf /opt/ghc
