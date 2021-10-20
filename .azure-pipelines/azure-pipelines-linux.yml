@@ -117,7 +117,9 @@ jobs:
         else
           export IS_PR_BUILD="False"
         fi
-        .scripts/run_docker_build.sh
+        # Azure Pipelines saves the cache only for successful builds
+        # https://github.com/microsoft/azure-pipelines-tasks/issues/11950#issuecomment-597899556
+        (.scripts/run_docker_build.sh; exit 0)
     displayName: Run docker build
     env:
       BINSTAR_TOKEN: $(BINSTAR_TOKEN)
