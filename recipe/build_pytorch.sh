@@ -142,9 +142,9 @@ fi
 export CMAKE_BUILD_TYPE=Release
 export CMAKE_CXX_STANDARD=14
 
-# Azure Pipelines have limit of 6h, let's limit the build time to 4h
+# Azure Pipelines have limit of 6h, let's limit the build time to 5h
 # INT signal (Ctlr+C) is too kind and doesn't actually destroy the process.
 # Use the mean SIGTERM which will stop the process for sure
-timeout -s SIGTERM 4h $PYTHON -m pip install . --no-deps -vvv --no-clean || ( [[ $? -eq 124 ]] && \
+timeout -s SIGTERM 5h $PYTHON -m pip install . --no-deps -vvv --no-clean || ( [[ $? -eq 124 ]] && \
 echo "Timeout reached." )
 ccache --print-stats
