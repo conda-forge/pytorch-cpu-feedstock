@@ -8,106 +8,81 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      linux_64_cuda_compiler_version10.2cudnn7numpy1.18python3.6.____cpython:
-        CONFIG: linux_64_cuda_compiler_version10.2cudnn7numpy1.18python3.6.____cpython
-        UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version10.2c_hbd3306b348
       linux_64_cuda_compiler_version10.2cudnn7numpy1.18python3.7.____cpython:
         CONFIG: linux_64_cuda_compiler_version10.2cudnn7numpy1.18python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version10.2c_h46cfd38e4f
+        SHORT_CONFIG: linux_64_cuda_compiler_version10.2c_h46cfd38e4f
       linux_64_cuda_compiler_version10.2cudnn7numpy1.18python3.8.____cpython:
         CONFIG: linux_64_cuda_compiler_version10.2cudnn7numpy1.18python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version10.2c_ha7763fd818
+        SHORT_CONFIG: linux_64_cuda_compiler_version10.2c_ha7763fd818
       linux_64_cuda_compiler_version10.2cudnn7numpy1.19python3.9.____cpython:
         CONFIG: linux_64_cuda_compiler_version10.2cudnn7numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version10.2c_h380be48ee7
-      linux_64_cuda_compiler_version11.0cudnn8numpy1.18python3.6.____cpython:
-        CONFIG: linux_64_cuda_compiler_version11.0cudnn8numpy1.18python3.6.____cpython
-        UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.0c_h1c99836911
+        SHORT_CONFIG: linux_64_cuda_compiler_version10.2c_h380be48ee7
       linux_64_cuda_compiler_version11.0cudnn8numpy1.18python3.7.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.0cudnn8numpy1.18python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.0c_hdad6457722
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.0c_hdad6457722
       linux_64_cuda_compiler_version11.0cudnn8numpy1.18python3.8.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.0cudnn8numpy1.18python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.0c_hb4a639ecb7
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.0c_hb4a639ecb7
       linux_64_cuda_compiler_version11.0cudnn8numpy1.19python3.9.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.0cudnn8numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.0c_hea6020ecb1
-      linux_64_cuda_compiler_version11.1cudnn8numpy1.18python3.6.____cpython:
-        CONFIG: linux_64_cuda_compiler_version11.1cudnn8numpy1.18python3.6.____cpython
-        UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.1
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.1c_h0afa9a24c7
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.0c_hea6020ecb1
       linux_64_cuda_compiler_version11.1cudnn8numpy1.18python3.7.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.1cudnn8numpy1.18python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.1
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.1c_h12e5ddd840
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.1c_h12e5ddd840
       linux_64_cuda_compiler_version11.1cudnn8numpy1.18python3.8.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.1cudnn8numpy1.18python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.1
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.1c_h8c31b86664
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.1c_h8c31b86664
       linux_64_cuda_compiler_version11.1cudnn8numpy1.19python3.9.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.1cudnn8numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.1
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.1c_hf3305e0654
-      linux_64_cuda_compiler_version11.2cudnn8numpy1.18python3.6.____cpython:
-        CONFIG: linux_64_cuda_compiler_version11.2cudnn8numpy1.18python3.6.____cpython
-        UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.2
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.2c_he7c0fc5a14
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.1c_hf3305e0654
       linux_64_cuda_compiler_version11.2cudnn8numpy1.18python3.7.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.2cudnn8numpy1.18python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.2
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.2c_hc256e67a39
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.2c_hc256e67a39
       linux_64_cuda_compiler_version11.2cudnn8numpy1.18python3.8.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.2cudnn8numpy1.18python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.2
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.2c_h99ba890cb9
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.2c_h99ba890cb9
       linux_64_cuda_compiler_version11.2cudnn8numpy1.19python3.9.____cpython:
         CONFIG: linux_64_cuda_compiler_version11.2cudnn8numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.2
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_version11.2c_hca0bd2ac17
-      linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.18python3.6.____cpython:
-        CONFIG: linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.18python3.6.____cpython
-        UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_versionNonec_hfd854e6478
+        SHORT_CONFIG: linux_64_cuda_compiler_version11.2c_hca0bd2ac17
       linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.18python3.7.____cpython:
         CONFIG: linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.18python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_versionNonec_hfe21e9dba3
+        SHORT_CONFIG: linux_64_cuda_compiler_versionNonec_hfe21e9dba3
       linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.18python3.8.____cpython:
         CONFIG: linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.18python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_versionNonec_h90b2e6f7d5
+        SHORT_CONFIG: linux_64_cuda_compiler_versionNonec_h90b2e6f7d5
       linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.19python3.9.____cpython:
         CONFIG: linux_64_cuda_compiler_versionNonecudnnundefinednumpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG_NAME: linux_64_cuda_compiler_versionNonec_ha2ac98a0c3
+        SHORT_CONFIG: linux_64_cuda_compiler_versionNonec_ha2ac98a0c3
   timeoutInMinutes: 360
 
   steps:
@@ -128,6 +103,11 @@ jobs:
         export CI=azure
         export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
         export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
+        if [[ "${BUILD_REASON:-}" == "PullRequest" ]]; then
+          export IS_PR_BUILD="True"
+        else
+          export IS_PR_BUILD="False"
+        fi
         .scripts/run_docker_build.sh
     displayName: Run docker build
     env:
@@ -135,14 +115,31 @@ jobs:
       FEEDSTOCK_TOKEN: $(FEEDSTOCK_TOKEN)
       STAGING_BINSTAR_TOKEN: $(STAGING_BINSTAR_TOKEN)
   - script: |
-        artifact_name="conda_artifacts_$(build.BuildId)_$(SHORT_CONFIG_NAME)"
-        echo "##vso[task.setVariable variable=ARTIFACT_NAME]$artifact_name"
-        if [ -d build_artifacts ]; then
-          echo "##vso[task.setVariable variable=CONDA_BLD_DIR_EXISTS]true"
+        export CI=azure
+        export CI_RUN_ID=$(build.BuildNumber).$(system.JobAttempt)
+        export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
+        export CONDA_BLD_DIR=build_artifacts
+        export ARTIFACT_STAGING_DIR="$(Build.ArtifactStagingDirectory)"
+        # Archive everything in CONDA_BLD_DIR except environments
+        export BLD_ARTIFACT_PREFIX=conda_artifacts
+        if [[ "$AGENT_JOBSTATUS" == "Failed" ]]; then
+          # Archive the CONDA_BLD_DIR environments only when the job fails
+          export ENV_ARTIFACT_PREFIX=conda_envs
         fi
-    displayName: Check for conda build artifacts
+        ./.scripts/create_conda_build_artifacts.sh
+    displayName: Prepare conda build artifacts
     condition: succeededOrFailed()
 
-  - publish: build_artifacts/
-    artifact: $(ARTIFACT_NAME)
-    condition: eq(variables.CONDA_BLD_DIR_EXISTS, 'true')
+  - task: PublishPipelineArtifact@1
+    displayName: Store conda build artifacts
+    condition: not(eq(variables.BLD_ARTIFACT_PATH, ''))
+    inputs:
+      targetPath: $(BLD_ARTIFACT_PATH)
+      artifactName: $(BLD_ARTIFACT_NAME)
+
+  - task: PublishPipelineArtifact@1
+    displayName: Store conda build environment artifacts
+    condition: not(eq(variables.ENV_ARTIFACT_PATH, ''))
+    inputs:
+      targetPath: $(ENV_ARTIFACT_PATH)
+      artifactName: $(ENV_ARTIFACT_NAME)
