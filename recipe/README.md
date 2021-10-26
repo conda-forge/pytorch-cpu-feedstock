@@ -21,16 +21,15 @@ The following script may help build all cuda version sequentially:
 
 set -ex
 conda activate base
-# Ensure that the anaconda command exists for uploading
-which anaconda
 
 docker system prune --force
 configs=$(find .ci_support/ -type f -name '*cuda_compiler_version[^nN]*' -printf "%p ")
-# anaconda upload  --skip build_artifacts/linux-64/pytorch*
 
 # Assuming a powerful enough machine with many cores
 # 10 seems to be a good point where things don't run out of RAM too much.
 export CPU_COUNT=10
+
+mkdir -p build_artifacts
 
 for config_filename in $configs; do
     filename=$(basename ${config_filename})
@@ -40,9 +39,8 @@ for config_filename in $configs; do
         continue
     fi
 
-    python build-locally.py $config
+    python build-locally.py $config | tee build_artifacts/${config}-log.txt
     # docker images get quite big clean them up after each build to save your disk....
     docker system prune --force
-    # anaconda upload  --skip build_artifacts/linux-64/pytorch*
 done
 ```

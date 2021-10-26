@@ -1,4 +1,4 @@
-{% set version = "1.9.1" %}
+{% set version = "1.10.0" %}
 {% set commit = "v" + version %}
 
 package:
@@ -10,19 +10,10 @@ source:
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: {{ commit }}
   patches:
-    # https://github.com/pytorch/pytorch/pull/49281
-    - fix_std_stdint.patch
     - fix_dispatch_apply_auto.patch
-    # https://github.com/pytorch/pytorch/pull/49646
-    - fix_cross_compile.patch
-    # https://github.com/pytorch/pytorch/pull/49647
-    - fix_blas_lapack.patch
-    # 20210920 hmaarrfk:
-    # This patch is necessary, but it is applied in the build script
-    # - protocol_buffers_3_11.patch
 
 build:
-  number: 3
+  number: 0
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
   skip: true  # [win]
@@ -102,14 +93,13 @@ outputs:
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
         - python
-        - dataclasses   # [py==36]
         - {{ pin_compatible('numpy') }}
         - cffi
         # if future isn't installed on python 3, `pip check` can give
         # the user an error
         - future
-        - typing  # [py2k]
         - typing_extensions
+        - setuptools
         # Need ninja to load C++ extensions
         - ninja
       run_constrained:
