@@ -119,6 +119,7 @@ outputs:
         - setuptools
         - hypothesis
         - pytest
+        - expecttest
         - tabulate
         - pydot
         - mock  # [linux]
@@ -128,8 +129,8 @@ outputs:
       source_files:
         - test
       commands:
-        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
-        - python ./test/run_test.py  # [win]
+        - OMP_NUM_THREADS=2 python ./test/run_test.py  # [not win]
+        - python .\test\run_test.py  # [win]
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
