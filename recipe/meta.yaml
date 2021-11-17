@@ -130,6 +130,7 @@ outputs:
         - torch
       source_files:
         - test
+        - benchmarks
       commands:
         - OMP_NUM_THREADS=2 python ./test/run_test.py  # [not win]
         - python .\test\run_test.py  # [win]
