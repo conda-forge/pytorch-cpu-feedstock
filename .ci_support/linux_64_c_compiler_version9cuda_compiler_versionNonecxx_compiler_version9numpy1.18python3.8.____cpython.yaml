@@ -1,7 +1,7 @@
 c_compiler:
 - gcc
 c_compiler_version:
-- '7'
+- '9'
 cdt_name:
 - cos7
 channel_sources:
@@ -17,11 +17,11 @@ cudnn:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '7'
+- '9'
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
 libprotobuf:
-- '3.18'
+- '3.19'
 mkl:
 - '2021'
 nccl:
@@ -39,9 +39,9 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - cdt_name
-  - cuda_compiler_version
   - cudnn
+  - cuda_compiler_version
+  - cdt_name
   - docker_image
-- - numpy
-  - python
+- - python
+  - numpy
