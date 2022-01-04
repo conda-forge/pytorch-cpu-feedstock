@@ -17,6 +17,9 @@ build:
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
   skip: true  # [win]
+  skip: true  # [cuda_compiler_version=="10.2"]
+  skip: true  # [cuda_compiler_version=="11.0"]
+  skip: true  # [cuda_compiler_version=="11.1"]
 
 outputs:
   - name: pytorch
