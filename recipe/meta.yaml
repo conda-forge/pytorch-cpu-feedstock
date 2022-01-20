@@ -11,12 +11,14 @@ source:
   git_tag: {{ commit }}
   patches:
     - fix_dispatch_apply_auto.patch
+    # mkl-devel on Windows has suffix _dll for MKL's .lib files
+    - fix_mkl_win.patch  # [win]
 
 build:
   number: 0
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
-  skip: true  # [win]
+  skip: true  # [win and cuda_compiler_version != "None"]
 
 outputs:
   - name: pytorch
@@ -86,6 +88,7 @@ outputs:
         - libcblas   # [not x86]
         - liblapack   # [not x86]
         - llvm-openmp    # [osx]
+        - libuv  # [win]
         #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
         #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
         # GPU requirements without run_exports
@@ -116,6 +119,7 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - expecttest
         - setuptools
         - hypothesis
         - pytest
