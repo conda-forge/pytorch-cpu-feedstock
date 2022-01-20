@@ -13,7 +13,7 @@ source:
     - fix_dispatch_apply_auto.patch
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
   skip: true  # [win]
