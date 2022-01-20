@@ -11,19 +11,19 @@ channel_targets:
 cuda_compiler:
 - nvcc
 cuda_compiler_version:
-- None
+- '10.2'
 cudnn:
-- undefined
+- '7'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
 - '7'
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+- quay.io/condaforge/linux-anvil-cos7-cuda:10.2
 libprotobuf:
 - '3.18'
 mkl:
-- '2021'
+- '2022'
 nccl:
 - '2'
 numpy:
@@ -39,9 +39,9 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - cdt_name
-  - cuda_compiler_version
   - cudnn
+  - cuda_compiler_version
+  - cdt_name
   - docker_image
-- - numpy
-  - python
+- - python
+  - numpy
