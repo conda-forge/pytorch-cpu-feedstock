@@ -72,7 +72,6 @@ outputs:
         - libblas               # [not x86]
         - libblas               # [not x86]
         - liblapack             # [not x86]
-        - openblas              # [not x86]
         - libprotobuf
         - sleef
         - typing
