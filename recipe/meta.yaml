@@ -133,6 +133,7 @@ outputs:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
+        - python -c "import torch; print(torch.__config__.show())"
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
