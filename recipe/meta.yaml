@@ -69,11 +69,10 @@ outputs:
         - mkl-devel {{ mkl }}   # [x86]
         - mkl {{ mkl }}         # [x86]
         - libblas * *_mkl       # [x86]
-        - libblas * *accelerate  # [osx and (not x86)]
-        - libblas
-        - libblas
-        - liblapack
-        - openblas
+        - libblas               # [not x86]
+        - libblas               # [not x86]
+        - liblapack             # [not x86]
+        - openblas              # [not x86]
         - libprotobuf
         - sleef
         - typing
@@ -83,10 +82,9 @@ outputs:
       run:
         - mkl {{ mkl }}     # [x86]
         - libblas * *_mkl   # [x86]
-        - libblas * *accelerate  # [osx and (not x86)]
-        # - libblas   # [linux and (not x86)]
-        # - libcblas   # [linux and (not x86)]
-        # - liblapack   # [linux and (not x86)]
+        - libblas   # [not x86]
+        - libcblas   # [not x86]
+        - liblapack   # [not x86]
         - llvm-openmp    # [osx]
         #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
         #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
@@ -155,7 +153,6 @@ outputs:
     test:
       imports:
         - torch
-        - python -c "import torch; print(torch.__config__.show())"
 
 about:
   home: https://pytorch.org/
