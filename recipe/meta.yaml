@@ -1,5 +1,4 @@
-{% set version = "1.10.0" %}
-{% set commit = "v" + version %}
+{% set version = "1.10.1" %}
 
 package:
   name: pytorch-recipe
@@ -8,14 +7,14 @@ package:
 source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
-  git_tag: {{ commit }}
+  git_tag: v{{ version }}
   patches:
     - fix_dispatch_apply_auto.patch
 
 build:
-  number: 1
+  number: 0
   run_exports:
-    - {{ pin_subpackage('pytorch', max_pin='x.x.x') }}
+    - {{ pin_subpackage('pytorch', max_pin='x.x') }}
   skip: true  # [win]
 
 outputs:
