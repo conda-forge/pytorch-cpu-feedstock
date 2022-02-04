@@ -16,6 +16,8 @@ build:
   run_exports:
     - {{ pin_subpackage('pytorch', max_pin='x.x') }}
   skip: true  # [win]
+  # temporary skip for everything but osx
+  skip: true  # [not osx]
 
 outputs:
   - name: pytorch
@@ -75,9 +77,9 @@ outputs:
         - mkl {{ mkl }}         # [x86]
         - libblas * *_mkl       # [x86]
         - libblas               # [not x86]
-        - libblas               # [not x86]
+        - libcblas              # [not x86]
         - liblapack             # [not x86]
-        - openblas              # [not x86]
+        - liblapacke            # [not x86]
         - libprotobuf
         - sleef
         - typing
@@ -87,9 +89,6 @@ outputs:
       run:
         - mkl {{ mkl }}     # [x86]
         - libblas * *_mkl   # [x86]
-        - libblas   # [not x86]
-        - libcblas   # [not x86]
-        - liblapack   # [not x86]
         - llvm-openmp    # [osx]
         #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
         #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
