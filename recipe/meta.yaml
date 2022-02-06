@@ -12,9 +12,7 @@ source:
     - fix_dispatch_apply_auto.patch
 
 build:
-  number: 0
-  run_exports:
-    - {{ pin_subpackage('pytorch', max_pin='x.x') }}
+  number: 1
   skip: true  # [win]
 
 outputs:
@@ -23,6 +21,8 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
+      run_exports:
+        - {{ pin_subpackage('pytorch', max_pin='x.x') }}
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
     requirements:
