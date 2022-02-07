@@ -1,0 +1,179 @@
+# This file was generated automatically from conda-smithy. To update this configuration,
+# update the conda-forge.yml and/or the recipe/meta.yaml.
+# -*- mode: yaml -*-
+
+name: Build conda package
+on: [push]
+
+jobs:
+  build:
+    name: ${{ matrix.CONFIG }}
+    runs-on: ${{ matrix.labels }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - CONFIG: linux_64_c_compiler_version7cuda_compiler_version10.2cudnn7cxx_compiler_version7numpy1.18python3.7.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version7cuda_compiler_version10.2cudnn7cxx_compiler_version7numpy1.18python3.8.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version7cuda_compiler_version10.2cudnn7cxx_compiler_version7numpy1.19python3.9.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-cuda:10.2
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.0cudnn8cxx_compiler_version9numpy1.18python3.7.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.0cudnn8cxx_compiler_version9numpy1.18python3.8.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.0cudnn8cxx_compiler_version9numpy1.19python3.9.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.0
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.1cudnn8cxx_compiler_version9numpy1.18python3.7.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.1
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.1cudnn8cxx_compiler_version9numpy1.18python3.8.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.1
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.1cudnn8cxx_compiler_version9numpy1.19python3.9.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.1
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.2cudnn8cxx_compiler_version9numpy1.18python3.7.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.2
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.2cudnn8cxx_compiler_version9numpy1.18python3.8.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.2
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_version11.2cudnn8cxx_compiler_version9numpy1.19python3.9.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.2
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_versionNonecudnnundefinedcxx_compiler_version9numpy1.18python3.7.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_versionNonecudnnundefinedcxx_compiler_version9numpy1.18python3.8.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+          - CONFIG: linux_64_c_compiler_version9cuda_compiler_versionNonecudnnundefinedcxx_compiler_version9numpy1.19python3.9.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+            os: ubuntu
+            labels: ['linux', 'self-hosted', 'x64']
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build on Linux
+      if: matrix.os == 'ubuntu'
+      env:
+        CONFIG: ${{ matrix.CONFIG }}
+        UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
+        DOCKER_IMAGE: ${{ matrix.DOCKER_IMAGE }}
+        CI: github_actions
+        BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
+        FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
+        STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
+      shell: bash
+      run: |
+        echo "::group::Configure binfmt_misc"
+        docker run --rm --privileged multiarch/qemu-user-static:register --reset --credential yes
+        export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
+        export GIT_BRANCH="$(basename $GITHUB_REF)"
+        if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+          export IS_PR_BUILD="True"
+        else
+          export IS_PR_BUILD="False"
+        fi
+        echo "::endgroup::"
+        ./.scripts/run_docker_build.sh
+
+    - name: Build on macOS
+      if: matrix.os == 'macos'
+      env:
+        CONFIG: ${{ matrix.CONFIG }}
+        UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
+        CI: github_actions
+        BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
+        FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
+        STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
+      shell: bash
+      run: |
+        export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
+        export GIT_BRANCH="$(basename $GITHUB_REF)"
+        if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+          export IS_PR_BUILD="True"
+        else
+          export IS_PR_BUILD="False"
+        fi
+        ./.scripts/run_osx_build.sh
+
+    - name: Install Miniconda for windows
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniforge-version: latest
+        miniforge-variant: Mambaforge
+      if: matrix.os == 'windows'
+
+    - name: Build on windows
+      shell: cmd
+      run: |
+        call activate base
+        mamba.exe install -c conda-forge 'python=3.9' conda-build conda "conda-forge-ci-setup=3" pip boa
+        if errorlevel 1 exit 1
+        setup_conda_rc .\ ".\recipe" .\.ci_support\%CONFIG%.yaml
+        if errorlevel 1 exit 1
+        
+        conda.exe mambabuild "recipe" -m .ci_support\%CONFIG%.yaml
+        if errorlevel 1 exit 1
+        set "FEEDSTOCK_NAME=%GITHUB_REPOSITORY:*/=%"
+        set "GIT_BRANCH=%GITHUB_REF:refs/heads/=%"
+        if /i "%GITHUB_EVENT_NAME%" == "pull_request" (
+          set "IS_PR_BUILD=True"
+        ) else (
+          set "IS_PR_BUILD=False"
+        )
+        validate_recipe_outputs "%FEEDSTOCK_NAME%"
+        if errorlevel 1 exit 1
+        if /i "%UPLOAD_PACKAGES%" == "true" (
+          if /i "%IS_PR_BUILD%" == "false" (
+            upload_package --validate --feedstock-name="%FEEDSTOCK_NAME%" .\ ".\recipe" .ci_support\%CONFIG%.yaml
+          )
+        )
+      env:
+        PYTHONUNBUFFERED: 1
+        CONFIG: ${{ matrix.CONFIG }}
+        CI: github_actions
+        UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
+        BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
+        FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
+        STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
+      if: matrix.os == 'windows'
