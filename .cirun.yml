@@ -3,6 +3,6 @@ runners:
     cloud: aws
     instance_type: t2.large
     machine_image: ami-0048c368c80e3ee99
-    preemptible: true
+    preemptible: false
     workflow: .github/workflows/conda-build.yml
     count: 2
