@@ -1,0 +1,8 @@
+runners:
+  - name: long-runner
+    cloud: aws
+    instance_type: t2.large
+    machine_image: ami-0048c368c80e3ee99
+    preemptible: true
+    workflow: .github/workflows/conda-build.yml
+    count: 2
