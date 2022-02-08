@@ -76,10 +76,11 @@ outputs:
         - mkl-devel {{ mkl }}   # [x86]
         - mkl {{ mkl }}         # [x86]
         - libblas * *_mkl       # [x86]
-        - libblas               # [not x86]
-        - libcblas              # [not x86]
-        - liblapack             # [not x86]
-        - liblapacke            # [not x86]
+        # - libblas               # [not x86]
+        # - libcblas              # [not x86]
+        # - liblapack             # [not x86]
+        # - liblapacke            # [not x86]
+        - {{ blas_impl }}  # [not x86]
         - libprotobuf
         - sleef
         - typing
@@ -87,6 +88,8 @@ outputs:
         - pkg-config  # [unix]
         - typing_extensions
       run:
+        - {{ blas_impl }}  # [not x86]
+        - libblas * *{{ blas_impl }}  # [not x86]
         - mkl {{ mkl }}     # [x86]
         - libblas * *_mkl   # [x86]
         - llvm-openmp    # [osx]
