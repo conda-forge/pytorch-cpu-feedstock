@@ -1,5 +1,7 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '11.0'
+blas_impl:
+- openblas
 c_compiler:
 - clang
 c_compiler_version:
@@ -14,14 +16,6 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '11'
-libblas:
-- 3.9 *netlib
-libcblas:
-- 3.9 *netlib
-liblapack:
-- 3.9 *netlib
-liblapacke:
-- 3.9 *netlib
 libprotobuf:
 - '3.19'
 llvm_openmp:
@@ -35,7 +29,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.9.* *_cpython
 target_platform:
 - osx-arm64
 zip_keys:

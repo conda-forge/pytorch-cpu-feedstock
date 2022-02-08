@@ -20,14 +20,22 @@ jobs:
         CONFIG: osx_64_numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_64_numpy1.19python3.9.____cpython
-      osx_arm64_python3.8.____cpython:
-        CONFIG: osx_arm64_python3.8.____cpython
+      osx_arm64_blas_implacceleratepython3.8.____cpython:
+        CONFIG: osx_arm64_blas_implacceleratepython3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_python3.8.____cpython
-      osx_arm64_python3.9.____cpython:
-        CONFIG: osx_arm64_python3.9.____cpython
+        SHORT_CONFIG: osx_arm64_blas_implacceleratepython_h3ec3d81047
+      osx_arm64_blas_implacceleratepython3.9.____cpython:
+        CONFIG: osx_arm64_blas_implacceleratepython3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_python3.9.____cpython
+        SHORT_CONFIG: osx_arm64_blas_implacceleratepython_ha5620f701b
+      osx_arm64_blas_implopenblaspython3.8.____cpython:
+        CONFIG: osx_arm64_blas_implopenblaspython3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_blas_implopenblaspython3.8.____cpython
+      osx_arm64_blas_implopenblaspython3.9.____cpython:
+        CONFIG: osx_arm64_blas_implopenblaspython3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_blas_implopenblaspython3.9.____cpython
   timeoutInMinutes: 360
 
   steps:
