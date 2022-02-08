@@ -72,8 +72,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export USE_DISTRIBUTED=1
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
-        # no need to set this explicitly
- 	export BLAS='Generic' 
+        # only set when OpenBLAS; otherwise it finds accelerate
+ 	if [["$blas_impl" == "openblas" ]]; then
+           export BLAS=OpenBLAS
+        fi
         export USE_MKLDNN=0
         # There is a problem with pkg-config
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
