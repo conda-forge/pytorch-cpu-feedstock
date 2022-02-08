@@ -1,7 +1,7 @@
 runners:
   - name: long-runner
     cloud: aws
-    instance_type: c5d.2xlarge
+    instance_type: c5d.4xlarge
     machine_image: ami-0048c368c80e3ee99
     preemptible: false
     workflow: .github/workflows/conda-build.yml
