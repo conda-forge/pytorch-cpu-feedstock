@@ -99,6 +99,13 @@ outputs:
         # other requirements
         - python
         - {{ pin_compatible('numpy') }}
+        # hmaarrfk 2021/12/28
+        # it seems that pytorch uses some aspects of setuptools
+        # that were removed in version 59.6
+        # I'm not really inclined to patch this out since
+        # this is a pretty easy build time dependency
+        # https://github.com/pytorch/pytorch/issues/69894
+        - setuptools <59.6
         - cffi
         # if future isn't installed on python 3, `pip check` can give
         # the user an error
