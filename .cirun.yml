@@ -5,4 +5,3 @@ runners:
     machine_image: ami-0febc229056b2de48
     preemptible: false
     workflow: .github/workflows/conda-build.yml
-    count: 2
