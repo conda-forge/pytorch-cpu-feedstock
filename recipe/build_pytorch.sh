@@ -86,7 +86,7 @@ fi
 CPPFLAGS="${CPPFLAGS//-std=c++17/-std=c++14}"
 CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++14}"
 
-export MAX_JOBS=${CPU_COUNT}
+# export MAX_JOBS=${CPU_COUNT}
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
