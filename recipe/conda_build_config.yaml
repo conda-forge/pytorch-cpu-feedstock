@@ -1,10 +1,8 @@
+# mark.harfouche channel has uploaded builds for
+# https://github.com/conda-forge/ctng-compilers-feedstock/pull/88
+# Need to downgrade compiler for nccl until it gets patched on conda forge
+# https://github.com/NVIDIA/nccl/issues/494#issuecomment-881074063
+channel_sources:
+  - mark.harfouche,conda-forge
 blas_impl:
   - mkl                        # [x86 or x86_64]
-c_compiler_version:  # [linux64]
-  - 7                # [linux64]
-cxx_compiler_version:  # [linux64]
-  - 7                # [linux64]
-c_compiler:    # [win]
-  - vs2019     # [win]
-cxx_compiler:  # [win]
-  - vs2019     # [win]

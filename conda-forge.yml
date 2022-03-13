@@ -9,3 +9,7 @@ conda_forge_output_validation: true
 os_version:
   linux_64: cos7
 test_on_native_only: true
+remote_ci_setup:
+  - conda-forge-ci-setup=3
+  - conda-forge/label/lief_dev::py-lief
+  - conda-forge/label/lief_dev::liblief
