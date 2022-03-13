@@ -1,19 +1,2 @@
 blas_impl:
   - mkl                        # [x86 or x86_64]
-
-# Need to downgrade compiler for nccl until it gets patched on conda forge
-# https://github.com/NVIDIA/nccl/issues/494#issuecomment-881074063
-c_compiler_version:            # [unix]
-  - 12                         # [osx]
-  - 10                         # [linux]
-  - 7                          # [os.environ.get("CF_CUDA_ENABLED", "False") == "True" and linux64]
-  - 9                          # [os.environ.get("CF_CUDA_ENABLED", "False") == "True" and linux64]
-  - 9                          # [os.environ.get("CF_CUDA_ENABLED", "False") == "True" and linux64]
-  - 9                          # [os.environ.get("CF_CUDA_ENABLED", "False") == "True" and linux64]
-cxx_compiler_version:          # [unix]
-  - 12                         # [osx]
-  - 10                         # [linux]
-  - 7                          # [os.environ.get("CF_CUDA_ENABLED", "False") == "True" and linux64]
-  - 9                          # [os.environ.get("CF_CUDA_ENABLED", "False") == "True" and linux64]
-  - 9                          # [os.environ.get("CF_CUDA_ENABLED", "False") == "True" and linux64]
-  - 9                          # [os.environ.get("CF_CUDA_ENABLED", "False") == "True" and linux64]
