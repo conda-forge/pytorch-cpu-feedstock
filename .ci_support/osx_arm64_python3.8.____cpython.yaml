@@ -3,9 +3,9 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 c_compiler_version:
-- '11'
+- '12'
 channel_sources:
-- conda-forge
+- mark.harfouche,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler_version:
@@ -13,7 +13,7 @@ cuda_compiler_version:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '11'
+- '12'
 libblas:
 - 3.9 *netlib
 liblapack:
@@ -21,7 +21,7 @@ liblapack:
 libprotobuf:
 - '3.19'
 llvm_openmp:
-- '11'
+- '12'
 macos_machine:
 - arm64-apple-darwin20.0.0
 numpy:

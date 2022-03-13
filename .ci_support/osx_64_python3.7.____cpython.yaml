@@ -3,9 +3,9 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 c_compiler_version:
-- '11'
+- '12'
 channel_sources:
-- conda-forge
+- mark.harfouche,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler_version:
@@ -13,11 +13,11 @@ cuda_compiler_version:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '11'
+- '12'
 libprotobuf:
 - '3.19'
 llvm_openmp:
-- '11'
+- '12'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 mkl:
@@ -29,7 +29,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.7.* *_cpython
 target_platform:
 - osx-64
 zip_keys:
