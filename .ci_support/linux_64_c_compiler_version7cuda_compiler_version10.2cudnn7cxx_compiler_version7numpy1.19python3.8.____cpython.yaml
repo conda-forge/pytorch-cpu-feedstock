@@ -1,27 +1,31 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '10.9'
 c_compiler:
-- clang
+- gcc
 c_compiler_version:
-- '12'
+- '7'
+cdt_name:
+- cos7
 channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
+cuda_compiler:
+- nvcc
 cuda_compiler_version:
-- None
+- '10.2'
+cudnn:
+- '7'
 cxx_compiler:
-- clangxx
+- gxx
 cxx_compiler_version:
-- '12'
+- '7'
+docker_image:
+- quay.io/condaforge/linux-anvil-cos7-cuda:10.2
 libprotobuf:
 - '3.19'
-llvm_openmp:
-- '12'
-macos_machine:
-- x86_64-apple-darwin13.4.0
 mkl:
 - '2022'
+nccl:
+- '2'
 numpy:
 - '1.19'
 pin_run_as_build:
@@ -29,11 +33,15 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.8.* *_cpython
 target_platform:
-- osx-64
+- linux-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+  - cudnn
+  - cuda_compiler_version
+  - cdt_name
+  - docker_image
 - - python
   - numpy
