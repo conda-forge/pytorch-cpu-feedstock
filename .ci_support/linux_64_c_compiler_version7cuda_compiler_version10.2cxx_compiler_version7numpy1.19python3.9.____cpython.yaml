@@ -33,7 +33,9 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.9.* *_cpython
+pytorch:
+- '1.10'
 target_platform:
 - linux-64
 zip_keys:
