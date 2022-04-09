@@ -12,7 +12,7 @@ source:
     - fix_dispatch_apply_auto.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
 
 outputs:
