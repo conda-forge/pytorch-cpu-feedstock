@@ -19,7 +19,7 @@ libblas:
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- '3.19'
+- '3.20'
 llvm_openmp:
 - '12'
 macos_machine:
@@ -34,6 +34,8 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.8.* *_cpython
+pytorch:
+- '1.10'
 target_platform:
 - osx-arm64
 zip_keys:
