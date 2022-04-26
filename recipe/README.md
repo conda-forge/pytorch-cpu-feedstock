@@ -42,4 +42,6 @@ for config_filename in $configs; do
     # docker images get quite big clean them up after each build to save your disk....
     docker system prune --force
 done
+
+zip build_artifacts/log_files.zip build_artifacts/*-log.txt
 ```
