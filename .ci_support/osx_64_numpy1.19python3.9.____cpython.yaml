@@ -15,7 +15,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '12'
 libprotobuf:
-- '3.19'
+- '3.20'
 llvm_openmp:
 - '12'
 macos_machine:
@@ -30,6 +30,8 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.9.* *_cpython
+pytorch:
+- '1.10'
 target_platform:
 - osx-64
 zip_keys:
