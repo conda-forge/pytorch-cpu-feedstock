@@ -7,13 +7,14 @@ package:
 source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
-  git_tag: v{{ version }}
+  # git_tag: v{{ version }}
   patches:
     - fix_dispatch_apply_auto.patch
 
 build:
   number: 1
   skip: true  # [win]
+  skip: true  # [impl != "mps"]
 
 outputs:
   - name: pytorch

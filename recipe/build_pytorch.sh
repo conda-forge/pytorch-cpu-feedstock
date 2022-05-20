@@ -75,6 +75,11 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
     fi
+
+    if [[ "$osx_impl" == "mps" ]]; then
+        export BLAS=accelerate
+        export USE_MPS=1
+    fi
     $PYTHON -m pip install . --no-deps -vv
     exit 0
 fi
