@@ -1,9 +1,9 @@
 blas_impl:
   - mkl                        # [x86 or x86_64]
 
-osx_impl:                  # [osx]
+osx_impl:                  # [osx and arm64]
   - mps                    # [osx and arm64]
-  - nomps                  # [osx]
+  - nomps                  # [osx and arm64]
 
 MACOSX_DEPLOYMENT_TARGET:  # [osx_impl == "mps"]
   - "12.3"                 # [osx_impl == "mps"]
