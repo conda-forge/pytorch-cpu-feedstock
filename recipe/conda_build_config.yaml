@@ -5,7 +5,7 @@ osx_impl:
   - mps
   - nomps
 
-MACOSX_DEPLOYMENT_TARGET:  # [osx and x86_64]
-  - "12.3"                 # [osx and x86_64]
+MACOSX_DEPLOYMENT_TARGET:  # [osx_impl == "mps"]
+  - "12.3"                 # [osx_impl == "mps"]
 MACOSX_SDK_VERSION:        # [osx_impl == "mps"]
   - "12.3"                 # [osx_impl == "mps"]
