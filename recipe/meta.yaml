@@ -12,7 +12,7 @@ source:
     - fix_dispatch_apply_auto.patch
 
 build:
-  number: 1
+  number: 2
   skip: true  # [win]
 
 outputs:
@@ -23,6 +23,8 @@ outputs:
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
+      track_features:
+        - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
     requirements:
@@ -109,6 +111,8 @@ outputs:
         - typing_extensions
         # Need ninja to load C++ extensions
         - ninja
+        # avoid that people without GPUs needlessly download ~0.5-1GB
+        - __cuda  # [cuda_compiler_version != "None"]
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
