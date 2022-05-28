@@ -1,6 +1,6 @@
 osx_impl:  # [osx]
-  - mps    # [osx]
   - nomps  # [osx]
+  - mps    # [osx]
 
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
   - 11.0                   # [osx and arm64]
