@@ -1,2 +1,11 @@
+osx_impl:
+  - mps
+  - nomps
+
+MACOSX_DEPLOYMENT_TARGET:  # [osx and x86_64 and osx_imple=="mps"]
+  - "12.3"                 # [osx and x86_64 and osx_imple=="mps"]
+MACOSX_SDK_VERSION:        # [osx and x86_64 and osx_imple=="mps"]
+  - "12.3"                 # [osx and x86_64 and osx_imple=="mps"]
+
 blas_impl:
   - mkl                        # [x86 or x86_64]
