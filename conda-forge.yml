@@ -1,7 +1,7 @@
 azure:
-  settings_osx:
-    pool:
-      vmImage: macos-12
+  settings_osx:          # [osx_impl == "mps"]
+    pool:                # [osx_impl == "mps"]
+      vmImage: macos-12  # [osx_impl == "mps"]
   settings_win:
     pool:
       vmImage: windows-2019
