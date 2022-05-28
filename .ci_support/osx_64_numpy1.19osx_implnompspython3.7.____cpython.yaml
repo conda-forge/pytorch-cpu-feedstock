@@ -41,5 +41,8 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+- - osx_impl
+  - MACOSX_DEPLOYMENT_TARGET
+  - MACOSX_SDK_VERSION
 - - python
   - numpy
