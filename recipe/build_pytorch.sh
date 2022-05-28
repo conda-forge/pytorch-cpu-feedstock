@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd pytorch
 set -ex
 
 # clean up an existing cmake build directory

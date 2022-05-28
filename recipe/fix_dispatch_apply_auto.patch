@@ -1,7 +1,7 @@
 Index: work/third_party/pthreadpool/src/gcd.c
 ===================================================================
---- work.orig/third_party/pthreadpool/src/gcd.c
-+++ work/third_party/pthreadpool/src/gcd.c
+--- work.orig/src/gcd.c
++++ work/src/gcd.c
 @@ -118,7 +118,9 @@ PTHREADPOOL_INTERNAL void pthreadpool_pa
  		/* The next subrange starts where the previous ended */
  		range_start = range_end;
