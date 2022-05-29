@@ -1,7 +1,7 @@
 {% set version = "1.11.0" %}
 
 package:
-  name: pytorch-recipe
+  name: pytorch
   version: {{ version }}
 
 source:
@@ -198,153 +198,123 @@ source:
 build:
   number: 1
   skip: true  # [win]
+  string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+  string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+  detect_binary_files_with_prefix: false
+  run_exports:
+    - {{ pin_subpackage('pytorch', max_pin='x.x') }}
 
-outputs:
-  - name: pytorch
-    build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
-      detect_binary_files_with_prefix: false
-      run_exports:
-        - {{ pin_subpackage('pytorch', max_pin='x.x') }}
-    script: build_pytorch.sh  # [not win]
-    script: bld_pytorch.bat   # [win]
-    requirements:
-      build:
-        - python                                 # [build_platform != target_platform]
-        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-        - numpy                                  # [build_platform != target_platform]
-        - cffi                                   # [build_platform != target_platform]
-        - sysroot_linux-64  2.17  # [linux64]
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
-        # Dec 2020: it seems that git is broken on windows, so we use m2-git
-        - patch     # [not win]
-        - m2-patch  # [win]
-        - git       # [not win]
-        - m2-git    # [win]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
-        # 2022/04/12 hmaarrfk
-        # Issues with recent version of CMake
-        # https://github.com/pytorch/pytorch/issues/74985
-        # Should be fixed in other versions
-        # https://gitlab.kitware.com/cmake/cmake/-/issues/23368
-        - cmake  != 3.23.0
-        - git       # [not win]
-        - m2-git    # [win]
-        - ninja
-        - protobuf {{ libprotobuf }}
-        - make      # [linux]
-      host:
-        # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None"]
-        - magma                           # [cuda_compiler_version != "None"]
-        # other requirements
-        - python
-        - numpy
-        # dataclasses is a backport of python 3.7 module
-        - dataclasses   # [py==36]
-        - pip
-        # hmaarrfk 2021/12/28
-        # it seems that pytorch uses some aspects of setuptools
-        # that were removed in version 59.6
-        # I'm not really inclined to patch this out since
-        # this is a pretty easy build time dependency
-        # https://github.com/pytorch/pytorch/issues/69894
-        - setuptools <59.6
-        - pyyaml
-        - requests
-        - future
-        - six
-        - cffi
-        - mkl-devel {{ mkl }}   # [x86]
-        - mkl {{ mkl }}         # [x86]
-        - libblas * *_mkl       # [x86]
-        - libblas               # [not x86]
-        - libblas               # [not x86]
-        - liblapack             # [not x86]
-        - openblas              # [not x86]
-        - libprotobuf
-        - sleef
-        - typing
-        - libuv
-        - pkg-config  # [unix]
-        - typing_extensions
-      run:
-        - mkl {{ mkl }}     # [x86]
-        - libblas * *_mkl   # [x86]
-        - libblas   # [not x86]
-        - libcblas   # [not x86]
-        - liblapack   # [not x86]
-        - llvm-openmp    # [osx]
-        #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
-        #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
-        # GPU requirements without run_exports
-        - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
-        - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
-        # other requirements
-        - python
-        - {{ pin_compatible('numpy') }}
-        - setuptools
-        - cffi
-        - typing_extensions
-        # Need ninja to load C++ extensions
-        - ninja
-      run_constrained:
-        # These constraints ensure conflict between pytorch and
-        # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
-        # built into place.
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
-        - pytorch-cpu = {{ version }}  # [cuda_compiler_version == "None"]
-        - pytorch-gpu = 99999999       # [cuda_compiler_version == "None"]
-        - pytorch-gpu = {{ version }}  # [cuda_compiler_version != "None"]
-        - pytorch-cpu = 99999999       # [cuda_compiler_version != "None"]
+requirements:
+  build:
+    - python                                 # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - numpy                                  # [build_platform != target_platform]
+    - cffi                                   # [build_platform != target_platform]
+    - sysroot_linux-64  2.17  # [linux64]
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+    # Dec 2020: it seems that git is broken on windows, so we use m2-git
+    - patch     # [not win]
+    - m2-patch  # [win]
+    - git       # [not win]
+    - m2-git    # [win]
+    - libgomp   # [linux]
+    - llvm-openmp    # [osx]
+    - cmake
+    - git       # [not win]
+    - m2-git    # [win]
+    - ninja
+    - protobuf {{ libprotobuf }}
+    - make      # [linux]
+  host:
+    # GPU requirements
+    - cudnn                           # [cuda_compiler_version != "None"]
+    - nccl                            # [cuda_compiler_version != "None"]
+    - magma                           # [cuda_compiler_version != "None"]
+    # other requirements
+    - python
+    - numpy
+    # dataclasses is a backport of python 3.7 module
+    - dataclasses   # [py==36]
+    - pip
+    # hmaarrfk 2021/12/28
+    # it seems that pytorch uses some aspects of setuptools
+    # that were removed in version 59.6
+    # I'm not really inclined to patch this out since
+    # this is a pretty easy build time dependency
+    # https://github.com/pytorch/pytorch/issues/69894
+    - setuptools <59.6
+    - pyyaml
+    - requests
+    - future
+    - six
+    - cffi
+    - mkl-devel {{ mkl }}   # [x86]
+    - mkl {{ mkl }}         # [x86]
+    - libblas * *_mkl       # [x86]
+    - libblas               # [not x86]
+    - libblas               # [not x86]
+    - liblapack             # [not x86]
+    - openblas              # [not x86]
+    - libprotobuf
+    - sleef
+    - typing
+    - libuv
+    - pkg-config  # [unix]
+    - typing_extensions
+  run:
+    - mkl {{ mkl }}     # [x86]
+    - libblas * *_mkl   # [x86]
+    - libblas   # [not x86]
+    - libcblas   # [not x86]
+    - liblapack   # [not x86]
+    - llvm-openmp    # [osx]
+    #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
+    #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
+    # GPU requirements without run_exports
+    - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
+    - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
+    # other requirements
+    - python
+    - {{ pin_compatible('numpy') }}
+    - setuptools
+    - cffi
+    - typing_extensions
+    # Need ninja to load C++ extensions
+    - ninja
+  run_constrained:
+    # These constraints ensure conflict between pytorch and
+    # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
+    # built into place.
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
+    - pytorch-cpu = {{ version }}  # [cuda_compiler_version == "None"]
+    - pytorch-gpu = 99999999       # [cuda_compiler_version == "None"]
+    - pytorch-gpu = {{ version }}  # [cuda_compiler_version != "None"]
+    - pytorch-cpu = 99999999       # [cuda_compiler_version != "None"]
 
-    test:
-      requires:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - setuptools
-        - hypothesis
-        - pytest
-        - tabulate
-        - pydot
-        - mock  # [linux]
-        - pip
-      imports:
-        - torch
-      source_files:
-        - pytorch/test
-      commands:
-        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
-        - python ./test/run_test.py  # [win]
-        # Run pip check so as to ensure that all pytorch packages are installed
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
-        - pip check
-        - python -c "import torch; print(torch.__version__)"
-
-  # 2021/08/01, hmaarrfk
-  # While this seems like a roundabout way of defining the package name
-  # It helps the linter avoid errors on a package not having tests.
-  {% set pytorch_cpu_gpu = "pytorch-cpu" %}   # [cuda_compiler_version == "None"]
-  {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
-  - name: {{ pytorch_cpu_gpu }}
-    build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
-      detect_binary_files_with_prefix: False
-      # weigh down cpu implementation and give cuda preference
-      track_features:
-        - pytorch-cpu                                      # [cuda_compiler_version == "None"]
-    requirements:
-      run:
-        - {{ pin_subpackage("pytorch", exact=True) }}
-    test:
-      imports:
-        - torch
+test:
+  requires:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - setuptools
+    - hypothesis
+    - pytest
+    - tabulate
+    - pydot
+    - mock  # [linux]
+    - pip
+  imports:
+    - torch
+  source_files:
+    - pytorch/test
+  commands:
+    - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
+    - python ./test/run_test.py  # [win]
+    # Run pip check so as to ensure that all pytorch packages are installed
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
+    - pip check
+    - python -c "import torch; print(torch.__version__)"
 
 about:
   home: https://pytorch.org/
