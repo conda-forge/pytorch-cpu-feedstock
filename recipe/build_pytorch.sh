@@ -82,7 +82,7 @@ fi
 export MAX_JOBS=${CPU_COUNT}
 
 if [[ ${osx_impl} == "nomps" ]]; then
-    export USE_MPS=0
+    export USE_MPS=OFF
 fi
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
