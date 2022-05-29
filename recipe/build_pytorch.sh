@@ -1,12 +1,13 @@
 #!/bin/bash
 
+cd pytorch
 set -ex
 
 # clean up an existing cmake build directory
 rm -rf build
 
 # uncomment to debug cmake build
-export CMAKE_VERBOSE_MAKEFILE=1
+# export CMAKE_VERBOSE_MAKEFILE=1
 
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
