@@ -1,4 +1,7 @@
 azure:
+  settings_osx:
+    pool:
+      vmImage: macos-12
   settings_win:
     pool:
       vmImage: windows-2019

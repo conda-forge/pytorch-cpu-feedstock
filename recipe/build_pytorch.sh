@@ -69,7 +69,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export USE_DISTRIBUTED=1
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
-        export BLAS=OpenBLAS
+        # export BLAS=OpenBLAS
         export USE_MKLDNN=0
         # There is a problem with pkg-config
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
@@ -80,6 +80,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 export MAX_JOBS=${CPU_COUNT}
+
+if [[ ${osx_impl} == "nomps" ]]; then
+    export USE_MPS=0
+fi
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
