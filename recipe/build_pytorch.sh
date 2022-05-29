@@ -6,7 +6,7 @@ set -ex
 rm -rf build
 
 # uncomment to debug cmake build
-export CMAKE_VERBOSE_MAKEFILE=1
+# export CMAKE_VERBOSE_MAKEFILE=1
 
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
