@@ -8,7 +8,7 @@ rm -rf build
 rm -rf pyproject.toml
 
 # uncomment to debug cmake build
-export CMAKE_VERBOSE_MAKEFILE=1
+# export CMAKE_VERBOSE_MAKEFILE=1
 
 export USE_NUMA=0
 export USE_ITT=0
