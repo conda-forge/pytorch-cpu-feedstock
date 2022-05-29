@@ -47,7 +47,19 @@ export USE_NINJA=OFF
 export INSTALL_TEST=0
 export BUILD_TEST=0
 
+export USE_SYSTEM_CPUINFO=1
 export USE_SYSTEM_SLEEF=1
+# No GPU builds of GLOO just yet
+export USE_SYSTEM_GLOO=0
+export USE_SYSTEM_FP16=1
+export USE_SYSTEM_PYBIND11=1
+export USE_SYSTEM_PTHREADPOOL=1
+export USE_SYSTEM_PSIMD=1
+export USE_SYSTEM_FXDIV=1
+# We need to package something like libonnx and not python-onnx
+# to be able to build with it as a shared library
+# export USE_SYSTEM_ONNX=1
+export USE_SYSTEM_XNNPACK=1
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc

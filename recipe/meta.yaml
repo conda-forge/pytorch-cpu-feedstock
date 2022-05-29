@@ -8,6 +8,8 @@ source:
   - folder: pytorch
     url: https://github.com/pytorch/pytorch/archive/v{{ version }}.tar.gz
     sha256: 297532f911563625aec68b42bb6903c57f859a0e43e4d6b8bc2573dff03ce6db
+    patches:
+      - 0001-Fixup-cmake-USE_SYSTEM_PYBIND11.patch
 
   # To get this list:
   # 1. Clone pytorch from
@@ -198,6 +200,10 @@ source:
 build:
   number: 1
   skip: true  # [win]
+  # Just build python 3.9 for now
+  skip: true  # [py!=39]
+  # I don't have the system dependencies uploaded for osx
+  skip: true  # [osx]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -258,7 +264,20 @@ requirements:
     - liblapack             # [not x86]
     - openblas              # [not x86]
     - libprotobuf
+    - cpuinfo
     - sleef
+    # Don't have these builds of gloo yet
+    # - gloo *=cuda*   # [cuda_compiler_version != "None"]
+    # - gloo *=cpu*    # [cuda_compiler_version == "None"]
+    - fp16
+    - pybind11
+    - pthreadpool
+    - psimd
+    - fxdiv
+    # We need something like libonnx not the python package onnx
+    # to be alble to build with it.
+    # - onnx
+    - xnnpack  0.0.0.20210621.1448.79cd5f9e1
     - typing
     - libuv
     - pkg-config  # [unix]
