@@ -135,6 +135,8 @@ export CMAKE_BUILD_TYPE=Release
 
 mkdir build
 cd build
+
+# The CUDA binaries seem to be broken
 cmake ${CMAKE_ARGS} \
     -DCMAKE_GENERATOR=${CMAKE_GENERATOR} \
     -DCMAKE_LIBRARY_PATH="${CMAKE_LIBRARY_PATH}" \
@@ -156,7 +158,8 @@ cmake ${CMAKE_ARGS} \
     -DUSE_CUDA=${USE_CUDA} \
     -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} \
     -DBUILD_PYTHON=OFF \
-    -DBUILD_BINARY=ON \
+    -DBUILD_BINARY=OFF \
+    -DHAVE_SOVERSION=ON \
     ..
 
 ninja install -j${CPU_COUNT}
