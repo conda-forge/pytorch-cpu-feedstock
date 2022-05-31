@@ -5,21 +5,21 @@ c_compiler_version:
 cdt_name:
 - cos7
 channel_sources:
-- conda-forge
+- mark.harfouche,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
 - nvcc
 cuda_compiler_version:
-- None
+- '11.1'
 cudnn:
-- undefined
+- '8'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
 - '10'
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+- quay.io/condaforge/linux-anvil-cuda:11.1
 libprotobuf:
 - '3.20'
 mkl:
@@ -34,8 +34,6 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.9.* *_cpython
-pytorch:
-- '1.10'
 target_platform:
 - linux-64
 zip_keys:
