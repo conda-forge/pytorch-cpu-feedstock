@@ -38,25 +38,27 @@ for ARG in $CMAKE_ARGS; do
     export ${cmake_arg}
   fi
 done
-# unset CMAKE_INSTALL_PREFIX
-# export TH_BINARY_BUILD=1
+unset CMAKE_INSTALL_PREFIX
+export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 
-# export USE_NINJA=OFF
+export USE_NINJA=OFF
 export INSTALL_TEST=0
 export BUILD_TEST=0
 
 export USE_SYSTEM_CPUINFO=1
 export USE_SYSTEM_SLEEF=1
-# No GPU GLOO
+# No GPU builds of GLOO just yet
 export USE_SYSTEM_GLOO=0
 export USE_SYSTEM_FP16=1
 export USE_SYSTEM_PYBIND11=1
 export USE_SYSTEM_PTHREADPOOL=1
 export USE_SYSTEM_PSIMD=1
 export USE_SYSTEM_FXDIV=1
-export USE_SYSTEM_ONNX=0
+# We need to package something like libonnx and not python-onnx
+# to be able to build with it as a shared library
+# export USE_SYSTEM_ONNX=1
 export USE_SYSTEM_XNNPACK=1
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
@@ -130,32 +132,4 @@ fi
 
 export CMAKE_BUILD_TYPE=Release
 
-mkdir build
-cd build
-cmake ${CMAKE_ARGS} \
-    -DCMAKE_GENERATOR=${CMAKE_GENERATOR} \
-    -DCMAKE_LIBRARY_PATH="${CMAKE_LIBRARY_PATH}" \
-    -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
-    -DINSTALL_TEST=${INSTALL_TEST} \
-    -DBUILD_TEST=${BUILD_TEST} \
-    -DUSE_SYSTEM_CPUINFO=${USE_SYSTEM_CPUINFO} \
-    -DUSE_SYSTEM_SLEEF=${USE_SYSTEM_SLEEF} \
-    -DUSE_SYSTEM_GLOO=${USE_SYSTEM_GLOO} \
-    -DUSE_SYSTEM_FP16=${USE_SYSTEM_FP16} \
-    -DUSE_SYSTEM_PYBIND11=${USE_SYSTEM_PYBIND11} \
-    -DUSE_SYSTEM_PTHREADPOOL=${USE_SYSTEM_PTHREADPOOL} \
-    -DUSE_SYSTEM_PSIMD=${USE_SYSTEM_PSIMD} \
-    -DUSE_SYSTEM_FXDIV=${USE_SYSTEM_FXDIV} \
-    -DUSE_SYSTEM_ONNX=${USE_SYSTEM_ONNX} \
-    -DUSE_SYSTEM_XNNPACK=${USE_SYSTEM_XNNPACK} \
-    -DBUILD_CUSTOM_PROTOBUF=${BUILD_CUSTOM_PROTOBUF} \
-    -DBLAS=${BLAS} \
-    -DUSE_CUDA=${USE_CUDA} \
-    -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} \
-    -DBUILD_PYTHON=OFF \
-    -DBUILD_BINARY=ON \
-    ..
-
-ninja install -j${CPU_COUNT}
-# $PYTHON -m pip install . --no-deps -vvv --no-clean
-
+$PYTHON -m pip install . --no-deps -vvv --no-clean
