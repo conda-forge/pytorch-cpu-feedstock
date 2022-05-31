@@ -119,9 +119,12 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_CUDNN=0
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
     export MAGMA_HOME="${PREFIX}"
+    CMAKE_BLAS_ARG=
 else
     if [[ "$target_platform" == *-64 ]]; then
-      export BLAS="MKL"
+      CMAKE_BLAS_ARG=-DBLAS=MKL
+    else
+      CMAKE_BLAS_ARG=
     fi
     export USE_CUDA=0
     export USE_MKLDNN=1
@@ -149,7 +152,7 @@ cmake ${CMAKE_ARGS} \
     -DUSE_SYSTEM_ONNX=${USE_SYSTEM_ONNX} \
     -DUSE_SYSTEM_XNNPACK=${USE_SYSTEM_XNNPACK} \
     -DBUILD_CUSTOM_PROTOBUF=${BUILD_CUSTOM_PROTOBUF} \
-    -DBLAS=${BLAS} \
+    ${CMAKE_BLAS_ARG} \
     -DUSE_CUDA=${USE_CUDA} \
     -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} \
     -DBUILD_PYTHON=OFF \
