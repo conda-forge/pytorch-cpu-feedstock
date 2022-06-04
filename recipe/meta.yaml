@@ -205,7 +205,7 @@ build:
   skip: true  # [py!=39]
   # I don't have the system dependencies uploaded for osx
   skip: true  # [osx]
-  skip: true  # [cuda_compiler_version != "None"]
+  skip: true  # [cuda_compiler_version not in ("None", "11.2")]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
