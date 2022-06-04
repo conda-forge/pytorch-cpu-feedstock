@@ -10,6 +10,7 @@ source:
     sha256: 297532f911563625aec68b42bb6903c57f859a0e43e4d6b8bc2573dff03ce6db
     patches:
       - 0001-Fixup-cmake-USE_SYSTEM_PYBIND11.patch
+      - only_intsall_torch_cpu.patch
 
   # To get this list:
   # 1. Clone pytorch from
