@@ -8,12 +8,8 @@ channel_sources:
 - mark.harfouche,conda-forge
 channel_targets:
 - conda-forge main
-cuda_compiler:
-- nvcc
 cuda_compiler_version:
 - None
-cudnn:
-- undefined
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -24,8 +20,6 @@ libprotobuf:
 - '3.20'
 mkl:
 - '2022'
-nccl:
-- '2'
 numpy:
 - '1.19'
 pin_run_as_build:
@@ -39,7 +33,6 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-  - cudnn
   - cuda_compiler_version
   - cdt_name
   - docker_image
