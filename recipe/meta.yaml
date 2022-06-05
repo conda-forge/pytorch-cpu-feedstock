@@ -1,4 +1,9 @@
 {% set version = "1.11.0" %}
+{% set number = 2 %}
+
+{% if cuda_compiler_version != "None" %}
+{% set number = number + 200 %}
+{% endif %}
 
 package:
   name: pytorch-recipe
@@ -14,7 +19,7 @@ source:
     - link_blas_privately.patch
 
 build:
-  number: 2
+  number: {{ number }}
   skip: true  # [win]
 
 outputs:
@@ -111,6 +116,8 @@ outputs:
         - typing_extensions
         # Need ninja to load C++ extensions
         - ninja
+        # avoid that people without GPUs needlessly download ~0.5-1GB
+        - __cuda  # [cuda_compiler_version != "None"]
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
