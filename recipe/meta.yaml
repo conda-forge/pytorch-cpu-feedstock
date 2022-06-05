@@ -10,6 +10,7 @@ source:
   git_tag: v{{ version }}
   patches:
     - fix_dispatch_apply_auto.patch
+    # https://github.com/pytorch/pytorch/pull/78883
     - link_blas_privately.patch
 
 build:
