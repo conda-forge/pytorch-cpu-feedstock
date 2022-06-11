@@ -1,5 +1,5 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '11.0'
+- '10.9'
 c_compiler:
 - clang
 c_compiler_version:
@@ -14,30 +14,26 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '13'
-libblas:
-- 3.9 *netlib
-liblapack:
-- 3.9 *netlib
 libprotobuf:
 - '3.20'
 llvm_openmp:
 - '13'
 macos_machine:
-- arm64-apple-darwin20.0.0
+- x86_64-apple-darwin13.4.0
+mkl:
+- '2022'
 numpy:
 - '1.19'
-openblas:
-- 0.3.*
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.8.* *_73_pypy
 pytorch:
 - '1.11'
 target_platform:
-- osx-arm64
+- osx-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
