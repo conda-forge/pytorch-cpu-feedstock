@@ -21,6 +21,7 @@ source:
 build:
   number: {{ number }}
   skip: true  # [win]
+  skip: true  # [osx and osx_impl == "nomps"]
 
 outputs:
   - name: pytorch
