@@ -110,6 +110,10 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
 else
     if [[ "$target_platform" == *-64 ]]; then
       export BLAS="MKL"
+    else
+      # Breakpad seems to not work on aarch64 or ppc64le
+      # https://github.com/pytorch/pytorch/issues/67083
+      export USE_BREAKPAD=0
     fi
     export USE_CUDA=0
     export USE_MKLDNN=1
