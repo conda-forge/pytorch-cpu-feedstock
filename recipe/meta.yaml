@@ -55,8 +55,6 @@ outputs:
         # Should be fixed in other versions
         # https://gitlab.kitware.com/cmake/cmake/-/issues/23368
         - cmake  != 3.23.0
-        - git       # [not win]
-        - m2-git    # [win]
         - ninja
         - protobuf {{ libprotobuf }}
         - make      # [linux]
@@ -86,7 +84,6 @@ outputs:
         - mkl-devel {{ mkl }}   # [x86]
         - mkl {{ mkl }}         # [x86]
         - libblas * *_mkl       # [x86]
-        - libblas               # [not x86]
         - libblas               # [not x86]
         - liblapack             # [not x86]
         - openblas              # [not x86]
