@@ -12,7 +12,7 @@ package:
 source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
-  git_rev: fa01ea406a873f1afdd33dad91ccfcb2d8785f8e
+  git_rev: bcfb424768a3420a00bdad4be15190c1cfec49b2
   patches:
     - fix_dispatch_apply_auto.patch
     # https://github.com/pytorch/pytorch/pull/78883
