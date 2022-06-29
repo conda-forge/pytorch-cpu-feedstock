@@ -125,7 +125,9 @@ outputs:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
         - pytorch-cpu = {{ version }}  # [cuda_compiler_version == "None"]
         - pytorch-gpu = 99999999       # [cuda_compiler_version == "None"]
-
+        - pytorch-gpu = {{ version }}  # [cuda_compiler_version != "None"]
+        - pytorch-cpu = 99999999       # [cuda_compiler_version != "None"]
+   
     test:
       requires:
         - {{ compiler('c') }}
