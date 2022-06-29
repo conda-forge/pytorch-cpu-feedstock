@@ -21,15 +21,12 @@ source:
 build:
   number: {{ number }}
   skip: true  # [win]
-  skip: true  # [osx and osx_impl == "nomps"]
 
 outputs:
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None" and not osx]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [osx and osx_impl == "nomps"]
-      string: mps_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [osx and osx_impl == "mps"]
+      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
@@ -126,18 +123,8 @@ outputs:
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
         # built into place.
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
-        - pytorch-cpu = {{ version }}  # [cuda_compiler_version == "None" and not osx]
-        - pytorch-gpu = 99999999       # [cuda_compiler_version == "None" and not osx]
-        - pytorch-mps = 99999999       # [cuda_compiler_version == "None" and not osx]
-        - pytorch-cpu = {{ version }}  # [osx and osx_impl == "nomps"]
-        - pytorch-gpu = 99999999       # [osx and osx_impl == "nomps"]
-        - pytorch-mps = 99999999       # [osx and osx_impl == "nomps"]
-        - pytorch-mps = {{ version }}  # [osx and osx_impl == "mps"]
-        - pytorch-gpu = 99999999       # [osx and osx_impl == "mps"]
-        - pytorch-cpu = 99999999       # [osx and osx_impl == "mps"]
-        - pytorch-gpu = {{ version }}  # [cuda_compiler_version != "None"]
-        - pytorch-cpu = 99999999       # [cuda_compiler_version != "None"]
-        - pytorch-mps = 99999999       # [cuda_compiler_version != "None"]
+        - pytorch-cpu = {{ version }}  # [cuda_compiler_version == "None"]
+        - pytorch-gpu = 99999999       # [cuda_compiler_version == "None"]
 
     test:
       requires:
@@ -165,16 +152,12 @@ outputs:
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
   # It helps the linter avoid errors on a package not having tests.
-  {% set pytorch_cpu_gpu = "pytorch-cpu" %}   # [cuda_compiler_version == "None" and not osx]
-  {% set pytorch_cpu_gpu = "pytorch-cpu" %}   # [osx and osx_impl == "nomps"]
-  {% set pytorch_cpu_gpu = "pytorch-mps" %}   # [osx and osx_impl == "mps"]
+  {% set pytorch_cpu_gpu = "pytorch-cpu" %}   # [cuda_compiler_version == "None"]
   {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None" and not osx]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [osx and osx_impl == "nomps"]
-      string: mps_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [osx and osx_impl == "mps"]
+      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: False
       # weigh down cpu implementation and give cuda preference
       track_features:
