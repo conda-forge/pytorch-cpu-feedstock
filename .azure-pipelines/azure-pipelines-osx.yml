@@ -8,34 +8,34 @@ jobs:
     vmImage: macos-12
   strategy:
     matrix:
-      osx_64_numpy1.19osx_implmpspython3.7.____cpython:
-        CONFIG: osx_64_numpy1.19osx_implmpspython3.7.____cpython
+      osx_64_numpy1.19python3.7.____cpython:
+        CONFIG: osx_64_numpy1.19python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.19osx_implmpspython3.7.____cpython
-      osx_64_numpy1.19osx_implmpspython3.8.____cpython:
-        CONFIG: osx_64_numpy1.19osx_implmpspython3.8.____cpython
+        SHORT_CONFIG: osx_64_numpy1.19python3.7.____cpython
+      osx_64_numpy1.19python3.8.____cpython:
+        CONFIG: osx_64_numpy1.19python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.19osx_implmpspython3.8.____cpython
-      osx_64_numpy1.19osx_implmpspython3.9.____cpython:
-        CONFIG: osx_64_numpy1.19osx_implmpspython3.9.____cpython
+        SHORT_CONFIG: osx_64_numpy1.19python3.8.____cpython
+      osx_64_numpy1.19python3.9.____cpython:
+        CONFIG: osx_64_numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.19osx_implmpspython3.9.____cpython
-      osx_64_numpy1.21osx_implmpspython3.10.____cpython:
-        CONFIG: osx_64_numpy1.21osx_implmpspython3.10.____cpython
+        SHORT_CONFIG: osx_64_numpy1.19python3.9.____cpython
+      osx_64_numpy1.21python3.10.____cpython:
+        CONFIG: osx_64_numpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.21osx_implmpspython3._h3826aa8258
-      osx_arm64_numpy1.19osx_implmpspython3.8.____cpython:
-        CONFIG: osx_arm64_numpy1.19osx_implmpspython3.8.____cpython
+        SHORT_CONFIG: osx_64_numpy1.21python3.10.____cpython
+      osx_arm64_numpy1.19python3.8.____cpython:
+        CONFIG: osx_arm64_numpy1.19python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.19osx_implmpspytho_h71907029b2
-      osx_arm64_numpy1.19osx_implmpspython3.9.____cpython:
-        CONFIG: osx_arm64_numpy1.19osx_implmpspython3.9.____cpython
+        SHORT_CONFIG: osx_arm64_numpy1.19python3.8.____cpython
+      osx_arm64_numpy1.19python3.9.____cpython:
+        CONFIG: osx_arm64_numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.19osx_implmpspytho_h32dacbe395
-      osx_arm64_numpy1.21osx_implmpspython3.10.____cpython:
-        CONFIG: osx_arm64_numpy1.21osx_implmpspython3.10.____cpython
+        SHORT_CONFIG: osx_arm64_numpy1.19python3.9.____cpython
+      osx_arm64_numpy1.21python3.10.____cpython:
+        CONFIG: osx_arm64_numpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.21osx_implmpspytho_hd3592db6ce
+        SHORT_CONFIG: osx_arm64_numpy1.21python3.10.____cpython
   timeoutInMinutes: 360
 
   steps:
