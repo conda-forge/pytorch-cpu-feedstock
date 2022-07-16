@@ -59,6 +59,8 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT=""
 fi
 
+export MAX_JOBS=${CPU_COUNT}
+
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Produce macOS builds with torch.distributed support.
@@ -78,8 +80,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     $PYTHON -m pip install . --no-deps -vv
     exit 0
 fi
-
-export MAX_JOBS=${CPU_COUNT}
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
