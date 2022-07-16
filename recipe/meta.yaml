@@ -1,5 +1,5 @@
-{% set version = "1.11.0" %}
-{% set number = 2 %}
+{% set version = "1.12.0" %}
+{% set number = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set number = number + 200 %}
@@ -14,9 +14,11 @@ source:
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: v{{ version }}
   patches:
-    - fix_dispatch_apply_auto.patch
+    - patches/fix_dispatch_apply_auto.patch
     # https://github.com/pytorch/pytorch/pull/78883
-    - link_blas_privately.patch
+    - patches/link_blas_privately.patch
+    - patches/osx-map_anonymous.patch
+    - patches/75001-fix_USE_MKLDNN.patch
 
 build:
   number: {{ number }}
@@ -68,16 +70,8 @@ outputs:
         # other requirements
         - python
         - numpy
-        # dataclasses is a backport of python 3.7 module
-        - dataclasses   # [py==36]
         - pip
-        # hmaarrfk 2021/12/28
-        # it seems that pytorch uses some aspects of setuptools
-        # that were removed in version 59.6
-        # I'm not really inclined to patch this out since
-        # this is a pretty easy build time dependency
-        # https://github.com/pytorch/pytorch/issues/69894
-        - setuptools <59.6
+        - setuptools
         - pyyaml
         - requests
         - future
@@ -132,7 +126,6 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - setuptools
         - hypothesis
         - pytest
         - tabulate
@@ -175,7 +168,10 @@ about:
   home: https://pytorch.org/
   license: BSD-3-Clause
   license_family: BSD
-  license_file: LICENSE
+  license_file:
+    - LICENSE
+    - NOTICE
+    - third_party/pybind11/LICENSE
   summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
 
 extra:
