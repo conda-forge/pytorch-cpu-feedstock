@@ -1,0 +1,51 @@
+c_compiler:
+- gcc
+c_compiler_version:
+- '10'
+cdt_name:
+- cos7
+channel_sources:
+- conda-forge
+channel_targets:
+- conda-forge main
+cuda_compiler:
+- nvcc
+cuda_compiler_version:
+- None
+cudnn:
+- undefined
+cxx_compiler:
+- gxx
+cxx_compiler_version:
+- '10'
+docker_image:
+- quay.io/condaforge/linux-anvil-cos7-x86_64
+libprotobuf:
+- '3.20'
+mkl:
+- '2022'
+nccl:
+- '2'
+numpy:
+- '1.19'
+osx_acceleration:
+- None
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+python:
+- 3.7.* *_cpython
+pytorch:
+- '1.11'
+target_platform:
+- linux-64
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
+  - cudnn
+  - cuda_compiler_version
+  - cdt_name
+  - docker_image
+- - python
+  - numpy
