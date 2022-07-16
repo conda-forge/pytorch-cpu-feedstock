@@ -1,7 +1,7 @@
 azure:
-  settings_win:
+  settings_osx:
     pool:
-      vmImage: windows-2019
+      vmImage: macos-12
   store_build_artifacts: true
 build_platform:
   osx_arm64: osx_64
