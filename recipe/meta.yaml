@@ -143,6 +143,11 @@ outputs:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
         - python -c "import torch; print(torch.__version__)"
+        - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
+        # At conda-forge, we target versions of OSX that are too old for MPS support
+        # But if users install a newer version of OSX, they will have MPS support
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
+        # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
