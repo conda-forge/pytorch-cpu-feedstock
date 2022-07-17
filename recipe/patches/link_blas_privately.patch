@@ -1,0 +1,171 @@
+From dcc6c823d31946c8310bedfcba2447e408fb652d Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Sat, 4 Jun 2022 16:07:14 -0400
+Subject: [PATCH 1/4] Link BLAS privately
+
+---
+ cmake/Dependencies.cmake | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 44a8bf1211cc..737546a21004 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -183,22 +183,22 @@ if(BLAS STREQUAL "Eigen")
+ elseif(BLAS STREQUAL "ATLAS")
+   find_package(Atlas REQUIRED)
+   include_directories(SYSTEM ${ATLAS_INCLUDE_DIRS})
+-  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS ${ATLAS_LIBRARIES})
+-  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS cblas)
++  list(APPEND Caffe2_DEPENDENCY_LIBS ${ATLAS_LIBRARIES})
++  list(APPEND Caffe2_DEPENDENCY_LIBS cblas)
+   set(BLAS_INFO "atlas")
+   set(BLAS_FOUND 1)
+   set(BLAS_LIBRARIES ${ATLAS_LIBRARIES} cblas)
+ elseif(BLAS STREQUAL "OpenBLAS")
+   find_package(OpenBLAS REQUIRED)
+   include_directories(SYSTEM ${OpenBLAS_INCLUDE_DIR})
+-  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS ${OpenBLAS_LIB})
++  list(APPEND Caffe2_DEPENDENCY_LIBS ${OpenBLAS_LIB})
+   set(BLAS_INFO "open")
+   set(BLAS_FOUND 1)
+   set(BLAS_LIBRARIES ${OpenBLAS_LIB})
+ elseif(BLAS STREQUAL "BLIS")
+   find_package(BLIS REQUIRED)
+   include_directories(SYSTEM ${BLIS_INCLUDE_DIR})
+-  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS ${BLIS_LIB})
++  list(APPEND Caffe2_DEPENDENCY_LIBS ${BLIS_LIB})
+ elseif(BLAS STREQUAL "MKL")
+   if(BLAS_SET_BY_USER)
+     find_package(MKL REQUIRED)
+@@ -225,19 +225,19 @@ elseif(BLAS STREQUAL "MKL")
+ elseif(BLAS STREQUAL "vecLib")
+   find_package(vecLib REQUIRED)
+   include_directories(SYSTEM ${vecLib_INCLUDE_DIR})
+-  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS ${vecLib_LINKER_LIBS})
++  list(APPEND Caffe2_DEPENDENCY_LIBS ${vecLib_LINKER_LIBS})
+   set(BLAS_INFO "veclib")
+   set(BLAS_FOUND 1)
+   set(BLAS_LIBRARIES ${vecLib_LINKER_LIBS})
+ elseif(BLAS STREQUAL "FlexiBLAS")
+   find_package(FlexiBLAS REQUIRED)
+   include_directories(SYSTEM ${FlexiBLAS_INCLUDE_DIR})
+-  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS ${FlexiBLAS_LIB})
++  list(APPEND Caffe2_DEPENDENCY_LIBS ${FlexiBLAS_LIB})
+ elseif(BLAS STREQUAL "Generic")
+   # On Debian family, the CBLAS ABIs have been merged into libblas.so
+   find_library(BLAS_LIBRARIES blas)
+   message("-- Using BLAS: ${BLAS_LIBRARIES}")
+-  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS ${BLAS_LIBRARIES})
++  list(APPEND Caffe2_DEPENDENCY_LIBS ${BLAS_LIBRARIES})
+   set(GENERIC_BLAS_FOUND TRUE)
+   set(BLAS_INFO "generic")
+   set(BLAS_FOUND 1)
+@@ -1759,7 +1759,7 @@ if(NOT INTERN_BUILD_MOBILE)
+       include_directories(AFTER SYSTEM ${MKLDNN_INCLUDE_DIR})
+       if(BUILD_CAFFE2_OPS)
+         set(CAFFE2_USE_MKLDNN ON)
+-        list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS caffe2::mkldnn)
++        list(APPEND Caffe2_DEPENDENCY_LIBS caffe2::mkldnn)
+       endif(BUILD_CAFFE2_OPS)
+     else()
+       message(WARNING "MKLDNN could not be found.")
+
+From c6e93cc151acad5cedc6dd7a6d225e21ad4f4f16 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Thu, 9 Jun 2022 01:07:17 -0400
+Subject: [PATCH 2/4] Add library to pybind11 generated stuff
+
+---
+ caffe2/CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index eda99a76680f..53355b548a9a 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -2008,6 +2008,9 @@ if(BUILD_PYTHON)
+ 
+   target_link_libraries(caffe2_pybind11_state PRIVATE
+       torch_library python::python pybind::pybind11)
++  if(CAFFE2_USE_MKLDNN)
++      target_link_libraries(caffe2_pybind11_state PRIVATE caffe2::mkldnn)
++  endif()
+   if(WIN32)
+     target_link_libraries(caffe2_pybind11_state PRIVATE onnx_proto)
+   endif(WIN32)
+
+From 9d94d3d1f75a903eda1ccc729f08fca880e96b64 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Thu, 9 Jun 2022 01:42:06 -0400
+Subject: [PATCH 3/4] Link test_jit to caffe2:mkldnn
+
+---
+ test/cpp/jit/CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/test/cpp/jit/CMakeLists.txt b/test/cpp/jit/CMakeLists.txt
+index 60b43b81fc8b..9bd349b61952 100644
+--- a/test/cpp/jit/CMakeLists.txt
++++ b/test/cpp/jit/CMakeLists.txt
+@@ -118,6 +118,10 @@ if(USE_SYSTEM_ONNX)
+   target_link_libraries(test_jit PRIVATE onnx_proto onnx)
+ endif()
+ 
++if(CAFFE2_USE_MKLDNN)
++  target_link_libraries(test_jit PRIVATE caffe2::mkldnn)
++endif()
++
+ set(JIT_TEST_DEPENDENCIES torch gtest jitbackend_test backend_with_compiler)
+ 
+ if(MSVC)
+
+From 8869e3d92d560d1ecad7e7b71540e7fee49e23ea Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Thu, 9 Jun 2022 02:00:13 -0400
+Subject: [PATCH 4/4] link detectron
+
+---
+ modules/detectron/CMakeLists.txt | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/modules/detectron/CMakeLists.txt b/modules/detectron/CMakeLists.txt
+index bffc074e39a6..dc5aea2df179 100644
+--- a/modules/detectron/CMakeLists.txt
++++ b/modules/detectron/CMakeLists.txt
+@@ -16,7 +16,10 @@ if(BUILD_CAFFE2_OPS)
+         ${Detectron_GPU_SRCS})
+ 
+     torch_set_target_props(caffe2_detectron_ops_gpu)
+-    target_link_libraries(caffe2_detectron_ops_gpu torch ${OpenMP_link})
++    target_link_libraries(caffe2_detectron_ops_gpu PRIVATE torch ${OpenMP_link})
++    if(CAFFE2_USE_MKLDNN)
++      target_link_libraries(caffe2_detectron_ops_gpu PRIVATE caffe2::mkldnn)
++    endif()
+     install(TARGETS caffe2_detectron_ops_gpu DESTINATION lib)
+     if(MSVC)
+       install(FILES $<TARGET_PDB_FILE:caffe2_detectron_ops_gpu> DESTINATION lib OPTIONAL)
+@@ -30,7 +33,10 @@ if(BUILD_CAFFE2_OPS)
+         ${Detectron_HIP_SRCS})
+     torch_set_target_props(caffe2_detectron_ops_hip)
+     target_compile_options(caffe2_detectron_ops_hip PRIVATE ${HIP_CXX_FLAGS})
+-    target_link_libraries(caffe2_detectron_ops_hip torch)
++    if(CAFFE2_USE_MKLDNN)
++      target_link_libraries(caffe2_detectron_ops_hip PRIVATE caffe2::mkldnn)
++    endif()
++    target_link_libraries(caffe2_detectron_ops_hip PRIVATE torch)
+     install(TARGETS caffe2_detectron_ops_hip DESTINATION lib)
+   elseif(NOT IOS_PLATFORM)
+     add_library(caffe2_detectron_ops SHARED ${Detectron_CPU_SRCS})
+@@ -39,7 +45,10 @@ if(BUILD_CAFFE2_OPS)
+         VERSION ${TORCH_VERSION} SOVERSION ${TORCH_SOVERSION})
+     endif()
+     torch_set_target_props(caffe2_detectron_ops)
+-    target_link_libraries(caffe2_detectron_ops torch ${OpenMP_link})
++    target_link_libraries(caffe2_detectron_ops PRIVATE torch ${OpenMP_link})
++    if(CAFFE2_USE_MKLDNN)
++      target_link_libraries(caffe2_detectron_ops PRIVATE caffe2::mkldnn)
++    endif()
+     install(TARGETS caffe2_detectron_ops DESTINATION lib)
+     if(MSVC)
+       install(FILES $<TARGET_PDB_FILE:caffe2_detectron_ops> DESTINATION lib OPTIONAL)

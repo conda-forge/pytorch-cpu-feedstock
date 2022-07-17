@@ -59,6 +59,8 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT=""
 fi
 
+export MAX_JOBS=${CPU_COUNT}
+
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Produce macOS builds with torch.distributed support.
@@ -78,8 +80,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     $PYTHON -m pip install . --no-deps -vv
     exit 0
 fi
-
-export MAX_JOBS=${CPU_COUNT}
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_CUDA=1
@@ -110,6 +110,10 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
 else
     if [[ "$target_platform" == *-64 ]]; then
       export BLAS="MKL"
+    else
+      # Breakpad seems to not work on aarch64 or ppc64le
+      # https://github.com/pytorch/pytorch/issues/67083
+      export USE_BREAKPAD=0
     fi
     export USE_CUDA=0
     export USE_MKLDNN=1
