@@ -16,7 +16,7 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '13'
-libblas:
+libcblas:
 - 3.9 *netlib
 liblapack:
 - 3.9 *netlib

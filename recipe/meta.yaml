@@ -1,5 +1,5 @@
 {% set version = "1.12.0" %}
-{% set number = 0 %}
+{% set number = 1 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set number = number + 200 %}
@@ -21,6 +21,10 @@ source:
     - patches/link_blas_privately.patch
     - patches/osx-map_anonymous.patch
     - patches/75001-fix_USE_MKLDNN.patch
+    # 2022/07 hmaarrfk
+    # We've patch out the bug in GCC that makes it incompatible
+    # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
+    - patches/remove_gcc_maximum_requirements.patch 
 
 build:
   number: {{ number }}
@@ -78,9 +82,8 @@ outputs:
         - six
         - cffi
         - mkl-devel {{ mkl }}   # [x86]
-        - mkl {{ mkl }}         # [x86]
-        - libblas * *_mkl       # [x86]
-        - libblas               # [not x86]
+        - libcblas * *_mkl      # [x86]
+        - libcblas              # [not x86]
         - liblapack             # [not x86]
         - openblas              # [not x86]
         - libprotobuf
@@ -90,14 +93,7 @@ outputs:
         - pkg-config  # [unix]
         - typing_extensions
       run:
-        - mkl {{ mkl }}     # [x86]
-        - libblas * *_mkl   # [x86]
-        - libblas   # [not x86]
-        - libcblas   # [not x86]
-        - liblapack   # [not x86]
         - llvm-openmp    # [osx]
-        #- _pytorch_select ==0.1             # [cuda_compiler_version == "None"]
-        #- _pytorch_select ==0.2             # [cuda_compiler_version != "None"]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
