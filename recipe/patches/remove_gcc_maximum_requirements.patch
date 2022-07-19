@@ -1,0 +1,24 @@
+diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
+index aed4fd5004..f5cd710806 100644
+--- a/torch/utils/cpp_extension.py
++++ b/torch/utils/cpp_extension.py
+@@ -49,19 +49,9 @@ MINIMUM_MSVC_VERSION = (19, 0, 24215)
+ # summarizes the minimum valid major versions of g++/clang++ for each supported
+ # CUDA version: https://gist.github.com/ax3l/9489132
+ CUDA_GCC_VERSIONS = {
+-    '10.2': (MINIMUM_GCC_VERSION, (8, 0, 0)),
+-    '11.1': (MINIMUM_GCC_VERSION, (10, 0, 0)),
+-    '11.2': (MINIMUM_GCC_VERSION, (10, 0, 0)),
+-    '11.3': (MINIMUM_GCC_VERSION, (10, 0, 0)),
+-    '11.4': ((6, 0, 0), (10, 0, 0))
+ }
+ 
+ CUDA_CLANG_VERSIONS = {
+-    '10.2': ((3, 3, 0), (8, 0, 0)),
+-    '11.1': ((6, 0, 0), (10, 0, 0)),
+-    '11.2': ((6, 0, 0), (10, 0, 0)),
+-    '11.3': ((6, 0, 0), (10, 0, 0)),
+-    '11.4': ((6, 0, 0), (10, 0, 0))
+ }
+ 
+ 

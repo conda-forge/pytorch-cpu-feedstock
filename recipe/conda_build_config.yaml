@@ -1,9 +1,5 @@
 MACOSX_SDK_VERSION:         # [osx]
   - 12.3                    # [osx]
 
-MACOSX_DEPLOYMENT_TARGET:      # [osx]
-  - 11.0                       # [osx and arm64]
-  - 10.9                       # [osx and x86_64]
-
 blas_impl:
   - mkl                        # [x86 or x86_64]
