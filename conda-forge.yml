@@ -14,6 +14,10 @@ os_version:
   linux_64: cos7
 provider:
   linux_aarch64: azure
+# remote_ci_setup:
+# - conda-forge-ci-setup=3
+# - conda-forge/label/lief_dev::py-lief
+# - conda-forge/label/lief_dev::liblief
 test_on_native_only: true
 conda_build:
   pkg_format: '2'
