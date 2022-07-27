@@ -25,10 +25,12 @@ source:
     # We've patch out the bug in GCC that makes it incompatible
     # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
     - patches/remove_gcc_maximum_requirements.patch 
+    # mkl-devel on Windows has suffix _dll for MKL's .lib files
+    - fix_mkl_win.patch # [win]
 
 build:
   number: {{ number }}
-  skip: true  # [win]
+  skip: true  # [win and cuda_compiler_version != "None"]
 
 outputs:
   - name: pytorch
@@ -57,6 +59,7 @@ outputs:
         - m2-git    # [win]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
+        - libuv # [win]
         # 2022/04/12 hmaarrfk
         # Issues with recent version of CMake
         # https://github.com/pytorch/pytorch/issues/74985
@@ -124,6 +127,7 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - expecttest
         - hypothesis
         - pytest
         - tabulate
