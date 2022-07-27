@@ -53,7 +53,7 @@ outputs:
         - m2-git    # [win]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        - libuv # [win]
+        - libuv  # [win]
         # 2022/04/12 hmaarrfk
         # Issues with recent version of CMake
         # https://github.com/pytorch/pytorch/issues/74985
