@@ -191,4 +191,5 @@ extra:
     - hmaarrfk
     - sodre
     - benjaminrwilson
+    - mikemhenry
   feedstock-name: pytorch-cpu
