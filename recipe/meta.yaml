@@ -168,7 +168,10 @@ outputs:
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
+      host: 
+        - python
       run:
+        - python
         - {{ pin_subpackage("pytorch", exact=True) }}
     test:
       imports:
