@@ -26,7 +26,7 @@ source:
     # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
     - patches/remove_gcc_maximum_requirements.patch 
     # mkl-devel on Windows has suffix _dll for MKL's .lib files
-    - fix_mkl_win.patch  # [win]
+    - patches/fix_mkl_win.patch  # [win]
 
 build:
   number: {{ number }}
