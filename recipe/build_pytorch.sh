@@ -16,6 +16,11 @@ export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 
+# CUPTI seems to cause trouble when users install a version of
+# cudatoolkit different than the one specified at compile time.
+# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/135
+export LIBKINETO_NOCUPTI=ON
+
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
