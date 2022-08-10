@@ -16,6 +16,12 @@ export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 
+# KINETO seems to require CUPTI and will look quite hard for it.
+# CUPTI seems to cause trouble when users install a version of
+# cudatoolkit different than the one specified at compile time.
+# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/135
+export USE_KINETO=OFF
+
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
