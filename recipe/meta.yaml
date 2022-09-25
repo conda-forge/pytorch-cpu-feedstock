@@ -64,7 +64,10 @@ outputs:
         # https://gitlab.kitware.com/cmake/cmake/-/issues/23368
         - cmake  != 3.23.0
         - ninja
-        - protobuf {{ libprotobuf }}
+        # Keep libprotobuf here so that a compatibile version
+        # of protobuf is installed between build and host
+        - libprotobuf
+        - protobuf
         - make      # [linux]
       host:
         # GPU requirements
