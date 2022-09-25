@@ -27,9 +27,9 @@ libcblas:
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- '3.20'
+- '3.21'
 numpy:
-- '1.19'
+- '1.20'
 openblas:
 - 0.3.*
 pin_run_as_build:
@@ -37,9 +37,9 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.8.* *_cpython
 pytorch:
-- '1.11'
+- '1.12'
 target_platform:
 - linux-aarch64
 zip_keys:
