@@ -23,11 +23,11 @@ bash $MINIFORGE_FILE -b -p ${MINIFORGE_HOME}
 source ${MINIFORGE_HOME}/etc/profile.d/conda.sh
 conda activate base
 
-echo -e "\n\nInstalling ['conda-forge-ci-setup=3', 'conda-forge/label/lief_dev::py-lief', 'conda-forge/label/lief_dev::liblief'] and conda-build."
+echo -e "\n\nInstalling ['conda-forge-ci-setup=3'] and conda-build."
 mamba install --update-specs --quiet --yes --channel conda-forge \
-    conda-build pip boa conda-forge-ci-setup=3 conda-forge/label/lief_dev::py-lief conda-forge/label/lief_dev::liblief
+    conda-build pip boa conda-forge-ci-setup=3
 mamba update --update-specs --yes --quiet --channel conda-forge \
-    conda-build pip boa conda-forge-ci-setup=3 conda-forge/label/lief_dev::py-lief conda-forge/label/lief_dev::liblief
+    conda-build pip boa conda-forge-ci-setup=3
 
 
 
