@@ -11,7 +11,7 @@ channel_targets:
 cuda_compiler:
 - nvcc
 cuda_compiler_version:
-- '11.1'
+- '11.2'
 cudnn:
 - '8'
 cxx_compiler:
@@ -19,23 +19,23 @@ cxx_compiler:
 cxx_compiler_version:
 - '10'
 docker_image:
-- quay.io/condaforge/linux-anvil-cuda:11.1
+- quay.io/condaforge/linux-anvil-cuda:11.2
 libprotobuf:
-- '3.20'
+- '3.21'
 mkl:
 - '2022'
 nccl:
 - '2'
 numpy:
-- '1.19'
+- '1.20'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.9.* *_cpython
 pytorch:
-- '1.11'
+- '1.12'
 target_platform:
 - linux-64
 zip_keys:
