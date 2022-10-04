@@ -29,6 +29,7 @@ source:
 build:
   number: {{ number }}
   skip: true  # [not ppc64le]
+  skip: true  # [py != 39]
 
 outputs:
   - name: pytorch
