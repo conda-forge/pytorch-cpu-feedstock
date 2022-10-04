@@ -33,6 +33,7 @@ build:
   skip: true  # [win and cuda_compiler_version != "None"]
   # Enable these build later
   skip: true  # [unix]
+  skip: true  # [py != 39]
 
 outputs:
   - name: pytorch
