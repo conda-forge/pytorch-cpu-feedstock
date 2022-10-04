@@ -24,11 +24,12 @@ source:
     # 2022/07 hmaarrfk
     # We've patch out the bug in GCC that makes it incompatible
     # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
-    - patches/remove_gcc_maximum_requirements.patch 
+    - patches/remove_gcc_maximum_requirements.patch
 
 build:
   number: {{ number }}
   skip: true  # [win]
+  skip: true  # [not ppc64le]
 
 outputs:
   - name: pytorch
