@@ -160,7 +160,7 @@ source:
     sha256: 221024505fa31647a1bce58ffeeeefc761b93f3b9ee7a8a9e0608268fb068611
   - folder: pytorch/third_party/XNNPACK
     url: https://github.com/google/XNNPACK/archive/ae108ef49aa5623b896fc93d4298c49d1750d9ba.tar.gz
-    sha256: e308d113b15af137e273fbdfc38abfb1a348c47d73293bae0deee66a14e2ab85
+    sha256: f418e62321dee0513e098ebaf37bdfcac4080a00b431f8bd950cc989b1b1df48
     patches:
       # While this next patch has been accepted upstream, it doesn't seem to have
       # made it for the 1.12.0 release
