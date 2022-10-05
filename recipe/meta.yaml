@@ -35,7 +35,7 @@ source:
     url: https://github.com/NVlabs/cub/archive/d106ddb991a56c3df1b6d51b2409e36ba8181ce4.tar.gz
     sha256: d87f6737be1b544c299340b64b9303c1d6ec0447b49b3aaf6642838b4f8280d7
   - folder: pytorch/third_party/eigen
-    url: https://gitlab.com/libeigen/eigen/archive/3147391d946bb4b6c68edd901f2add6ac1f31f8c.tar.gz
+    url: https://gitlab.com/libeigen/eigen/-/archive/3147391d946bb4b6c68edd901f2add6ac1f31f8c/eigen-3147391d946bb4b6c68edd901f2add6ac1f31f8c.tar.gz
   - folder: pytorch/third_party/googletest
     url: https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.tar.gz
     sha256: 2765fbfaa978e90d1c8477bc2f2b9705be65b1b562bb215dbfaa76567d508fe1
