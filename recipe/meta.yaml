@@ -10,23 +10,201 @@ package:
   version: {{ version }}
 
 source:
-  # for local testing use a tarball including submodules
-  git_url: https://github.com/pytorch/pytorch.git
-  git_tag: v{{ version }}
-  patches:
-    - patches/fix_dispatch_apply_auto.patch
-    # While this next patch has been accepted upstream, it doesn't seem to have
-    # made it for the 1.12.0 release
-    # https://github.com/pytorch/pytorch/pull/78883
-    - patches/link_blas_privately.patch
-    - patches/osx-map_anonymous.patch
-    - patches/75001-fix_USE_MKLDNN.patch
-    # 2022/07 hmaarrfk
-    # We've patch out the bug in GCC that makes it incompatible
-    # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
-    - patches/remove_gcc_maximum_requirements.patch 
-    # mkl-devel on Windows has suffix _dll for MKL's .lib files
-    - patches/fix_mkl_win.patch  # [win]
+  # To get this list:
+  # 1. Clone pytorch from
+  #     https;//github.com/pytorch/pytorch.git
+  # 2. Checkout the commit related to the version
+  #     git checkout v{{ version }}
+  # 3. Run the make_source.sh script from within the cloned repo
+  - folder: pytorch
+    url: https://github.com/pytorch/pytorch/archive/v{{ version }}.tar.gz
+    patches:
+      # https://github.com/pytorch/pytorch/pull/78883
+      - patches/link_blas_privately.patch
+      - patches/75001-fix_USE_MKLDNN.patch
+      # 2022/07 hmaarrfk
+      # We've patch out the bug in GCC that makes it incompatible
+      # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
+      - patches/remove_gcc_maximum_requirements.patch 
+      # mkl-devel on Windows has suffix _dll for MKL's .lib files
+      - patches/fix_mkl_win.patch  # [win]
+  - folder: pytorch/third_party/pybind11
+    url: https://github.com/pybind/pybind11/archive/8de7772cc72daca8e947b79b83fea46214931604.tar.gz
+    sha256: 53cd43ce8ade975225c2fd99325c2d3e42190b317fcabd6e13c6406972427bd0
+  - folder: pytorch/third_party/cub
+    url: https://github.com/NVlabs/cub/archive/d106ddb991a56c3df1b6d51b2409e36ba8181ce4.tar.gz
+    sha256: d87f6737be1b544c299340b64b9303c1d6ec0447b49b3aaf6642838b4f8280d7
+  - folder: pytorch/third_party/eigen
+    url: https://gitlab.com/libeigen/eigen/archive/3147391d946bb4b6c68edd901f2add6ac1f31f8c.tar.gz
+    sha256: 
+  - folder: pytorch/third_party/googletest
+    url: https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.tar.gz
+    sha256: 2765fbfaa978e90d1c8477bc2f2b9705be65b1b562bb215dbfaa76567d508fe1
+  - folder: pytorch/third_party/benchmark
+    url: https://github.com/google/benchmark/archive/e991355c02b93fe17713efe04cbc2e278e00fdbd.tar.gz
+    sha256: 914f898c9efcd4d328dafad10df0cdc59708771acf66c29eaf0becc38a140a04
+  - folder: pytorch/third_party/protobuf
+    url: https://github.com/protocolbuffers/protobuf/archive/d1eca4e4b421cd2997495c4b4e65cea6be4e9b8a.tar.gz
+    sha256: 4579f7792b5ac9a2db2ad60409565f694a52b202078efbd36de066b6f2232992
+  - folder: pytorch/third_party/protobuf/third_party/benchmark
+    url: https://github.com/google/benchmark/archive/5b7683f49e1e9223cf9927b24f6fd3d6bd82e3f8.tar.gz
+    sha256: 5dc92703f811f94e2aa63bdab07ab749f28a094befa6cdfd5fe177f947590a48
+  - folder: pytorch/third_party/protobuf/third_party/googletest
+    url: https://github.com/google/googletest/archive/5ec7f0c4a113e2f18ac2c6cc7df51ad6afc24081.tar.gz
+    sha256: 0e2f36e8e403c125fd0ab02171bdb786d3b6b3875b6ccf3b2eb7969be8faecd0
+  - folder: pytorch/third_party/ios-cmake
+    url: https://github.com/Yangqing/ios-cmake/archive/8abaed637d56f1337d6e1d2c4026e25c1eade724.tar.gz
+    sha256: 25485cc56bbe0ad4e7453ec5e6b67f4943c9ca75dc3f6aa76a092003338d803c
+  - folder: pytorch/third_party/NNPACK
+    url: https://github.com/Maratyszcza/NNPACK/archive/c07e3a0400713d546e0dea2d5466dd22ea389c73.tar.gz
+    sha256: 7af7792ba33873fd8c0ca80f261c565e254ffb1348497da74541bf2909bf013d
+  - folder: pytorch/third_party/gloo
+    url: https://github.com/facebookincubator/gloo/archive/c22a5cfba94edf8ea4f53a174d38aa0c629d070f.tar.gz
+    sha256: b5d82d1f8d1e00d7a929e9e8fdbd5f46f72bf62d70aafe6aa7b79a9ec2432f81
+  - folder: pytorch/third_party/pthreadpool
+    url: https://github.com/Maratyszcza/pthreadpool/archive/a134dd5d4cee80cce15db81a72e7f929d71dd413.tar.gz
+    sha256: db5c281f6cd873670e2fef919ab398e4e0587f5265ddc9e014f17cb8e3449611
+    patches:
+      - patches/fix_dispatch_apply_auto.patch
+  - folder: pytorch/third_party/FXdiv
+    url: https://github.com/Maratyszcza/FXdiv/archive/b408327ac2a15ec3e43352421954f5b1967701d1.tar.gz
+    sha256: 9ccf554541666b5c089ad5dd465141d671c99971f36d72f313652f5c49ffce14
+  - folder: pytorch/third_party/FP16
+    url: https://github.com/Maratyszcza/FP16/archive/4dfe081cf6bcd15db339cf2680b9281b8451eeb3.tar.gz
+    sha256: 90f20492621d5ed80b442aa682ff92d7ccf333ac8fac4a10e7e02afb159f3c13
+  - folder: pytorch/third_party/psimd
+    url: https://github.com/Maratyszcza/psimd/archive/072586a71b55b7f8c584153d223e95687148a900.tar.gz
+    sha256: f6c4dab91ae9a03b3019e7cab0572743afd0e1b6e75b97fcca50259c737c924e
+  - folder: pytorch/third_party/zstd
+    url: https://github.com/facebook/zstd/archive/aec56a52fbab207fc639a1937d1e708a282edca8.tar.gz
+    sha256: fc05493c1ba7937eb350c69ebcf7a0b82c420d840cfe06de84bdecfd1332bce6
+  - folder: pytorch/third_party/cpuinfo
+    url: https://github.com/pytorch/cpuinfo/archive/5916273f79a21551890fd3d56fc5375a78d1598d.tar.gz
+    sha256: f3c16d5d393d6d1fa6b6ed8621dd0a535552df9bc88cbba739375dde38a93142
+  - folder: pytorch/third_party/python-enum
+    url: https://github.com/PeachPy/enum34/archive/4cfedc426c4e2fc52e3f5c2b4297e15ed8d6b8c7.tar.gz
+    sha256: 4fe3f5640686512dfa125dca7f8201a0318b6739fe3e9a516c37d9d7740af566
+  - folder: pytorch/third_party/python-peachpy
+    url: https://github.com/malfet/PeachPy/archive/f45429b087dd7d5bc78bb40dc7cf06425c252d67.tar.gz
+    sha256: e57182725e856db7751df5a4546fbc4fee9dd7a59ea2285ae4b3452b0dc7bc5c
+  - folder: pytorch/third_party/python-six
+    url: https://github.com/benjaminp/six/archive/15e31431af97e5e64b80af0a3f598d382bcdd49a.tar.gz
+    sha256: b296916bb8dd9db59471a7bf7e273dcb2adf580299df1d0708f8112dd5bf0e52
+  - folder: pytorch/third_party/onnx
+    url: https://github.com/onnx/onnx/archive/96046b8ccfb8e6fa82f6b2b34b3d56add2e8849c.tar.gz
+    sha256: 38b524e8074734ca10be54f47d7a1819d701b7fbe5741b06db36ce3548e376c2
+  - folder: pytorch/third_party/onnx/third_party/pybind11
+    url: https://github.com/pybind/pybind11/archive/59a2ac2745d8a57ac94c6accced73620d59fb844.tar.gz
+    sha256: 3276f79ae507ae578501ffc2833f8e9082092eb99e59763a77d08c3fdea35bec
+  - folder: pytorch/third_party/onnx/third_party/benchmark
+    url: https://github.com/google/benchmark/archive/e776aa0275e293707b6a0901e0e8d8a8a3679508.tar.gz
+    sha256: c7682e9007ddfd94072647abab3e89ffd9084089460ae47d67060974467b58bf
+  - folder: pytorch/third_party/onnx-tensorrt
+    url: https://github.com/onnx/onnx-tensorrt/archive/c153211418a7c57ce071d9ce2a41f8d1c85a878f.tar.gz
+    sha256: 314cde420a7cf692bdb6877bc6af6bc514805f6cdb8bee90f32566ed08d94b1c
+  - folder: pytorch/third_party/onnx-tensorrt/third_party/onnx
+    url: https://github.com/onnx/onnx/archive/765f5ee823a67a866f4bd28a9860e81f3c811ce8.tar.gz
+    sha256: 6835e8b278b7b38a3ad34c6c3d378713abdf78524aadb2c0f9afe16371b57fb7
+  - folder: pytorch/third_party/onnx-tensorrt/third_party/onnx/third_party/pybind11
+    url: https://github.com/pybind/pybind11/archive/a1041190c8b8ff0cd9e2f0752248ad5e3789ea0c.tar.gz
+    sha256: 79cc7be5edbb79b79a73af42d91608e8f65c5502bf92361dccd3895b128e061b
+  - folder: pytorch/third_party/onnx-tensorrt/third_party/onnx/third_party/pybind11/tools/clang
+    url: https://github.com/wjakob/clang-cindex-python3/archive/6a00cbc4a9b8e68b71caf7f774b3f9c753ae84d5.tar.gz
+    sha256: 828e0d6238e2129a9e08071750dc16ba10e38eacf96f21b8a71e501c2085b282
+  - folder: pytorch/third_party/onnx-tensorrt/third_party/onnx/third_party/benchmark
+    url: https://github.com/google/benchmark/archive/e776aa0275e293707b6a0901e0e8d8a8a3679508.tar.gz
+    sha256: c7682e9007ddfd94072647abab3e89ffd9084089460ae47d67060974467b58bf
+  - folder: pytorch/third_party/sleef
+    url: https://github.com/shibatch/sleef/archive/e0a003ee838b75d11763aa9c3ef17bf71a725bff.tar.gz
+    sha256: fdf8901ebeb58924e197dd14d264f7c04e9f80da720f4c38deb13992f1bb89ac
+  - folder: pytorch/third_party/ideep
+    url: https://github.com/intel/ideep/archive/02b17c5748c9349dcc586c359af800c684d9b1ab.tar.gz
+    sha256: e62b9286ebf5fcce13abd48f7a87ce7099d8914ab424b3a2d940d4ed10832dba
+  - folder: pytorch/third_party/ideep/mkl-dnn
+    url: https://github.com/intel/mkl-dnn/archive/888a87a954e4fddb4d81fd10858eb834f2441b46.tar.gz
+    sha256: bcc74032a15949a0f138336d1f15b8586d3acb8daa317fd6568f2c11a52d1fd4
+  - folder: pytorch/third_party/ideep/mkl-dnn/third_party/oneDNN
+    url: https://github.com/oneapi-src/oneDNN/archive/52b5f107dd9cf10910aaa19cb47f3abf9b349815.tar.gz
+    sha256: 327ef1acf20bc06c8376be3950333a7ec6fabd2d09ccc74910d2056c082fef99
+  - folder: pytorch/third_party/nccl/nccl
+    url: https://github.com/NVIDIA/nccl/archive/7e515921295adaab72adf56ea71a0fafb0ecb5f3.tar.gz
+    sha256: c3dc97d65a5277299a6e712cd5358af47b32044e1bdcddbaf338aeb19d296d2b
+  - folder: pytorch/third_party/gemmlowp/gemmlowp
+    url: https://github.com/google/gemmlowp/archive/3fb5c176c17c765a3492cd2f0321b0dab712f350.tar.gz
+    sha256: fdd6f08bdb33d33f4df516ffb91730fdb163479c19502cfc983083fd9cf43bfa
+  - folder: pytorch/third_party/QNNPACK
+    url: https://github.com/pytorch/QNNPACK/archive/7d2a4e9931a82adc3814275b6219a03e24e36b4c.tar.gz
+    sha256: 0d752bd75f46ce4d7c6f0a60b0d6c0e5918a7b4683c825284f8db3706dd24f76
+  - folder: pytorch/third_party/neon2sse
+    url: https://github.com/intel/ARM_NEON_2_x86_SSE/archive/97a126f08ce318023be604d03f88bf0820a9464a.tar.gz
+    sha256: 2713f5d97ab6fdde6fd9625a5bcd82bc3d7cd92f506b20c27d5e06f2bc996836
+  - folder: pytorch/third_party/fbgemm
+    url: https://github.com/pytorch/fbgemm/archive/2e9be65810107a9595da717f95d21924b73be833.tar.gz
+    sha256: 49d2c442fcb0aaa655f0d6d1cf6db6f19a07fe06b0df8971877bb17d45bfaeb2
+  - folder: pytorch/third_party/fbgemm/third_party/asmjit
+    url: https://github.com/asmjit/asmjit/archive/8b35b4cffb62ecb58a903bf91cb7537d7a672211.tar.gz
+    sha256: 782673cc0fc6d1cc8a9251650931e93320ef2a55c6d7f2d1af4519a8735f063d
+  - folder: pytorch/third_party/fbgemm/third_party/cpuinfo
+    url: https://github.com/pytorch/cpuinfo/archive/ed8b86a253800bafdb7b25c5c399f91bff9cb1f3.tar.gz
+    sha256: f4d856b143041697d1780065040e863264c84282963edb4cab1e4bbb7f7b6ce4
+  - folder: pytorch/third_party/fbgemm/third_party/googletest
+    url: https://github.com/google/googletest/archive/cbf019de22c8dd37b2108da35b2748fd702d1796.tar.gz
+    sha256: 8b160748c057ea013fdc1969cf2ab2ea0c6ed0bac029734b1a43806676422585
+  - folder: pytorch/third_party/foxi
+    url: https://github.com/houseroad/foxi/archive/c278588e34e535f0bb8f00df3880d26928038cad.tar.gz
+    sha256: 52665aae3c7352a1fa68d017a87c825559c514072409e30753f36aa6eb0c7b4d
+  - folder: pytorch/third_party/tbb
+    url: https://github.com/01org/tbb/archive/a51a90bc609bb73db8ea13841b5cf7aa4344d4a9.tar.gz
+    sha256: be111cf161b587812fa3b106fe550efb6f129b8b0b702fef32fac23af9580e5e
+  - folder: pytorch/android/libs/fbjni
+    url: https://github.com/facebookincubator/fbjni/archive/7e1e1fe3858c63c251c637ae41a20de425dde96f.tar.gz
+    sha256: 221024505fa31647a1bce58ffeeeefc761b93f3b9ee7a8a9e0608268fb068611
+  - folder: pytorch/third_party/XNNPACK
+    url: https://github.com/google/XNNPACK/archive/ae108ef49aa5623b896fc93d4298c49d1750d9ba.tar.gz
+    sha256: e308d113b15af137e273fbdfc38abfb1a348c47d73293bae0deee66a14e2ab85
+    patches:
+      # While this next patch has been accepted upstream, it doesn't seem to have
+      # made it for the 1.12.0 release
+      - patches/osx-map_anonymous.patch
+  - folder: pytorch/third_party/fmt
+    url: https://github.com/fmtlib/fmt/archive/cd4af11efc9c622896a3e4cb599fa28668ca3d05.tar.gz
+    sha256: 0654ea5a1899f373fee87ae00ca3478aef227c3cf23916572421c6ce25d274bc
+  - folder: pytorch/third_party/tensorpipe
+    url: https://github.com/pytorch/tensorpipe/archive/52791a2fd214b2a9dc5759d36725909c1daa7f2e.tar.gz
+    sha256: 7ff0b84c0623f3360ec7c34b8c4fe02e7f9a87f8fa559c303f9574e44be0bc56
+  - folder: pytorch/third_party/tensorpipe/third_party/pybind11
+    url: https://github.com/pybind/pybind11/archive/a23996fce38ff6ccfbcdc09f1e63f2c4be5ea2ef.tar.gz
+    sha256: fd73796d5d0c0a2d0f780b7b5a16e694241c30e637df15a4ee632cb55f63d5e4
+  - folder: pytorch/third_party/tensorpipe/third_party/pybind11/tools/clang
+    url: https://github.com/wjakob/clang-cindex-python3/archive/6a00cbc4a9b8e68b71caf7f774b3f9c753ae84d5.tar.gz
+    sha256: 828e0d6238e2129a9e08071750dc16ba10e38eacf96f21b8a71e501c2085b282
+  - folder: pytorch/third_party/tensorpipe/third_party/libuv
+    url: https://github.com/libuv/libuv/archive/1dff88e5161cba5c59276d2070d2e304e4dcb242.tar.gz
+    sha256: c66c8a024bb31c6134347a0d5630f6275c0bfe94d4144504d45099412fd7a054
+  - folder: pytorch/third_party/tensorpipe/third_party/googletest
+    url: https://github.com/google/googletest/archive/aee0f9d9b5b87796ee8a0ab26b7587ec30e8858e.tar.gz
+    sha256: 89e40180b66e6629d1dd80c3ca3ab036524ed4d6fda8544980e2d16a2d5cb4b0
+  - folder: pytorch/third_party/tensorpipe/third_party/libnop
+    url: https://github.com/google/libnop/archive/910b55815be16109f04f4180e9adee14fb4ce281.tar.gz
+    sha256: ec3604671f8ea11aed9588825f9098057ebfef7a8908e97459835150eea9f63a
+  - folder: pytorch/third_party/cudnn_frontend
+    url: https://github.com/NVIDIA/cudnn-frontend/archive/43709ab96c47e26eebcdac72f93f946d44ceffa8.tar.gz
+    sha256: abe9c71a5006a3a74d2a9842efea8ae13957b9637e759220b8dc05c30d994633
+  - folder: pytorch/third_party/kineto
+    url: https://github.com/pytorch/kineto/archive/b2b48c00c6e5bd8e807e2231adb229db6a1d1c22.tar.gz
+    sha256: 5c88221fa07d2649177bd684158520327e1e71099f4c9fc4e2c7ff97f290b40a
+  - folder: pytorch/third_party/kineto/libkineto/third_party/googletest
+    url: https://github.com/google/googletest/archive/7aca84427f224eeed3144123d5230d5871e93347.tar.gz
+    sha256: 3a33f9092002723f893eb8679907d44ac3f2a908c295b963d4d42eee53b876a5
+  - folder: pytorch/third_party/kineto/libkineto/third_party/fmt
+    url: https://github.com/fmtlib/fmt/archive/2591ab91c3898c9f6544fff04660276537d32ffd.tar.gz
+    sha256: 03816d1f6d760f99e5cd56e64b11680598229093659118334016c6c02bf4a024
+  - folder: pytorch/third_party/pocketfft
+    url: https://github.com/mreineck/pocketfft/archive/ea778e37710c07723435b1be58235996d1d43a5a.tar.gz
+    sha256: 73beae824c4824450168829ea05307db59dce9f6cb6aa6099eca7628b8377de0
+  - folder: pytorch/third_party/flatbuffers
+    url: https://github.com/google/flatbuffers/archive/d0cede9c90c5257537c293517a21376408b549fa.tar.gz
+    sha256: c9eec9456504667a07869fd940e3c5b31ffaaa72af4dab9b8340559aeb501fdc
 
 build:
   number: {{ number }}
