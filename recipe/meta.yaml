@@ -15,10 +15,6 @@ source:
   git_tag: release/1.13
   patches:
     - patches/fix_dispatch_apply_auto.patch
-    # While this next patch has been accepted upstream, it doesn't seem to have
-    # made it for the 1.12.0 release
-    # https://github.com/pytorch/pytorch/pull/78883
-    - patches/link_blas_privately.patch
     - patches/osx-map_anonymous.patch
     - patches/75001-fix_USE_MKLDNN.patch
     # 2022/07 hmaarrfk
