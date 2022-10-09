@@ -1,4 +1,4 @@
-{% set version = "1.12.1" %}
+{% set version = "1.13.0" %}
 {% set number = 1 %}
 
 {% if cuda_compiler_version != "None" %}
@@ -12,7 +12,7 @@ package:
 source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
-  git_tag: v{{ version }}
+  git_tag: release/1.13
   patches:
     - patches/fix_dispatch_apply_auto.patch
     # While this next patch has been accepted upstream, it doesn't seem to have
@@ -29,6 +29,7 @@ source:
 build:
   number: {{ number }}
   skip: true  # [win]
+  skip: true  # [cuda_compiler_version in ("10.2", "11.0", "11.1")]
 
 outputs:
   - name: pytorch
