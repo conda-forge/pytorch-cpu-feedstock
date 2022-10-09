@@ -26,6 +26,7 @@ build:
   number: {{ number }}
   skip: true  # [win]
   skip: true  # [cuda_compiler_version in ("10.2", "11.0", "11.1")]
+  skip: true  # [py<310]
 
 outputs:
   - name: pytorch
