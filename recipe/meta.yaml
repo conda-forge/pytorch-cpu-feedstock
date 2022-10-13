@@ -66,18 +66,6 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
-        # https://github.com/pytorch/pytorch/blob/v1.13.0-rc3/pyproject.toml
-        - setuptools
-        - wheel
-        - astunparse
-        - numpy
-        - pyyaml
-        - cffi
-        - typing_extensions
-        - future
-        - six
-        - requests
-        - dataclasses
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
