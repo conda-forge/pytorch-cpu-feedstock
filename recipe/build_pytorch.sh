@@ -4,8 +4,6 @@ set -ex
 
 # clean up an existing cmake build directory
 rm -rf build
-# remove pyproject.toml to avoid installing deps from pip
-rm -rf $PREFIX/pyproject.toml
 
 # uncomment to debug cmake build
 export CMAKE_VERBOSE_MAKEFILE=1
@@ -129,5 +127,8 @@ else
 fi
 
 export CMAKE_BUILD_TYPE=Release
+
+# remove pyproject.toml to avoid installing deps from pip
+rm -rf pyproject.toml
 
 $PYTHON -m pip install . --no-deps -vvv --no-clean
