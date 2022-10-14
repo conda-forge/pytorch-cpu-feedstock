@@ -1,4 +1,4 @@
-{% set version = "1.13.0" %}
+{% set version = "1.13.0-rc3" %}
 {% set number = 1 %}
 
 {% if cuda_compiler_version != "None" %}
@@ -7,12 +7,12 @@
 
 package:
   name: pytorch-recipe
-  version: {{ version }}
+  version: {{ version.replace(".rc", "-rc") }}
 
 source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
-  git_tag: release/1.13
+  git_tag: v{{ version }}
   patches:
     - patches/fix_dispatch_apply_auto.patch
     - patches/osx-map_anonymous.patch
