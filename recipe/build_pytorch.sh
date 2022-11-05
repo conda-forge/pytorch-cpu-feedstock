@@ -104,7 +104,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     elif [[ ${cuda_compiler_version} == 11.1 ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX"
     elif [[ ${cuda_compiler_version} == 11.2 ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX"
+        export TORCH_CUDA_ARCH_LIST="8.0;8.6+PTX"
     else
         echo "unsupported cuda version. edit build_pytorch.sh"
         exit 1
