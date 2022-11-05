@@ -71,7 +71,7 @@ outputs:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None"]
-        - magma                           # [cuda_compiler_version != "None"]
+        - magma 2.6.2                     # [cuda_compiler_version != "None"]
         # other requirements
         - python
         - numpy
