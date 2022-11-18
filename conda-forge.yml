@@ -12,5 +12,7 @@ github_actions:
   self_hosted: true
 provider:
   linux_64:
-    - azure
-    - github_actions
+  - azure
+  - github_actions
+conda_build:
+  pkg_format: '2'
