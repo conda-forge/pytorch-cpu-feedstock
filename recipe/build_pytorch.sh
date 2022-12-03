@@ -4,10 +4,14 @@ set -ex
 
 # clean up an existing cmake build directory
 rm -rf build
+# remove pyproject.toml to avoid installing deps from pip
+rm -rf pyproject.toml
 
 # uncomment to debug cmake build
 export CMAKE_VERBOSE_MAKEFILE=1
 
+export USE_NUMA=0
+export USE_ITT=0
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"

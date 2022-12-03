@@ -1,5 +1,5 @@
-{% set version = "1.12.1" %}
-{% set number = 1 %}
+{% set version = "1.13.0" %}
+{% set number = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set number = number + 200 %}
@@ -15,12 +15,7 @@ source:
   git_tag: v{{ version }}
   patches:
     - patches/fix_dispatch_apply_auto.patch
-    # While this next patch has been accepted upstream, it doesn't seem to have
-    # made it for the 1.12.0 release
-    # https://github.com/pytorch/pytorch/pull/78883
-    - patches/link_blas_privately.patch
     - patches/osx-map_anonymous.patch
-    - patches/75001-fix_USE_MKLDNN.patch
     # 2022/07 hmaarrfk
     # We've patch out the bug in GCC that makes it incompatible
     # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
