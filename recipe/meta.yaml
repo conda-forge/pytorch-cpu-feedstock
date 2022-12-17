@@ -19,7 +19,7 @@ source:
     # 2022/07 hmaarrfk
     # We've patch out the bug in GCC that makes it incompatible
     # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
-    - patches/remove_gcc_maximum_requirements.patch 
+    - patches/remove_gcc_maximum_requirements.patch
 
 build:
   number: {{ number }}
@@ -27,6 +27,8 @@ build:
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
+  # NOTE(hadim): temporary for testing.
+  skip: true  # [py!=310]
 
 outputs:
   - name: pytorch
