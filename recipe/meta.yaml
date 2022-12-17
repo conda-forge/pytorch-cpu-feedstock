@@ -23,10 +23,10 @@ source:
 
 build:
   number: {{ number }}
-  skip: true  # [win]
-  skip: true  # [cuda_compiler_version == "10.2"]
-  skip: true  # [cuda_compiler_version == "11.0"]
-  skip: true  # [cuda_compiler_version == "11.1"]
+  # skip: true  # [win]
+  # skip: true  # [cuda_compiler_version == "10.2"]
+  # skip: true  # [cuda_compiler_version == "11.0"]
+  # skip: true  # [cuda_compiler_version == "11.1"]
   # NOTE(hadim): temporary for testing.
   skip: true  # [py!=310]
 
