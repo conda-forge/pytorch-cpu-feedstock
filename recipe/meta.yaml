@@ -28,9 +28,9 @@ build:
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
   # NOTE(hadim): temporary for testing.
-  skip: true  # [py38]
-  skip: true  # [py39]
-  skip: true  # [py311]
+  skip: true  # [py==38]
+  skip: true  # [py==39]
+  skip: true  # [py==311]
 
 outputs:
   - name: pytorch
