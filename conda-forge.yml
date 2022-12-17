@@ -14,6 +14,9 @@ os_version:
   linux_64: cos7
 provider:
   linux_aarch64: azure
+  linux_64: ["github_actions"]
+  osx_64: ["github_actions"]
+  win_64: ["github_actions"]
 test_on_native_only: true
 conda_build:
   pkg_format: '2'
