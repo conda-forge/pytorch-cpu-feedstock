@@ -41,7 +41,7 @@ outputs:
     script: bld_pytorch.bat   # [win]
     requirements:
       build:
-        - python 3.11.*=*_0                      # [build_platform != target_platform and py==311]
+        - python 3.11.*=*_0_cpython              # [build_platform != target_platform and py==311]
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
@@ -75,7 +75,7 @@ outputs:
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
-        - python 3.11.*=*_0               # [py==311]
+        - python 3.11.*=*_0_cpython       # [py==311]
         - python
         - numpy
         - pip
