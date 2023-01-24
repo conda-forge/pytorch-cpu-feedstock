@@ -130,6 +130,7 @@ outputs:
         - pydot
         - mock  # [linux]
         - pip
+        - expecttest
       imports:
         - torch
       source_files:
