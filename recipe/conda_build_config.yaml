@@ -1,5 +1,5 @@
 MACOSX_SDK_VERSION:         # [osx]
-  - 12.3                    # [osx]
+  - 11.3                    # [osx]
 
 # This works around a bug with more severe compiler warnings
 # in clang 14. This should be addressed in pytorch newer than 1.12.1
