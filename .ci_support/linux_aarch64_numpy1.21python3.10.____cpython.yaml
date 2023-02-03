@@ -39,7 +39,7 @@ pin_run_as_build:
 python:
 - 3.10.* *_cpython
 pytorch:
-- '1.12'
+- '1.13'
 target_platform:
 - linux-aarch64
 zip_keys:
