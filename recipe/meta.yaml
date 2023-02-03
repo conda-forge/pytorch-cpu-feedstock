@@ -106,8 +106,6 @@ outputs:
         - setuptools
         - cffi
         - typing_extensions
-        # Need ninja to load C++ extensions
-        - ninja
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
       run_constrained:
