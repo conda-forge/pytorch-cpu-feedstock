@@ -87,6 +87,8 @@ outputs:
         - libcblas              # [not x86]
         - liblapack             # [not x86]
         - openblas              # [not x86]
+        - libgomp   # [linux]
+        - llvm-openmp    # [osx]
         - libprotobuf
         - sleef
         - typing
