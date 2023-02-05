@@ -102,9 +102,6 @@ outputs:
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
         - python
-        - {{ pin_compatible('numpy') }}
-        - setuptools
-        - cffi
         - typing_extensions
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
