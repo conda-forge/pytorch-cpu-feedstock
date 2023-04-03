@@ -20,6 +20,9 @@ export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 
+# This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
+export _GLIBCXX_USE_CXX11_ABI=1
+
 # KINETO seems to require CUPTI and will look quite hard for it.
 # CUPTI seems to cause trouble when users install a version of
 # cudatoolkit different than the one specified at compile time.
