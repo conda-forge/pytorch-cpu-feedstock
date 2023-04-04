@@ -1,5 +1,5 @@
-{% set version = "1.13.1" %}
-{% set number = 1 %}
+{% set version = "2.0.0" %}
+{% set number = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set number = number + 200 %}
@@ -15,7 +15,6 @@ source:
   git_tag: v{{ version }}
   patches:
     - patches/fix_dispatch_apply_auto.patch
-    - patches/osx-map_anonymous.patch
     # 2022/07 hmaarrfk
     # We've patch out the bug in GCC that makes it incompatible
     # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
@@ -101,6 +100,10 @@ outputs:
         # other requirements
         - python
         - typing_extensions
+        - sympy
+        - filelock
+        - jinja2
+        - networkx
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
       run_constrained:
@@ -123,10 +126,14 @@ outputs:
         - pydot
         - mock  # [linux]
         - pip
+        - expecttest
       imports:
         - torch
       source_files:
         - test
+        # tools/ is needed to optimise test run
+        # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
+        - tools
       commands:
         - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
         - python ./test/run_test.py  # [win]
@@ -175,4 +182,5 @@ extra:
     - hmaarrfk
     - sodre
     - benjaminrwilson
+    - Tobias-Fischer
   feedstock-name: pytorch-cpu
