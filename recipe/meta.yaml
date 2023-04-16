@@ -1,5 +1,5 @@
 {% set version = "2.0.0" %}
-{% set number = 0 %}
+{% set number = 1 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set number = number + 200 %}
@@ -83,7 +83,6 @@ outputs:
         - libcblas * *_mkl      # [x86]
         - libcblas              # [not x86]
         - liblapack             # [not x86]
-        - openblas              # [not x86]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
         - libprotobuf
