@@ -19,7 +19,7 @@ cxx_compiler_version:
 libprotobuf:
 - '3.21'
 llvm_openmp:
-- '14'
+- '15'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 mkl:
