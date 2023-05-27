@@ -8,38 +8,70 @@ jobs:
     vmImage: macos-12
   strategy:
     matrix:
-      osx_64_numpy1.21python3.10.____cpython:
-        CONFIG: osx_64_numpy1.21python3.10.____cpython
+      osx_64_libprotobuf3.21numpy1.21python3.10.____cpython:
+        CONFIG: osx_64_libprotobuf3.21numpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.21python3.10.____cpython
-      osx_64_numpy1.21python3.8.____cpython:
-        CONFIG: osx_64_numpy1.21python3.8.____cpython
+        SHORT_CONFIG: osx_64_libprotobuf3.21numpy1.21pyth_hd8756b5ec7
+      osx_64_libprotobuf3.21numpy1.21python3.8.____cpython:
+        CONFIG: osx_64_libprotobuf3.21numpy1.21python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.21python3.8.____cpython
-      osx_64_numpy1.21python3.9.____cpython:
-        CONFIG: osx_64_numpy1.21python3.9.____cpython
+        SHORT_CONFIG: osx_64_libprotobuf3.21numpy1.21pyth_h0ff789d152
+      osx_64_libprotobuf3.21numpy1.21python3.9.____cpython:
+        CONFIG: osx_64_libprotobuf3.21numpy1.21python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.21python3.9.____cpython
-      osx_64_numpy1.23python3.11.____cpython:
-        CONFIG: osx_64_numpy1.23python3.11.____cpython
+        SHORT_CONFIG: osx_64_libprotobuf3.21numpy1.21pyth_hd1ed43e457
+      osx_64_libprotobuf3.21numpy1.23python3.11.____cpython:
+        CONFIG: osx_64_libprotobuf3.21numpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.23python3.11.____cpython
-      osx_arm64_numpy1.21python3.10.____cpython:
-        CONFIG: osx_arm64_numpy1.21python3.10.____cpython
+        SHORT_CONFIG: osx_64_libprotobuf3.21numpy1.23pyth_h1c58864649
+      osx_64_libprotobuf4.23.2numpy1.21python3.10.____cpython:
+        CONFIG: osx_64_libprotobuf4.23.2numpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.21python3.10.____cpython
-      osx_arm64_numpy1.21python3.8.____cpython:
-        CONFIG: osx_arm64_numpy1.21python3.8.____cpython
+        SHORT_CONFIG: osx_64_libprotobuf4.23.2numpy1.21py_hb090e567dd
+      osx_64_libprotobuf4.23.2numpy1.21python3.8.____cpython:
+        CONFIG: osx_64_libprotobuf4.23.2numpy1.21python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.21python3.8.____cpython
-      osx_arm64_numpy1.21python3.9.____cpython:
-        CONFIG: osx_arm64_numpy1.21python3.9.____cpython
+        SHORT_CONFIG: osx_64_libprotobuf4.23.2numpy1.21py_h3da0484c22
+      osx_64_libprotobuf4.23.2numpy1.21python3.9.____cpython:
+        CONFIG: osx_64_libprotobuf4.23.2numpy1.21python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.21python3.9.____cpython
-      osx_arm64_numpy1.23python3.11.____cpython:
-        CONFIG: osx_arm64_numpy1.23python3.11.____cpython
+        SHORT_CONFIG: osx_64_libprotobuf4.23.2numpy1.21py_h7b45dcf765
+      osx_64_libprotobuf4.23.2numpy1.23python3.11.____cpython:
+        CONFIG: osx_64_libprotobuf4.23.2numpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.23python3.11.____cpython
+        SHORT_CONFIG: osx_64_libprotobuf4.23.2numpy1.23py_he8bc53979b
+      osx_arm64_libprotobuf3.21numpy1.21python3.10.____cpython:
+        CONFIG: osx_arm64_libprotobuf3.21numpy1.21python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_libprotobuf3.21numpy1.21p_h41b47f42ac
+      osx_arm64_libprotobuf3.21numpy1.21python3.8.____cpython:
+        CONFIG: osx_arm64_libprotobuf3.21numpy1.21python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_libprotobuf3.21numpy1.21p_hefaa9bd00f
+      osx_arm64_libprotobuf3.21numpy1.21python3.9.____cpython:
+        CONFIG: osx_arm64_libprotobuf3.21numpy1.21python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_libprotobuf3.21numpy1.21p_he56a2353b1
+      osx_arm64_libprotobuf3.21numpy1.23python3.11.____cpython:
+        CONFIG: osx_arm64_libprotobuf3.21numpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_libprotobuf3.21numpy1.23p_h0d9935854c
+      osx_arm64_libprotobuf4.23.2numpy1.21python3.10.____cpython:
+        CONFIG: osx_arm64_libprotobuf4.23.2numpy1.21python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_libprotobuf4.23.2numpy1.2_h88694d50f3
+      osx_arm64_libprotobuf4.23.2numpy1.21python3.8.____cpython:
+        CONFIG: osx_arm64_libprotobuf4.23.2numpy1.21python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_libprotobuf4.23.2numpy1.2_h00fe690347
+      osx_arm64_libprotobuf4.23.2numpy1.21python3.9.____cpython:
+        CONFIG: osx_arm64_libprotobuf4.23.2numpy1.21python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_libprotobuf4.23.2numpy1.2_h16353748e6
+      osx_arm64_libprotobuf4.23.2numpy1.23python3.11.____cpython:
+        CONFIG: osx_arm64_libprotobuf4.23.2numpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_libprotobuf4.23.2numpy1.2_h224f7b71cb
   timeoutInMinutes: 360
 
   steps:
