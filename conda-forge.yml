@@ -5,8 +5,10 @@ azure:
   store_build_artifacts: true
   free_disk_space: true
 build_platform:
-  osx_arm64: osx_64
   linux_aarch64: linux_64
+  osx_arm64: osx_64
+conda_build:
+  pkg_format: '2'
 conda_forge_output_validation: true
 github:
   branch_name: main
@@ -15,10 +17,7 @@ os_version:
   linux_64: cos7
 provider:
   linux_aarch64: azure
-test_on_native_only: true
-conda_build:
-  pkg_format: '2'
-# https://github.com/conda-forge/conda-smithy/pull/1686
 remote_ci_setup:
 - py-lief=0.12.3
 - conda-forge-ci-setup=3
+test_on_native_only: true
