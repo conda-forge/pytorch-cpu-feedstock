@@ -16,6 +16,7 @@ os_version:
   linux_64: cos7
 provider:
   linux_aarch64: azure
+# https://github.com/conda-forge/conda-smithy/pull/1686
 remote_ci_setup:
 - py-lief=0.12.3
 - conda-forge-ci-setup=3
