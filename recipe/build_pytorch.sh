@@ -34,6 +34,11 @@ if [[ "$target_platform" == "osx-64" ]]; then
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
 fi
 
+if [[ "$target_platform" == "linux*" ]]; then
+  export CXXFLAGS+="$CXXFLAGS -Wno-maybe-uninitialized -Wno-uninitialized -Wno-free-nonheap-object -Wno-nonnull"
+  export CFLAGS+="$CFLAGS -Wno-maybe-uninitialized -Wno-uninitialized -Wno-free-nonheap-object -Wno-nonnull"
+fi
+
 # Dynamic libraries need to be lazily loaded so that torch
 # can be imported on system without a GPU
 LDFLAGS="${LDFLAGS//-Wl,-z,now/-Wl,-z,lazy}"
