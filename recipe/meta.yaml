@@ -70,7 +70,6 @@ outputs:
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
-        - onednn                          # [cuda_compiler_version == "11.2"]
         # other requirements
         - python
         - numpy
@@ -80,11 +79,12 @@ outputs:
         - requests
         - future
         - six
-        - mkl-devel {{ mkl }}   # [x86]
-        - libcblas * *_mkl      # [x86]
-        - libcblas              # [not x86]
-        - liblapack             # [not x86]
-        - openblas              # [not x86]
+        - mkl-devel {{ mkl }}    # [x86]
+        - mkl-include {{ mkl }}  # [x86]
+        - libcblas * *_mkl       # [x86]
+        - libcblas               # [not x86]
+        - liblapack              # [not x86]
+        - openblas               # [not x86]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
         - libprotobuf
