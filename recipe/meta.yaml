@@ -70,7 +70,6 @@ outputs:
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
-        - onednn                          # [cuda_compiler_version != "None"] 
         # other requirements
         - python
         - numpy
