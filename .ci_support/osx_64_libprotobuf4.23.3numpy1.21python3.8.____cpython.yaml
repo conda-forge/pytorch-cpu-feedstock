@@ -1,35 +1,33 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '11.0'
+- '10.9'
 MACOSX_SDK_VERSION:
 - '12.3'
 c_compiler:
 - clang
 c_compiler_version:
-- '14'
+- '13'
 channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
+cuda_compiler:
+- None
 cuda_compiler_version:
 - None
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '14'
-libcblas:
-- 3.9 *netlib
-liblapack:
-- 3.9 *netlib
+- '13'
 libprotobuf:
-- '3.21'
+- 4.23.3
 llvm_openmp:
-- '14'
+- '15'
 macos_machine:
-- arm64-apple-darwin20.0.0
+- x86_64-apple-darwin13.4.0
+mkl:
+- '2022'
 numpy:
 - '1.21'
-openblas:
-- 0.3.*
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -37,9 +35,9 @@ pin_run_as_build:
 python:
 - 3.8.* *_cpython
 pytorch:
-- '1.13'
+- '2.0'
 target_platform:
-- osx-arm64
+- osx-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
