@@ -8,22 +8,38 @@ jobs:
     vmImage: macos-12
   strategy:
     matrix:
-      osx_64_numpy1.21python3.10.____cpython:
-        CONFIG: osx_64_numpy1.21python3.10.____cpython
+      osx_64_blas_implmklnumpy1.21python3.10.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.21python3.10.____cpython
-      osx_64_numpy1.21python3.8.____cpython:
-        CONFIG: osx_64_numpy1.21python3.8.____cpython
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.21python3_h2a308720bd
+      osx_64_blas_implmklnumpy1.21python3.8.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.21python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.21python3.8.____cpython
-      osx_64_numpy1.21python3.9.____cpython:
-        CONFIG: osx_64_numpy1.21python3.9.____cpython
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.21python3_h347b071be0
+      osx_64_blas_implmklnumpy1.21python3.9.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.21python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.21python3.9.____cpython
-      osx_64_numpy1.23python3.11.____cpython:
-        CONFIG: osx_64_numpy1.23python3.11.____cpython
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.21python3_h5c353ce0ba
+      osx_64_blas_implmklnumpy1.23python3.11.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.23python3.11.____cpython
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.23python3_hc56ac1fa22
+      osx_64_blas_implopenblasnumpy1.21python3.10.____cpython:
+        CONFIG: osx_64_blas_implopenblasnumpy1.21python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implopenblasnumpy1.21py_he4e6b0fd67
+      osx_64_blas_implopenblasnumpy1.21python3.8.____cpython:
+        CONFIG: osx_64_blas_implopenblasnumpy1.21python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implopenblasnumpy1.21py_h7a5aaf626e
+      osx_64_blas_implopenblasnumpy1.21python3.9.____cpython:
+        CONFIG: osx_64_blas_implopenblasnumpy1.21python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implopenblasnumpy1.21py_hbbbd8a7904
+      osx_64_blas_implopenblasnumpy1.23python3.11.____cpython:
+        CONFIG: osx_64_blas_implopenblasnumpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implopenblasnumpy1.23py_hc2e74ff6e0
       osx_arm64_numpy1.21python3.10.____cpython:
         CONFIG: osx_arm64_numpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
