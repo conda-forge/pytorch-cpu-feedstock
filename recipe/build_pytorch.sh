@@ -74,6 +74,14 @@ fi
 
 export MAX_JOBS=${CPU_COUNT}
 
+if [[ "$blas_impl" == "openblas" ]]; then
+    export BLAS=OpenBLAS
+    export USE_MKLDNN=0
+else
+    export BLAS=mkl
+    export USE_MKLDNN=1
+fi
+
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Produce macOS builds with torch.distributed support.
@@ -122,14 +130,13 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     export MAGMA_HOME="${PREFIX}"
 else
     if [[ "$target_platform" == *-64 ]]; then
-      export BLAS="MKL"
+      echo "dead branch!"
     else
       # Breakpad seems to not work on aarch64 or ppc64le
       # https://github.com/pytorch/pytorch/issues/67083
       export USE_BREAKPAD=0
     fi
     export USE_CUDA=0
-    export USE_MKLDNN=1
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
 
