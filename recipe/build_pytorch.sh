@@ -78,7 +78,7 @@ if [[ "$blas_impl" == "openblas" ]]; then
     export BLAS=OpenBLAS
     export USE_MKLDNN=0
 else
-    export BLAS=mkl
+    export BLAS=MKL
     export USE_MKLDNN=1
 fi
 
