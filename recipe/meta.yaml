@@ -27,6 +27,13 @@ build:
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
+  skip: true  # [py != 310]
+
+requirements:
+  host:
+    - python
+  run:
+    - python
 
 outputs:
   - name: pytorch
@@ -36,11 +43,12 @@ outputs:
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
+      skip: true  # [py != 310]
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
     requirements:
       build:
-        - python =3.10                                # [build_platform != target_platform]
+        - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
         - sysroot_linux-64  2.17  # [linux64]
@@ -72,7 +80,7 @@ outputs:
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
-        - python =3.10
+        - python
         - numpy
         - pip
         - setuptools
@@ -103,7 +111,7 @@ outputs:
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
-        - python =3.10
+        - python
         - typing_extensions
         - sympy
         - filelock
@@ -165,6 +173,7 @@ outputs:
       # weigh down cpu implementation and give cuda preference
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
+      skip: true  # [py != 310]
     requirements:
       run:
         - {{ pin_subpackage("pytorch", exact=True) }}

@@ -8,30 +8,18 @@ jobs:
     vmImage: macos-12
   strategy:
     matrix:
-      osx_64_blas_implmklnumpy1.21:
-        CONFIG: osx_64_blas_implmklnumpy1.21
+      osx_64_blas_implmklnumpy1.21python3.10.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implmklnumpy1.21
-      osx_64_blas_implmklnumpy1.23:
-        CONFIG: osx_64_blas_implmklnumpy1.23
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.21python3_h2a308720bd
+      osx_64_blas_implopenblasnumpy1.21python3.10.____cpython:
+        CONFIG: osx_64_blas_implopenblasnumpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implmklnumpy1.23
-      osx_64_blas_implopenblasnumpy1.21:
-        CONFIG: osx_64_blas_implopenblasnumpy1.21
+        SHORT_CONFIG: osx_64_blas_implopenblasnumpy1.21py_he4e6b0fd67
+      osx_arm64_numpy1.21python3.10.____cpython:
+        CONFIG: osx_arm64_numpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implopenblasnumpy1.21
-      osx_64_blas_implopenblasnumpy1.23:
-        CONFIG: osx_64_blas_implopenblasnumpy1.23
-        UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implopenblasnumpy1.23
-      osx_arm64_numpy1.21:
-        CONFIG: osx_arm64_numpy1.21
-        UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.21
-      osx_arm64_numpy1.23:
-        CONFIG: osx_arm64_numpy1.23
-        UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.23
+        SHORT_CONFIG: osx_arm64_numpy1.21python3.10.____cpython
   timeoutInMinutes: 360
 
   steps:
