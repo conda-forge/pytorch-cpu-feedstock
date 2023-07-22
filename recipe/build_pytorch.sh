@@ -17,8 +17,8 @@ export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
-export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
-export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
+export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
 
 # This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
 export _GLIBCXX_USE_CXX11_ABI=1
