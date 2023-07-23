@@ -8,7 +8,7 @@ rm -rf build
 rm -rf pyproject.toml
 
 # uncomment to debug cmake build
-export CMAKE_VERBOSE_MAKEFILE=1
+# export CMAKE_VERBOSE_MAKEFILE=1
 
 export USE_NUMA=0
 export USE_ITT=0
@@ -100,6 +100,18 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
+    # TODO: figure out what to patch to make this work without a CFLAGS hack
+    #   FAILED: caffe2/CMakeFiles/torch_cpu.dir/__/torch/csrc/jit/codegen/onednn/graph_fuser.cpp.o
+    #   /home/conda/feedstock_root/build_artifacts/pytorch-recipe_1690125468847/_build_env/bin/x86_64-conda-linux-gnu-c++ ...
+    #   /home/conda/feedstock_root/build_artifacts/pytorch-recipe_1690125468847/work/torch/csrc/jit/codegen/onednn/graph_fuser.cpp
+    #   In file included from /home/conda/feedstock_root/build_artifacts/pytorch-recipe_1690125468847/work/torch/csrc/jit/codegen/onednn/graph_fuser.h:3,
+    #                    from /home/conda/feedstock_root/build_artifacts/pytorch-recipe_1690125468847/work/torch/csrc/jit/codegen/onednn/graph_fuser.cpp:1:
+    #   /home/conda/feedstock_root/build_artifacts/pytorch-recipe_1690125468847/work/torch/csrc/jit/codegen/onednn/graph_helper.h:3:10: fatal error: oneapi/dnnl/dnnl_graph.hpp: No such file or directory
+    #       3 | #include <oneapi/dnnl/dnnl_graph.hpp>
+    #         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    export CFLAGS="${CLFAGS} -I${SRC_DIR}/third_party/ideep/mkl-dnn/include/"
+    export CXXFLAGS="${CXXLFAGS} -I${SRC_DIR}/third_party/ideep/mkl-dnn/include/"
+
     export USE_CUDA=1
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"

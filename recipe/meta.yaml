@@ -70,6 +70,9 @@ outputs:
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
+        # Not yet compatible with conda-forge's 3.X version
+        # https://github.com/pytorch/pytorch/pull/97957
+        # - onednn                          # [cuda_compiler_version != "None"]
         # other requirements
         - python
         - numpy
