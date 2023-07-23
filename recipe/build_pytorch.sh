@@ -81,11 +81,16 @@ export MAX_JOBS=${CPU_COUNT}
 
 if [[ "$blas_impl" == "openblas" ]]; then
     export BLAS=OpenBLAS
-    export USE_MKLDNN=0
 else
     export BLAS=MKL
-    export USE_MKLDNN=0
 fi
+
+# MKLDNN is an Apache-2.0 licensed library for DNNs and is used
+# for CPU builds. Not to be confused with MKL.
+# Even though cudnn is used for CUDA builds, it's good to enable
+# for MKLDNN for CUDA builds when CUDA builds are used on a machine
+# with no NVIDIA GPUs.
+export USE_MKLDNN=1
 
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -97,7 +102,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export USE_DISTRIBUTED=1
     export USE_AVX=OFF
     export USE_NNPACK=OFF
-    # export USE_MKLDNN=OFF
     export C_HAS_AVX_2=OFF
     export C_HAS_AVX2_2=OFF
     export C_HAS_AVX512_2=OFF
@@ -109,6 +113,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
         export BLAS=OpenBLAS
+        # MKLDNN did not support on Apple M1 at the time support Apple M1
+        # was added. Revisit later
         export USE_MKLDNN=0
         # There is a problem with pkg-config
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
@@ -145,9 +151,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
     export MAGMA_HOME="${PREFIX}"
 else
-    if [[ "$target_platform" == *-64 ]]; then
-      echo "dead branch!"
-    else
+    if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
       # https://github.com/pytorch/pytorch/issues/67083
       export USE_BREAKPAD=0
