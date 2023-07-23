@@ -85,13 +85,6 @@ else
     export BLAS=MKL
 fi
 
-# MKLDNN is an Apache-2.0 licensed library for DNNs and is used
-# for CPU builds. Not to be confused with MKL.
-# Even though cudnn is used for CUDA builds, it's good to enable
-# for MKLDNN for CUDA builds when CUDA builds are used on a machine
-# with no NVIDIA GPUs.
-export USE_MKLDNN=1
-
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Produce macOS builds with torch.distributed support.
@@ -115,6 +108,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
+    # Even though cudnn is used for CUDA builds, it's good to enable
+    # for MKLDNN for CUDA builds when CUDA builds are used on a machine
+    # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
+    export USE_MKLDNN=OFF
     export USE_CUDA=1
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"
@@ -146,6 +143,9 @@ else
       # https://github.com/pytorch/pytorch/issues/67083
       export USE_BREAKPAD=0
     fi
+    # MKLDNN is an Apache-2.0 licensed library for DNNs and is used
+    # for CPU builds. Not to be confused with MKL.
+    export USE_MKLDNN=1
     export USE_CUDA=0
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
