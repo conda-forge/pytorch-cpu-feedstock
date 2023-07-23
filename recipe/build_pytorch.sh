@@ -100,6 +100,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export CXX_HAS_AVX2_2=OFF
     export CXX_HAS_AVX512_2=OFF
     export CAFFE2_COMPILER_SUPPORTS_AVX512_EXTENSIONS=OFF
+    export COMPILER_SUPPORTS_AVX512=OFF
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
         export BLAS=OpenBLAS
