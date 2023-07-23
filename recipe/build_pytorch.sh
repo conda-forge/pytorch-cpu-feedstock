@@ -79,7 +79,7 @@ if [[ "$blas_impl" == "openblas" ]]; then
     export USE_MKLDNN=0
 else
     export BLAS=MKL
-    export USE_MKLDNN=1
+    export USE_MKLDNN=0
 fi
 
 # MacOS build is simple, and will not be for CUDA

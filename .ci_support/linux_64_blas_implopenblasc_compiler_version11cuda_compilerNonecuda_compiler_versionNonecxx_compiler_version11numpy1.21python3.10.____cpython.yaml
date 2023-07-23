@@ -1,9 +1,9 @@
 blas_impl:
-- mkl
+- openblas
 c_compiler:
 - gcc
 c_compiler_version:
-- '12'
+- '11'
 cdt_name:
 - cos7
 channel_sources:
@@ -19,7 +19,7 @@ cudnn:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '12'
+- '11'
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
 libcblas:

@@ -34,10 +34,10 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version12cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version12numpy1.21python3.10.____cpython</td>
+              <td>linux_64_blas_implmklc_compiler_version11cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version11numpy1.21python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version12cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version12numpy1.21python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version11cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version11numpy1.21python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -48,10 +48,10 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implopenblasc_compiler_version12cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version12numpy1.21python3.10.____cpython</td>
+              <td>linux_64_blas_implopenblasc_compiler_version11cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version11numpy1.21python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implopenblasc_compiler_version12cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version12numpy1.21python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implopenblasc_compiler_version11cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version11numpy1.21python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
