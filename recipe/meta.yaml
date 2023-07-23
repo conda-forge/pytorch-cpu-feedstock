@@ -90,7 +90,7 @@ outputs:
         - six
         - mkl-devel {{ mkl }}   # [x86 and blas_impl == "mkl"]
         - libcblas * *_mkl      # [x86 and blas_impl == "mkl"]
-        - onednn * omp_*        # [x86 and blas_impl == "mkl"]
+        # - onednn * omp_*        # [x86 and blas_impl == "mkl"]
         - libcblas              # [x86 and blas_impl != "mkl"]
         - liblapack             # [x86 and blas_impl != "mkl"]
         - openblas              # [x86 and blas_impl != "mkl"]
