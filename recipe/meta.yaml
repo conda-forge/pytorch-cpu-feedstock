@@ -140,6 +140,7 @@ outputs:
         - mock  # [linux]
         - pip
         - expecttest
+        - xmlrunner
       imports:
         - torch
       source_files:
