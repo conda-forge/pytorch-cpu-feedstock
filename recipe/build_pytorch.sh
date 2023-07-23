@@ -100,16 +100,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # through gloo). This dependency is made available through meta.yaml, so
     # we can override the default and set USE_DISTRIBUTED=1.
     export USE_DISTRIBUTED=1
-    export USE_AVX=OFF
-    export USE_NNPACK=OFF
-    export C_HAS_AVX_2=OFF
-    export C_HAS_AVX2_2=OFF
-    export C_HAS_AVX512_2=OFF
-    export CXX_HAS_AVX_2=OFF
-    export CXX_HAS_AVX2_2=OFF
-    export CXX_HAS_AVX512_2=OFF
-    export CAFFE2_COMPILER_SUPPORTS_AVX512_EXTENSIONS=OFF
-    export COMPILER_SUPPORTS_AVX512=OFF
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
         export BLAS=OpenBLAS
