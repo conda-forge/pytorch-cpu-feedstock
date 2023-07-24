@@ -27,21 +27,21 @@ mkl:
 nccl:
 - '2'
 numpy:
-- '1.21'
+- '1.23'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
+- 3.11.* *_cpython
 pytorch:
-- '1.13'
+- '2.0'
 target_platform:
 - linux-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-  - cudnn
+  - cuda_compiler
   - cuda_compiler_version
   - cdt_name
   - docker_image
