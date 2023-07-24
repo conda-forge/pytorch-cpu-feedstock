@@ -82,11 +82,7 @@ export MAX_JOBS=${CPU_COUNT}
 if [[ "$blas_impl" == "generic" ]]; then
     # Fake openblas
     export BLAS=OpenBLAS
-    if [[ "$target_platform" == osx-* ]]; then
-        ln -sf $PREFIX/lib/libcblas.3.dylib $PREFIX/lib/libopenblas.dylib
-    else
-        ln -sf $PREFIX/lib/libcblas.so.3 $PREFIX/lib/libopenblas.so
-    fi
+    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB ${PREFIX}/lib/liblapack${SHLIB_EXT} ${PREFIX}/lib/libcblas${SHLIB_EXT} ${PREFIX}/lib/libblas${SHLIB_EXT})#g" cmake/Modules/FindOpenBLAS.cmake
 else
     export BLAS=MKL
 fi
@@ -109,7 +105,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export USE_DISTRIBUTED=0
     fi
     $PYTHON -m pip install . --no-deps -vv
-    rm -f $PREFIX/lib/libopenblas.dylib
     exit 0
 fi
 
@@ -159,4 +154,3 @@ fi
 export CMAKE_BUILD_TYPE=Release
 
 $PYTHON -m pip install . --no-deps -vvv --no-clean
-rm -f $PREFIX/lib/libopenblas.so
