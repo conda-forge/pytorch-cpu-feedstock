@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 MACOSX_SDK_VERSION:
 - '12.3'
 blas_impl:
-- openblas
+- generic
 c_compiler:
 - clang
 c_compiler_version:
@@ -32,8 +32,6 @@ macos_machine:
 - arm64-apple-darwin20.0.0
 numpy:
 - '1.21'
-openblas:
-- 0.3.*
 pin_run_as_build:
   python:
     min_pin: x.x
