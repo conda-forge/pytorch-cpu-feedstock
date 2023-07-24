@@ -44,7 +44,6 @@ outputs:
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
-      skip: true  # [py != 310]
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat   # [win]
     requirements:
@@ -171,7 +170,6 @@ outputs:
       # weigh down cpu implementation and give cuda preference
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
-      skip: true  # [py != 310]
     requirements:
       run:
         - {{ pin_subpackage("pytorch", exact=True) }}
