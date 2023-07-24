@@ -86,7 +86,7 @@ if [[ "$blas_impl" == "generic" ]]; then
         ln -sf $PREFIX/lib/libcblas.3.dylib $PREFIX/lib/libopenblas.dylib
     else
         ln -sf $PREFIX/lib/libcblas.so.3 $PREFIX/lib/libopenblas.so
-    if
+    fi
 else
     export BLAS=MKL
 fi
