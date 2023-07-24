@@ -79,8 +79,14 @@ fi
 
 export MAX_JOBS=${CPU_COUNT}
 
-if [[ "$blas_impl" == "openblas" ]]; then
+if [[ "$blas_impl" == "generic" ]]; then
+    # Fake openblas
     export BLAS=OpenBLAS
+    if [[ "$target_platform" == osx-* ]]; then
+        ln -sf $PREFIX/lib/libcblas.3.dylib $PREFIX/lib/libopenblas.dylib
+    else
+        ln -sf $PREFIX/lib/libcblas.so.3 $PREFIX/lib/libopenblas.so
+    if
 else
     export BLAS=MKL
 fi
@@ -95,7 +101,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export USE_DISTRIBUTED=1
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
-        export BLAS=OpenBLAS
         # MKLDNN did not support on Apple M1 at the time support Apple M1
         # was added. Revisit later
         export USE_MKLDNN=0
@@ -104,6 +109,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export USE_DISTRIBUTED=0
     fi
     $PYTHON -m pip install . --no-deps -vv
+    rm -f $PREFIX/lib/libopenblas.dylib
     exit 0
 fi
 
@@ -153,3 +159,4 @@ fi
 export CMAKE_BUILD_TYPE=Release
 
 $PYTHON -m pip install . --no-deps -vvv --no-clean
+rm -f $PREFIX/lib/libopenblas.so

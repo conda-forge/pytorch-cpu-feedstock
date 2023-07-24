@@ -89,14 +89,10 @@ outputs:
         - requests
         - future
         - six
-        - mkl-devel {{ mkl }}   # [x86 and blas_impl == "mkl"]
-        - libcblas * *_mkl      # [x86 and blas_impl == "mkl"]
-        - libcblas              # [x86 and blas_impl != "mkl"]
-        - liblapack             # [x86 and blas_impl != "mkl"]
-        - openblas              # [x86 and blas_impl != "mkl"]
-        - libcblas              # [not x86]
-        - liblapack             # [not x86]
-        - openblas              # [not x86]
+        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+        - libcblas * *_mkl      # [blas_impl == "mkl"]
+        - libcblas              # [blas_impl != "mkl"]
+        - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
         - libprotobuf
@@ -117,6 +113,7 @@ outputs:
         - filelock
         - jinja2
         - networkx
+        - nomkl                 # [blas_impl == "mkl"]
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
       run_constrained:
