@@ -24,6 +24,7 @@ build:
   number: {{ number + 100 }}  # [blas_impl == "mkl"]
   number: {{ number }}  # [blas_impl != "mkl"]
   skip: true  # [win]
+  skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
