@@ -29,12 +29,6 @@ build:
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
 
-requirements:
-  host:
-    - python
-  run:
-    - python
-
 outputs:
   - name: pytorch
     build:
