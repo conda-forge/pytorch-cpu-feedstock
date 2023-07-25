@@ -12,14 +12,50 @@ jobs:
         CONFIG: osx_64_blas_implgenericnumpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_64_blas_implgenericnumpy1.21pyt_hfd9a55dfbc
+      osx_64_blas_implgenericnumpy1.21python3.8.____cpython:
+        CONFIG: osx_64_blas_implgenericnumpy1.21python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.21pyt_h09ed712eb7
+      osx_64_blas_implgenericnumpy1.21python3.9.____cpython:
+        CONFIG: osx_64_blas_implgenericnumpy1.21python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.21pyt_h2e705661f4
+      osx_64_blas_implgenericnumpy1.23python3.11.____cpython:
+        CONFIG: osx_64_blas_implgenericnumpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.23pyt_hb6392de840
       osx_64_blas_implmklnumpy1.21python3.10.____cpython:
         CONFIG: osx_64_blas_implmklnumpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_64_blas_implmklnumpy1.21python3_h2a308720bd
+      osx_64_blas_implmklnumpy1.21python3.8.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.21python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.21python3_h347b071be0
+      osx_64_blas_implmklnumpy1.21python3.9.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.21python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.21python3_h5c353ce0ba
+      osx_64_blas_implmklnumpy1.23python3.11.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.23python3_hc56ac1fa22
       osx_arm64_numpy1.21python3.10.____cpython:
         CONFIG: osx_arm64_numpy1.21python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_numpy1.21python3.10.____cpython
+      osx_arm64_numpy1.21python3.8.____cpython:
+        CONFIG: osx_arm64_numpy1.21python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_numpy1.21python3.8.____cpython
+      osx_arm64_numpy1.21python3.9.____cpython:
+        CONFIG: osx_arm64_numpy1.21python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_numpy1.21python3.9.____cpython
+      osx_arm64_numpy1.23python3.11.____cpython:
+        CONFIG: osx_arm64_numpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_numpy1.23python3.11.____cpython
   timeoutInMinutes: 360
 
   steps:
