@@ -1,5 +1,5 @@
 {% set version = "2.0.0" %}
-{% set number = 0 %}
+{% set number = 1 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set number = number + 200 %}
@@ -18,11 +18,13 @@ source:
     # 2022/07 hmaarrfk
     # We've patch out the bug in GCC that makes it incompatible
     # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
-    - patches/remove_gcc_maximum_requirements.patch 
+    - patches/remove_gcc_maximum_requirements.patch
 
 build:
-  number: {{ number }}
+  number: {{ number + 100 }}  # [blas_impl == "mkl"]
+  number: {{ number }}  # [blas_impl != "mkl"]
   skip: true  # [win]
+  skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
@@ -31,7 +33,7 @@ outputs:
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
@@ -79,11 +81,10 @@ outputs:
         - requests
         - future
         - six
-        - mkl-devel {{ mkl }}   # [x86]
-        - libcblas * *_mkl      # [x86]
-        - libcblas              # [not x86]
-        - liblapack             # [not x86]
-        - openblas              # [not x86]
+        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+        - libcblas * *_mkl      # [blas_impl == "mkl"]
+        - libcblas              # [blas_impl != "mkl"]
+        - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
         - libprotobuf
@@ -104,6 +105,7 @@ outputs:
         - filelock
         - jinja2
         - networkx
+        - nomkl                 # [blas_impl != "mkl"]
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
       run_constrained:
@@ -127,6 +129,7 @@ outputs:
         - mock  # [linux]
         - pip
         - expecttest
+        - xmlrunner
       imports:
         - torch
       source_files:
@@ -155,7 +158,7 @@ outputs:
   - name: {{ pytorch_cpu_gpu }}
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: False
       # weigh down cpu implementation and give cuda preference
       track_features:
@@ -183,4 +186,5 @@ extra:
     - sodre
     - benjaminrwilson
     - Tobias-Fischer
+    - beckermr
   feedstock-name: pytorch-cpu

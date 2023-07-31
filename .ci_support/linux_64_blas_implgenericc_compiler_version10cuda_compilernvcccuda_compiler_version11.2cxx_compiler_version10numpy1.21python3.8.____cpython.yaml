@@ -1,3 +1,5 @@
+blas_impl:
+- generic
 c_compiler:
 - gcc
 c_compiler_version:
@@ -20,6 +22,10 @@ cxx_compiler_version:
 - '10'
 docker_image:
 - quay.io/condaforge/linux-anvil-cuda:11.2
+libcblas:
+- 3.9 *netlib
+liblapack:
+- 3.9 *netlib
 libprotobuf:
 - '3.21'
 mkl:
@@ -33,15 +39,15 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
+- 3.8.* *_cpython
 pytorch:
-- '1.13'
+- '2.0'
 target_platform:
 - linux-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-  - cudnn
+  - cuda_compiler
   - cuda_compiler_version
   - cdt_name
   - docker_image

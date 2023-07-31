@@ -10,3 +10,4 @@ cxx_compiler_version:       # [osx and x86_64]
 
 blas_impl:
   - mkl                        # [x86 or x86_64]
+  - generic

@@ -17,8 +17,13 @@ export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
-export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
-export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+if [[ "$c_compiler" == "clang" ]]; then
+    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
+    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
+else
+    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
+    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
+fi
 
 # This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
 export _GLIBCXX_USE_CXX11_ABI=1
@@ -74,6 +79,14 @@ fi
 
 export MAX_JOBS=${CPU_COUNT}
 
+if [[ "$blas_impl" == "generic" ]]; then
+    # Fake openblas
+    export BLAS=OpenBLAS
+    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB ${PREFIX}/lib/liblapack${SHLIB_EXT} ${PREFIX}/lib/libcblas${SHLIB_EXT} ${PREFIX}/lib/libblas${SHLIB_EXT})#g" cmake/Modules/FindOpenBLAS.cmake
+else
+    export BLAS=MKL
+fi
+
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Produce macOS builds with torch.distributed support.
@@ -84,7 +97,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export USE_DISTRIBUTED=1
 
     if [[ "$target_platform" == "osx-arm64" ]]; then
-        export BLAS=OpenBLAS
+        # MKLDNN did not support on Apple M1 at the time support Apple M1
+        # was added. Revisit later
         export USE_MKLDNN=0
         # There is a problem with pkg-config
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
@@ -95,6 +109,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
+    # Even though cudnn is used for CUDA builds, it's good to enable
+    # for MKLDNN for CUDA builds when CUDA builds are used on a machine
+    # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
+    export USE_MKLDNN=OFF
     export USE_CUDA=1
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"
@@ -121,15 +139,15 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
     export MAGMA_HOME="${PREFIX}"
 else
-    if [[ "$target_platform" == *-64 ]]; then
-      export BLAS="MKL"
-    else
+    if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
       # https://github.com/pytorch/pytorch/issues/67083
       export USE_BREAKPAD=0
     fi
-    export USE_CUDA=0
+    # MKLDNN is an Apache-2.0 licensed library for DNNs and is used
+    # for CPU builds. Not to be confused with MKL.
     export USE_MKLDNN=1
+    export USE_CUDA=0
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
 
