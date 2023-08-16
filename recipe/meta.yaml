@@ -81,10 +81,13 @@ outputs:
         - requests
         - future
         - six
-        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
-        - libcblas * *_mkl      # [blas_impl == "mkl"]
-        - libcblas              # [blas_impl != "mkl"]
-        - liblapack             # [blas_impl != "mkl"]
+        - mkl==2021.4.0         # [x86]
+        - mkl-include==2021.4.0 # [x86]
+        - mkl-devel==2021.4.0   # [x86]- 
+        - libcblas * *_mkl      # [x86]
+        - libcblas              # [not x86]
+        - liblapack             # [not x86]
+        - openblas              # [not x86]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
         - libprotobuf
