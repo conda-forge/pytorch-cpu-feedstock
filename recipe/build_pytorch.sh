@@ -120,6 +120,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_CUDNN=0
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
     export MAGMA_HOME="${PREFIX}"
+    export USE_MKLDNN=1
 else
     if [[ "$target_platform" == *-64 ]]; then
       export BLAS="MKL"
@@ -132,6 +133,8 @@ else
     export USE_MKLDNN=1
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
+export CFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
+export CXXFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
 
 export CMAKE_BUILD_TYPE=Release
 

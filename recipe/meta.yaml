@@ -79,7 +79,9 @@ outputs:
         - requests
         - future
         - six
-        - mkl-devel {{ mkl }}   # [x86]
+        - mkl==2021.4.0         # [x86]
+        - mkl-include==2021.4.0 # [x86]
+        - mkl-devel==2021.4.0   # [x86]- 
         - libcblas * *_mkl      # [x86]
         - libcblas              # [not x86]
         - liblapack             # [not x86]
