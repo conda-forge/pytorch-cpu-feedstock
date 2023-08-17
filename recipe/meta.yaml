@@ -83,7 +83,7 @@ outputs:
         - six
         - mkl==2021.4.0         # [x86]
         - mkl-include==2021.4.0 # [x86]
-        - mkl-devel==2021.4.0   # [x86]- 
+        - mkl-devel==2021.4.0   # [x86]
         - libcblas * *_mkl      # [x86]
         - libcblas              # [not x86]
         - liblapack             # [not x86]
@@ -103,6 +103,9 @@ outputs:
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
         - python
+        - mkl==2021.4.0         # [x86]
+        - mkl-include==2021.4.0 # [x86]
+        - mkl-devel==2021.4.0   # [x86]
         - typing_extensions
         - sympy
         - filelock
@@ -131,6 +134,9 @@ outputs:
         - pydot
         - mock  # [linux]
         - pip
+        - mkl==2021.4.0         # [x86]
+        - mkl-include==2021.4.0 # [x86]
+        - mkl-devel==2021.4.0   # [x86] 
         - expecttest
         - xmlrunner
       imports:
