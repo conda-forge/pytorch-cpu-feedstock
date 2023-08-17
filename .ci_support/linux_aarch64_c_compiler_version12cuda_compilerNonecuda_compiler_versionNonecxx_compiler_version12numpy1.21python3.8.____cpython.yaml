@@ -31,13 +31,15 @@ liblapack:
 libprotobuf:
 - '3.21'
 numpy:
-- '1.23'
+- '1.21'
+openblas:
+- 0.3.*
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.8.* *_cpython
 pytorch:
 - '2.0'
 target_platform:
