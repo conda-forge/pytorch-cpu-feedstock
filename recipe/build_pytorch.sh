@@ -17,13 +17,13 @@ export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
-if [[ "$c_compiler" == "clang" ]]; then
-    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
-    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
-else
-    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
-    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
-fi
+export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
+export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+# There is some bug in GCC 12 that makes compilation fail without these. Related issues:
+# https://github.com/pytorch/FBGEMM/issues/1666
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105593
+export CFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
+export CXXFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
 
 # This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
 export _GLIBCXX_USE_CXX11_ABI=1
@@ -77,16 +77,6 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT=""
 fi
 
-export MAX_JOBS=${CPU_COUNT}
-
-if [[ "$blas_impl" == "generic" ]]; then
-    # Fake openblas
-    export BLAS=OpenBLAS
-    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB ${PREFIX}/lib/liblapack${SHLIB_EXT} ${PREFIX}/lib/libcblas${SHLIB_EXT} ${PREFIX}/lib/libblas${SHLIB_EXT})#g" cmake/Modules/FindOpenBLAS.cmake
-else
-    export BLAS=MKL
-fi
-
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Produce macOS builds with torch.distributed support.
@@ -126,18 +116,13 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX"
     elif [[ ${cuda_compiler_version} == 11.2 ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX"
+    elif [[ ${cuda_compiler_version} == 12.0 ]]; then
+        export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;9.0+PTX"
     else
         echo "unsupported cuda version. edit build_pytorch.sh"
         exit 1
     fi
-    export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-    export NCCL_ROOT_DIR=$PREFIX
-    export NCCL_INCLUDE_DIR=$PREFIX/include
-    export USE_SYSTEM_NCCL=1
-    export USE_STATIC_NCCL=0
-    export USE_STATIC_CUDNN=0
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    export MAGMA_HOME="${PREFIX}"
     export USE_MKLDNN=1
 else
     if [[ "$target_platform" != *-64 ]]; then
@@ -151,9 +136,7 @@ else
     export USE_CUDA=0
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
-export CFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
-export CXXFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
 
 export CMAKE_BUILD_TYPE=Release
-
-$PYTHON -m pip install . --no-deps -vvv --no-clean
+$PYTHON setup.py build --cmake-only
+cd build && cmake --build . --parallel $(nproc) --target install

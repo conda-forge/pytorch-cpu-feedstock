@@ -70,6 +70,16 @@ outputs:
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
+        - cuda-nvcc                       # [(cuda_compiler_version or "").startswith("12")]
+        - cuda-version                    # [(cuda_compiler_version or "").startswith("12")]
+        - cuda-runtime                    # [(cuda_compiler_version or "").startswith("12")]
+        - libcurand-dev                   # [(cuda_compiler_version or "").startswith("12")]
+        - libcublas-dev                   # [(cuda_compiler_version or "").startswith("12")]
+        - libcusolver-dev                 # [(cuda_compiler_version or "").startswith("12")]
+        - libcusparse-dev                 # [(cuda_compiler_version or "").startswith("12")]
+        - cuda-libraries-dev              # [(cuda_compiler_version or "").startswith("12")]
+        - cuda-nvrtc-dev                  # [(cuda_compiler_version or "").startswith("12")]
+        - cuda-nvml-dev                   # [(cuda_compiler_version or "").startswith("12")]
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
@@ -81,9 +91,9 @@ outputs:
         - requests
         - future
         - six
-        - mkl==2021.4.0         # [x86]
-        - mkl-include==2021.4.0 # [x86]
-        - mkl-devel==2021.4.0   # [x86]
+        - mkl {{ mkl }}         # [x86]
+        - mkl-include {{ mkl }} # [x86]
+        - mkl-devel {{ mkl }}   # [x86]
         - libcblas * *_mkl      # [x86]
         - libcblas              # [not x86]
         - liblapack             # [not x86]
