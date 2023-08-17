@@ -113,9 +113,9 @@ outputs:
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
         - python
-        - mkl==2021.4.0         # [x86]
-        - mkl-include==2021.4.0 # [x86]
-        - mkl-devel==2021.4.0   # [x86]
+        - mkl {{ mkl }}         # [x86]
+        - mkl-include {{ mkl }} # [x86]
+        - mkl-devel {{ mkl }}   # [x86]
         - typing_extensions
         - sympy
         - filelock
@@ -144,9 +144,9 @@ outputs:
         - pydot
         - mock  # [linux]
         - pip
-        - mkl==2021.4.0         # [x86]
-        - mkl-include==2021.4.0 # [x86]
-        - mkl-devel==2021.4.0   # [x86] 
+        - mkl {{ mkl }}         # [x86]
+        - mkl-include {{ mkl }} # [x86]
+        - mkl-devel {{ mkl }}   # [x86] 
         - expecttest
         - xmlrunner
       imports:
