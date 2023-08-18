@@ -24,8 +24,8 @@ export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105593
 export CFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
 export CXXFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
-export CFLAGS+=" -Wno-error=unused-command-line-argument"
-export CXXFLAGS+=" -Wno-error=unused-command-line-argument"
+export CFLAGS+=" -Wno-unused-command-line-argument"
+export CXXFLAGS+=" -Wno-unused-command-line-argument"
 
 # This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
 export _GLIBCXX_USE_CXX11_ABI=1
@@ -141,5 +141,4 @@ fi
 
 export CMAKE_BUILD_TYPE=Release
 $PYTHON setup.py build --cmake-only
-cd build && cmake --build . --parallel $(nproc) --target install
-pip install -vvv .
+cd build && cmake --build . --parallel $(nproc) --target install && pip install -vvv .
