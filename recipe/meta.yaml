@@ -67,6 +67,7 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
+        - setuptools 
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
@@ -92,9 +93,9 @@ outputs:
         - requests
         - future
         - six
-        - mkl {{ mkl }}         # [x86]
-        - mkl-include {{ mkl }} # [x86]
-        - mkl-devel {{ mkl }}   # [x86]
+        - mkl          # [x86]
+        - mkl-include  # [x86]
+        - mkl-devel    # [x86]
         - libcblas * *_mkl      # [x86]
         - libcblas              # [not x86]
         - liblapack             # [not x86]
@@ -114,9 +115,9 @@ outputs:
         - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
         - python
-        - mkl {{ mkl }}         # [x86]
-        - mkl-include {{ mkl }} # [x86]
-        - mkl-devel {{ mkl }}   # [x86]
+        - mkl          # [x86]
+        - mkl-include  # [x86]
+        - mkl-devel    # [x86]
         - typing_extensions
         - sympy
         - filelock
@@ -145,9 +146,9 @@ outputs:
         - pydot
         - mock  # [linux]
         - pip
-        - mkl {{ mkl }}         # [x86]
-        - mkl-include {{ mkl }} # [x86]
-        - mkl-devel {{ mkl }}   # [x86] 
+        - mkl          # [x86]
+        - mkl-include  # [x86]
+        - mkl-devel    # [x86] 
         - expecttest
         - xmlrunner
       imports:

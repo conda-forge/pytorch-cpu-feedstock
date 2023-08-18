@@ -104,7 +104,6 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
     # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
-    export USE_MKLDNN=OFF
     export USE_CUDA=1
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"
@@ -125,7 +124,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
         exit 1
     fi
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    export USE_MKLDNN=1
+    export USE_MKLDNN=OFF
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
@@ -141,4 +140,5 @@ fi
 
 export CMAKE_BUILD_TYPE=Release
 $PYTHON setup.py build --cmake-only
-cd build && cmake --build . --parallel $(nproc) --target install && pip install -vvv .
+(cd build && cmake --build . --parallel $(nproc) --target install)
+pip install -vvv .
