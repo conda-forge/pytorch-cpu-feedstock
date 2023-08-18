@@ -140,3 +140,4 @@ fi
 export CMAKE_BUILD_TYPE=Release
 $PYTHON setup.py build --cmake-only
 cd build && cmake --build . --parallel $(nproc) --target install
+pip install -vvv .
