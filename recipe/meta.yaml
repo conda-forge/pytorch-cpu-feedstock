@@ -80,6 +80,7 @@ outputs:
         - cuda-libraries-dev              # [(cuda_compiler_version or "").startswith("12")]
         - cuda-nvrtc-dev                  # [(cuda_compiler_version or "").startswith("12")]
         - cuda-nvml-dev                   # [(cuda_compiler_version or "").startswith("12")]
+        - cuda-nvtx-dev                   # [(cuda_compiler_version or "").startswith("12")]
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         # other requirements
