@@ -63,6 +63,7 @@ export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 # It helps cross compiled builds without emulation support to complete
 export CAFFE2_CUSTOM_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 export PROTOBUF_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
+export ONNX_CUSTOM_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 
 export USE_NINJA=OFF
 export INSTALL_TEST=0
