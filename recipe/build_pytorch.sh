@@ -59,6 +59,9 @@ unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
+# This is safe to specify for normal builds
+# It helps cross compiled builds without emulation support to complete
+export CAFFE2_CUSTOM_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 
 export USE_NINJA=OFF
 export INSTALL_TEST=0
