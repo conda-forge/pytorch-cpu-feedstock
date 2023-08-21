@@ -58,12 +58,7 @@ outputs:
         - m2-git    # [win]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        # 2022/04/12 hmaarrfk
-        # Issues with recent version of CMake
-        # https://github.com/pytorch/pytorch/issues/74985
-        # Should be fixed in other versions
-        # https://gitlab.kitware.com/cmake/cmake/-/issues/23368
-        - cmake  != 3.23.0
+        - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
@@ -169,15 +164,26 @@ outputs:
       skip: true  # [py!=310]
     requirements:
       build:
-        - python                                 # [build_platform != target_platform]
+ l      - python                                 # [build_platform != target_platform]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+        # Dec 2020: it seems that git is broken on windows, so we use m2-git
+        - libgomp   # [linux]
+        - llvm-openmp    # [osx]
+        - ninja
+        # Keep libprotobuf here so that a compatibile version
+        # of protobuf is installed between build and host
+        - libprotobuf
+        - protobuf
       host:
         - python
       run:
         - python
         - {{ pin_subpackage("pytorch", exact=True) }}
+      run_constrained:
+        # break the inclusion of the global pytorch pin in the PKG_HASH
+        - pytorch {{ version }}
     test:
       imports:
         - torch
