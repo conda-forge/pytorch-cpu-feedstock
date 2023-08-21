@@ -66,8 +66,6 @@ export PROTOBUF_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 export ONNX_CUSTOM_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 export ONNX_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 export Protobuf_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
-rm ${PREFIX}/bin/protoc
-rm ${PREFIX}/bin/protoc-*
 
 export USE_NINJA=OFF
 export INSTALL_TEST=0
@@ -77,6 +75,13 @@ export USE_SYSTEM_SLEEF=1
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
+
+if [[ "${target_platform}" != "${build_platform}" ]]; then
+    rm -rf ${PREFIX}/bin/protoc-*
+
+    cp ${BUILD_PREFIX}/bin/protoc ${PREFIX}/bin/protoc
+    cp ${BUILD_PREFIX}/bin/protoc-* ${PREFIX}/bin/protoc-*
+fi
 
 # I don't know where this folder comes from, but it's interfering with the build in osx-64
 rm -rf $PREFIX/git
