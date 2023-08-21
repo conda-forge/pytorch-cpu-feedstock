@@ -66,6 +66,8 @@ export PROTOBUF_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 export ONNX_CUSTOM_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 export ONNX_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 export Protobuf_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
+rm ${PREFIX}/bin/protoc
+rm ${PREFIX}/bin/protoc-*
 
 export USE_NINJA=OFF
 export INSTALL_TEST=0
