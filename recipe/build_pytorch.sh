@@ -80,6 +80,11 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     rm -rf ${PREFIX}/bin/protoc-*
 
     cp ${BUILD_PREFIX}/bin/protoc ${PREFIX}/bin/protoc
+    # libprotobuf 4.23.3 ships out the file protoc-23.3.0
+    # for example and refers to it explicitely
+    if [[ -x "${CONDA_PREFIX}/bin/protoc-*" ]]; then
+        cp ${BUILD_PREFIX}/bin/protoc-* ${PREFIX}/bin/
+    fi
 fi
 
 # I don't know where this folder comes from, but it's interfering with the build in osx-64
