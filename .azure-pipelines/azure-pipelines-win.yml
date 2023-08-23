@@ -8,22 +8,22 @@ jobs:
     vmImage: windows-2022
   strategy:
     matrix:
-      win_64_cuda_compiler_versionNonenumpy1.20python3.8.____cpython:
-        CONFIG: win_64_cuda_compiler_versionNonenumpy1.20python3.8.____cpython
+      win_64_cuda_compilerNonecuda_compiler_versionNonenumpy1.22python3.10.____cpython:
+        CONFIG: win_64_cuda_compilerNonecuda_compiler_versionNonenumpy1.22python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: win_64_cuda_compiler_versionNonenum_hc802f91f81
-      win_64_cuda_compiler_versionNonenumpy1.20python3.9.____cpython:
-        CONFIG: win_64_cuda_compiler_versionNonenumpy1.20python3.9.____cpython
+        SHORT_CONFIG: win_64_cuda_compilerNonecuda_compil_hf0ad5da2c6
+      win_64_cuda_compilerNonecuda_compiler_versionNonenumpy1.22python3.8.____cpython:
+        CONFIG: win_64_cuda_compilerNonecuda_compiler_versionNonenumpy1.22python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: win_64_cuda_compiler_versionNonenum_h5b8eac2f50
-      win_64_cuda_compiler_versionNonenumpy1.21python3.10.____cpython:
-        CONFIG: win_64_cuda_compiler_versionNonenumpy1.21python3.10.____cpython
+        SHORT_CONFIG: win_64_cuda_compilerNonecuda_compil_hd0580cff34
+      win_64_cuda_compilerNonecuda_compiler_versionNonenumpy1.22python3.9.____cpython:
+        CONFIG: win_64_cuda_compilerNonecuda_compiler_versionNonenumpy1.22python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: win_64_cuda_compiler_versionNonenum_h60723522fd
-      win_64_cuda_compiler_versionNonenumpy1.23python3.11.____cpython:
-        CONFIG: win_64_cuda_compiler_versionNonenumpy1.23python3.11.____cpython
+        SHORT_CONFIG: win_64_cuda_compilerNonecuda_compil_hf18cdf13f3
+      win_64_cuda_compilerNonecuda_compiler_versionNonenumpy1.23python3.11.____cpython:
+        CONFIG: win_64_cuda_compilerNonecuda_compiler_versionNonenumpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: win_64_cuda_compiler_versionNonenum_h929aa94940
+        SHORT_CONFIG: win_64_cuda_compilerNonecuda_compil_h4781efc63a
   timeoutInMinutes: 360
   variables:
     CONDA_BLD_PATH: D:\\bld\\
@@ -73,7 +73,10 @@ jobs:
         if EXIST LICENSE.txt (
           copy LICENSE.txt "recipe\\recipe-scripts-license.txt"
         )
-        conda.exe mambabuild "recipe" -m .ci_support\%CONFIG%.yaml --suppress-variables
+        if NOT [%HOST_PLATFORM%] == [%BUILD_PLATFORM%] (
+          set "EXTRA_CB_OPTIONS=%EXTRA_CB_OPTIONS% --no-test"
+        )
+        conda.exe mambabuild "recipe" -m .ci_support\%CONFIG%.yaml --suppress-variables %EXTRA_CB_OPTIONS%
       displayName: Build recipe
       env:
         PYTHONUNBUFFERED: 1

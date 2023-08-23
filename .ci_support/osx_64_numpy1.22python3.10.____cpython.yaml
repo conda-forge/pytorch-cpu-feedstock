@@ -10,6 +10,8 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
+cuda_compiler:
+- None
 cuda_compiler_version:
 - None
 cxx_compiler:
@@ -17,23 +19,23 @@ cxx_compiler:
 cxx_compiler_version:
 - '13'
 libprotobuf:
-- '3.21'
+- 4.23.3
 llvm_openmp:
-- '14'
+- '15'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 mkl:
 - '2022'
 numpy:
-- '1.20'
+- '1.22'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.10.* *_cpython
 pytorch:
-- '1.13'
+- '2.0'
 target_platform:
 - osx-64
 zip_keys:
