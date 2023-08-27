@@ -59,13 +59,6 @@ unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
-# This is safe to specify for normal builds
-# It helps cross compiled builds without emulation support to complete
-export CAFFE2_CUSTOM_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
-export PROTOBUF_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
-export ONNX_CUSTOM_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
-export ONNX_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
-export Protobuf_PROTOC_EXECUTABLE="${BUILD_PREFIX}/bin/protoc"
 
 export USE_NINJA=OFF
 export INSTALL_TEST=0
@@ -77,16 +70,11 @@ export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
-    rm -rf ${PREFIX}/bin/protoc-*
-
-    cp ${BUILD_PREFIX}/bin/protoc ${PREFIX}/bin/protoc
-    # libprotobuf 4.23.3 ships out the file protoc-23.3.0
-    # for example and refers to it explicitely
-    # not very portable, but i want to get through the build process
-    cp ${BUILD_PREFIX}/bin/protoc-23.3.0 ${PREFIX}/bin/protoc-23.3.0
-    # if [[ -x "${CONDA_PREFIX}/bin/protoc-*" ]]; then
-    #     cp ${BUILD_PREFIX}/bin/protoc-* ${PREFIX}/bin/
-    # fi
+    # It helps cross compiled builds without emulation support to complete
+    # Use BUILD PREFIX protoc instead of the one that is from the host platform
+    sed -i.bak \
+        "s,IMPORTED_LOCATION_RELEASE .*/bin/protoc,IMPORTED_LOCATION_RELEASE \"${BUILD_PREFIX}/bin/protoc," \
+        ${PREFIX}/lib/cmake/protobuf/protobuf-targets-release.cmake
 fi
 
 # I don't know where this folder comes from, but it's interfering with the build in osx-64
