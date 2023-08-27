@@ -69,6 +69,14 @@ export USE_SYSTEM_SLEEF=1
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
 
+if [[ "${target_platform}" != "${build_platform}" ]]; then
+    # It helps cross compiled builds without emulation support to complete
+    # Use BUILD PREFIX protoc instead of the one that is from the host platform
+    sed -i.bak \
+        "s,IMPORTED_LOCATION_RELEASE .*/bin/protoc,IMPORTED_LOCATION_RELEASE \"${BUILD_PREFIX}/bin/protoc," \
+        ${PREFIX}/lib/cmake/protobuf/protobuf-targets-release.cmake
+fi
+
 # I don't know where this folder comes from, but it's interfering with the build in osx-64
 rm -rf $PREFIX/git
 
