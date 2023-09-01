@@ -111,7 +111,7 @@ outputs:
         - {{ pin_subpackage('pytorch-cpu', exact=True) }}  # [cuda_compiler_version == "None"]
         - pytorch-gpu ==99999999                           # [cuda_compiler_version == "None"]
         - {{ pin_subpackage('pytorch-gpu', exact=True) }}  # [cuda_compiler_version != "None"]
-        - pytorch-cpu == 99999999                          # [cuda_compiler_version != "None"]
+        - pytorch-cpu ==99999999                          # [cuda_compiler_version != "None"]
 
     test:
       requires:
