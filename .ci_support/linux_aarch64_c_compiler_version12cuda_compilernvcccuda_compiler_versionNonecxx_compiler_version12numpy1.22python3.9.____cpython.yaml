@@ -32,6 +32,8 @@ libprotobuf:
 - 4.23.3
 numpy:
 - '1.22'
+openblas:
+- 0.3.*
 pin_run_as_build:
   python:
     min_pin: x.x
