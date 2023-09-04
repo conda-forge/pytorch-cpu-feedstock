@@ -1,9 +1,13 @@
+BUILD:
+- aarch64-conda_cos7-linux-gnu
 blas_impl:
 - generic
 c_compiler:
 - gcc
 c_compiler_version:
 - '12'
+cdt_arch:
+- aarch64
 cdt_name:
 - cos7
 channel_sources:
@@ -11,11 +15,9 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- None
+- nvcc
 cuda_compiler_version:
 - None
-cudnn:
-- '8'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -27,13 +29,9 @@ libcblas:
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- '3.21'
-mkl:
-- '2022'
-nccl:
-- '2'
+- 4.23.3
 numpy:
-- '1.21'
+- '1.22'
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -43,7 +41,7 @@ python:
 pytorch:
 - '2.0'
 target_platform:
-- linux-64
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version

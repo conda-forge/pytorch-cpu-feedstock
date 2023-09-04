@@ -1,9 +1,9 @@
 azure:
+  free_disk_space: true
   settings_osx:
     pool:
       vmImage: macos-12
   store_build_artifacts: true
-  free_disk_space: true
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
