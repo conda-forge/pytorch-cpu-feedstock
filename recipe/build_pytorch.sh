@@ -106,6 +106,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     fi
     export USE_FBGEMM=0
     export USE_CUDA=0
+    export USE_MKLDNN=0
     export CMAKE_BUILD_TYPE=Release
     $PYTHON setup.py build --cmake-only
     (cd build && cmake --build . --parallel $(nproc) --target install)
