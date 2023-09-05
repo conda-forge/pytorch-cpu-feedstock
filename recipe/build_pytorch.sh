@@ -19,14 +19,6 @@ export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
-# There is some bug in GCC 12 that makes compilation fail without these. Related issues:
-# https://github.com/pytorch/FBGEMM/issues/1666
-# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105593
-export CFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
-export CXXFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
-export CFLAGS+=" -Wno-unused-command-line-argument"
-export CXXFLAGS+=" -Wno-unused-command-line-argument"
-
 # This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
 export _GLIBCXX_USE_CXX11_ABI=1
 
@@ -113,6 +105,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     pip install -vvv .
     exit 0
 fi
+# There is some bug in GCC 12 that makes compilation fail without these when FBGEMM is enabled. Related issues:
+# https://github.com/pytorch/FBGEMM/issues/1666
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105593
+export CFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
+export CXXFLAGS+=" -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=restrict"
+export CFLAGS+=" -Wno-unused-command-line-argument"
+export CXXFLAGS+=" -Wno-unused-command-line-argument"
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
     # Even though cudnn is used for CUDA builds, it's good to enable
