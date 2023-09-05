@@ -103,9 +103,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # There is a problem with pkg-config
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
-	export USE_FBGEMM=0
     fi
-    $PYTHON -m pip install . --no-deps -vv
+    export USE_FBGEMM=0
+    export USE_CUDA=0
+    export CMAKE_BUILD_TYPE=Release
+    $PYTHON setup.py build --cmake-only
+    (cd build && cmake --build . --parallel $(nproc) --target install)
+    pip install -vvv .
     exit 0
 fi
 
