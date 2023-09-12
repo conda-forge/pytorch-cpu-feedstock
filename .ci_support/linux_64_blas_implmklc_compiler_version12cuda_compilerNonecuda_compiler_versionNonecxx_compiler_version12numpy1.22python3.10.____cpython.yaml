@@ -27,7 +27,7 @@ libcblas:
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- 4.23.3
+- 4.23.4
 mkl:
 - '2022'
 nccl:

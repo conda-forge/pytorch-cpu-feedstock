@@ -1,8 +1,12 @@
 {% set version = "2.0.0" %}
-{% set number = 1 %}
+{% set build_number = 2 %}
 
 {% if cuda_compiler_version != "None" %}
-{% set number = number + 200 %}
+{% set build_number = build_number + 200 %}
+{% endif %}
+
+{% if blas_impl == "mkl" %}
+{% set build_number = build_number + 100 %}
 {% endif %}
 
 package:
@@ -21,8 +25,7 @@ source:
     - patches/remove_gcc_maximum_requirements.patch
 
 build:
-  number: {{ number + 100 }}  # [blas_impl == "mkl"]
-  number: {{ number }}  # [blas_impl != "mkl"]
+  number: {{ build_number }}
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
@@ -108,10 +111,10 @@ outputs:
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
         # built into place.
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
-        - pytorch-cpu = {{ version }}  # [cuda_compiler_version == "None"]
-        - pytorch-gpu = 99999999       # [cuda_compiler_version == "None"]
-        - pytorch-gpu = {{ version }}  # [cuda_compiler_version != "None"]
-        - pytorch-cpu = 99999999       # [cuda_compiler_version != "None"]
+        - pytorch-cpu =={{ version }}  # [cuda_compiler_version == "None"]
+        - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
+        - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
+        - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
 
     test:
       requires:
