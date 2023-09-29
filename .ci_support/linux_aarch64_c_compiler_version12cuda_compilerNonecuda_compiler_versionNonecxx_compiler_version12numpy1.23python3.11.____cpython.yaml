@@ -15,7 +15,7 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- nvcc
+- None
 cuda_compiler_version:
 - None
 cxx_compiler:
@@ -30,6 +30,8 @@ liblapack:
 - 3.9 *netlib
 libprotobuf:
 - 4.23.4
+mkl:
+- '2022'
 numpy:
 - '1.23'
 pin_run_as_build:
@@ -51,3 +53,4 @@ zip_keys:
   - docker_image
 - - python
   - numpy
+  - channel_sources
