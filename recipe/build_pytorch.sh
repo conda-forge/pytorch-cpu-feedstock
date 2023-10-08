@@ -112,6 +112,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
     fi
+    echo '${CXX}'=${CXX}
+    echo '${PREFIX}'=${PREFIX}
+    $PYTHON -m pip install . --no-deps -vvv \
+        | sed "s,${CXX},\$\{CXX\},g" \
+        | sed "s,${PREFIX},\$\{PREFIX\},g"
+
+    exit 0
 fi
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
