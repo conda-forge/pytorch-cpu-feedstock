@@ -8,7 +8,7 @@ rm -rf build
 rm -rf pyproject.toml
 
 # uncomment to debug cmake build
-export CMAKE_VERBOSE_MAKEFILE=1
+# export CMAKE_VERBOSE_MAKEFILE=1
 
 export USE_NUMA=0
 export USE_ITT=0
@@ -112,8 +112,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
     fi
-    $PYTHON -m pip install . --no-deps -vv
-    exit 0
 fi
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
@@ -161,4 +159,8 @@ fi
 
 export CMAKE_BUILD_TYPE=Release
 
-$PYTHON -m pip install . --no-deps -vvv --no-clean
+echo '${CXX}'=${CXX}
+echo '${PREFIX}'=${PREFIX}
+$PYTHON -m pip install . --no-deps -vvv --no-clean \
+    | sed "s,${CXX},\$\{CXX\},g" \
+    | sed "s,${PREFIX},\$\{PREFIX\},g"
