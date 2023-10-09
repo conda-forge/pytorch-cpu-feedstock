@@ -25,11 +25,13 @@ libcblas:
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- 4.23.4
+- 4.24.3
 llvm_openmp:
-- '15'
+- '16'
 macos_machine:
 - arm64-apple-darwin20.0.0
+mkl:
+- '2022'
 numpy:
 - '1.22'
 pin_run_as_build:
