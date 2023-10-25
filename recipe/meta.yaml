@@ -5,6 +5,8 @@
 {% set build_number = build_number + 200 %}
 {% endif %}
 
+{% set cuda_major_version = '0' if cuda_compiler_version == "None" else cuda_compiler_version.split('.')[0] %}
+
 {% if blas_impl == "mkl" %}
 {% set build_number = build_number + 100 %}
 {% endif %}
@@ -51,6 +53,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+        - cuda-libraries-dev  # [cuda_major_version == "12"]
         # Dec 2020: it seems that git is broken on windows, so we use m2-git
         - patch     # [not win]
         - m2-patch  # [win]
