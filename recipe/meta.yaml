@@ -69,20 +69,20 @@ outputs:
         - numpy
         - pip
         - setuptools
-	- astunparse
-	- expecttest
-	- hypothesis
-	- numpy
-	- psutil
-	- pyyaml
-	- requests
-	- setuptools
-	- types-dataclasses
-	- sympy
-	- filelock
-	- networkx
-	- jinja2
-	- fsspec
+        - astunparse
+        - expecttest
+        - hypothesis
+        - numpy
+        - psutil
+        - pyyaml
+        - requests
+        - setuptools
+        - types-dataclasses
+        - sympy
+        - filelock
+        - networkx
+        - jinja2
+        - fsspec
         - packaging
         - optree
         - mkl {{ mkl }}   # [blas_impl == "mkl"]
