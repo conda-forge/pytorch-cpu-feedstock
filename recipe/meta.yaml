@@ -1,5 +1,5 @@
-{% set version = "2.0.0" %}
-{% set build_number = 3 %}
+{% set version = "2.1.0" %}
+{% set build_number = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build_number = build_number + 200 %}
@@ -17,12 +17,6 @@ source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: v{{ version }}
-  patches:
-    - patches/fix_dispatch_apply_auto.patch
-    # 2022/07 hmaarrfk
-    # We've patch out the bug in GCC that makes it incompatible
-    # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
-    - patches/remove_gcc_maximum_requirements.patch
 
 build:
   number: {{ build_number }}
@@ -75,22 +69,30 @@ outputs:
         - numpy
         - pip
         - setuptools
-        - pyyaml
-        - requests
-        - future
-        - six
-        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
-        - libcblas * *_mkl      # [blas_impl == "mkl"]
+	- astunparse
+	- expecttest
+	- hypothesis
+	- numpy
+	- psutil
+	- pyyaml
+	- requests
+	- setuptools
+	- types-dataclasses
+	- sympy
+	- filelock
+	- networkx
+	- jinja2
+	- fsspec
+        - packaging
+        - optree
+        - mkl {{ mkl }}   # [blas_impl == "mkl"]
+        - mkl-include      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - magma   # [linux]
         - libprotobuf
-        - sleef
-        - typing
         - libuv
         - pkg-config  # [unix]
-        - typing_extensions
       run:
         - llvm-openmp    # [osx]
         # GPU requirements without run_exports

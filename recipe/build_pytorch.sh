@@ -10,20 +10,20 @@ rm -rf pyproject.toml
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
-export USE_NUMA=0
-export USE_ITT=0
-export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
-export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
-export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
-export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
-export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
-if [[ "$c_compiler" == "clang" ]]; then
-    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
-    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
-else
-    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
-    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
-fi
+# export USE_NUMA=0
+# export USE_ITT=0
+# export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
+# export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
+# export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
+# export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
+# export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
+# if [[ "$c_compiler" == "clang" ]]; then
+#     export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
+#     export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
+# else
+#     export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
+#     export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
+# fi
 
 # This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
 export _GLIBCXX_USE_CXX11_ABI=1
@@ -32,7 +32,7 @@ export _GLIBCXX_USE_CXX11_ABI=1
 # CUPTI seems to cause trouble when users install a version of
 # cudatoolkit different than the one specified at compile time.
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/135
-export USE_KINETO=OFF
+# export USE_KINETO=OFF
 
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
@@ -56,11 +56,11 @@ for ARG in $CMAKE_ARGS; do
   fi
 done
 unset CMAKE_INSTALL_PREFIX
-export TH_BINARY_BUILD=1
+# export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 
-export USE_NINJA=OFF
+#export USE_NINJA=OFF
 export INSTALL_TEST=0
 export BUILD_TEST=0
 
@@ -125,7 +125,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
     # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
-    export USE_MKLDNN=OFF
+    # export USE_MKLDNN=OFF
     export USE_CUDA=1
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"
@@ -144,11 +144,11 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
         exit 1
     fi
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-    export NCCL_ROOT_DIR=$PREFIX
-    export NCCL_INCLUDE_DIR=$PREFIX/include
-    export USE_SYSTEM_NCCL=1
-    export USE_STATIC_NCCL=0
-    export USE_STATIC_CUDNN=0
+    # export NCCL_ROOT_DIR=$PREFIX
+    # export NCCL_INCLUDE_DIR=$PREFIX/include
+    # export USE_SYSTEM_NCCL=1
+    # export USE_STATIC_NCCL=0
+    # export USE_STATIC_CUDNN=0
     export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
     export MAGMA_HOME="${PREFIX}"
 else
@@ -159,7 +159,7 @@ else
     fi
     # MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     # for CPU builds. Not to be confused with MKL.
-    export USE_MKLDNN=1
+    # export USE_MKLDNN=1
     export USE_CUDA=0
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
@@ -167,7 +167,7 @@ fi
 export CMAKE_BUILD_TYPE=Release
 
 echo '${CXX}'=${CXX}
-echo '${PREFIX}'=${PREFIX}
+echo '${PREFIX}'=${REFIX}
 $PYTHON -m pip install . --no-deps -vvv --no-clean \
     | sed "s,${CXX},\$\{CXX\},g" \
     | sed "s,${PREFIX},\$\{PREFIX\},g"
