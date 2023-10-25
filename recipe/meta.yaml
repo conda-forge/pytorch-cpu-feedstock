@@ -89,7 +89,7 @@ outputs:
         - mkl-include      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - magma   # [linux]
+        - triton      # [linux]
         - libprotobuf
         - libuv
         - pkg-config  # [unix]
