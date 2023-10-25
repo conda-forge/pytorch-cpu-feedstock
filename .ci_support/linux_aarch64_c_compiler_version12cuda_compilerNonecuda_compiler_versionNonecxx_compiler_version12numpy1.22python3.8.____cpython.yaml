@@ -15,7 +15,7 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- nvcc
+- None
 cuda_compiler_version:
 - None
 cxx_compiler:
@@ -33,13 +33,13 @@ libprotobuf:
 mkl:
 - '2022'
 numpy:
-- '1.23'
+- '1.22'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.8.* *_cpython
 pytorch:
 - '2.0'
 target_platform:
