@@ -45,9 +45,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
-        - cudatoolkit    # [cuda_compiler_version < 12]
-        - cuda-libraries-dev  # [cuda_compiler_version >= 12]
-        - cuda-cudart-dev  # [cuda_compiler_version >= 12]
+        - cuda-libraries-dev  # [cuda_compiler_version != "None"]
         # Dec 2020: it seems that git is broken on windows, so we use m2-git
         - patch     # [not win]
         - m2-patch  # [win]
