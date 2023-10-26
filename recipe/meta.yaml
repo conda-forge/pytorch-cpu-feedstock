@@ -59,7 +59,6 @@ outputs:
         # of protobuf is installed between build and host
         - libprotobuf
         - protobuf
-        - sleef
         - make      # [linux]
       host:
         # GPU requirements
