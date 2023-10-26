@@ -89,6 +89,18 @@ outputs:
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
 	- cuda-version {{ cuda_compiler_version }}
+        {% if cuda_major >= 12 %}
+        - cuda-driver-dev
+        - cuda-cudart-dev
+        - cuda-nvrtc-dev
+        - cuda-nvtx-dev
+        - cuda-profiler-api
+        - libcublas-dev
+        - libcufft-dev
+        - libcurand-dev
+        - libcusolver-dev
+        - libcusparse-dev
+        {% endif %}
         # other requirements
         - python
         - numpy
