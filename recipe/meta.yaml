@@ -62,6 +62,7 @@ outputs:
         - cuda-cudart-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
+        - cuda-nvml-dev
         - cuda-profiler-api
         - libcublas-dev
         - libcufft-dev
@@ -94,6 +95,7 @@ outputs:
         - cuda-cudart-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
+        - cuda-nvml-dev
         - cuda-profiler-api
         - libcublas-dev
         - libcufft-dev
