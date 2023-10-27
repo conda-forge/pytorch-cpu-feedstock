@@ -60,7 +60,6 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
-        - sleef
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
@@ -94,6 +93,7 @@ outputs:
         - libprotobuf
         - libuv
         - pkg-config  # [unix]
+        - sleef
       run:
         - llvm-openmp    # [osx]
         # GPU requirements without run_exports

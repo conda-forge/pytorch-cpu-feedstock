@@ -63,7 +63,7 @@ export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
 export INSTALL_TEST=0
 export BUILD_TEST=0
 
-export USE_SYSTEM_SLEEF=1
+export USE_SYSTEM_SLEEF=ON
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
