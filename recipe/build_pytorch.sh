@@ -10,8 +10,8 @@ rm -rf pyproject.toml
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
-# export USE_NUMA=0
-# export USE_ITT=0
+export USE_NUMA=0
+export USE_ITT=0
 # export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 # export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 # export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
