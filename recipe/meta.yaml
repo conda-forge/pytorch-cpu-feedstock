@@ -60,6 +60,7 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
+        - sleef
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
