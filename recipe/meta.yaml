@@ -79,6 +79,8 @@ outputs:
         - psutil
         - pyyaml
         - requests
+        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+        - libcblas * *_mkl      # [blas_impl == "mkl"]
         - setuptools
         - types-dataclasses
         - sympy
@@ -88,8 +90,6 @@ outputs:
         - fsspec
         - packaging
         - optree
-        - mkl {{ mkl }}   # [blas_impl == "mkl"]
-        - mkl-include      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
         - libprotobuf
