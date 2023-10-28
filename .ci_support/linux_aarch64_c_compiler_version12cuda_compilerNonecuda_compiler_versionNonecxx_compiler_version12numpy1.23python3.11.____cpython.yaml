@@ -15,7 +15,7 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- nvcc
+- None
 cuda_compiler_version:
 - None
 cxx_compiler:
@@ -24,22 +24,18 @@ cxx_compiler_version:
 - '12'
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
-libcblas:
-- 3.9 *netlib
-liblapack:
-- 3.9 *netlib
 libprotobuf:
 - 4.24.3
 mkl:
 - '2022'
 numpy:
-- '1.22'
+- '1.23'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.11.* *_cpython
 pytorch:
 - '2.0'
 target_platform:

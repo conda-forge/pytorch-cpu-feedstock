@@ -22,10 +22,6 @@ cxx_compiler_version:
 - '12'
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
-libcblas:
-- 3.9 *netlib
-liblapack:
-- 3.9 *netlib
 libprotobuf:
 - 4.24.3
 mkl:
