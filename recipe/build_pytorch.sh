@@ -167,7 +167,7 @@ fi
 export CMAKE_BUILD_TYPE=Release
 
 echo '${CXX}'=${CXX}
-echo '${PREFIX}'=${REFIX}
+echo '${PREFIX}'=${PREFIX}
 $PYTHON -m pip install . --no-deps -vvv --no-clean \
     | sed "s,${CXX},\$\{CXX\},g" \
     | sed "s,${PREFIX},\$\{PREFIX\},g"
