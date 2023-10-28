@@ -17,6 +17,8 @@ source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: v{{ version }}
+  patches:
+    - nvml.patch # [cuda_compiler_version == "11.2"]
 
 build:
   number: {{ build_number }}

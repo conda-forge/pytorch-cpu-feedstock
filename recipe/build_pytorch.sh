@@ -142,8 +142,8 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
         echo "unsupported cuda version. edit build_pytorch.sh"
         exit 1
     fi
-    export TORCH_NVCC_FLAGS="-Xfatbin -compress-all -DnvmlProcessInfo_v1_t=nvmlProcessInfo"
-    export CXXFLAGS="$CXXFLAGS -DnvmlProcessInfo_v1_t=nvmlProcessInfo"
+    export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+    export CXXFLAGS="$CXXFLAGS"
     # export NCCL_ROOT_DIR=$PREFIX
     # export NCCL_INCLUDE_DIR=$PREFIX/include
     # export USE_SYSTEM_NCCL=1
