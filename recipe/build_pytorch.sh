@@ -124,7 +124,7 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
     # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
-    # export USE_MKLDNN=OFF
+    export USE_MKLDNN=OFF
     export USE_CUDA=1
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"
@@ -159,7 +159,7 @@ else
     fi
     # MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     # for CPU builds. Not to be confused with MKL.
-    # export USE_MKLDNN=1
+    export USE_MKLDNN=1
     export USE_CUDA=0
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
