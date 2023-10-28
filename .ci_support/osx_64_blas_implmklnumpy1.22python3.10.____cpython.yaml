@@ -20,6 +20,10 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '15'
+libcblas:
+- 3.9 *netlib
+liblapack:
+- 3.9 *netlib
 libprotobuf:
 - 4.24.3
 llvm_openmp:
@@ -36,8 +40,6 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.10.* *_cpython
-pytorch:
-- '2.0'
 target_platform:
 - osx-64
 zip_keys:
