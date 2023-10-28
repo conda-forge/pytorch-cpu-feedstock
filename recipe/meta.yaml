@@ -93,9 +93,9 @@ outputs:
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
         - libprotobuf
+        - sleef
         - libuv
         - pkg-config  # [unix]
-        - sleef
       run:
         - llvm-openmp    # [osx]
         # GPU requirements without run_exports
