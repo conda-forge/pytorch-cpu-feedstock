@@ -92,6 +92,8 @@ outputs:
         - optree
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
+        - libgomp   # [linux]
+        - llvm-openmp    # [osx]
         - libprotobuf
         - sleef
         - libuv
