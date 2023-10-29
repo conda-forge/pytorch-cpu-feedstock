@@ -14,7 +14,7 @@ export USE_NUMA=0
 export USE_ITT=0
 # export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 # export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
-# export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
+export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 # export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 # export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 # if [[ "$c_compiler" == "clang" ]]; then
