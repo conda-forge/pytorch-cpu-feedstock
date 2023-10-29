@@ -171,7 +171,6 @@ outputs:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
-        - python
         - {{ pin_subpackage("pytorch", exact=True) }}
     test:
       imports:
