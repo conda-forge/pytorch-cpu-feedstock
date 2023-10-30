@@ -83,7 +83,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libblas               # [blas_impl != "mkl"]
         - libcblas              # [blas_impl != "mkl"]
-        - liblapack             # [blas_impl != "mkl"
+        - liblapack             # [blas_impl != "mkl"]
         - setuptools
         - types-dataclasses
         - sympy
@@ -96,8 +96,8 @@ outputs:
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
         - libprotobuf
-        - sleef          # [not osx]
-        - libuv          # [not osx]
+        - sleef
+        - libuv
         - pkg-config  # [unix]
       run:
         - llvm-openmp    # [osx]
