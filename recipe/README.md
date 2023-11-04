@@ -22,7 +22,8 @@ The following script may help build all cuda version sequentially:
 set -ex
 
 docker system prune --force
-configs=$(find .ci_support/ -type f -name '*cuda_compiler_version[^nN]*' -printf "%p ")
+configs=$(find .ci_support/ -type f -name 'linux_*' -printf "%p ")
+# configs=$(find .ci_support/ -type f -name '*cuda_compiler_version[^nN]*' -printf "%p ")
 
 # Assuming a powerful enough machine with many cores
 # 10 seems to be a good point where things don't run out of RAM too much.
