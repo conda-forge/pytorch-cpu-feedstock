@@ -24,6 +24,10 @@ jobs:
         CONFIG: osx_64_blas_implgenericnumpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_64_blas_implgenericnumpy1.23pyt_hb6392de840
+      osx_64_blas_implgenericnumpy1.26python3.12.____cpython:
+        CONFIG: osx_64_blas_implgenericnumpy1.26python3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.26pyt_hd395361a3c
       osx_64_blas_implmklnumpy1.22python3.10.____cpython:
         CONFIG: osx_64_blas_implmklnumpy1.22python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -40,6 +44,10 @@ jobs:
         CONFIG: osx_64_blas_implmklnumpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_64_blas_implmklnumpy1.23python3_hc56ac1fa22
+      osx_64_blas_implmklnumpy1.26python3.12.____cpython:
+        CONFIG: osx_64_blas_implmklnumpy1.26python3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_blas_implmklnumpy1.26python3_hb93642295c
       osx_arm64_numpy1.22python3.10.____cpython:
         CONFIG: osx_arm64_numpy1.22python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -56,6 +64,11 @@ jobs:
         CONFIG: osx_arm64_numpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_numpy1.23python3.11.____cpython
+      osx_arm64_numpy1.26python3.12.____cpython:
+        CONFIG: osx_arm64_numpy1.26python3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_numpy1.26python3.12.____cpython
+    maxParallel: 12
   timeoutInMinutes: 360
 
   steps:
