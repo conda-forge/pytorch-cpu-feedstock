@@ -1,12 +1,12 @@
-{% set version = "2.0.0" %}
-{% set build_number = 4 %}
+{% set version = "2.1.0" %}
+{% set build = 0 %}
 
 {% if cuda_compiler_version != "None" %}
-{% set build_number = build_number + 200 %}
+{% set build = build + 200 %}
 {% endif %}
 
 {% if blas_impl == "mkl" %}
-{% set build_number = build_number + 100 %}
+{% set build = build + 100 %}
 {% endif %}
 
 {% if cuda_compiler_version in (None, "None", True, False) %}
@@ -23,15 +23,10 @@ source:
   # for local testing use a tarball including submodules
   git_url: https://github.com/pytorch/pytorch.git
   git_tag: v{{ version }}
-  patches:
-    - patches/fix_dispatch_apply_auto.patch
-    # 2022/07 hmaarrfk
-    # We've patch out the bug in GCC that makes it incompatible
-    # https://github.com/conda-forge/ctng-compilers-feedstock/blob/7ea10c2526445beb9faff23efcc6bc40fc0079b5/recipe/meta.yaml#L23=
-    - patches/remove_gcc_maximum_requirements.patch
+  # patches:
 
 build:
-  number: {{ build_number }}
+  number: {{ build }}
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
@@ -137,6 +132,7 @@ outputs:
         - jinja2
         - networkx
         - nomkl                 # [blas_impl != "mkl"]
+        - fsspec
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
       run_constrained:
