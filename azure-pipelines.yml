@@ -3,5 +3,7 @@
 # -*- mode: yaml -*-
 
 jobs:
-  - template: ./.azure-pipelines/azure-pipelines-linux.yml
+  # hmaarrfk will build the huge linux matrix themselves to save on CIs
+  # the cuda builds just timeout and waste resources
+  # - template: ./.azure-pipelines/azure-pipelines-linux.yml
   - template: ./.azure-pipelines/azure-pipelines-osx.yml
