@@ -25,7 +25,7 @@ libcblas:
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- 4.24.3
+- 4.24.4
 llvm_openmp:
 - '16'
 macos_machine:

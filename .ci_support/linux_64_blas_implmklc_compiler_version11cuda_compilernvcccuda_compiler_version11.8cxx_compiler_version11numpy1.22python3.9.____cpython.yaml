@@ -1,13 +1,9 @@
-BUILD:
-- aarch64-conda_cos7-linux-gnu
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - gcc
 c_compiler_version:
-- '12'
-cdt_arch:
-- aarch64
+- '11'
 cdt_name:
 - cos7
 channel_sources:
@@ -17,33 +13,37 @@ channel_targets:
 cuda_compiler:
 - nvcc
 cuda_compiler_version:
-- None
+- '11.8'
+cudnn:
+- '8'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '12'
+- '11'
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+- quay.io/condaforge/linux-anvil-cuda:11.8
 libcblas:
 - 3.9 *netlib
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- 4.24.3
+- 4.24.4
 mkl:
 - '2022'
+nccl:
+- '2'
 numpy:
-- '1.23'
+- '1.22'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.9.* *_cpython
 pytorch:
 - '2.0'
 target_platform:
-- linux-aarch64
+- linux-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
