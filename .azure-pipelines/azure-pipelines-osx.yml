@@ -11,63 +11,48 @@ jobs:
       osx_64_blas_implgenericnumpy1.22python3.10.____cpython:
         CONFIG: osx_64_blas_implgenericnumpy1.22python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.22pyt_h6f6e25bc95
       osx_64_blas_implgenericnumpy1.22python3.8.____cpython:
         CONFIG: osx_64_blas_implgenericnumpy1.22python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.22pyt_h9ef14d80b1
       osx_64_blas_implgenericnumpy1.22python3.9.____cpython:
         CONFIG: osx_64_blas_implgenericnumpy1.22python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.22pyt_he89dd260de
       osx_64_blas_implgenericnumpy1.23python3.11.____cpython:
         CONFIG: osx_64_blas_implgenericnumpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.23pyt_hb6392de840
       osx_64_blas_implgenericnumpy1.26python3.12.____cpython:
         CONFIG: osx_64_blas_implgenericnumpy1.26python3.12.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implgenericnumpy1.26pyt_hd395361a3c
       osx_64_blas_implmklnumpy1.22python3.10.____cpython:
         CONFIG: osx_64_blas_implmklnumpy1.22python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implmklnumpy1.22python3_h91c9557398
       osx_64_blas_implmklnumpy1.22python3.8.____cpython:
         CONFIG: osx_64_blas_implmklnumpy1.22python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implmklnumpy1.22python3_h49b5513c47
       osx_64_blas_implmklnumpy1.22python3.9.____cpython:
         CONFIG: osx_64_blas_implmklnumpy1.22python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implmklnumpy1.22python3_ha8f7634ffc
       osx_64_blas_implmklnumpy1.23python3.11.____cpython:
         CONFIG: osx_64_blas_implmklnumpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implmklnumpy1.23python3_hc56ac1fa22
       osx_64_blas_implmklnumpy1.26python3.12.____cpython:
         CONFIG: osx_64_blas_implmklnumpy1.26python3.12.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_blas_implmklnumpy1.26python3_hb93642295c
       osx_arm64_numpy1.22python3.10.____cpython:
         CONFIG: osx_arm64_numpy1.22python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.22python3.10.____cpython
       osx_arm64_numpy1.22python3.8.____cpython:
         CONFIG: osx_arm64_numpy1.22python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.22python3.8.____cpython
       osx_arm64_numpy1.22python3.9.____cpython:
         CONFIG: osx_arm64_numpy1.22python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.22python3.9.____cpython
       osx_arm64_numpy1.23python3.11.____cpython:
         CONFIG: osx_arm64_numpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.23python3.11.____cpython
       osx_arm64_numpy1.26python3.12.____cpython:
         CONFIG: osx_arm64_numpy1.26python3.12.____cpython
         UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_numpy1.26python3.12.____cpython
     maxParallel: 12
   timeoutInMinutes: 360
 
@@ -89,32 +74,3 @@ jobs:
       BINSTAR_TOKEN: $(BINSTAR_TOKEN)
       FEEDSTOCK_TOKEN: $(FEEDSTOCK_TOKEN)
       STAGING_BINSTAR_TOKEN: $(STAGING_BINSTAR_TOKEN)
-  - script: |
-      export CI=azure
-      export CI_RUN_ID=$(build.BuildNumber).$(system.JobAttempt)
-      export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
-      export CONDA_BLD_DIR=/Users/runner/miniforge3/conda-bld
-      export ARTIFACT_STAGING_DIR="$(Build.ArtifactStagingDirectory)"
-      # Archive everything in CONDA_BLD_DIR except environments
-      export BLD_ARTIFACT_PREFIX=conda_artifacts
-      if [[ "$AGENT_JOBSTATUS" == "Failed" ]]; then
-        # Archive the CONDA_BLD_DIR environments only when the job fails
-        export ENV_ARTIFACT_PREFIX=conda_envs
-      fi
-      ./.scripts/create_conda_build_artifacts.sh
-    displayName: Prepare conda build artifacts
-    condition: succeededOrFailed()
-
-  - task: PublishPipelineArtifact@1
-    displayName: Store conda build artifacts
-    condition: not(eq(variables.BLD_ARTIFACT_PATH, ''))
-    inputs:
-      targetPath: $(BLD_ARTIFACT_PATH)
-      artifactName: $(BLD_ARTIFACT_NAME)
-
-  - task: PublishPipelineArtifact@1
-    displayName: Store conda build environment artifacts
-    condition: not(eq(variables.ENV_ARTIFACT_PATH, ''))
-    inputs:
-      targetPath: $(ENV_ARTIFACT_PATH)
-      artifactName: $(ENV_ARTIFACT_NAME)
