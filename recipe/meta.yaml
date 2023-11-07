@@ -1,5 +1,7 @@
 {% set version = "2.1.0" %}
-{% set build = 0 %}
+# Build 1 was only ever built for cuda 12.0
+# Unskip other things when it passes
+{% set build = 1 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
