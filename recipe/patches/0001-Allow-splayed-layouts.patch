@@ -1,17 +1,17 @@
-From 0c8d24175f9ec3e2cb05b755bbf19f953889369c Mon Sep 17 00:00:00 2001
+From 8b238f4476527abc1164ff16377206e516decbe5 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
-Date: Mon, 6 Nov 2023 22:00:51 -0500
+Date: Mon, 6 Nov 2023 22:46:47 -0500
 Subject: [PATCH] Allow splayed layouts
 
 ---
- cmake/public/cuda.cmake | 7 -------
- 1 file changed, 7 deletions(-)
+ cmake/public/cuda.cmake | 11 -----------
+ 1 file changed, 11 deletions(-)
 
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index 32f3ba375b5..14318d7b399 100644
+index 32f3ba375b5..241554d76fc 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
-@@ -60,13 +60,6 @@ find_package(CUDAToolkit REQUIRED)
+@@ -60,17 +60,6 @@ find_package(CUDAToolkit REQUIRED)
  
  cmake_policy(POP)
  
@@ -22,9 +22,13 @@ index 32f3ba375b5..14318d7b399 100644
 -                      "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIR}'")
 -endif()
 -
- if(NOT TARGET CUDA::nvToolsExt)
-   message(FATAL_ERROR "Failed to find nvToolsExt")
- endif()
+-if(NOT TARGET CUDA::nvToolsExt)
+-  message(FATAL_ERROR "Failed to find nvToolsExt")
+-endif()
+-
+ message(STATUS "Caffe2: CUDA detected: " ${CUDA_VERSION})
+ message(STATUS "Caffe2: CUDA nvcc is: " ${CUDA_NVCC_EXECUTABLE})
+ message(STATUS "Caffe2: CUDA toolkit directory: " ${CUDA_TOOLKIT_ROOT_DIR})
 -- 
 2.42.0
 
