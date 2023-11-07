@@ -33,6 +33,7 @@ build:
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
+  skip: true  # [cuda_compiler_version != "12.0"]
 
 outputs:
   - name: pytorch
