@@ -25,6 +25,11 @@ source:
   git_tag: v{{ version }}
   patches:
     - nvml.patch  # [cuda_compiler_version == "11.2"]
+    # The patch below is probably OK for other versions too, but it is untested with them
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
+    # https://github.com/pytorch/pytorch/pull/82695/files#diff-8e5cb190cc46be808993381a31fe9c027705d356b6bc0460368c0310ae82b273R61-R66
+    # https://github.com/pytorch/pytorch/pull/108932
+    - 0001-Allow-splayed-layouts.patch  # [cuda_compiler_version == "12.0"]
 
 build:
   number: {{ build }}
