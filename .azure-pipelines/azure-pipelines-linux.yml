@@ -28,7 +28,7 @@ jobs:
       : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.26python3.12.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-  timeoutInMinutes: 60
+  timeoutInMinutes: 1
 
   steps:
   - script: |
