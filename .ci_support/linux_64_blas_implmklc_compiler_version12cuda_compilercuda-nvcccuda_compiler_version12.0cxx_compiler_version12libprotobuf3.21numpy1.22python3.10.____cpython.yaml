@@ -23,19 +23,19 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
 libprotobuf:
-- 4.24.4
+- '3.21'
 mkl:
-- '2022'
+- '2023'
 nccl:
 - '2'
 numpy:
-- '1.23'
+- '1.22'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.10.* *_cpython
 pytorch:
 - '2.0'
 target_platform:

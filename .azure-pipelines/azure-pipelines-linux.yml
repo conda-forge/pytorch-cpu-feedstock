@@ -8,24 +8,44 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.10.____cpython
-      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.10.____cpython
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.22python3.10.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.22python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.8.____cpython
-      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.8.____cpython
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.22python3.8.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.22python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.9.____cpython
-      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.9.____cpython
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.22python3.9.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.22python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.23python3.11.____cpython
-      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.23python3.11.____cpython
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.23python3.11.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.26python3.12.____cpython
-      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.26python3.12.____cpython
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.26python3.12.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf3.21numpy1.26python3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.22python3.10.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.22python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.22python3.8.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.22python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.22python3.9.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.22python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.23python3.11.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.26python3.12.____cpython
+      : CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12libprotobuf4.24.4numpy1.26python3.12.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
   timeoutInMinutes: 1
@@ -50,7 +70,6 @@ jobs:
                                   microsoft-edge-stable
          sudo apt-get autoremove -y >& /dev/null
          sudo apt-get autoclean -y >& /dev/null
-         sudo docker image prune --all --force
          df -h
     displayName: Manage disk space
   # configure qemu binfmt-misc running.  This allows us to run docker containers
@@ -63,6 +82,9 @@ jobs:
 
   - script: |
         export CI=azure
+        export flow_run_id=azure_$(Build.BuildNumber).$(System.JobAttempt)
+        export remote_url=$(Build.Repository.Uri)
+        export sha=$(Build.SourceVersion)
         export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
         export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
         if [[ "${BUILD_REASON:-}" == "PullRequest" ]]; then
