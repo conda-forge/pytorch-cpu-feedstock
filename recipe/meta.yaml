@@ -47,6 +47,11 @@ build:
   skip: true  # [cuda_compiler_version == "11.1"]
   # TODO: remove this skip when enabling the next build
   skip: true  # [cuda_compiler_version != "12.0"]
+  # https://github.com/conda-forge/libprotobuf-feedstock/issues/198
+  # hmaaarrfk is asking to have this extra build of pytorch be available
+  # Other build may be added upon request, but in order to limit the size of
+  # the build matrix these should be added sparingly
+  skip: true  # [protobuf == "3.21" and cuda_compiler_version != "12.0"]
 
 outputs:
   - name: pytorch
