@@ -3,6 +3,8 @@ azure:
   settings_linux:
     timeoutInMinutes: 1
   settings_osx:
+    # Remove this to enable the OSX builds again
+    timeoutInMinutes: 1
     pool:
       vmImage: macos-12
 build_platform:
