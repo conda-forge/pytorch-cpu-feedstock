@@ -49,8 +49,9 @@ build:
   # hmaaarrfk is asking to have this extra build of pytorch be available
   # Other build may be added upon request, but in order to limit the size of
   # the build matrix these should be added sparingly
-  skip: true  # [protobuf == "3.21" and (cuda_compiler_version != "None" or cuda_compiler_ersion != "12.0")]
+  skip: true  # [protobuf == "3.21" and (cuda_compiler_version != "None" or cuda_compiler_version != "12.0")]
   skip: true  # [protobuf == "3.21" and osx]
+  skip: true  # [protobuf == "3.21" and aarch64]
 
 outputs:
   - name: pytorch
@@ -204,7 +205,7 @@ outputs:
   - name: {{ pytorch_cpu_gpu }}
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: False
       # weigh down cpu implementation and give cuda preference
       track_features:
