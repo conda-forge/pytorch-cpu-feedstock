@@ -50,7 +50,6 @@ build:
   # Other build may be added upon request, but in order to limit the size of
   # the build matrix these should be added sparingly
   skip: true  # [libprotobuf == "3.21" and cuda_compiler_version == "11.2"]
-  skip: true  # [libprotobuf == "3.21" and cuda_compiler_version == "11.8"]
   skip: true  # [libprotobuf == "3.21" and osx]
   skip: true  # [libprotobuf == "3.21" and aarch64]
 
