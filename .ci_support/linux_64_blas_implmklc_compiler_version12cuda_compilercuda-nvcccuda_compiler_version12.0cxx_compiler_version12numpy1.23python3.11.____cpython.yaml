@@ -25,7 +25,7 @@ docker_image:
 libprotobuf:
 - 4.24.4
 mkl:
-- '2022'
+- '2023'
 nccl:
 - '2'
 numpy:
