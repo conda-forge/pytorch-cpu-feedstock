@@ -18,7 +18,12 @@ os_version:
   linux_64: cos7
 provider:
   linux_aarch64: azure
+  linux_64: github_actions
 remote_ci_setup:
 - py-lief=0.12.3
 - conda-forge-ci-setup=3
 test_on_native_only: true
+github_actions:
+  self_hosted: true
+upload_on_branch:
+- main
