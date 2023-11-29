@@ -25,5 +25,4 @@ remote_ci_setup:
 test_on_native_only: true
 github_actions:
   self_hosted: true
-upload_on_branch:
-- main
+upload_on_branch: main
