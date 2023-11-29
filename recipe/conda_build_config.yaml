@@ -1,13 +1,15 @@
 MACOSX_SDK_VERSION:         # [osx]
-  - 12.3                    # [osx]
+- 12.3                      # [osx]
 
 # It seems that clang 16 might be a little too strict for
 # some pointer conversions
 c_compiler_version:         # [osx]
-  - 15                      # [osx]
+- 15                        # [osx]
 cxx_compiler_version:       # [osx]
-  - 15                      # [osx]
+- 15                        # [osx]
 
 blas_impl:
-  - mkl                        # [x86 or x86_64]
-  - generic
+- mkl                          # [x86 or x86_64]
+- generic
+github_actions_labels:
+- cirun-openstack-gpu-large
