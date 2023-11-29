@@ -129,7 +129,7 @@ jobs:
         CONFIG: ${{ matrix.CONFIG }}
         CI: github_actions
         UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
-        UPLOAD_ON_BRANCH: ['main']
+        UPLOAD_ON_BRANCH: main
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
         FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
