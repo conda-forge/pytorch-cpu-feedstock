@@ -11,3 +11,7 @@ cxx_compiler_version:       # [osx]
 blas_impl:
   - mkl                        # [x86 or x86_64]
   - generic
+
+github_actions_labels:
+- cirun-openstack-gpu-large  # [linux and x86_64]
+- cirun-openstack-cpu-large  # [linux and aarch64]
