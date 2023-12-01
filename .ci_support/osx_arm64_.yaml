@@ -21,7 +21,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '15'
 github_actions_labels:
-- hosted
+- cirun-openstack-cpu-large
 libcblas:
 - 3.9 *netlib
 liblapack:

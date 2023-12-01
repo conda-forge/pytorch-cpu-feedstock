@@ -14,7 +14,7 @@ blas_impl:
 
 github_actions_labels:
 - cirun-openstack-gpu-large    # [x86 or x86_64]
-- hosted
+- cirun-openstack-cpu-large
 
 zip_keys:
   - - github_actions_labels

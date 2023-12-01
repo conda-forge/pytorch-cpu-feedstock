@@ -23,7 +23,7 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-cuda:11.2
 github_actions_labels:
-- hosted
+- cirun-openstack-cpu-large
 libcblas:
 - 3.9 *netlib
 liblapack:
