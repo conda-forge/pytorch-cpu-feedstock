@@ -22,6 +22,8 @@ cxx_compiler_version:
 - '10'
 docker_image:
 - quay.io/condaforge/linux-anvil-cuda:11.2
+github_actions_labels:
+- hosted
 libcblas:
 - 3.9 *netlib
 liblapack:
@@ -59,5 +61,7 @@ zip_keys:
   - cuda_compiler_version
   - cdt_name
   - docker_image
+- - github_actions_labels
+  - blas_impl
 - - python
   - numpy
