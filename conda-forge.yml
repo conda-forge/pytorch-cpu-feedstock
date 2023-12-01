@@ -25,3 +25,6 @@ remote_ci_setup:
 test_on_native_only: true
 github_actions:
   self_hosted: true
+  triggers:
+  - push
+  - pull_request
