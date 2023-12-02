@@ -44,6 +44,8 @@ LDFLAGS="${LDFLAGS//-Wl,-z,now/-Wl,-z,lazy}"
 export CMAKE_GENERATOR=Ninja
 export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
 export CMAKE_PREFIX_PATH=$PREFIX
+export CMAKE_BUILD_TYPE=Release
+
 for ARG in $CMAKE_ARGS; do
   if [[ "$ARG" == "-DCMAKE_"* ]]; then
     cmake_arg=$(echo $ARG | cut -d= -f1)
@@ -118,16 +120,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
         export USE_DISTRIBUTED=0
     fi
-    echo '${CXX}'=${CXX}
-    echo '${PREFIX}'=${PREFIX}
-    $PREFIX/bin/python -m pip $PIP_ACTION . --no-deps -vvv --no-clean \
-        | sed "s,${CXX},\$\{CXX\},g" \
-        | sed "s,${PREFIX},\$\{PREFIX\},g"
-
-    exit 0
-fi
-
-if [[ ${cuda_compiler_version} != "None" ]]; then
+elif [[ ${cuda_compiler_version} != "None" ]]; then
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
     # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
@@ -181,8 +174,6 @@ else
     export USE_CUDA=0
     export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
-
-export CMAKE_BUILD_TYPE=Release
 
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
