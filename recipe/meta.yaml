@@ -48,6 +48,9 @@ build:
   ignore_run_exports_from:
     - python *
     - numpy *
+  ignore_run_exports:
+    - python *
+    - numpy *
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
