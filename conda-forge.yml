@@ -24,6 +24,7 @@ remote_ci_setup:
 - conda-forge-ci-setup=3
 test_on_native_only: true
 github_actions:
+  timeout_minutes: 720
   self_hosted: true
   triggers:
   - push
