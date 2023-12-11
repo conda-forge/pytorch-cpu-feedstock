@@ -48,6 +48,7 @@ build:
   ignore_run_exports_from:
     - python *
     - numpy *
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
   ignore_run_exports:
     - python *
     - numpy *
