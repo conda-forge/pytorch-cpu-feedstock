@@ -8,14 +8,50 @@ jobs:
     vmImage: macos-12
   strategy:
     matrix:
-      osx_64_blas_implgeneric:
-        CONFIG: osx_64_blas_implgeneric
+      osx_64_blas_implgenericpython3.10.____cpython:
+        CONFIG: osx_64_blas_implgenericpython3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmkl:
-        CONFIG: osx_64_blas_implmkl
+      osx_64_blas_implgenericpython3.11.____cpython:
+        CONFIG: osx_64_blas_implgenericpython3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-      osx_arm64_:
-        CONFIG: osx_arm64_
+      osx_64_blas_implgenericpython3.12.____cpython:
+        CONFIG: osx_64_blas_implgenericpython3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implgenericpython3.8.____cpython:
+        CONFIG: osx_64_blas_implgenericpython3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implgenericpython3.9.____cpython:
+        CONFIG: osx_64_blas_implgenericpython3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implmklpython3.10.____cpython:
+        CONFIG: osx_64_blas_implmklpython3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implmklpython3.11.____cpython:
+        CONFIG: osx_64_blas_implmklpython3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implmklpython3.12.____cpython:
+        CONFIG: osx_64_blas_implmklpython3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implmklpython3.8.____cpython:
+        CONFIG: osx_64_blas_implmklpython3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implmklpython3.9.____cpython:
+        CONFIG: osx_64_blas_implmklpython3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_python3.10.____cpython:
+        CONFIG: osx_arm64_python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_python3.11.____cpython:
+        CONFIG: osx_arm64_python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_python3.12.____cpython:
+        CONFIG: osx_arm64_python3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_python3.8.____cpython:
+        CONFIG: osx_arm64_python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_python3.9.____cpython:
+        CONFIG: osx_arm64_python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
 
