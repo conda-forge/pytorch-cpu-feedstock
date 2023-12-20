@@ -66,7 +66,8 @@ requirements:
     - python 3.12                            # [not osx and build_platform != target_platform]
     - python                                 # [osx and build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - numpy  *                               # [build_platform != target_platform]
+    - numpy  *                               # [not osx and build_platform != target_platform]
+    - numpy                                  # [osx and build_platform != target_platform]
     - sysroot_linux-64  2.17  # [linux64]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
@@ -120,7 +121,8 @@ requirements:
     # other requirements
     - python 3.12  # [not osx]
     - python       # [osx]
-    - numpy *
+    - numpy *      # [not osx]
+    - numpy        # [osx]
     - pip
     - setuptools
     - pyyaml
