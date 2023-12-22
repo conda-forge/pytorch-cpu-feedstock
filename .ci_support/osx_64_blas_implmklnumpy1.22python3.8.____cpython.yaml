@@ -32,16 +32,18 @@ llvm_openmp:
 - '16'
 macos_machine:
 - x86_64-apple-darwin13.4.0
+megabuild:
+- 'false'
 mkl:
 - '2023'
 numpy:
-- '1.23'
+- '1.22'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.8.* *_cpython
 pytorch:
 - '2.0'
 target_platform:

@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 MACOSX_SDK_VERSION:
 - '12.3'
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - clang
 c_compiler_version:
@@ -21,7 +21,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '15'
 github_actions_labels:
-- cirun-openstack-gpu-large
+- cirun-openstack-cpu-large
 libcblas:
 - 3.9 *netlib
 liblapack:
@@ -32,16 +32,18 @@ llvm_openmp:
 - '16'
 macos_machine:
 - x86_64-apple-darwin13.4.0
+megabuild:
+- 'false'
 mkl:
 - '2023'
 numpy:
-- '1.22'
+- '1.23'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.11.* *_cpython
 pytorch:
 - '2.0'
 target_platform:

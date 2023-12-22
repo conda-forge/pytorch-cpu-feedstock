@@ -30,6 +30,8 @@ liblapack:
 - 3.9 *netlib
 libprotobuf:
 - 4.24.4
+megabuild:
+- 'true'
 mkl:
 - '2023'
 nccl:

@@ -32,6 +32,8 @@ llvm_openmp:
 - '16'
 macos_machine:
 - x86_64-apple-darwin13.4.0
+megabuild:
+- 'false'
 mkl:
 - '2023'
 numpy:
