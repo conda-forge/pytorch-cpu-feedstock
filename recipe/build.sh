@@ -116,9 +116,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # MKLDNN did not support on Apple M1 at the time support Apple M1
         # was added. Revisit later
         export USE_MKLDNN=0
-        # There is a problem with pkg-config
-        # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
-        export USE_DISTRIBUTED=0
     fi
 elif [[ ${cuda_compiler_version} != "None" ]]; then
     # Even though cudnn is used for CUDA builds, it's good to enable
