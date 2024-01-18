@@ -189,7 +189,9 @@ if [[ "$PKG_NAME" == "libtorch" ]]; then
   mv torch/bin/* ${PREFIX}/bin
   mv torch/lib/* ${PREFIX}/lib
   mv torch/share/* ${PREFIX}/share
-  mv torch/include/* ${PREFIX}/include
+  for f in ATen caffe2 tensorpipe torch c10; do
+    mv torch/include/$f ${PREFIX}/include/$f
+  done
   rm ${PREFIX}/lib/libtorch_python.*
   popd
   popd

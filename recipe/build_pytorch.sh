@@ -1,3 +1,4 @@
+set -x
 if [[ "$megabuild" == true ]]; then
   source $RECIPE_DIR/build.sh
   pushd $SP_DIR/torch
