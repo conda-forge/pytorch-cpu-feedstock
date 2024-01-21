@@ -116,9 +116,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # MKLDNN did not support on Apple M1 at the time support Apple M1
         # was added. Revisit later
         export USE_MKLDNN=0
-        # There is a problem with pkg-config
-        # See https://github.com/conda-forge/pkg-config-feedstock/issues/38
-        export USE_DISTRIBUTED=0
     fi
 elif [[ ${cuda_compiler_version} != "None" ]]; then
     # Even though cudnn is used for CUDA builds, it's good to enable
@@ -189,7 +186,9 @@ if [[ "$PKG_NAME" == "libtorch" ]]; then
   mv torch/bin/* ${PREFIX}/bin
   mv torch/lib/* ${PREFIX}/lib
   mv torch/share/* ${PREFIX}/share
-  mv torch/include/* ${PREFIX}/include
+  for f in ATen caffe2 tensorpipe torch c10; do
+    mv torch/include/$f ${PREFIX}/include/$f
+  done
   rm ${PREFIX}/lib/libtorch_python.*
   popd
   popd

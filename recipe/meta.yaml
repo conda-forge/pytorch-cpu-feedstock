@@ -1,8 +1,5 @@
-# TODO: remmeber to remove skip cuda != 12.0 when the version or build number gets bumped
 {% set version = "2.1.0" %}
-# Build 1 was only ever built for cuda 12.0
-# Unskip other things when it passes
-{% set build = 2 %}
+{% set build = 3 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
