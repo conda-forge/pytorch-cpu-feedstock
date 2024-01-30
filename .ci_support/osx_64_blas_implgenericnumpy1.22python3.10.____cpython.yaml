@@ -45,7 +45,7 @@ pin_run_as_build:
 python:
 - 3.10.* *_cpython
 pytorch:
-- '2.0'
+- '2.1'
 target_platform:
 - osx-64
 zip_keys:
