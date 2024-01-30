@@ -14,6 +14,12 @@ conda_forge_output_validation: true
 github:
   branch_name: main
   tooling_branch_name: main
+github_actions:
+  self_hosted: true
+  timeout_minutes: 720
+  triggers:
+  - push
+  - pull_request
 os_version:
   linux_64: cos7
 provider:
@@ -23,9 +29,3 @@ remote_ci_setup:
 - py-lief=0.12.3
 - conda-forge-ci-setup=3
 test_on_native_only: true
-github_actions:
-  timeout_minutes: 720
-  self_hosted: true
-  triggers:
-  - push
-  - pull_request
