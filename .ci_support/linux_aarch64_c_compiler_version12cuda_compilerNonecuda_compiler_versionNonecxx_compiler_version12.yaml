@@ -31,7 +31,7 @@ libcblas:
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- 4.24.4
+- 4.25.1
 megabuild:
 - 'true'
 mkl:
