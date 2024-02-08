@@ -9,5 +9,5 @@ if [[ "$megabuild" == true ]]; then
     fi
   done
 else
-  $PREFIX/bin/python -m pip install torch-*.whl
+  $PREFIX/bin/python -m pip install --no-deps torch-*.whl
 fi
