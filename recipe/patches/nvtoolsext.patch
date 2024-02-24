@@ -1,8 +1,8 @@
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 74d0d557190..52f2f8a1425 100644
+index 748363725bc..312a9468aef 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -1516,7 +1516,14 @@ if(USE_CUDA)
+@@ -1548,7 +1548,14 @@ if(USE_CUDA)
      target_link_libraries(torch_cpu PRIVATE torch::cudart)
    endif()
    target_link_libraries(torch_cuda INTERFACE torch::cudart)
@@ -18,7 +18,7 @@ index 74d0d557190..52f2f8a1425 100644
  
    target_include_directories(
        torch_cuda INTERFACE $<INSTALL_INTERFACE:include>)
-@@ -1571,7 +1578,7 @@ if(BUILD_SHARED_LIBS)
+@@ -1605,7 +1612,7 @@ if(BUILD_SHARED_LIBS)
    # not find them, because they're usually in non-standard locations)
    if(USE_CUDA)
      target_link_libraries(torch_global_deps ${Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS})
@@ -28,10 +28,21 @@ index 74d0d557190..52f2f8a1425 100644
    if(USE_TBB)
      target_link_libraries(torch_global_deps TBB::tbb)
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index 241554d76fc..66fb14547d4 100644
+index c7595774d81..feebb01462f 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
-@@ -203,12 +203,6 @@ else()
+@@ -66,10 +66,6 @@ if(NOT CMAKE_CUDA_COMPILER_VERSION VERSION_EQUAL CUDAToolkit_VERSION)
+                       "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIRS}'")
+ endif()
+ 
+-if(NOT TARGET CUDA::nvToolsExt)
+-  message(FATAL_ERROR "Failed to find nvToolsExt")
+-endif()
+-
+ message(STATUS "Caffe2: CUDA detected: " ${CUDA_VERSION})
+ message(STATUS "Caffe2: CUDA nvcc is: " ${CUDA_NVCC_EXECUTABLE})
+ message(STATUS "Caffe2: CUDA toolkit directory: " ${CUDA_TOOLKIT_ROOT_DIR})
+@@ -213,12 +209,6 @@ else()
          CUDA::cudart)
  endif()
  
@@ -44,45 +55,11 @@ index 241554d76fc..66fb14547d4 100644
  # cublas
  add_library(caffe2::cublas INTERFACE IMPORTED)
  if(CAFFE2_STATIC_LINK_CUDA AND NOT WIN32)
-diff --git a/third_party/nvfuser/CMakeLists.txt b/third_party/nvfuser/CMakeLists.txt
-index b148418af0c..795abc21684 100644
---- a/third_party/nvfuser/CMakeLists.txt
-+++ b/third_party/nvfuser/CMakeLists.txt
-@@ -146,8 +146,14 @@ endif()
- 
- target_link_libraries(${NVFUSER_CODEGEN} PRIVATE torch ${TORCHLIB_FLAVOR})
- if(NOT USE_ROCM)
--  target_link_libraries(${NVFUSER_CODEGEN} PRIVATE ${CUDA_NVRTC_LIB} torch::nvtoolsext)
-+  target_link_libraries(${NVFUSER_CODEGEN} PRIVATE ${CUDA_NVRTC_LIB})
-   target_include_directories(${NVFUSER_CODEGEN} PRIVATE ${CUDA_INCLUDE_DIRS})
-+  # CUDA SDK >= 12 doesn't include NVTX anymore, so use the nvToolsExt included in third_party/nccl.
-+  if(CUDA_VERSION_MAJOR GREATER_EQUAL 12)
-+    target_include_directories(${NVFUSER_CODEGEN} PRIVATE ${TORCH_ROOT}/third_party/nccl/nccl/src/include/nvtx3)
-+  else()
-+    target_link_libraries(${NVFUSER_CODEGEN} PRIVATE torch::nvtoolsext)
-+  endif()
- else()
-   target_link_libraries(${NVFUSER_CODEGEN} PRIVATE ${ROCM_HIPRTC_LIB})
-   target_include_directories(${NVFUSER_CODEGEN} PRIVATE ${Caffe2_HIP_INCLUDE})
-@@ -183,7 +189,12 @@ if(BUILD_PYTHON)
-     # NB: This must be target_compile_definitions, not target_compile_options,
-     # as the latter is not respected by nvcc
-     target_compile_definitions(${NVFUSER} PRIVATE "-DTORCH_CUDA_BUILD_MAIN_LIB")
--    target_link_libraries(${NVFUSER} PRIVATE torch::nvtoolsext)
-+    # CUDA SDK >= 12 doesn't include NVTX anymore, so use the nvToolsExt included in third_party/nccl.
-+    if(CUDA_VERSION_MAJOR GREATER_EQUAL 12)
-+      target_include_directories(${NVFUSER} PRIVATE ${TORCH_ROOT}/third_party/nccl/nccl/src/include/nvtx3)
-+    else()
-+      target_link_libraries(${NVFUSER} PRIVATE torch::nvtoolsext)
-+    endif()
-   else()
-     target_compile_options(${NVFUSER} PRIVATE "-DTORCH_HIP_BUILD_MAIN_LIB")
-     target_compile_definitions(${NVFUSER} PRIVATE "-DTORCH_HIP_BUILD_MAIN_LIB")
 diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
-index 62ee4c12a94..e58a4eed287 100644
+index b0d7bd842d3..8ea5aca5349 100644
 --- a/torch/CMakeLists.txt
 +++ b/torch/CMakeLists.txt
-@@ -137,7 +137,12 @@ if(USE_CUDA)
+@@ -131,7 +131,12 @@ if(USE_CUDA)
          list(APPEND TORCH_PYTHON_COMPILE_DEFINITIONS USE_CUDNN)
      endif()
  
