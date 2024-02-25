@@ -309,14 +309,26 @@ outputs:
   - name: {{ pytorch_cpu_gpu }}
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: False
       # weigh down cpu implementation and give cuda preference
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
+      # keep python here as a dependency so that it gets captured by the megabuilds
+      host:
+        - python
+        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+        - libcblas * *_mkl      # [blas_impl == "mkl"]
+        - libcblas              # [blas_impl != "mkl"]
+        - liblapack             # [blas_impl != "mkl"]
       run:
-        - {{ pin_subpackage("pytorch", exact=True) }}
+        - python
+        - nomkl                 # [blas_impl != "mkl"]
+        # In the megabuilds we cannot use the pin_subpackage exact since it will match to an arbitrary python version of the package
+        - pytorch {{ version }}=cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+        - pytorch {{ version }}=cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                # [cuda_compiler_version == "None"]
     test:
       imports:
         - torch
