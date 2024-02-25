@@ -327,8 +327,8 @@ outputs:
         - python
         - nomkl                 # [blas_impl != "mkl"]
         # In the megabuilds we cannot use the pin_subpackage exact since it will match to an arbitrary python version of the package
-        - pytorch {{ version }}=cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-        - pytorch {{ version }}=cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                # [cuda_compiler_version == "None"]
+        - pytorch {{ version }}=cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+        - pytorch {{ version }}=cpu_{{ blas_impl }}_py{{ CONDA_PY }}h*_{{ PKG_BUILDNUM }}                                # [cuda_compiler_version == "None"]
     test:
       imports:
         - torch
