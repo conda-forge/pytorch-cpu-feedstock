@@ -12,6 +12,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
+env:
+  CPU_COUNT: 3
+
 jobs:
   build:
     name: ${{ matrix.CONFIG }}
