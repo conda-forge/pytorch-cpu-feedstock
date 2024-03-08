@@ -31,7 +31,7 @@ libcblas:
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- 4.25.1
+- 4.25.3
 megabuild:
 - 'true'
 mkl:
@@ -59,9 +59,9 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+  - cdt_name
   - cuda_compiler
   - cuda_compiler_version
-  - cdt_name
   - docker_image
 - - github_actions_labels
   - blas_impl
