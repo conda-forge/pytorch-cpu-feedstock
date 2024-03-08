@@ -1,5 +1,5 @@
 {% set version = "2.1.2" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -50,7 +50,7 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   skip: true  # [win]
-  skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
+  skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
