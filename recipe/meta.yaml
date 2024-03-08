@@ -1,5 +1,5 @@
 {% set version = "2.1.2" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
