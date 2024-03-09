@@ -166,7 +166,7 @@ outputs:
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
       skip: true  # [win]
-      skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
+      skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       skip: true  # [cuda_compiler_version == "10.2"]
       skip: true  # [cuda_compiler_version == "11.0"]
       skip: true  # [cuda_compiler_version == "11.1"]
