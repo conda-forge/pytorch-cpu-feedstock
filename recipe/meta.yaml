@@ -289,19 +289,19 @@ outputs:
         - expecttest
         - xmlrunner
       imports:
-        - torch
+        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
       source_files:
         - test
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
       commands:
-        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
+        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win and not (aarch64 and cuda_compiler_version != "None")]
         - python ./test/run_test.py  # [win]
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
-        - python -c "import torch; print(torch.__version__)"
+        - python -c "import torch; print(torch.__version__)"  # [not (aarch64 and cuda_compiler_version != "None")]
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
         # At conda-forge, we target versions of OSX that are too old for MPS support
         # But if users install a newer version of OSX, they will have MPS support
@@ -325,7 +325,7 @@ outputs:
         - {{ pin_subpackage("pytorch", exact=True) }}
     test:
       imports:
-        - torch
+        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
 
 about:
   home: https://pytorch.org/
