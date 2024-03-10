@@ -55,6 +55,8 @@ build:
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
+  # https://github.com/conda-forge/cudnn-feedstock/issues/58
+  skip: true  # [aarch64 and cuda_compiler_version == "12.0"]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
