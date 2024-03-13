@@ -28,22 +28,6 @@ index 420ee63cfa..1f009bcc5c 100644
      mark_as_advanced(CUDA_TOOLKIT_TARGET_DIR)
    endif()
  
-diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index 32f3ba375b..9d7c45c1b5 100644
---- a/cmake/public/cuda.cmake
-+++ b/cmake/public/cuda.cmake
-@@ -60,8 +60,9 @@ find_package(CUDAToolkit REQUIRED)
- 
- cmake_policy(POP)
- 
--if(NOT CMAKE_CUDA_COMPILER_VERSION STREQUAL CUDAToolkit_VERSION OR
--    NOT CUDA_INCLUDE_DIRS STREQUAL CUDAToolkit_INCLUDE_DIR)
-+if(NOT CMAKE_CROSSCOMPILING AND
-+   (NOT CMAKE_CUDA_COMPILER_VERSION STREQUAL CUDAToolkit_VERSION OR
-+    NOT CUDA_INCLUDE_DIRS STREQUAL CUDAToolkit_INCLUDE_DIR))
-   message(FATAL_ERROR "Found two conflicting CUDA installs:\n"
-                       "V${CMAKE_CUDA_COMPILER_VERSION} in '${CUDA_INCLUDE_DIRS}' and\n"
-                       "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIR}'")
 -- 
 2.43.0
 
