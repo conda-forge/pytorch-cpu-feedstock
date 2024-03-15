@@ -22,10 +22,10 @@ provider:
 remote_ci_setup:
 - py-lief=0.12.3
 - conda-forge-ci-setup=3
-test_on_native_only: true
 github_actions:
   timeout_minutes: 720
   self_hosted: true
   triggers:
   - push
   - pull_request
+test: native_and_emulated
