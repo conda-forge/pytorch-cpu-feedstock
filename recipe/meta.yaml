@@ -326,7 +326,7 @@ outputs:
         - {{ pin_subpackage("pytorch", exact=True) }}
     test:
       imports:
-        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
+        - torch
 
 about:
   home: https://pytorch.org/
