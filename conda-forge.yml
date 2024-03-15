@@ -28,4 +28,4 @@ provider:
 remote_ci_setup:
 - py-lief=0.12.3
 - conda-forge-ci-setup=3
-test_on_native_only: true
+test: native_and_emulated
