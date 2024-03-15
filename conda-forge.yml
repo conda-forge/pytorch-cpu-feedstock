@@ -5,9 +5,6 @@ build_platform:
 conda_forge_output_validation: true
 os_version:
   linux_64: cos7
-test_on_native_only: true
-
-
 github_actions:
   self_hosted: true
 provider:
@@ -16,3 +13,4 @@ provider:
   - github_actions
 conda_build:
   pkg_format: '2'
+test: native_and_emulated
