@@ -83,11 +83,11 @@ requirements:
     - libcusparse-dev                        # [build_platform != target_platform]
     {% endif %}
     # Dec 2020: it seems that git is broken on windows, so we use m2-git
-    - patch     # [not win]
-    - m2-patch  # [win]
-    - git       # [not win]
-    - m2-git    # [win]
-    - libgomp   # [linux]
+    - patch          # [not win]
+    - m2-patch       # [win]
+    - git            # [not win]
+    - m2-git         # [win]
+    - libgomp        # [linux]
     - llvm-openmp    # [osx]
     - cmake
     - ninja
