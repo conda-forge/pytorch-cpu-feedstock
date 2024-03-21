@@ -56,6 +56,9 @@ build:
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
+  # 2024/04 This build seems to fail due to disk space on the CIs
+  # We can potentially re-enable it at a later time
+  skip: true  # [cuda_compiler_version == "11.8" and aarch64]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
