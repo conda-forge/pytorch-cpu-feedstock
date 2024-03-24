@@ -1,5 +1,5 @@
 {% set version = "2.1.2" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -29,11 +29,13 @@ source:
     # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
     # https://github.com/pytorch/pytorch/pull/82695/files#diff-8e5cb190cc46be808993381a31fe9c027705d356b6bc0460368c0310ae82b273R61-R66
     # https://github.com/pytorch/pytorch/pull/108932
-    - patches/0001-Allow-splayed-layouts.patch  # [cuda_compiler_version == "12.0"]
+    # cross compiling CUDA also needs to delete the check
+    - patches/0001-Allow-splayed-layouts.patch  # [cuda_compiler_version == "12.0" or (build_platform != target_platform and cuda_compiler_version != "None")]
     # https://github.com/pytorch/pytorch/issues/101135
     # the following patch was transcribed to work wit 2.1.0
     # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
     - patches/nvtoolsext.patch                  # [cuda_compiler_version == "12.0"]
+    - patches/0002-fix-FindCUDA.patch           # [build_platform != target_platform and cuda_compiler_version != "None"]
 
 build:
   number: {{ build }}
@@ -50,10 +52,13 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   skip: true  # [win]
-  skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
+  skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
+  # 2024/04 This build seems to fail due to disk space on the CIs
+  # We can potentially re-enable it at a later time
+  skip: true  # [cuda_compiler_version == "11.8" and aarch64]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
@@ -165,7 +170,7 @@ outputs:
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
       skip: true  # [win]
-      skip: true  # [cuda_compiler_version != "None" and blas_impl != "mkl"]
+      skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       skip: true  # [cuda_compiler_version == "10.2"]
       skip: true  # [cuda_compiler_version == "11.0"]
       skip: true  # [cuda_compiler_version == "11.1"]
@@ -288,19 +293,19 @@ outputs:
         - expecttest
         - xmlrunner
       imports:
-        - torch
+        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
       source_files:
         - test
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
       commands:
-        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win]
+        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win and not (aarch64 and cuda_compiler_version != "None")]
         - python ./test/run_test.py  # [win]
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
-        - python -c "import torch; print(torch.__version__)"
+        - python -c "import torch; print(torch.__version__)"  # [not (aarch64 and cuda_compiler_version != "None")]
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
         # At conda-forge, we target versions of OSX that are too old for MPS support
         # But if users install a newer version of OSX, they will have MPS support
@@ -324,7 +329,9 @@ outputs:
         - {{ pin_subpackage("pytorch", exact=True) }}
     test:
       imports:
-        - torch
+        # Throws OSError. See comments in: #224
+        # It may not be resolved until glibc 2.28 images are ready: conda-forge/conda-forge.github.io#1941
+        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
 
 about:
   home: https://pytorch.org/

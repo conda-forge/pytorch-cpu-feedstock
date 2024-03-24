@@ -123,6 +123,13 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
     export USE_MKLDNN=OFF
     export USE_CUDA=1
+    # PyTorch Vendors an old version of FindCUDA
+    # https://gitlab.kitware.com/cmake/cmake/-/blame/master/Modules/FindCUDA.cmake#L891
+    # They are working on updating it pytorch/pytorch#76082
+    # See: https://github.com/conda-forge/pytorch-cpu-feedstock/pull/224#discussion_r1522698939
+    if [[ "${target_platform}" != "${build_platform}" ]]; then
+        export CUDA_TOOLKIT_ROOT=${CUDA_HOME}
+    fi
     if [[ ${cuda_compiler_version} == 9.0* ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"
         export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
@@ -148,6 +155,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
         export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
         # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
         export CUDA_TOOLKIT_ROOT_DIR="${PREFIX}"
+        if [[ "${target_platform}" != "${build_platform}" ]]; then
+            export CUDA_TOOLKIT_ROOT=${PREFIX}
+        fi
     else
         echo "unsupported cuda version. edit build_pytorch.sh"
         exit 1
