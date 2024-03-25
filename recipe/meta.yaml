@@ -73,7 +73,7 @@ requirements:
     - sysroot_linux-64  2.17  # [linux64]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+    - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     {% if cuda_major >= 12 %}
     - cuda-driver-dev                        # [build_platform != target_platform]
     - cuda-cudart-dev                        # [build_platform != target_platform]
