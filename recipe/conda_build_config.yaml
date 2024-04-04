@@ -97,9 +97,15 @@ blas_impl:
   - generic
 
 # https://github.com/conda-forge/.cirun
-github_actions_labels:          # [linux]
+github_actions_labels:          # [linux or win]
 - cirun-openstack-gpu-2xlarge   # [linux]
+- cirun-azure-windows-2xlarge   # [win]
 
 megabuild:
 - true      # [linux]
 - false     # [osx]
+- true      # [win]
+
+# zip_keys:
+#   - - github_actions_labels
+#     - blas_impl
