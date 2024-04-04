@@ -20,8 +20,10 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-  sha256: 6c66b59345091907cd62a693b647cee224558e7f15a9b04f4f322f4f6ffeb75b
+  # for local testing use a tarball including submodules
+  # git_url: https://github.com/pytorch/pytorch.git
+  # git_tag: v{{ version }}
+  path: "../../2.2.2"
   patches:
     # The patch below is probably OK for other versions too, but it is untested with them
     # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
@@ -48,7 +50,7 @@ build:
   ignore_run_exports:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
-  skip: true  # [win]
+  skip: true  # [win and cuda_compiler_version != "None"]
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
@@ -88,6 +90,7 @@ requirements:
     - m2-git    # [win]
     - libgomp   # [linux]
     - llvm-openmp    # [osx]
+    - libuv     # [win]
     - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
@@ -221,7 +224,7 @@ outputs:
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None"]
+        - nccl                            # [cuda_compiler_version != "None" and linux]
         - magma                           # [cuda_compiler_version != "None"]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         {% if cuda_major >= 12 %}
@@ -290,6 +293,7 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - expecttest
         - hypothesis
         - pytest
         - tabulate
@@ -333,7 +337,10 @@ outputs:
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
+      host:
+        - python
       run:
+        - python
         - {{ pin_subpackage("pytorch", exact=True) }}
     test:
       imports:
@@ -359,4 +366,5 @@ extra:
     - benjaminrwilson
     - Tobias-Fischer
     - beckermr
+    - baszalmstra
   feedstock-name: pytorch-cpu
