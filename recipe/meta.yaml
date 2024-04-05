@@ -1,5 +1,5 @@
 {% set version = "2.1.2" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -20,9 +20,8 @@ package:
   version: {{ version }}
 
 source:
-  # for local testing use a tarball including submodules
-  git_url: https://github.com/pytorch/pytorch.git
-  git_tag: v{{ version }}
+  url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
+  sha256: 57a1136095bdfe769acb87876dce77212da2c995c61957a67a1f16172d235d17
   patches:
     - patches/nvml.patch  # [cuda_compiler_version == "11.2"]
     # The patch below is probably OK for other versions too, but it is untested with them
@@ -350,4 +349,5 @@ extra:
     - benjaminrwilson
     - Tobias-Fischer
     - beckermr
+    - baszalmstra
   feedstock-name: pytorch-cpu
