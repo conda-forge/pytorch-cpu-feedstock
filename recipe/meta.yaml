@@ -52,7 +52,7 @@ build:
     - numpy *                                # [megabuild]
   
   # Disabling everything but windows cpu now for testing purposes
-  skip: true  # [not win or cuda_compiler_version != "None" or py==311]
+  skip: true  # [not win or cuda_compiler_version != "None" or py!=311]
   
   # skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # skip: true  # [cuda_compiler_version == "10.2"]
