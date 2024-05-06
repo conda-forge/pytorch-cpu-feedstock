@@ -23,3 +23,8 @@ megabuild:
 zip_keys:
   - - github_actions_labels
     - blas_impl
+
+c_stdlib:          # [linux64]
+  - sysroot        # [linux64]
+c_stdlib_version:  # [linux64]
+  - 2.17           # [linux64]
