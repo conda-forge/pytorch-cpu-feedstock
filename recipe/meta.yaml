@@ -168,6 +168,7 @@ outputs:
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
+        - {{ pin_subpackage('libtorch', max_pin='x.x') }}
       skip: true  # [win]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       skip: true  # [cuda_compiler_version == "10.2"]
