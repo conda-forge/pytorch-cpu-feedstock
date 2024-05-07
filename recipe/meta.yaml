@@ -20,9 +20,8 @@ package:
   version: {{ version }}
 
 source:
-  # for local testing use a tarball including submodules
-  git_url: https://github.com/pytorch/pytorch.git
-  git_tag: v{{ version }}
+  url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
+  sha256: 85effbcce037bffa290aea775c9a4bad5f769cb229583450c40055501ee1acd7
   patches:
     - patches/nvml.patch  # [cuda_compiler_version == "11.2"]
     # The patch below is probably OK for other versions too, but it is untested with them
