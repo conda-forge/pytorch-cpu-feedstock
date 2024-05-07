@@ -23,7 +23,6 @@ source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
   sha256: 85effbcce037bffa290aea775c9a4bad5f769cb229583450c40055501ee1acd7
   patches:
-    - patches/nvml.patch  # [cuda_compiler_version == "11.2"]
     # The patch below is probably OK for other versions too, but it is untested with them
     # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
     # https://github.com/pytorch/pytorch/pull/82695/files#diff-8e5cb190cc46be808993381a31fe9c027705d356b6bc0460368c0310ae82b273R61-R66
@@ -55,6 +54,7 @@ build:
   skip: true  # [cuda_compiler_version == "10.2"]
   skip: true  # [cuda_compiler_version == "11.0"]
   skip: true  # [cuda_compiler_version == "11.1"]
+  skip: true  # [cuda_compiler_version == "11.2"]
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
