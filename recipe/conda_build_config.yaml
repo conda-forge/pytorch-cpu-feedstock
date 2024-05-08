@@ -26,5 +26,6 @@ zip_keys:
 
 c_stdlib:          # [linux64]
   - sysroot        # [linux64]
-c_stdlib_version:  # [linux64]
+c_stdlib_version:  # [linux64 or (osx and x86_64)]
   - 2.17           # [linux64]
+  - 10.15          # [osx and x86_64]
