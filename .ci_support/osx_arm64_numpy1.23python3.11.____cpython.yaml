@@ -7,7 +7,7 @@ blas_impl:
 c_compiler:
 - clang
 c_compiler_version:
-- '15'
+- '16'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
@@ -23,7 +23,7 @@ cuda_compiler_version:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '15'
+- '16'
 github_actions_labels:
 - cirun-openstack-cpu-large
 libcblas:
