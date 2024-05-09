@@ -38,7 +38,7 @@ source:
 build:
   number: {{ build }}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -162,7 +162,7 @@ outputs:
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
@@ -316,7 +316,7 @@ outputs:
   - name: {{ pytorch_cpu_gpu }}
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       # weigh down cpu implementation and give cuda preference
       track_features:
