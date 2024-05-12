@@ -25,3 +25,8 @@ c_compiler:                 # [win]
 - vs2019                    # [win]
 cxx_compiler:               # [win]
 - vs2019                    # [win]
+
+c_stdlib:          # [linux64]
+  - sysroot        # [linux64]
+c_stdlib_version:  # [linux64]
+  - 2.17           # [linux64]

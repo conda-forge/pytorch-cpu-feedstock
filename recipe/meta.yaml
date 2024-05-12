@@ -1,5 +1,5 @@
 {% set version = "2.1.2" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -23,7 +23,6 @@ source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
   sha256: 85effbcce037bffa290aea775c9a4bad5f769cb229583450c40055501ee1acd7
   patches:
-    - patches/nvml.patch  # [cuda_compiler_version == "11.2"]
     # The patch below is probably OK for other versions too, but it is untested with them
     # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
     # https://github.com/pytorch/pytorch/pull/82695/files#diff-8e5cb190cc46be808993381a31fe9c027705d356b6bc0460368c0310ae82b273R61-R66
@@ -52,14 +51,14 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   
-  # Disabling everything but windows cpu now for testing purposes
   # TODO(baszalmstra): Lift all these restrictions, however pytorch 2.1.2 only supports python 3.11 and lower.
   skip: true  # [not win or cuda_compiler_version != "12.0" or py>=312]
-  
-  # skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-  # skip: true  # [cuda_compiler_version == "10.2"]
-  # skip: true  # [cuda_compiler_version == "11.0"]
-  # skip: true  # [cuda_compiler_version == "11.1"]
+
+  skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
+  skip: true  # [cuda_compiler_version == "10.2"]
+  skip: true  # [cuda_compiler_version == "11.0"]
+  skip: true  # [cuda_compiler_version == "11.1"]
+  skip: true  # [cuda_compiler_version == "11.2"]
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   # skip: true  # [cuda_compiler_version == "11.8" and aarch64]
@@ -74,7 +73,7 @@ requirements:
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - numpy  *                               # [megabuild and build_platform != target_platform]
     - numpy                                  # [not megabuild and build_platform != target_platform]
-    - sysroot_linux-64  2.17  # [linux64]
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
@@ -155,7 +154,6 @@ requirements:
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
-    - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
   run_constrained:
     # These constraints ensure conflict between pytorch and
     # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
@@ -170,7 +168,6 @@ requirements:
 
 outputs:
   - name: libtorch
-
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
@@ -178,6 +175,7 @@ outputs:
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
+        - {{ pin_subpackage('libtorch', max_pin='x.x') }}
       skip: true  # [not win or cuda_compiler_version != "12.0" or py>=312]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       skip: true  # [cuda_compiler_version == "10.2"]
@@ -190,7 +188,7 @@ outputs:
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
-        - sysroot_linux-64  2.17  # [linux64]
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
@@ -268,7 +266,6 @@ outputs:
         - llvm-openmp    # [osx]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
-        - {{ pin_compatible('magma', max_pin='x.x.x') }}      # [cuda_compiler_version != "None"]
         # other requirements
         - python
         - typing_extensions
