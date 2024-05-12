@@ -1,0 +1,78 @@
+From 1e85773b8b4843d720881acdddbd2daaaaa39d6b Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Sun, 12 May 2024 09:17:00 -0400
+Subject: [PATCH 2/2] Use new nvtoolset
+
+---
+ caffe2/CMakeLists.txt   | 11 +++++++++--
+ cmake/public/cuda.cmake |  6 ------
+ torch/CMakeLists.txt    |  7 ++++++-
+ 3 files changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index a6b6f0f7d1d..a3c064821b1 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -1615,7 +1615,14 @@ if(USE_CUDA)
+     target_link_libraries(torch_cpu PRIVATE torch::cudart)
+   endif()
+   target_link_libraries(torch_cuda INTERFACE torch::cudart)
+-  target_link_libraries(torch_cuda PUBLIC c10_cuda torch::nvtoolsext)
++  target_link_libraries(torch_cuda PUBLIC c10_cuda)
++
++  # CUDA SDK >= 12 doesn't include NVTX anymore, so use the nvToolsExt included in third_party/nccl.
++  if(CUDA_VERSION_MAJOR GREATER_EQUAL 12)
++    list(APPEND Caffe2_GPU_INCLUDE ${TORCH_ROOT}/third_party/nccl/nccl/src/include/nvtx3)
++  else()
++    target_link_libraries(torch_cuda PUBLIC c10_cuda torch::nvtoolsext)
++  endif()
+ 
+   target_include_directories(
+       torch_cuda INTERFACE $<INSTALL_INTERFACE:include>)
+@@ -1685,7 +1692,7 @@ if(BUILD_SHARED_LIBS)
+   # not find them, because they're usually in non-standard locations)
+   if(USE_CUDA)
+     target_link_libraries(torch_global_deps ${Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS})
+-    target_link_libraries(torch_global_deps torch::cudart torch::nvtoolsext)
++    target_link_libraries(torch_global_deps torch::cudart)
+   endif()
+   if(USE_TBB)
+     target_link_libraries(torch_global_deps TBB::tbb)
+diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
+index 39e7af74c18..1a3f026d00e 100644
+--- a/cmake/public/cuda.cmake
++++ b/cmake/public/cuda.cmake
+@@ -203,12 +203,6 @@ else()
+         CUDA::cudart)
+ endif()
+ 
+-# nvToolsExt
+-add_library(torch::nvtoolsext INTERFACE IMPORTED)
+-set_property(
+-    TARGET torch::nvtoolsext PROPERTY INTERFACE_LINK_LIBRARIES
+-    CUDA::nvToolsExt)
+-
+ # cublas
+ add_library(caffe2::cublas INTERFACE IMPORTED)
+ if(CAFFE2_STATIC_LINK_CUDA AND NOT WIN32)
+diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
+index 97a72eed55b..444ef9887b5 100644
+--- a/torch/CMakeLists.txt
++++ b/torch/CMakeLists.txt
+@@ -131,7 +131,12 @@ if(USE_CUDA)
+         list(APPEND TORCH_PYTHON_COMPILE_DEFINITIONS USE_CUDNN)
+     endif()
+ 
+-    list(APPEND TORCH_PYTHON_LINK_LIBRARIES torch::nvtoolsext)
++    # CUDA SDK >= 12 doesn't include NVTX anymore, so use the nvToolsExt included in third_party/nccl.
++    if(CUDA_VERSION_MAJOR GREATER_EQUAL 12)
++      list(APPEND TORCH_PYTHON_INCLUDE_DIRECTORIES ${TORCH_ROOT}/third_party/nccl/nccl/src/include/nvtx3)
++    else()
++      list(APPEND TORCH_PYTHON_LINK_LIBRARIES torch::nvtoolsext)
++    endif()
+ endif()
+ 
+ if(USE_ROCM)
+-- 
+2.45.0
+
