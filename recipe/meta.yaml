@@ -35,6 +35,7 @@ source:
     # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
     - patches/nvtoolsext.patch                  # [cuda_compiler_version == "12.0"]
     - patches/0002-fix-FindCUDA.patch           # [build_platform != target_platform and cuda_compiler_version != "None"]
+    - patches/fix-mkl-win.patch                 # [win and blas_impl == "mkl"]
 
 build:
   number: {{ build }}
@@ -52,7 +53,8 @@ build:
     - numpy *                                # [megabuild]
   
   # Disabling everything but windows cpu now for testing purposes
-  skip: true  # [not win or cuda_compiler_version != "None" or py!=311]
+  # TODO(baszalmstra): Lift all these restrictions, however pytorch 2.1.2 only supports python 3.11 and lower.
+  skip: true  # [not win or cuda_compiler_version != "12.0" or py>=312]
   
   # skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # skip: true  # [cuda_compiler_version == "10.2"]
@@ -92,6 +94,7 @@ requirements:
     # Dec 2020: it seems that git is broken on windows, so we use m2-git
     - patch     # [not win]
     - m2-patch  # [win]
+    - m2-sed    # [win]
     - git       # [not win]
     - m2-git    # [win]
     - libgomp   # [linux]
@@ -124,7 +127,10 @@ requirements:
     - libcusparse-dev
     {% endif %}
     # other requirements
-    - python 3.12  # [megabuild]
+    # TODO(baszalmstra): pytorch <2.2 doesnt build on windows with python 3.12.
+    # https://github.com/rerun-io/rerun/issues/4704
+    - python 3.12  # [megabuild and not win]
+    - python 3.11  # [megabuild and win]
     - python       # [not megabuild]
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
@@ -172,7 +178,7 @@ outputs:
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
-      skip: true  # [win]
+      skip: true  # [not win or cuda_compiler_version != "12.0" or py>=312]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       skip: true  # [cuda_compiler_version == "10.2"]
       skip: true  # [cuda_compiler_version == "11.0"]
@@ -212,8 +218,9 @@ outputs:
         - ninja
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
-        - libprotobuf
-        - protobuf
+        # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
+        - libprotobuf #[not win]
+        - protobuf    #[not win]
         - make      # [linux]
       host:
         # GPU requirements
@@ -249,7 +256,8 @@ outputs:
         - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        - libprotobuf
+        # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
+        - libprotobuf   #[not win]
         - sleef
         - typing
         - libuv
@@ -305,7 +313,11 @@ outputs:
         - tools
       commands:
         - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win and not (aarch64 and cuda_compiler_version != "None")]
-        - python ./test/run_test.py  # [win]
+        
+        # TODO(baszalmstra): The tests seem to fail because they are missing some dependencies (e.g. pytest-rerunfailures, pytest-shard, etc.).
+        # These packages also dont seem to be available on Windows. But I assume that means that the tests are also not run on unix??
+        # - python ./test/run_test.py  # [win]
+
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check

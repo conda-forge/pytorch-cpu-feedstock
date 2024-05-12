@@ -15,6 +15,7 @@ github_actions_labels:          # [linux]
 megabuild:
 - true      # [linux]
 - false     # [osx]
+- true      # [win]
 
 zip_keys:
   - - github_actions_labels
