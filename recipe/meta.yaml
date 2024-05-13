@@ -1,5 +1,5 @@
-{% set version = "2.1.2" %}
-{% set build = 4 %}
+{% set version = "2.3.0" %}
+{% set build = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -21,7 +21,7 @@ package:
 
 source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-  sha256: 85effbcce037bffa290aea775c9a4bad5f769cb229583450c40055501ee1acd7
+  sha256: 69579513b26261bbab32e13b7efc99ad287fcf3103087f2d4fdf1adacd25316f
   patches:
     # The patch below is probably OK for other versions too, but it is untested with them
     # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
@@ -32,8 +32,7 @@ source:
     # https://github.com/pytorch/pytorch/issues/101135
     # the following patch was transcribed to work wit 2.1.0
     # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
-    - patches/nvtoolsext.patch                  # [cuda_compiler_version == "12.0"]
-    - patches/0002-fix-FindCUDA.patch           # [build_platform != target_platform and cuda_compiler_version != "None"]
+    - patches/0002-Use-new-nvtoolset.patch      # [cuda_compiler_version == "12.0"]
 
 build:
   number: {{ build }}
@@ -173,7 +172,7 @@ outputs:
       skip: true  # [cuda_compiler_version == "11.0"]
       skip: true  # [cuda_compiler_version == "11.1"]
     script: build_pytorch.sh  # [not win]
-    script: bld_pytorch.bat   # [win]
+    script: bld_pytorch.bat  # [win]
     requirements:
       build:
         - python                                 # [build_platform != target_platform]
@@ -317,7 +316,7 @@ outputs:
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
-      detect_binary_files_with_prefix: False
+      detect_binary_files_with_prefix: false
       # weigh down cpu implementation and give cuda preference
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]

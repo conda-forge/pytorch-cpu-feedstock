@@ -1,5 +1,5 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.13'
+- '10.15'
 MACOSX_SDK_VERSION:
 - '12.3'
 blas_impl:
@@ -7,11 +7,11 @@ blas_impl:
 c_compiler:
 - clang
 c_compiler_version:
-- '15'
+- '16'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
-- '10.13'
+- '10.15'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -23,7 +23,7 @@ cuda_compiler_version:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '15'
+- '16'
 github_actions_labels:
 - cirun-openstack-gpu-large
 libcblas:

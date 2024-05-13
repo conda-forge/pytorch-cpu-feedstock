@@ -1,12 +1,11 @@
+c_stdlib:          # [linux64]
+  - sysroot        # [linux64]
+c_stdlib_version:  # [linux64 or (osx and x86_64)]
+  - 2.17           # [linux64]
+  - 10.15          # [osx and x86_64]
+
 MACOSX_SDK_VERSION:         # [osx]
   - 12.3                    # [osx]
-
-# It seems that clang 16 might be a little too strict for
-# some pointer conversions
-c_compiler_version:         # [osx]
-  - 15                      # [osx]
-cxx_compiler_version:       # [osx]
-  - 15                      # [osx]
 
 blas_impl:
   - mkl                        # [x86 or x86_64]
@@ -23,8 +22,3 @@ megabuild:
 zip_keys:
   - - github_actions_labels
     - blas_impl
-
-c_stdlib:          # [linux64]
-  - sysroot        # [linux64]
-c_stdlib_version:  # [linux64]
-  - 2.17           # [linux64]
