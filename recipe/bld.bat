@@ -37,6 +37,7 @@ if "%PKG_NAME%" == "pytorch" (
   @REM we need to make sure to update that here. Perhaps we can write a nice 
   @REM little regex?
   sed "s/3.11/%PY_VER%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
+  sed -i "s/311/%CONDA_PY%/g" build/CMakeCache.txt
 ) else (
   @REM For the main script we just build a wheel for so that the C++/CUDA
   @REM parts are built. Then they are reused in each python version.

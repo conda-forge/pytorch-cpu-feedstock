@@ -1,5 +1,5 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - vs2019
 c_stdlib:
@@ -17,25 +17,31 @@ cudnn:
 cxx_compiler:
 - vs2019
 github_actions_labels:
-- cirun-openstack-cpu-large
+- cirun-openstack-gpu-large
 libcblas:
 - 3.9 *netlib
 liblapack:
 - 3.9 *netlib
-libprotobuf:
-- 4.25.3
 megabuild:
 - 'true'
 mkl:
 - '2023'
 numpy:
+- '1.22'
+- '1.23'
 - '1.26'
+- '1.22'
+- '1.22'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
+- 3.10.* *_cpython
+- 3.11.* *_cpython
 - 3.12.* *_cpython
+- 3.8.* *_cpython
+- 3.9.* *_cpython
 pytorch:
 - '2.1'
 target_platform:

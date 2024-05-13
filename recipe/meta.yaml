@@ -52,7 +52,7 @@ build:
     - numpy *                                # [megabuild]
   
   # TODO(baszalmstra): Lift all these restrictions, however pytorch 2.1.2 only supports python 3.11 and lower.
-  skip: true  # [not win or cuda_compiler_version != "12.0" or py>=312]
+  skip: true  # [not win or cuda_compiler_version != "12.0"]
 
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
@@ -103,8 +103,8 @@ requirements:
     - ninja
     # Keep libprotobuf here so that a compatibile version
     # of protobuf is installed between build and host
-    - libprotobuf
-    - protobuf
+    - libprotobuf  #[not win]
+    - protobuf     #[not win]
     - make      # [linux]
   host:
     # GPU requirements
@@ -145,7 +145,7 @@ requirements:
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
     - llvm-openmp    # [osx]
-    - libprotobuf
+    - libprotobuf #[not win]
     - sleef
     - typing
     - libuv
@@ -176,7 +176,7 @@ outputs:
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
-      skip: true  # [not win or cuda_compiler_version != "12.0" or py>=312]
+      skip: true  # [not win or cuda_compiler_version != "12.0" or py >= 312]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       skip: true  # [cuda_compiler_version == "10.2"]
       skip: true  # [cuda_compiler_version == "11.0"]
@@ -334,6 +334,7 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: False
+      skip: true  # [win and py >= 312]
       # weigh down cpu implementation and give cuda preference
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
