@@ -8,8 +8,14 @@ jobs:
     vmImage: windows-2022
   strategy:
     matrix:
+      win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNone:
+        CONFIG: win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNone
+        UPLOAD_PACKAGES: 'True'
       win_64_blas_implgenericcuda_compilercuda-nvcccuda_compiler_version12.0:
         CONFIG: win_64_blas_implgenericcuda_compilercuda-nvcccuda_compiler_version12.0
+        UPLOAD_PACKAGES: 'True'
+      win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNone:
+        CONFIG: win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNone
         UPLOAD_PACKAGES: 'True'
       win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.0:
         CONFIG: win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.0

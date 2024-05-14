@@ -52,8 +52,8 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   
-  # TODO(baszalmstra): Lift all these restrictions, however pytorch 2.1.2 only supports python 3.11 and lower.
-  skip: true  # [not win or cuda_compiler_version != "12.0"]
+  # TODO(baszalmstra): Remove this before merging
+  skip: true  # [not win or not (cuda_compiler_version == "12.0" or cuda_compiler == "None")]
 
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   skip: true  # [cuda_compiler_version == "10.2"]
@@ -127,10 +127,7 @@ requirements:
     - libcusparse-dev
     {% endif %}
     # other requirements
-    # TODO(baszalmstra): pytorch <2.2 doesnt build on windows with python 3.12.
-    # https://github.com/rerun-io/rerun/issues/4704
-    - python 3.12  # [megabuild and not win]
-    - python 3.11  # [megabuild and win]
+    - python 3.12  # [megabuild]
     - python       # [not megabuild]
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
@@ -177,7 +174,7 @@ outputs:
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
-      skip: true  # [not win or cuda_compiler_version != "12.0"]
+      skip: true  # [py != 312]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       skip: true  # [cuda_compiler_version == "10.2"]
       skip: true  # [cuda_compiler_version == "11.0"]
@@ -338,7 +335,6 @@ outputs:
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
-      skip: true  # [win and py >= 312]
       detect_binary_files_with_prefix: false
       # weigh down cpu implementation and give cuda preference
       track_features:
