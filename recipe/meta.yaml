@@ -36,6 +36,9 @@ source:
     - patches/0002-fix-FindCUDA.patch           # [build_platform != target_platform and cuda_compiler_version != "None"]
     - patches/fix-mkl-win.patch                 # [win and blas_impl == "mkl"]
 
+    # Remove when https://github.com/pytorch/pytorch/pull/126165 is merged
+    - patches/0003-fix-FindLAPACK.patch         # [win and blas_impl == "generic"]
+
 build:
   number: {{ build }}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
@@ -301,6 +304,11 @@ outputs:
         - pip
         - expecttest
         - xmlrunner
+        # Required by run_test.py
+        - pytest-rerunfailures
+        - pytest-shard
+        - pytest-flakefinder
+        - pytest-xdist
       imports:
         - torch  # [not (aarch64 and cuda_compiler_version != "None")]
       source_files:
@@ -311,9 +319,8 @@ outputs:
       commands:
         - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win and not (aarch64 and cuda_compiler_version != "None")]
         
-        # TODO(baszalmstra): The tests seem to fail because they are missing some dependencies (e.g. pytest-rerunfailures, pytest-shard, etc.).
-        # These packages also dont seem to be available on Windows. But I assume that means that the tests are also not run on unix??
-        # - python ./test/run_test.py  # [win]
+        # Using `cmd.exe /c` to not fail if this test fails (similar to `|| true`).
+        - cmd.exe /c python ./test/run_test.py  # [win and cuda_compiler_version == "None"]
 
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24

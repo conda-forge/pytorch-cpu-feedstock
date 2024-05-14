@@ -12,10 +12,11 @@ REM I don't know where this folder comes from, but it's interfering with the bui
 RD /S /Q %PREFIX%\git
 
 @REM Setup BLAS
-if %blas_impl% == "generic" (
+if "%blas_impl%" == "generic" (
     REM Fake openblas
-    export BLAS=OpenBLAS
-    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB ${PREFIX}/lib/liblapack${SHLIB_EXT} ${PREFIX}/lib/libcblas${SHLIB_EXT} ${PREFIX}/lib/libblas${SHLIB_EXT})#g" cmake/Modules/FindOpenBLAS.cmake
+    SET BLAS=OpenBLAS
+
+    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB %PREFIX:\=/%/Library/lib/lapack.lib %PREFIX:\=/%/Library/lib/cblas.lib %PREFIX:\=/%/Library/lib/blas.lib)#g" cmake/Modules/FindOpenBLAS.cmake
 ) else (
     SET BLAS=MKL
 )
@@ -42,6 +43,9 @@ if "%PKG_NAME%" == "pytorch" (
   @REM For the main script we just build a wheel for so that the C++/CUDA
   @REM parts are built. Then they are reused in each python version.
   set "PIP_ACTION=wheel"
+
+  @REM Disable building python specific code
+  set "BUILD_PYTON=0"
 )
 
 if not "%cuda_compiler_version%" == "None" (
