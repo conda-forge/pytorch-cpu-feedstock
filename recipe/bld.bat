@@ -128,11 +128,11 @@ set "libuv_ROOT=%LIBRARY_PREFIX%"
 set "USE_SYSTEM_SLEEF=ON"
 
 @REM Only for debugging
-set "CMAKE_C_COMPILER_LAUNCHER=sccache"
-set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
-set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
+@REM set "CMAKE_C_COMPILER_LAUNCHER=sccache"
+@REM set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+@REM set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
 @REM uncomment to debug cmake build
-set "CMAKE_VERBOSE_MAKEFILE=1"
+@REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
 @REM TODO(baszalmstra): There are link errors because of conflicting symbols with caffe2_protos.lib
 set "BUILD_CUSTOM_PROTOBUF=ON"
@@ -182,18 +182,4 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Keep the original backed up to sed later
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
-) else (   
-    rmdir /s /q %SP_DIR%\torch\bin
-    rmdir /s /q %SP_DIR%\torch\share
-    for %%f in (ATen caffe2 torch c10) do (
-        rmdir /s /q %SP_DIR%\torch\include\%%f
-    )
-
-    @REM Delete all files from the lib directory that do not start with libtorch_python
-    for %%f in (%SP_DIR%\torch\lib\*) do (
-        set "FILENAME=%%~nf"
-        if "!FILENAME:~0,12!" neq "torch_python" (
-            del %%f
-        )
-    )
 )
