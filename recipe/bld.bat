@@ -15,8 +15,7 @@ RD /S /Q %PREFIX%\git
 if "%blas_impl%" == "generic" (
     REM Fake openblas
     SET BLAS=OpenBLAS
-
-    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB %PREFIX:\=/%/Library/lib/lapack.lib %PREFIX:\=/%/Library/lib/cblas.lib %PREFIX:\=/%/Library/lib/blas.lib)#g" cmake/Modules/FindOpenBLAS.cmake
+    SET OpenBLAS_HOME=%LIBRARY_PREFIX%
 ) else (
     SET BLAS=MKL
 )

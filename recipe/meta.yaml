@@ -42,6 +42,7 @@ source:
     # even use MKL in the first place. This patch simply removes the python dependency until a
     # better solution is found or the problem is fixed upstream.
     - patches/0004-Fix-mkl-dependency.patch     # [win]
+    - patches/0005-Fix-FindOpenBLAS.patch       # [blas_impl == "generic"]
 
 build:
   number: {{ build }}
@@ -97,12 +98,9 @@ requirements:
     - libcusolver-dev                        # [build_platform != target_platform]
     - libcusparse-dev                        # [build_platform != target_platform]
     {% endif %}
-    # Dec 2020: it seems that git is broken on windows, so we use m2-git
     - patch     # [not win]
     - m2-patch  # [win]
     - m2-sed    # [win]
-    - git       # [not win]
-    - m2-git    # [win]
     - libgomp   # [linux]
     - llvm-openmp    # [osx]
     - libuv     # [win]
