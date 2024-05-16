@@ -1,6 +1,6 @@
 set -x
 if [[ "$megabuild" == true ]]; then
-  source $RECIPE_DIR/build.sh
+  source $RECIPE_DIR/build_libtorch.sh
   pushd $SP_DIR/torch
   for f in bin/* lib/* share/* include/*; do
     if [[ -e "$PREFIX/$f" ]]; then
