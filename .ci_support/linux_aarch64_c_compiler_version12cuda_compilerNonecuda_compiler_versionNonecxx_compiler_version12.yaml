@@ -15,7 +15,7 @@ cdt_arch:
 cdt_name:
 - cos7
 channel_sources:
-- conda-forge
+- conda-forge/label/numpy_rc,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -45,11 +45,11 @@ mkl:
 nccl:
 - '2'
 numpy:
+- '2.0'
+- '2.0'
+- '2.0'
 - '1.22'
-- '1.23'
-- '1.26'
-- '1.22'
-- '1.22'
+- '2.0'
 pin_run_as_build:
   python:
     min_pin: x.x

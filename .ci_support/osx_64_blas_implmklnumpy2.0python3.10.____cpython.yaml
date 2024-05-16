@@ -13,7 +13,7 @@ c_stdlib:
 c_stdlib_version:
 - '10.15'
 channel_sources:
-- conda-forge
+- conda-forge/label/numpy_rc,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -41,13 +41,13 @@ megabuild:
 mkl:
 - '2023'
 numpy:
-- '1.26'
+- '2.0'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.12.* *_cpython
+- 3.10.* *_cpython
 pytorch:
 - '2.1'
 target_platform:
