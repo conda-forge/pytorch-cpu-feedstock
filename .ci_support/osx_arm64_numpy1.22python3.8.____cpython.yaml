@@ -13,7 +13,7 @@ c_stdlib:
 c_stdlib_version:
 - '11.0'
 channel_sources:
-- conda-forge
+- conda-forge/label/numpy_rc,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -26,6 +26,8 @@ cxx_compiler_version:
 - '16'
 github_actions_labels:
 - cirun-openstack-cpu-large
+libabseil:
+- '20240116'
 libcblas:
 - 3.9 *netlib
 liblapack:

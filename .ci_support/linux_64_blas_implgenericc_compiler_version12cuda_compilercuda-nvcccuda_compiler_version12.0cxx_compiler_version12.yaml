@@ -11,7 +11,7 @@ c_stdlib_version:
 cdt_name:
 - cos7
 channel_sources:
-- conda-forge
+- conda-forge/label/numpy_rc,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -28,6 +28,8 @@ docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
 github_actions_labels:
 - cirun-openstack-cpu-large
+libabseil:
+- '20240116'
 libcblas:
 - 3.9 *netlib
 liblapack:
@@ -41,11 +43,11 @@ mkl:
 nccl:
 - '2'
 numpy:
+- '2.0'
+- '2.0'
+- '2.0'
 - '1.22'
-- '1.23'
-- '1.26'
-- '1.22'
-- '1.22'
+- '2.0'
 pin_run_as_build:
   python:
     min_pin: x.x
