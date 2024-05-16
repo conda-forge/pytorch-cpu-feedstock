@@ -150,6 +150,7 @@ outputs:
         - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
+        - libabseil
         - libprotobuf
         - sleef
         - typing
@@ -261,6 +262,7 @@ outputs:
         - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
+        - libabseil
         - libprotobuf
         - sleef
         - typing
