@@ -12,7 +12,7 @@ blas_impl:
   - generic
 
 github_actions_labels:
-- cirun-openstack-gpu-large    # [x86 or x86_64]
+- cirun-openstack-gpu-4xlarge    # [x86 or x86_64]
 - cirun-openstack-cpu-large
 
 megabuild:
