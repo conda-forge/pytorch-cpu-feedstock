@@ -1,18 +1,16 @@
-c_stdlib:          # [linux64]
-  - sysroot        # [linux64]
-c_stdlib_version:  # [linux64 or (osx and x86_64)]
-  - 2.17           # [linux64]
+c_stdlib_version:  # [linux or (osx and x86_64)]
+  - 2.17           # [linux]
   - 10.15          # [osx and x86_64]
 
 MACOSX_SDK_VERSION:         # [osx]
   - 12.3                    # [osx]
 
 blas_impl:
-  - mkl                        # [x86 or x86_64]
+  - mkl                         # [x86_64]
   - generic
 
 github_actions_labels:
-- cirun-openstack-gpu-4xlarge    # [x86 or x86_64]
+- cirun-openstack-gpu-4xlarge   # [x86_64]
 - cirun-openstack-cpu-large
 
 megabuild:
