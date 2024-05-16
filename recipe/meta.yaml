@@ -15,6 +15,13 @@
 {% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
 {% endif %}
 
+{% set libs = [
+    'libc10', 'libshm', 'libtorch', 'libtorch_cpu', 'libtorch_global_deps'
+] + (cuda_compiler_version != "None") * [
+    'libc10_cuda', 'libcaffe2_nvrtc', 'libtorch_cuda', 'libtorch_cuda_linalg'
+] %}
+
+
 package:
   name: pytorch-recipe
   version: {{ version }}
@@ -163,6 +170,13 @@ outputs:
         - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
         - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
         - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+
+    test:
+      commands:
+        # libraries
+        {% for each_lib in libs %}
+        - test -f $PREFIX/lib/{{ each_lib }}${SHLIB_EXT}
+        {% endfor %}
 
   - name: pytorch
     build:
