@@ -1,17 +1,9 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '10.15'
-MACOSX_SDK_VERSION:
-- '12.3'
 blas_impl:
-- generic
+- mkl
 c_compiler:
-- clang
-c_compiler_version:
-- '16'
+- vs2019
 c_stdlib:
-- macosx_deployment_target
-c_stdlib_version:
-- '10.15'
+- vs
 channel_sources:
 - conda-forge
 channel_targets:
@@ -20,41 +12,43 @@ cuda_compiler:
 - None
 cuda_compiler_version:
 - None
+cudnn:
+- '8'
 cxx_compiler:
-- clangxx
-cxx_compiler_version:
-- '16'
+- vs2019
 github_actions_labels:
-- cirun-openstack-cpu-large
+- cirun-openstack-gpu-large
 libcblas:
 - 3.9 *netlib
 liblapack:
 - 3.9 *netlib
-libprotobuf:
-- 4.25.3
-llvm_openmp:
-- '16'
-macos_machine:
-- x86_64-apple-darwin13.4.0
 megabuild:
-- 'false'
+- 'true'
 mkl:
 - '2023'
 numpy:
+- '1.22'
+- '1.23'
 - '1.26'
+- '1.22'
+- '1.22'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
+- 3.10.* *_cpython
+- 3.11.* *_cpython
 - 3.12.* *_cpython
+- 3.8.* *_cpython
+- 3.9.* *_cpython
 pytorch:
 - '2.1'
 target_platform:
-- osx-64
+- win-64
 zip_keys:
-- - c_compiler_version
-  - cxx_compiler_version
+- - cuda_compiler
+  - cuda_compiler_version
 - - github_actions_labels
   - blas_impl
 - - python
