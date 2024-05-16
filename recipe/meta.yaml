@@ -50,10 +50,6 @@ build:
     - numpy *                                # [megabuild]
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-  skip: true  # [cuda_compiler_version == "10.2"]
-  skip: true  # [cuda_compiler_version == "11.0"]
-  skip: true  # [cuda_compiler_version == "11.1"]
-  skip: true  # [cuda_compiler_version == "11.2"]
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
@@ -168,9 +164,7 @@ outputs:
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
       skip: true  # [win]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-      skip: true  # [cuda_compiler_version == "10.2"]
-      skip: true  # [cuda_compiler_version == "11.0"]
-      skip: true  # [cuda_compiler_version == "11.1"]
+
     script: build_pytorch.sh  # [not win]
     script: bld_pytorch.bat  # [win]
     requirements:
@@ -307,6 +301,7 @@ outputs:
         # But if users install a newer version of OSX, they will have MPS support
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
         # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
+
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
   # It helps the linter avoid errors on a package not having tests.
