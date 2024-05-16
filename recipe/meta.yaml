@@ -353,6 +353,7 @@ outputs:
 
 about:
   home: https://pytorch.org/
+  dev_url: https://github.com/pytorch/pytorch
   license: BSD-3-Clause
   license_family: BSD
   license_file:
