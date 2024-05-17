@@ -97,8 +97,10 @@ fi
 if [[ "$PKG_NAME" == "pytorch" ]]; then
   PIP_ACTION=install
   sed "s/3.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
-  if [[ "$numpy" == 1.* ]]; then
+  if [[ "$PY_VER" == "3.8" ]]; then
     sed -i.bak "s#numpy/_core/include#numpy/core/include#g" build/CMakeCache.txt
+  else
+    sed -i.bak "s#numpy/core/include#numpy/_core/include#g" build/CMakeCache.txt
   fi
 else
   # For the main script we just build a wheel for so that the C++/CUDA
