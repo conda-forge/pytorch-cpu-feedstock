@@ -24,8 +24,6 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '16'
-github_actions_labels:
-- cirun-openstack-cpu-large
 libabseil:
 - '20240116'
 libcblas:
@@ -57,7 +55,5 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - github_actions_labels
-  - blas_impl
 - - python
   - numpy

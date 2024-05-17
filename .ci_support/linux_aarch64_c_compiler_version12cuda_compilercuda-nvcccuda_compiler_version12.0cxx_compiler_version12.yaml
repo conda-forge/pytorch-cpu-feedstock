@@ -31,7 +31,7 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
 github_actions_labels:
-- cirun-openstack-cpu-large
+- cirun-openstack-gpu-2xlarge
 libabseil:
 - '20240116'
 libcblas:
@@ -74,7 +74,5 @@ zip_keys:
   - cuda_compiler
   - cuda_compiler_version
   - docker_image
-- - github_actions_labels
-  - blas_impl
 - - python
   - numpy
