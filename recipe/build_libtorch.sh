@@ -84,7 +84,8 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT=""
 fi
 
-export MAX_JOBS=${CPU_COUNT}
+# reduce parallelism to avoid getting OOM-killed
+export MAX_JOBS=4
 
 if [[ "$blas_impl" == "generic" ]]; then
     # Fake openblas
