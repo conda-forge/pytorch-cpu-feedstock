@@ -16,7 +16,7 @@
 {% endif %}
 
 package:
-  name: pytorch-recipe
+  name: libtorch
   version: {{ version }}
 
 source:
@@ -38,146 +38,139 @@ source:
 
 build:
   number: {{ build }}
+  string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+  detect_binary_files_with_prefix: false
+  run_exports:
+    - {{ pin_subpackage('libtorch', max_pin='x.x') }}
+  ignore_run_exports_from:
+    - python *                               # [megabuild]
+    - numpy *                                # [megabuild]
+    - cross-python_{{ target_platform }}     # [megabuild and build_platform != target_platform]
+  ignore_run_exports:
+    - python *                               # [megabuild]
+    - numpy *                                # [megabuild]
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
 
+requirements:
+  # Keep this list synchronized (except for python*, numpy*) in outputs
+  # We use python to build libtorch as well because it is easier
+  build:
+    # When you change 3.12 here, change it in build.sh as well
+    - python 3.12                            # [megabuild and build_platform != target_platform]
+    - python                                 # [not megabuild and build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - numpy  *                               # [megabuild and build_platform != target_platform]
+    - numpy                                  # [not megabuild and build_platform != target_platform]
+    - {{ stdlib('c') }}
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+    {% if cuda_major >= 12 %}
+    - cuda-driver-dev                        # [build_platform != target_platform]
+    - cuda-cudart-dev                        # [build_platform != target_platform]
+    - cuda-nvrtc-dev                         # [build_platform != target_platform]
+    - cuda-nvtx-dev                          # [build_platform != target_platform]
+    - cuda-nvml-dev                          # [build_platform != target_platform]
+    - cuda-profiler-api                      # [build_platform != target_platform]
+    - libcublas-dev                          # [build_platform != target_platform]
+    - libcufft-dev                           # [build_platform != target_platform]
+    - libcurand-dev                          # [build_platform != target_platform]
+    - libcusolver-dev                        # [build_platform != target_platform]
+    - libcusparse-dev                        # [build_platform != target_platform]
+    {% endif %}
+    # Dec 2020: it seems that git is broken on windows, so we use m2-git
+    - patch     # [not win]
+    - m2-patch  # [win]
+    - git       # [not win]
+    - m2-git    # [win]
+    - libgomp   # [linux]
+    - llvm-openmp    # [osx]
+    - cmake
+    - ninja
+    # Keep libprotobuf here so that a compatibile version
+    # of protobuf is installed between build and host
+    - libprotobuf
+    - protobuf
+    - make      # [linux]
+  host:
+    # GPU requirements
+    - cudnn                           # [cuda_compiler_version != "None"]
+    - nccl                            # [cuda_compiler_version != "None"]
+    - magma                           # [cuda_compiler_version != "None"]
+    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+    {% if cuda_major >= 12 %}
+    - cuda-driver-dev
+    - cuda-cudart-dev
+    - cuda-nvrtc-dev
+    - cuda-nvtx-dev
+    - cuda-nvml-dev
+    - cuda-profiler-api
+    - libcublas-dev
+    - libcufft-dev
+    - libcurand-dev
+    - libcusolver-dev
+    - libcusparse-dev
+    {% endif %}
+    # other requirements
+    - python 3.12  # [megabuild]
+    - python       # [not megabuild]
+    - numpy *      # [megabuild]
+    - numpy        # [not megabuild]
+    - pip
+    - setuptools
+    - pyyaml
+    - requests
+    - future
+    - six
+    - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+    - libcblas * *_mkl      # [blas_impl == "mkl"]
+    - libcblas              # [blas_impl != "mkl"]
+    - liblapack             # [blas_impl != "mkl"]
+    - libgomp   # [linux]
+    - llvm-openmp    # [osx]
+    - libabseil
+    - libprotobuf
+    - sleef
+    - typing
+    - libuv
+    - pkg-config  # [unix]
+    - typing_extensions
+  run:
+    # GPU requirements without run_exports
+    - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
+  run_constrained:
+    # These constraints ensure conflict between pytorch and
+    # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
+    # built into place.
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
+    - pytorch-cpu =={{ version }}  # [cuda_compiler_version == "None"]
+    - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
+    - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
+    - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
+    - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+    - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+
+# these tests are for the libtorch output below, but due to
+# a particularity of conda-build, that output is defined in
+# the global build stage, including tests
+test:
+  commands:
+    # libraries
+    {% for each_lib in [ 'libc10', 'libshm', 'libtorch', 'libtorch_cpu', 'libtorch_global_deps'] %}
+    - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux]
+    - test -f $PREFIX/lib/{{ each_lib }}.dylib  # [osx]
+    {% endfor %}
+    {% for each_lib in ['libc10_cuda', 'libcaffe2_nvrtc', 'libtorch_cuda', 'libtorch_cuda_linalg'] %}
+    - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux and cuda_compiler_version != "None"]
+    {% endfor %}
+
 outputs:
   - name: libtorch
-    script: build_libtorch.sh   # [unix]
-    script: build_libtorch.bat  # [win]
-    build:
-      number: {{ build }}
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
-      detect_binary_files_with_prefix: false
-      run_exports:
-        - {{ pin_subpackage('libtorch', max_pin='x.x') }}
-      ignore_run_exports_from:
-        - python *                               # [megabuild]
-        - numpy *                                # [megabuild]
-        - cross-python_{{ target_platform }}     # [megabuild and build_platform != target_platform]
-      ignore_run_exports:
-        - python *                               # [megabuild]
-        - numpy *                                # [megabuild]
-      skip: true  # [win]
-      skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-      # 2024/04 This build seems to fail due to disk space on the CIs
-      # We can potentially re-enable it at a later time
-      skip: true  # [cuda_compiler_version == "11.8" and aarch64]
-
-    requirements:
-      # Keep this list synchronized (except for python*, numpy*) in outputs
-      # We use python to build libtorch as well because it is easier
-      build:
-        # When you change 3.12 here, change it in build.sh as well
-        - python 3.12                            # [megabuild and build_platform != target_platform]
-        - python                                 # [not megabuild and build_platform != target_platform]
-        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-        - numpy  *                               # [megabuild and build_platform != target_platform]
-        - numpy                                  # [not megabuild and build_platform != target_platform]
-        - {{ stdlib('c') }}
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
-        {% if cuda_major >= 12 %}
-        - cuda-driver-dev                        # [build_platform != target_platform]
-        - cuda-cudart-dev                        # [build_platform != target_platform]
-        - cuda-nvrtc-dev                         # [build_platform != target_platform]
-        - cuda-nvtx-dev                          # [build_platform != target_platform]
-        - cuda-nvml-dev                          # [build_platform != target_platform]
-        - cuda-profiler-api                      # [build_platform != target_platform]
-        - libcublas-dev                          # [build_platform != target_platform]
-        - libcufft-dev                           # [build_platform != target_platform]
-        - libcurand-dev                          # [build_platform != target_platform]
-        - libcusolver-dev                        # [build_platform != target_platform]
-        - libcusparse-dev                        # [build_platform != target_platform]
-        {% endif %}
-        # Dec 2020: it seems that git is broken on windows, so we use m2-git
-        - patch     # [not win]
-        - m2-patch  # [win]
-        - git       # [not win]
-        - m2-git    # [win]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
-        - cmake
-        - ninja
-        # Keep libprotobuf here so that a compatibile version
-        # of protobuf is installed between build and host
-        - libprotobuf
-        - protobuf
-        - make      # [linux]
-      host:
-        # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None"]
-        - magma                           # [cuda_compiler_version != "None"]
-        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-        {% if cuda_major >= 12 %}
-        - cuda-driver-dev
-        - cuda-cudart-dev
-        - cuda-nvrtc-dev
-        - cuda-nvtx-dev
-        - cuda-nvml-dev
-        - cuda-profiler-api
-        - libcublas-dev
-        - libcufft-dev
-        - libcurand-dev
-        - libcusolver-dev
-        - libcusparse-dev
-        {% endif %}
-        # other requirements
-        - python 3.12  # [megabuild]
-        - python       # [not megabuild]
-        - numpy *      # [megabuild]
-        - numpy        # [not megabuild]
-        - pip
-        - setuptools
-        - pyyaml
-        - requests
-        - future
-        - six
-        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
-        - libcblas * *_mkl      # [blas_impl == "mkl"]
-        - libcblas              # [blas_impl != "mkl"]
-        - liblapack             # [blas_impl != "mkl"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
-        - libabseil
-        - libprotobuf
-        - sleef
-        - typing
-        - libuv
-        - pkg-config  # [unix]
-        - typing_extensions
-      run:
-        # GPU requirements without run_exports
-        - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
-      run_constrained:
-        # These constraints ensure conflict between pytorch and
-        # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
-        # built into place.
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
-        - pytorch-cpu =={{ version }}  # [cuda_compiler_version == "None"]
-        - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
-        - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
-        - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
-        - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-        - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
-
-    test:
-      commands:
-        # libraries
-        {% for each_lib in [ 'libc10', 'libshm', 'libtorch', 'libtorch_cpu', 'libtorch_global_deps'] %}
-        - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux]
-        - test -f $PREFIX/lib/{{ each_lib }}.dylib  # [osx]
-        {% endfor %}
-        {% for each_lib in ['libc10_cuda', 'libcaffe2_nvrtc', 'libtorch_cuda', 'libtorch_cuda_linalg'] %}
-        - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux and cuda_compiler_version != "None"]
-        {% endfor %}
-
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]

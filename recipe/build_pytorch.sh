@@ -1,6 +1,6 @@
 set -x
 if [[ "$megabuild" == true ]]; then
-  source $RECIPE_DIR/build_libtorch.sh
+  source $RECIPE_DIR/build.sh
   # if $SP_DIR/torch doesn't exist here, the installation
   # of pytorch (see build_libtorch.sh call above) failed
   pushd $SP_DIR/torch
