@@ -84,8 +84,14 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT=""
 fi
 
-# reduce parallelism to avoid getting OOM-killed
-export MAX_JOBS=4
+if [[ "${CI}" == "github_actions" ]]; then
+    # h-vetinari/hmaarrfk -- May 2024
+    # reduce parallelism to avoid getting OOM-killed on
+    # cirun-openstack-gpu-2xlarge, which has 32GB RAM, 8 CPUs
+    export MAX_JOBS=4
+else
+    export MAX_JOBS=${CPU_COUNT}
+fi
 
 if [[ "$blas_impl" == "generic" ]]; then
     # Fake openblas
