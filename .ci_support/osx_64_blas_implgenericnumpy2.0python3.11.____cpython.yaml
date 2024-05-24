@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 MACOSX_SDK_VERSION:
 - '12.3'
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - clang
 c_compiler_version:
@@ -13,7 +13,7 @@ c_stdlib:
 c_stdlib_version:
 - '10.15'
 channel_sources:
-- conda-forge
+- conda-forge/label/numpy_rc,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -24,8 +24,8 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '16'
-github_actions_labels:
-- cirun-openstack-gpu-large
+libabseil:
+- '20240116'
 libcblas:
 - 3.9 *netlib
 liblapack:
@@ -41,13 +41,13 @@ megabuild:
 mkl:
 - '2023'
 numpy:
-- '1.22'
+- '2.0'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.11.* *_cpython
 pytorch:
 - '2.1'
 target_platform:
@@ -55,7 +55,5 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - github_actions_labels
-  - blas_impl
 - - python
   - numpy
