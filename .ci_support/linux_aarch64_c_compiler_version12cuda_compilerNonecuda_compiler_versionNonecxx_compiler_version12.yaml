@@ -63,7 +63,7 @@ python:
 - 3.8.* *_cpython
 - 3.9.* *_cpython
 pytorch:
-- '2.1'
+- '2.3'
 target_platform:
 - linux-aarch64
 zip_keys:
