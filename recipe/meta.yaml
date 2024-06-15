@@ -1,5 +1,7 @@
-{% set version = "2.3.0" %}
-{% set build = 1 %}
+{% set pytorch_cpu_gpu = "pytorch-gpu" %}  # [cuda_compiler_version != "None"]
+{% set pytorch_cpu_gpu = "pytorch-cpu" %}  # [cuda_compiler_version == "None"]
+{% set version = "2.3.1" %}
+{% set build = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -21,7 +23,7 @@ package:
 
 source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-  sha256: 69579513b26261bbab32e13b7efc99ad287fcf3103087f2d4fdf1adacd25316f
+  sha256: 6c66b59345091907cd62a693b647cee224558e7f15a9b04f4f322f4f6ffeb75b
   patches:
     # The patch below is probably OK for other versions too, but it is untested with them
     # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
@@ -39,7 +41,7 @@ source:
 build:
   number: {{ build }}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -174,7 +176,7 @@ outputs:
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
@@ -182,7 +184,7 @@ outputs:
       skip: true  # [win]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
 
-    script: build_pytorch.sh   # [unix]
+    script: build_pytorch.sh  # [unix]
     script: build_pytorch.bat  # [win]
     requirements:
       build:
@@ -328,7 +330,7 @@ outputs:
   - name: {{ pytorch_cpu_gpu }}
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       # weigh down cpu implementation and give cuda preference
