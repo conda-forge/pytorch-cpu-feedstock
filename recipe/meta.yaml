@@ -33,8 +33,6 @@ source:
     # the following patch was transcribed to work wit 2.1.0
     # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
     - patches/0002-Use-new-nvtoolset.patch      # [cuda_compiler_version == "12.0"]
-    # backport https://github.com/pytorch/pytorch/pull/122616
-    - patches/0003-Restore-DILL_AVAILABLE-for-backwards-compat-with-tor.patch
 
 build:
   number: {{ build }}
