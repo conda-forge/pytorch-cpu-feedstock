@@ -17,7 +17,7 @@ cudnn:
 cxx_compiler:
 - vs2019
 github_actions_labels:
-- cirun-openstack-gpu-large
+- cirun-azure-windows-2xlarge
 libcblas:
 - 3.9 *netlib
 liblapack:
@@ -43,13 +43,11 @@ python:
 - 3.8.* *_cpython
 - 3.9.* *_cpython
 pytorch:
-- '2.1'
+- '2.3'
 target_platform:
 - win-64
 zip_keys:
 - - cuda_compiler
   - cuda_compiler_version
-- - github_actions_labels
-  - blas_impl
 - - python
   - numpy
