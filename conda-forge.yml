@@ -5,6 +5,9 @@ azure:
   settings_osx:
     pool:
       vmImage: macos-12
+  settings_win:
+    variables:
+      CONDA_BLD_PATH: C:\\bld\\
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
@@ -24,6 +27,7 @@ os_version:
   linux_64: cos7
 provider:
   linux_64: github_actions
+  win_64: github_actions
   linux_aarch64: azure
 remote_ci_setup:
 - py-lief=0.12.3

@@ -21,58 +21,26 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_blas_implgenericc_compiler_version11cuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11
+          - CONFIG: win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNone
             UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_compiler_ha43477854c', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.8
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_64_blas_implgenericc_compiler_version12cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version12
+            os: windows
+            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implgenericcuda_compile_h4a9b946200', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_blas_implgenericcuda_compilercuda-nvcccuda_compiler_version12.0
             UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_compiler_he6436be4c1', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_64_blas_implgenericc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12
+            os: windows
+            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implgenericcuda_compile_hd23f0db2d7', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNone
             UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_compiler_h018d675136', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_64_blas_implmklc_compiler_version11cuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11
+            os: windows
+            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implmklcuda_compilerNon_ha94fa4b9ab', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.0
             UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklc_compiler_ver_h4755e832d1', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.8
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version12
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklc_compiler_ver_hcff7803cf0', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklc_compiler_ver_h46f1704d51', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_aarch64_c_compiler_version12cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version12
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_c_compiler_version12c_h07c7302bdb', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_aarch64_c_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_c_compiler_version12c_h235c88ac5f', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+            os: windows
+            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implmklcuda_compilercud_h0e61f86427', 'windows', 'x64', 'self-hosted']
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
     - name: Build on Linux
       if: matrix.os == 'ubuntu'
@@ -126,7 +94,7 @@ jobs:
         ./.scripts/run_osx_build.sh
 
     - name: Install Miniconda for windows
-      uses: conda-incubator/setup-miniconda@v3
+      uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3.0.4
       with:
         miniforge-version: latest
         miniforge-variant: Mambaforge
