@@ -21,9 +21,9 @@ megabuild:
 - false     # [osx]
 - true      # [win]
 
-zip_keys:
-  - - github_actions_labels
-    - blas_impl
+# zip_keys:
+#   - - github_actions_labels
+#     - blas_impl
 
 c_compiler:                 # [win]
 - vs2019                    # [win]
