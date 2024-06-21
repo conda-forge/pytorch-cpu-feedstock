@@ -12,8 +12,9 @@ blas_impl:
   - mkl                         # [x86_64]
   - generic
 
-github_actions_labels:          # [linux]
+github_actions_labels:          # [linux or win]
 - cirun-openstack-gpu-2xlarge   # [linux]
+- cirun-azure-windows-2xlarge   # [win]
 
 megabuild:
 - true      # [linux]
