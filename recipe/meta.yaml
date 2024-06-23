@@ -48,6 +48,8 @@ build:
   ignore_run_exports:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
+  skip: true  # [not osx]
+  skip: true  # [py!=310]
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # 2024/04 This build seems to fail due to disk space on the CIs
@@ -317,6 +319,8 @@ outputs:
         # But if users install a newer version of OSX, they will have MPS support
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
         # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
+        - OMP_NUM_THREADS=1 python -c "import numpy; import torch; torch.zeros((1024, 1024), dtype=torch.uint8)"  # [unix]
+        - OMP_NUM_THREADS=2 python -c "import numpy; import torch; torch.zeros((1024, 1024), dtype=torch.uint8)"  # [unix]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
