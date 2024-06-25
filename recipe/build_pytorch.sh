@@ -5,7 +5,8 @@ source $RECIPE_DIR/build.sh
 # of pytorch (see build_libtorch.sh call above) failed
 pushd $SP_DIR/torch
 
-# Remove the vendorered libraries they seem to include
+# Make symlinks for libraries and headers from libtorch into $SP_DIR/torch
+# Also remove the vendorered libraries they seem to include
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/243
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 for f in bin/* lib/* share/* include/*; do
