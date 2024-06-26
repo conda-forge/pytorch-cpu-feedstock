@@ -72,7 +72,7 @@ jobs:
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
     - name: Build on Linux
       if: matrix.os == 'ubuntu'
@@ -126,7 +126,7 @@ jobs:
         ./.scripts/run_osx_build.sh
 
     - name: Install Miniconda for windows
-      uses: conda-incubator/setup-miniconda@v3
+      uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3.0.4
       with:
         miniforge-version: latest
         miniforge-variant: Mambaforge
