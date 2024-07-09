@@ -159,7 +159,7 @@ requirements:
 test:
   commands:
     # libraries
-    {% for each_lib in [ 'libc10', 'libshm', 'libtorch', 'libtorch_cpu', 'libtorch_global_deps'] %}
+    {% for each_lib in [ 'libc10', 'libshm', 'libtorch', 'libtorch_cpu', 'libtorch_global_deps', 'libtorch_python'] %}
     - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux]
     - test -f $PREFIX/lib/{{ each_lib }}.dylib  # [osx]
     {% endfor %}
