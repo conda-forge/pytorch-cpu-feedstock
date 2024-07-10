@@ -2,6 +2,10 @@
 
 set -ex
 
+# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/243
+# https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
+export PACKAGE_TYPE=conda
+
 # remove pyproject.toml to avoid installing deps from pip
 rm -rf pyproject.toml
 
