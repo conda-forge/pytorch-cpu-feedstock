@@ -108,8 +108,8 @@ requirements:
     - ninja
     # Keep libprotobuf here so that a compatibile version
     # of protobuf is installed between build and host
-    - libprotobuf  #[not win]
-    - protobuf     #[not win]
+    - libprotobuf  # [not win]
+    - protobuf     # [not win]
     - make      # [linux]
   host:
     # GPU requirements
@@ -146,8 +146,8 @@ requirements:
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
-    - llvm-openmp    # [osx]
-    - libprotobuf #[not win]
+    - llvm-openmp  # [osx]
+    - libprotobuf  # [not win]
     - sleef
     - typing
     - libuv
@@ -218,8 +218,8 @@ outputs:
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
         # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
-        - libprotobuf #[not win]
-        - protobuf    #[not win]
+        - libprotobuf  # [not win]
+        - protobuf     # [not win]
         - make      # [linux]
       host:
         # GPU requirements
@@ -256,7 +256,7 @@ outputs:
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
         # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
-        - libprotobuf   #[not win]
+        - libprotobuf   # [not win]
         - sleef
         - typing
         - libuv
@@ -314,7 +314,7 @@ outputs:
         - test  # [not win and not (aarch64 and cuda_compiler_version != "None")]
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
-        - tools # [not win and not (aarch64 and cuda_compiler_version != "None")]
+        - tools  # [not win and not (aarch64 and cuda_compiler_version != "None")]
       commands:
         - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win and not (aarch64 and cuda_compiler_version != "None")]
         
