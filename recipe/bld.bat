@@ -37,6 +37,16 @@ if "%PKG_NAME%" == "pytorch" (
   @REM we need to make sure to update that here.
   sed "s/3.12/%PY_VER%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
   sed -i "s/312/%CONDA_PY%/g" build/CMakeCache.txt
+
+  @REM We use a fan-out build to avoid the long rebuild of libtorch
+  @REM However, the location of the numpy headers changes between python 3.8
+  @REM and 3.9+ since numpy 2.0 only exists for 3.9+
+  if "%PY_VER%" == "3.8" (
+    sed -i.bak "s#numpy\\\\_core\\\\include#numpy\\\\core\\\\include#g" build/CMakeCache.txt
+  ) else ( 
+    sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
+  )
+
 ) else (
   @REM For the main script we just build a wheel for so that the C++/CUDA
   @REM parts are built. Then they are reused in each python version.
@@ -53,25 +63,7 @@ if not "%cuda_compiler_version%" == "None" (
     REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
 
     set TORCH_CUDA_ARCH_LIST=3.5;5.0+PTX
-    if "%cuda_compiler_version:~0,3%" == "9.0" (
-        set TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;7.0+PTX
-        set CUDA_TOOLKIT_ROOT_DIR=%CUDA_HOME%
-    ) else if "%cuda_compiler_version:~0,3%" == "9.2" (
-        set TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;6.1;7.0+PTX
-        set CUDA_TOOLKIT_ROOT_DIR=%CUDA_HOME%
-    ) else if "%cuda_compiler_version:~0,3%" == "10." (
-        set TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;6.1;7.0;7.5+PTX
-        set CUDA_TOOLKIT_ROOT_DIR=%CUDA_HOME%
-    ) else if "%cuda_compiler_version:~0,4%" == "11.0" (
-        set TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;6.1;7.0;7.5;8.0+PTX
-        set CUDA_TOOLKIT_ROOT_DIR=%CUDA_HOME%
-    ) else if "%cuda_compiler_version%" == "11.1" (
-        set TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX
-        set CUDA_TOOLKIT_ROOT_DIR=%CUDA_HOME%
-    ) else if "%cuda_compiler_version%" == "11.2" (
-        set TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX
-        set CUDA_TOOLKIT_ROOT_DIR=%CUDA_HOME%
-    ) else if "%cuda_compiler_version%" == "11.8" (
+    if "%cuda_compiler_version%" == "11.8" (
         set TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9+PTX
         set CUDA_TOOLKIT_ROOT_DIR=%CUDA_HOME%
     ) else if "%cuda_compiler_version%" == "12.0" (
@@ -127,9 +119,9 @@ set "libuv_ROOT=%LIBRARY_PREFIX%"
 set "USE_SYSTEM_SLEEF=ON"
 
 @REM Only for debugging
-@REM set "CMAKE_C_COMPILER_LAUNCHER=sccache"
-@REM set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
-@REM set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
+set "CMAKE_C_COMPILER_LAUNCHER=sccache"
+set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
 @REM uncomment to debug cmake build
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
