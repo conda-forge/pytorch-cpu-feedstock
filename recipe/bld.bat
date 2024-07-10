@@ -119,9 +119,9 @@ set "libuv_ROOT=%LIBRARY_PREFIX%"
 set "USE_SYSTEM_SLEEF=ON"
 
 @REM Only for debugging
-set "CMAKE_C_COMPILER_LAUNCHER=sccache"
-set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
-set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
+@REM set "CMAKE_C_COMPILER_LAUNCHER=sccache"
+@REM set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+@REM set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
 @REM uncomment to debug cmake build
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
