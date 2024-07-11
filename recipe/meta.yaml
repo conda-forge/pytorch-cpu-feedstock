@@ -192,7 +192,7 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+        - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         {% if cuda_major >= 12 %}
         - cuda-driver-dev                        # [build_platform != target_platform and linux]
         - cuda-cudart-dev                        # [build_platform != target_platform]
@@ -230,6 +230,7 @@ outputs:
         {% if cuda_major >= 12 %}
         - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
+        - cuda-crt
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
