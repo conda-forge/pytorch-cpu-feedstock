@@ -224,7 +224,6 @@ outputs:
         {% if cuda_major >= 12 %}
         - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
-        - cuda-crt
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
