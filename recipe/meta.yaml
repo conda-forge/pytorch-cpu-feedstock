@@ -1,5 +1,5 @@
 {% set version = "2.3.1" %}
-{% set build = 1 %}
+{% set build = 2 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -142,16 +142,11 @@ requirements:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
   run_constrained:
-    # These constraints ensure conflict between pytorch and
-    # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
-    # built into place.
-    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
-    - pytorch-cpu =={{ version }}  # [cuda_compiler_version == "None"]
-    - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
-    - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
-    - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+    # obsolete compat outputs that have been removed
+    - pytorch-cpu <0.0a0
+    - pytorch-gpu <0.0a0
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
@@ -277,14 +272,9 @@ outputs:
         - __cuda  # [cuda_compiler_version != "None"]
         - libtorch {{ version }}
       run_constrained:
-        # These constraints ensure conflict between pytorch and
-        # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
-        # built into place.
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
-        - pytorch-cpu =={{ version }}  # [cuda_compiler_version == "None"]
-        - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
-        - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
-        - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
+        # obsolete compat outputs that have been removed
+        - pytorch-cpu <0.0a0
+        - pytorch-gpu <0.0a0
 
     test:
       requires:
@@ -317,29 +307,6 @@ outputs:
         # But if users install a newer version of OSX, they will have MPS support
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
         # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
-
-  # 2021/08/01, hmaarrfk
-  # While this seems like a roundabout way of defining the package name
-  # It helps the linter avoid errors on a package not having tests.
-  {% set pytorch_cpu_gpu = "pytorch-cpu" %}   # [cuda_compiler_version == "None"]
-  {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
-  - name: {{ pytorch_cpu_gpu }}
-    build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
-      detect_binary_files_with_prefix: false
-      skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-      # weigh down cpu implementation and give cuda preference
-      track_features:
-        - pytorch-cpu                                      # [cuda_compiler_version == "None"]
-    requirements:
-      run:
-        - {{ pin_subpackage("pytorch", exact=True) }}
-    test:
-      imports:
-        # Throws OSError. See comments in: #224
-        # It may not be resolved until glibc 2.28 images are ready: conda-forge/conda-forge.github.io#1941
-        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
 
 about:
   home: https://pytorch.org/
