@@ -183,7 +183,7 @@ outputs:
       skip: true  # [cuda_compiler_version == "11.0"]
       skip: true  # [cuda_compiler_version == "11.1"]
     script: build_pytorch.sh  # [not win]
-    script: bld_pytorch.bat  # [win]
+    script: build_pytorch.bat  # [win]
     requirements:
       build:
         - python                                 # [build_platform != target_platform]
