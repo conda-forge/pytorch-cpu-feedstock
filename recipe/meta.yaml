@@ -165,6 +165,20 @@ requirements:
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
 
+# these tests are for the libtorch output below, but due to
+# a particularity of conda-build, that output is defined in
+# the global build stage, including tests
+test:
+  commands:
+    # libraries
+    {% for each_lib in [ 'libc10', 'libshm', 'libtorch', 'libtorch_cpu', 'libtorch_global_deps'] %}
+    - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux]
+    - test -f $PREFIX/lib/{{ each_lib }}.dylib  # [osx]
+    {% endfor %}
+    {% for each_lib in ['libc10_cuda', 'libcaffe2_nvrtc', 'libtorch_cuda', 'libtorch_cuda_linalg'] %}
+    - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux and cuda_compiler_version != "None"]
+    {% endfor %}
+
 outputs:
   - name: libtorch
   - name: pytorch
@@ -352,6 +366,7 @@ outputs:
 
 about:
   home: https://pytorch.org/
+  dev_url: https://github.com/pytorch/pytorch
   license: BSD-3-Clause
   license_family: BSD
   license_file:
