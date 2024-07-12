@@ -63,10 +63,6 @@ build:
   skip: true  # [not win or not (cuda_compiler_version == "12.0" or cuda_compiler == "None")]
 
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-  skip: true  # [cuda_compiler_version == "10.2"]
-  skip: true  # [cuda_compiler_version == "11.0"]
-  skip: true  # [cuda_compiler_version == "11.1"]
-  skip: true  # [cuda_compiler_version == "11.2"]
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   # skip: true  # [cuda_compiler_version == "11.8" and aarch64]
@@ -179,9 +175,6 @@ outputs:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-      skip: true  # [cuda_compiler_version == "10.2"]
-      skip: true  # [cuda_compiler_version == "11.0"]
-      skip: true  # [cuda_compiler_version == "11.1"]
     script: build_pytorch.sh  # [not win]
     script: build_pytorch.bat  # [win]
     requirements:
