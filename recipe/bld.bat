@@ -2,14 +2,14 @@
 setlocal enabledelayedexpansion
 
 REM remove pyproject.toml to avoid installing deps from pip
-DEL pyproject.toml
+if EXIST pyproject.toml DEL pyproject.toml
 
 set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 set PYTORCH_BUILD_NUMBER=%PKG_BUILDNUM%
 
 REM I don't know where this folder comes from, but it's interfering with the build in osx-64
-RD /S /Q %PREFIX%\git
+if EXIST %PREFIX%\git RD /S /Q %PREFIX%\git
 
 @REM Setup BLAS
 if "%blas_impl%" == "generic" (
@@ -130,6 +130,18 @@ set "BUILD_CUSTOM_PROTOBUF=ON"
 
 @REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
 set "USE_OPENMP=0"
+
+@REM The activation script for cuda-nvcc doesnt add the CUDA_CFLAGS on windows. 
+@REM Therefor we do this manually here. See:
+@REM https://github.com/conda-forge/cuda-nvcc-feedstock/issues/47
+echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
+set "CUDA_CFLAGS=-I%PREFIX%/Library/include -I%BUILD_PREFIX%/Library/include"
+set "CFLAGS=%CFLAGS% %CUDA_CFLAGS%"
+set "CPPFLAGS=%CPPFLAGS% %CUDA_CFLAGS%"
+set "CXXFLAGS=%CXXFLAGS% %CUDA_CFLAGS%"
+echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
+echo "CXXFLAGS=%CXXFLAGS%"
+
 
 %PYTHON% -m pip %PIP_ACTION% . --no-deps -vvv --no-clean
 if errorlevel 1 exit /b 1
