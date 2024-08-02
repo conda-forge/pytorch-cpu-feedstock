@@ -224,4 +224,11 @@ if [[ "$PKG_NAME" == "libtorch" ]]; then
 
   # Keep the original backed up to sed later
   cp build/CMakeCache.txt build/CMakeCache.txt.orig
+else
+  # Keep this in ${PREFIX}/lib so that the library can be found by
+  # TorchConfig.cmake.
+  # With upstream non-split build, `libtorch_python.so`
+  # and TorchConfig.cmake are both in ${SP_DIR}/torch/lib and therefore
+  # this is not needed.
+  mv ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
 fi
