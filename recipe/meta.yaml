@@ -53,6 +53,8 @@ build:
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
+  # debug: save resources on cirun
+  skip: true  # [not ((osx and py==312) or (cuda_compiler_version == "12.0" and megabuild))]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
