@@ -51,9 +51,6 @@ if "%PKG_NAME%" == "pytorch" (
   @REM For the main script we just build a wheel for so that the C++/CUDA
   @REM parts are built. Then they are reused in each python version.
   set "PIP_ACTION=wheel"
-
-  @REM Disable building python specific code
-  set "BUILD_PYTON=0"
 )
 
 if not "%cuda_compiler_version%" == "None" (
@@ -118,10 +115,6 @@ set "BUILD_TEST=0"
 set "libuv_ROOT=%LIBRARY_PREFIX%"
 set "USE_SYSTEM_SLEEF=ON"
 
-@REM Only for debugging
-@REM set "CMAKE_C_COMPILER_LAUNCHER=sccache"
-@REM set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
-@REM set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
 @REM uncomment to debug cmake build
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
@@ -142,6 +135,17 @@ set "CXXFLAGS=%CXXFLAGS% %CUDA_CFLAGS%"
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 echo "CXXFLAGS=%CXXFLAGS%"
 
+@REM Configure sccache
+set "CMAKE_C_COMPILER_LAUNCHER=sccache"
+set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
+
+sccache --stop-server
+sccache --start-server
+sccache --zero-stats
+
+@REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
+cmake --build build --target clean
 
 %PYTHON% -m pip %PIP_ACTION% . --no-deps -vvv --no-clean
 if errorlevel 1 exit /b 1
@@ -169,11 +173,11 @@ if "%PKG_NAME%" == "libtorch" (
     pushd torch-*
 
     @REM Move the binaries into the packages site-package directory
-    robocopy /NP /E torch\bin %SP_DIR%\torch\bin\
-    robocopy /NP /E torch\lib %SP_DIR%\torch\lib\
-    robocopy /NP /E torch\share %SP_DIR%\torch\share\
+    robocopy /NP /NFL /NDL /NJH /E torch\bin %SP_DIR%\torch\bin\
+    robocopy /NP /NFL /NDL /NJH /E torch\lib %SP_DIR%\torch\lib\
+    robocopy /NP /NFL /NDL /NJH /E torch\share %SP_DIR%\torch\share\
     for %%f in (ATen caffe2 torch c10) do (
-        robocopy /NP /E torch\include\%%f %SP_DIR%\torch\include\%%f\
+        robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %SP_DIR%\torch\include\%%f\
     )
 
     @REM Remove the python binary file, that is placed in the site-packages 
@@ -186,3 +190,6 @@ if "%PKG_NAME%" == "libtorch" (
     @REM Keep the original backed up to sed later
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
 )
+
+@REM Show the sccache stats.
+sccache --show-stats

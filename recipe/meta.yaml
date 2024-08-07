@@ -107,6 +107,7 @@ requirements:
     - libprotobuf  # [not win]
     - protobuf     # [not win]
     - make      # [linux]
+    - sccache
   host:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
@@ -171,12 +172,33 @@ requirements:
 test:
   commands:
     # libraries
-    {% for each_lib in [ 'libc10', 'libshm', 'libtorch', 'libtorch_cpu', 'libtorch_global_deps'] %}
-    - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux]
-    - test -f $PREFIX/lib/{{ each_lib }}.dylib  # [osx]
+    {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu', 'torch_global_deps'] %}
+    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux]
+    - test -f $PREFIX/lib/lib{{ each_lib }}.dylib                 # [osx]
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
     {% endfor %}
-    {% for each_lib in ['libc10_cuda', 'libcaffe2_nvrtc', 'libtorch_cuda', 'libtorch_cuda_linalg'] %}
-    - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux and cuda_compiler_version != "None"]
+    
+    # Windows specific .LIB files
+    {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu'] %}
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
+    {% endfor %}
+
+    # Windows specific libraries
+    {% for each_lib in [ 'asmjit', 'fbgemm'] %}
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
+    {% endfor %}
+    
+    # Cuda only libraries
+    {% for each_lib in ['c10_cuda', 'caffe2_nvrtc', 'torch_cuda'] %}
+    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win and cuda_compiler_version != "None"]
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win and cuda_compiler_version != "None"]
+    {% endfor %}
+
+    # Linux specific cuda libraries
+    {% for each_lib in [ 'torch_cuda_linalg'] %}
+    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
     {% endfor %}
 
 outputs:
@@ -319,16 +341,16 @@ outputs:
         - torch  # [not (aarch64 and cuda_compiler_version != "None")]
       source_files:
         # Only include the source_files if we are actually going to run the tests.
-        - test  # [not win and not (aarch64 and cuda_compiler_version != "None")]
+        - test
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
-        - tools  # [not win and not (aarch64 and cuda_compiler_version != "None")]
+        - tools
       commands:
         - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win and not (aarch64 and cuda_compiler_version != "None")]
         
         # TODO(baszalmstra): Getting all sorts of test failures, disabling for now, should take a look later.
         # Using `cmd.exe /c` to not fail if this test fails (similar to `|| true`).
-        # - cmd.exe /c python ./test/run_test.py  # [win and cuda_compiler_version == "None"]
+        - cmd.exe /c "python ./test/run_test.py" || ver > nul 2> nul    # [win and cuda_compiler_version == "None"]
 
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
