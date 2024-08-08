@@ -251,6 +251,7 @@ outputs:
         - libprotobuf  # [not win]
         - protobuf     # [not win]
         - make      # [linux]
+        - sccache
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
