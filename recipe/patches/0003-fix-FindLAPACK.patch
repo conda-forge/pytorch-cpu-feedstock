@@ -1,0 +1,12 @@
+diff --git a/cmake/Modules/FindLAPACK.cmake b/cmake/Modules/FindLAPACK.cmake
+index 02367ff..cd85f99 100644
+--- a/cmake/Modules/FindLAPACK.cmake	
++++ b/cmake/Modules/FindLAPACK.cmake
+@@ -26,6 +26,7 @@ ENDIF(LAPACK_FIND_QUIETLY OR NOT LAPACK_FIND_REQUIRED)
+ 
+ # Old search lapack script
+ include(CheckFortranFunctionExists)
++include(CheckFunctionExists)
+ 
+ macro(Check_Lapack_Libraries LIBRARIES _prefix _name _flags _list _blas)
+   # This macro checks for the existence of the combination of fortran libraries

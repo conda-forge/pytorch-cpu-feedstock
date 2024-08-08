@@ -1,5 +1,4 @@
-c_stdlib_version:  # [unix]
-  - 2.17           # [linux]
+c_stdlib_version:  # [osx and x86_64]
   - 10.15          # [osx and x86_64]
 
 MACOSX_SDK_VERSION:         # [osx]
@@ -9,9 +8,15 @@ blas_impl:
   - mkl                         # [x86_64]
   - generic
 
-github_actions_labels:          # [linux]
+github_actions_labels:          # [linux or win]
 - cirun-openstack-gpu-2xlarge   # [linux]
+- cirun-azure-windows-2xlarge   # [win]
 
 megabuild:
 - true      # [linux]
 - false     # [osx]
+- true      # [win]
+
+# zip_keys:
+#   - - github_actions_labels
+#     - blas_impl
