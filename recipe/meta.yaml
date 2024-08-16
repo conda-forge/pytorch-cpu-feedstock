@@ -317,7 +317,7 @@ outputs:
         # But if users install a newer version of OSX, they will have MPS support
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
         # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
-        - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
+        - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}                    # [unix]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
