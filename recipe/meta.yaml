@@ -270,8 +270,8 @@ outputs:
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
         - python
-        - typing_extensions
-        - sympy
+        - typing_extensions >=4.8.0
+        - sympy >=1.13.1
         - filelock
         - jinja2
         - networkx
