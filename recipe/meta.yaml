@@ -99,7 +99,7 @@ requirements:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
     - nccl                            # [cuda_compiler_version != "None"]
-    - magma                           # [cuda_compiler_version != "None"]
+    - magma 2.7.2                     # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
     {% if cuda_major >= 12 %}
     - cuda-driver-dev
@@ -222,7 +222,7 @@ outputs:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None"]
-        - magma                           # [cuda_compiler_version != "None"]
+        - magma 2.7.2                     # [cuda_compiler_version != "None"]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         {% if cuda_major >= 12 %}
         - cuda-driver-dev
