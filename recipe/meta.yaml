@@ -1,5 +1,5 @@
-{% set version = "2.3.1" %}
-{% set build = 1 %}
+{% set version = "2.4.0" %}
+{% set build = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -21,7 +21,7 @@ package:
 
 source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-  sha256: 6c66b59345091907cd62a693b647cee224558e7f15a9b04f4f322f4f6ffeb75b
+  sha256: a890d4342149adbc6c8b116a9afe437fe347527a9ecc0650086cdec82ecdcfb7
   patches:
     # The patch below is probably OK for other versions too, but it is untested with them
     # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
@@ -33,6 +33,10 @@ source:
     # the following patch was transcribed to work wit 2.1.0
     # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
     - patches/0002-Use-new-nvtoolset.patch      # [cuda_compiler_version == "12.0"]
+
+    # Remove in 2.4.1+
+    # https://github.com/pytorch/pytorch/pull/133177
+    - patches/133177_remove_qnnpack.patch
 
 build:
   number: {{ build }}
@@ -266,8 +270,8 @@ outputs:
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
         - python
-        - typing_extensions
-        - sympy
+        - typing_extensions >=4.8.0
+        - sympy >=1.13.1
         - filelock
         - jinja2
         - networkx
@@ -317,6 +321,7 @@ outputs:
         # But if users install a newer version of OSX, they will have MPS support
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
         # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
+        - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
