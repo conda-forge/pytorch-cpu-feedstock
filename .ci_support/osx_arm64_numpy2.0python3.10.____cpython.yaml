@@ -7,7 +7,7 @@ blas_impl:
 c_compiler:
 - clang
 c_compiler_version:
-- '16'
+- '17'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
@@ -23,7 +23,7 @@ cuda_compiler_version:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '16'
+- '17'
 libabseil:
 - '20240116'
 libcblas:
@@ -33,7 +33,7 @@ liblapack:
 libprotobuf:
 - 4.25.3
 llvm_openmp:
-- '16'
+- '17'
 macos_machine:
 - arm64-apple-darwin20.0.0
 megabuild:
