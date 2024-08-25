@@ -53,6 +53,8 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   skip: true  # [win]
+  skip: true  # [not (osx and x86_64)]
+  skip: true  # [py!=310]
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
@@ -92,13 +94,7 @@ requirements:
     - m2-git    # [win]
     - libgomp   # [linux]
     - llvm-openmp    # [osx]
-    # hmaarrfk - 2024/08 -- I feel like the patch added in
-    # https://gitlab.kitware.com/cmake/cmake/-/commit/df551ee53875bbfc888d92c7c523c9b6b2154283#
-    # is wrong for conda-forge....
-    # https://github.com/numpy/numpy/issues/23775
-    # https://gitlab.kitware.com/cmake/cmake/-/blob/v3.30.2/Modules/FindPython/Support.cmake?ref_type=tags#L3906
-    - cmake !=3.30.0,!=3.30.1,!=3.30.2        # [osx and blas_impl == "mkl"]
-    - cmake                                   # [not (osx and blas_impl == "mkl")]
+    - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
     # of protobuf is installed between build and host
@@ -221,13 +217,7 @@ outputs:
         - m2-git    # [win]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        # hmaarrfk - 2024/08 -- I feel like the patch added in
-        # https://gitlab.kitware.com/cmake/cmake/-/commit/df551ee53875bbfc888d92c7c523c9b6b2154283#
-        # is wrong for conda-forge....
-        # https://github.com/numpy/numpy/issues/23775
-        # https://gitlab.kitware.com/cmake/cmake/-/blob/v3.30.2/Modules/FindPython/Support.cmake?ref_type=tags#L3906
-        - cmake !=3.30.0,!=3.30.1,!=3.30.2        # [osx and blas_impl == "mkl"]
-        - cmake                                   # [not (osx and blas_impl == "mkl")]
+        - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
