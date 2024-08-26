@@ -12,8 +12,8 @@ rm -rf pyproject.toml
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
-export CMAKE_FIND_DEBUG_MODE=1
-export USE_NUMPY=1
+# export CMAKE_FIND_DEBUG_MODE=1
+# export USE_NUMPY=1
 
 # Force failure if numpy can't be found
 sed -i.bak 's/Python COMPONENTS Interpreter OPTIONAL_COMPONENTS/Python COMPONENTS Interpreter/g' cmake/Dependencies.cmake
