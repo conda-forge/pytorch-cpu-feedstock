@@ -14,6 +14,7 @@ rm -rf pyproject.toml
 
 export CMAKE_FIND_DEBUG_MODE=1
 export USE_NUMPY=1
+export MKL_ENABLE_INSTRUCTIONS=AVX
 
 # Force failure if numpy can't be found
 sed -i.bak 's/Python COMPONENTS Interpreter OPTIONAL_COMPONENTS/Python COMPONENTS Interpreter/g' cmake/Dependencies.cmake
