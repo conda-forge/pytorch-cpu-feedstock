@@ -6,6 +6,11 @@ set -ex
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 export PACKAGE_TYPE=conda
 
+
+# hmaarrfk - Designed for Pytorch 2.4.0
+# Help detect failures in Numpy Early
+sed -i.bak 's/Python COMPONENTS Interpreter OPTIONAL_COMPONENTS/Python COMPONENTS Interpreter/g' cmake/Dependencies.cmake
+
 # remove pyproject.toml to avoid installing deps from pip
 rm -rf pyproject.toml
 
