@@ -26,5 +26,6 @@ github_actions:
 provider:
   linux_64: github_actions
   linux_aarch64: azure
+  linux_ppc64le: azure
   win_64: github_actions
 test: native_and_emulated
