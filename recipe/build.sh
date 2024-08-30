@@ -12,16 +12,16 @@ rm -rf pyproject.toml
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
-# export CMAKE_FIND_DEBUG_MODE=1
-# export USE_NUMPY=1
+export CMAKE_FIND_DEBUG_MODE=1
+export USE_NUMPY=1
 
-# Force failure if numpy can't be found
-sed -i.bak 's/Python COMPONENTS Interpreter OPTIONAL_COMPONENTS/Python COMPONENTS Interpreter/g' cmake/Dependencies.cmake
-
-# Try to delete the problematic lines
-sed -i.bak '/set(ENV{MKL_ENABLE_INSTRUCTIONS}/d' ${BUILD_PREFIX}/share/cmake-3.30/Modules/FindPython/Support.cmake
-# Print the file
-cat ${BUILD_PREFIX}/share/cmake-3.30/Modules/FindPython/Support.cmake
+# # Force failure if numpy can't be found
+# sed -i.bak 's/Python COMPONENTS Interpreter OPTIONAL_COMPONENTS/Python COMPONENTS Interpreter/g' cmake/Dependencies.cmake
+#
+# # Try to delete the problematic lines
+# sed -i.bak '/set(ENV{MKL_ENABLE_INSTRUCTIONS}/d' ${BUILD_PREFIX}/share/cmake-3.30/Modules/FindPython/Support.cmake
+# # Print the file
+# cat ${BUILD_PREFIX}/share/cmake-3.30/Modules/FindPython/Support.cmake
 
 export USE_NUMA=0
 export USE_ITT=0
