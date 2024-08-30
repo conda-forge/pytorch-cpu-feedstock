@@ -23,7 +23,7 @@ cuda_compiler:
 cuda_compiler_version:
 - None
 cudnn:
-- '8'
+- '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -50,7 +50,6 @@ numpy:
 - '2.0'
 - '2.0'
 - '2.0'
-- '1.22'
 - '2.0'
 pin_run_as_build:
   python:
@@ -60,7 +59,6 @@ python:
 - 3.10.* *_cpython
 - 3.11.* *_cpython
 - 3.12.* *_cpython
-- 3.8.* *_cpython
 - 3.9.* *_cpython
 pytorch:
 - '2.3'
