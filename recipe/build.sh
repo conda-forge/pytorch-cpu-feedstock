@@ -6,6 +6,8 @@ set -ex
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 export PACKAGE_TYPE=conda
 
+export CMAKE_FIND_DEBUG_MODE=1
+export USE_NUMPY=1
 
 # hmaarrfk - Designed for Pytorch 2.4.0
 # Help detect failures in Numpy Early
