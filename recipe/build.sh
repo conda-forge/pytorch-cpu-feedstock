@@ -6,13 +6,13 @@ set -ex
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 export PACKAGE_TYPE=conda
 
-# export CMAKE_FIND_DEBUG_MODE=1
+export CMAKE_FIND_DEBUG_MODE=1
 
 # remove pyproject.toml to avoid installing deps from pip
 rm -rf pyproject.toml
 
 # uncomment to debug cmake build
-export CMAKE_VERBOSE_MAKEFILE=1
+# export CMAKE_VERBOSE_MAKEFILE=1
 
 export USE_NUMA=0
 export USE_ITT=0
