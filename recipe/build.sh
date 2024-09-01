@@ -12,7 +12,7 @@ export PACKAGE_TYPE=conda
 rm -rf pyproject.toml
 
 # uncomment to debug cmake build
-# export CMAKE_VERBOSE_MAKEFILE=1
+export CMAKE_VERBOSE_MAKEFILE=1
 
 export USE_NUMA=0
 export USE_ITT=0
@@ -110,14 +110,6 @@ fi
 if [[ "$PKG_NAME" == "pytorch" ]]; then
   PIP_ACTION=install
   sed "s/3.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
-  # We use a fan-out build to avoid the long rebuild of libtorch
-  # However, the location of the numpy headers changes between python 3.8
-  # and 3.9+ since numpy 2.0 only exists for 3.9+
-  if [[ "$PY_VER" == "3.8" ]]; then
-    sed -i.bak "s#numpy/_core/include#numpy/core/include#g" build/CMakeCache.txt
-  else
-    sed -i.bak "s#numpy/core/include#numpy/_core/include#g" build/CMakeCache.txt
-  fi
 else
   # For the main script we just build a wheel for so that the C++/CUDA
   # parts are built. Then they are reused in each python version.
