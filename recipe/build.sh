@@ -7,11 +7,6 @@ set -ex
 export PACKAGE_TYPE=conda
 
 # export CMAKE_FIND_DEBUG_MODE=1
-export USE_NUMPY=1
-
-# hmaarrfk - Designed for Pytorch 2.4.0
-# Help detect failures in Numpy Early
-sed -i.bak 's/Python COMPONENTS Interpreter OPTIONAL_COMPONENTS/Python 3 COMPONENTS Interpreter/g' cmake/Dependencies.cmake
 
 # remove pyproject.toml to avoid installing deps from pip
 rm -rf pyproject.toml
