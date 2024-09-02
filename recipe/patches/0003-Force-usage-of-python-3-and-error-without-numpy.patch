@@ -1,0 +1,37 @@
+From 3e2745efd746576b51a1428406f05205d84d5208 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Sun, 1 Sep 2024 17:35:40 -0400
+Subject: [PATCH] Force usage of python 3 and error without numpy
+
+---
+ cmake/Dependencies.cmake | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index c4661e39e18..97206b10ca2 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -854,9 +854,9 @@ if(BUILD_PYTHON)
+   if(USE_NUMPY)
+     list(APPEND PYTHON_COMPONENTS NumPy)
+   endif()
+-  find_package(Python COMPONENTS Interpreter OPTIONAL_COMPONENTS ${PYTHON_COMPONENTS})
++  find_package(Python 3 REQUIRED COMPONENTS Interpreter ${PYTHON_COMPONENTS})
+ else()
+-  find_package(Python COMPONENTS Interpreter)
++  find_package(Python 3 REQUIRED COMPONENTS Interpreter)
+ endif()
+ 
+ if(NOT Python_Interpreter_FOUND)
+@@ -873,7 +873,7 @@ if(BUILD_PYTHON)
+   if(Python_Development.Module_FOUND)
+     if(USE_NUMPY)
+       if(NOT Python_NumPy_FOUND)
+-        message(WARNING "NumPy could not be found. Not building with NumPy. Suppress this warning with -DUSE_NUMPY=OFF")
++          message(FATAL_ERROR "NumPy could not be found. Not building with NumPy. Suppress this warning with -DUSE_NUMPY=OFF")
+         caffe2_update_option(USE_NUMPY OFF)
+       else()
+         caffe2_update_option(USE_NUMPY ON)
+-- 
+2.46.0
+
