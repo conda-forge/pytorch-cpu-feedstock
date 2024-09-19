@@ -21,7 +21,7 @@ package:
 
 source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-  sha256: a890d4342149adbc6c8b116a9afe437fe347527a9ecc0650086cdec82ecdcfb7
+  sha256: 39666a43c0c10f5fd46c1a7ca95dc74d3bc39de2678b70066481cbf02e58384f
   patches:
     # The patch below is probably OK for other versions too, but it is untested with them
     # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
