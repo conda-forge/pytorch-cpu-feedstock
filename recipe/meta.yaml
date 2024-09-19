@@ -34,10 +34,6 @@ source:
     # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
     - patches/0002-Use-new-nvtoolset.patch      # [cuda_compiler_version == "12.0"]
 
-    # Remove in 2.4.1+
-    # https://github.com/pytorch/pytorch/pull/133177
-    - patches/133177_remove_qnnpack.patch
-
 build:
   number: {{ build }}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
