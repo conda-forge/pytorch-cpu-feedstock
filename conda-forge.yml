@@ -1,7 +1,5 @@
 azure:
   free_disk_space: true
-  settings_linux:
-    timeoutInMinutes: 1
   settings_osx:
     pool:
       vmImage: macos-12
