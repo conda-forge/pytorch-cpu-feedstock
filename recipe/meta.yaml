@@ -20,24 +20,25 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-  sha256: a890d4342149adbc6c8b116a9afe437fe347527a9ecc0650086cdec82ecdcfb7
-  patches:
-    # The patch below is probably OK for other versions too, but it is untested with them
-    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
-    # https://github.com/pytorch/pytorch/pull/82695/files#diff-8e5cb190cc46be808993381a31fe9c027705d356b6bc0460368c0310ae82b273R61-R66
-    # https://github.com/pytorch/pytorch/pull/108932
-    # cross compiling CUDA also needs to delete the check
-    - patches/0001-Allow-splayed-layouts.patch  # [cuda_compiler_version == "12.0" or (build_platform != target_platform and cuda_compiler_version != "None")]
-    # https://github.com/pytorch/pytorch/issues/101135
-    # the following patch was transcribed to work wit 2.1.0
-    # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
-    - patches/0002-Use-new-nvtoolset.patch      # [cuda_compiler_version == "12.0"]
-    - patches/0003-Force-usage-of-python-3-and-error-without-numpy.patch
+  path: CMakeLists.txt
+  # url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
+  # sha256: a890d4342149adbc6c8b116a9afe437fe347527a9ecc0650086cdec82ecdcfb7
+  # patches:
+  #   # The patch below is probably OK for other versions too, but it is untested with them
+  #   # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
+  #   # https://github.com/pytorch/pytorch/pull/82695/files#diff-8e5cb190cc46be808993381a31fe9c027705d356b6bc0460368c0310ae82b273R61-R66
+  #   # https://github.com/pytorch/pytorch/pull/108932
+  #   # cross compiling CUDA also needs to delete the check
+  #   - patches/0001-Allow-splayed-layouts.patch  # [cuda_compiler_version == "12.0" or (build_platform != target_platform and cuda_compiler_version != "None")]
+  #   # https://github.com/pytorch/pytorch/issues/101135
+  #   # the following patch was transcribed to work wit 2.1.0
+  #   # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
+  #   - patches/0002-Use-new-nvtoolset.patch      # [cuda_compiler_version == "12.0"]
+  #   - patches/0003-Force-usage-of-python-3-and-error-without-numpy.patch
 
-    # Remove in 2.4.1+
-    # https://github.com/pytorch/pytorch/pull/133177
-    - patches/133177_remove_qnnpack.patch
+  #   # Remove in 2.4.1+
+  #   # https://github.com/pytorch/pytorch/pull/133177
+  #   - patches/133177_remove_qnnpack.patch
 
 build:
   number: {{ build }}

@@ -2,6 +2,13 @@
 
 set -ex
 
+mkdir build
+cd build
+cmake ${CMAKE_ARGS} ..
+
+echo it worked
+exit 0
+
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/243
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 export PACKAGE_TYPE=conda
