@@ -37,31 +37,25 @@ liblapack:
 libprotobuf:
 - 4.25.3
 megabuild:
-- 'true'
+- 'false'
 mkl:
 - '2023'
 nccl:
 - '2'
 numpy:
 - '2.0'
-- '2.0'
-- '2.0'
-- '1.22'
-- '2.0'
+orc:
+- 2.0.2
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
 - 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
-- 3.8.* *_cpython
-- 3.9.* *_cpython
 pytorch:
 - '2.3'
 target_platform:
-- linux-64
+- linux-ppc64le
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
