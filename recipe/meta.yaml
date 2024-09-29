@@ -53,6 +53,9 @@ build:
   skip: true  # [win]
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  skip: true  # [py!=310]
+  skip: true  # [osx]
+  skip: true  # [aarch64]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
