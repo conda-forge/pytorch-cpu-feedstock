@@ -4,11 +4,11 @@ set -ex
 
 mkdir build
 cd build
-# Python3_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
-export Python3_NumPy_INCLUDE_DIRS="$(python -c 'import numpy;print(numpy.get_include())')"
+Python3_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
+# export Python3_NumPy_INCLUDE_DIRS="$(python -c 'import numpy;print(numpy.get_include())')"
 
-# Python_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
-export Python_NumPy_INCLUDE_DIRS="$(python -c 'import numpy;print(numpy.get_include())')"
+Python_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
+# export Python_NumPy_INCLUDE_DIRS="$(python -c 'import numpy;print(numpy.get_include())')"
 cmake ${CMAKE_ARGS} ..
 
 echo it worked
