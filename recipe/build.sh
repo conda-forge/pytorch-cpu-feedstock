@@ -4,7 +4,17 @@ set -ex
 
 mkdir build
 cd build
-cmake ${CMAKE_ARGS} -DPython3_NumPy_INCLUDE_DIRS:PATH=$(python -c 'import numpy;print(numpy.get_include())') -DPython_NumPy_INCLUDE_DIRS:PATH=$(python -c 'import numpy;print(numpy.get_include())')  ..
+Python3_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
+Python3_NumPy_INCLUDE_DIRS="$(python -c 'import numpy;print(numpy.get_include())')"
+
+Python_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
+Python_NumPy_INCLUDE_DIRS="$(python -c 'import numpy;print(numpy.get_include())')"
+cmake ${CMAKE_ARGS}                                                \
+    -DPython3_NumPy_INCLUDE_DIRS:PATH=DPython3_NumPy_INCLUDE_DIRS  \
+    -DPython3_NumPy_INCLUDE_DIR:PATH=DPython3_NumPy_INCLUDE_DIR    \
+    -DPython_NumPy_INCLUDE_DIRS:PATH=DPython_NumPy_INCLUDE_DIRS    \
+    -DPython_NumPy_INCLUDE_DIR:PATH=DPython_NumPy_INCLUDE_DIR      \
+    ..
 
 echo it worked
 exit 0
