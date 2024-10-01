@@ -2,9 +2,6 @@ azure:
   free_disk_space: true
   settings_linux:
     timeoutInMinutes: 1
-  settings_osx:
-    pool:
-      vmImage: macos-12
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
@@ -20,12 +17,7 @@ github_actions:
   triggers:
   - push
   - pull_request
-os_version:
-  linux_64: cos7
 provider:
   linux_64: github_actions
   linux_aarch64: azure
-remote_ci_setup:
-- py-lief=0.12.3
-- conda-forge-ci-setup=3
 test: native_and_emulated
