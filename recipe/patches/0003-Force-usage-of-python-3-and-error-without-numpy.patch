@@ -16,10 +16,10 @@ index c4661e39e18..97206b10ca2 100644
      list(APPEND PYTHON_COMPONENTS NumPy)
    endif()
 -  find_package(Python COMPONENTS Interpreter OPTIONAL_COMPONENTS ${PYTHON_COMPONENTS})
-+  find_package(Python 3 REQUIRED COMPONENTS Interpreter ${PYTHON_COMPONENTS})
++  find_package(Python REQUIRED COMPONENTS Interpreter ${PYTHON_COMPONENTS})
  else()
 -  find_package(Python COMPONENTS Interpreter)
-+  find_package(Python 3 REQUIRED COMPONENTS Interpreter)
++  find_package(Python REQUIRED COMPONENTS Interpreter)
  endif()
  
  if(NOT Python_Interpreter_FOUND)
