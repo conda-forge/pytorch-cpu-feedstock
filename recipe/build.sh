@@ -2,29 +2,11 @@
 
 set -ex
 
-mkdir build
-cd build
-Python3_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
-
-# Python3_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
-# export Python3_NumPy_INCLUDE_DIRS="$(python -c 'import numpy;print(numpy.get_include())')"
-
-# Python_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
-# export Python_NumPy_INCLUDE_DIRS="$(python -c 'import numpy;print(numpy.get_include())')"
-cmake ${CMAKE_ARGS} \
-      -DPython3_EXECUTABLE:PATH=$PYTHON \
-      -DPython3_INCLUDE_DIR:PATH=$PREFIX/include/`ls $PREFIX/include | grep "python\|pypy"` \
-      -DPython3_NumPy_INCLUDE_DIR=${Python3_NumPy_INCLUDE_DIR} \
-..
-
-echo it worked
-exit 0
-
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/243
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 export PACKAGE_TYPE=conda
 
-export CMAKE_FIND_DEBUG_MODE=1
+# export CMAKE_FIND_DEBUG_MODE=1
 
 # remove pyproject.toml to avoid installing deps from pip
 rm -rf pyproject.toml
