@@ -5,14 +5,14 @@
 jobs:
 - job: osx
   pool:
-    vmImage: macos-12
+    vmImage: macOS-12
   strategy:
     matrix:
-      osx_64_blas_implgenericnumpy2.0python3.10.____cpython:
-        CONFIG: osx_64_blas_implgenericnumpy2.0python3.10.____cpython
+      osx_64_blas_implgenericpython3.10.____cpython:
+        CONFIG: osx_64_blas_implgenericpython3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmklnumpy2.0python3.10.____cpython:
-        CONFIG: osx_64_blas_implmklnumpy2.0python3.10.____cpython
+      osx_64_blas_implmklpython3.10.____cpython:
+        CONFIG: osx_64_blas_implmklpython3.10.____cpython
         UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
   variables: {}
