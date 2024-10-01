@@ -33,6 +33,8 @@ source:
     # the following patch was transcribed to work wit 2.1.0
     # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
     - patches/0002-Use-new-nvtoolset.patch      # [cuda_compiler_version == "12.0"]
+    - patches/0003-Force-usage-of-python-3-and-error-without-numpy.patch
+    - patches/0004-Help-find-numpy.patch
 
     # Remove in 2.4.1+
     # https://github.com/pytorch/pytorch/pull/133177
