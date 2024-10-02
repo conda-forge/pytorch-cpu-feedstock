@@ -50,10 +50,6 @@ build:
   ignore_run_exports:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
-  # Build 1 and 0 were built without numpy support on aarch, so we are focusing our build
-  # efforts on aarch.
-  # Other platforms will be rebuilt on the next builds.
-  skip: true  # [not aarch64]
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # 2024/04 This build seems to fail due to disk space on the CIs
