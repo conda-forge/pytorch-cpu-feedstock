@@ -50,6 +50,8 @@ build:
   ignore_run_exports:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
+  skip: true  # [not aarch64]
+  skip: true  # [cuda_compiler_version == "None"]
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # 2024/04 This build seems to fail due to disk space on the CIs
@@ -69,7 +71,7 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+    - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     {% if cuda_major >= 12 %}
     - cuda-driver-dev                        # [build_platform != target_platform]
     - cuda-cudart-dev                        # [build_platform != target_platform]
