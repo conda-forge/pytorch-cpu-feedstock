@@ -137,11 +137,11 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export USE_MKLDNN=0
     fi
 elif [[ ${cuda_compiler_version} != "None" ]]; then
-    # if [[ "$target_platform" == "linux-aarch64" ]]; then
-    #     # https://github.com/pytorch/pytorch/pull/121975
-    #     # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/264
-    #     export USE_PRIORITIZED_TEXT_FOR_LD=1
-    # fi
+    if [[ "$target_platform" == "linux-aarch64" ]]; then
+        # https://github.com/pytorch/pytorch/pull/121975
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/264
+        export USE_PRIORITIZED_TEXT_FOR_LD=1
+    fi
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
     # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
