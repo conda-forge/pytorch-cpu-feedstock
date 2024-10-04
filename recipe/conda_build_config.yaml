@@ -14,10 +14,7 @@ c_stdlib_version:                                   # [linux and aarch64]
 docker_image:                                       # [linux and aarch64]
   - quay.io/condaforge/linux-anvil-cos7-x86_64      # [linux and aarch64]
   - quay.io/condaforge/linux-anvil-cuda:11.8        # [linux and aarch64]
-  # TODO: We're using the aarch64-cuda:11.8 image, based on ubi8, only to get a
-  # newer glibc for the CUDA 12 builds. For some reason, aarch64 + CUDA 12 is
-  # expecting GLIBC_2.27.
-  - quay.io/condaforge/linux-anvil-alma-x86_64:8  # [linux and aarch64]
+  - quay.io/condaforge/linux-anvil-alma-x86_64:8    # [linux and aarch64]
 # rest just to make smithy happy
 c_compiler_version:                                 # [linux and aarch64]
   - 13                                              # [linux and aarch64]
