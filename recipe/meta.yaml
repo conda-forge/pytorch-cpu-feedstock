@@ -40,7 +40,7 @@ source:
     # Fix linker script inclusion for aarch64
     # Already merged, can remove on Pytorch 2.4.1+
     # https://github.com/pytorch/pytorch/pull/130370
-    - patches/130370.patch
+    # - patches/130370.patch
 
     # See https://github.com/pytorch/pytorch/pull/137331
     # for status
