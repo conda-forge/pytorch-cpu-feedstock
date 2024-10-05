@@ -66,6 +66,11 @@ build:
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
 
+  # For speed
+  skip: true  # [not linux64]
+  skip: true  # [cuda_compiler_version != "None"]
+  skip: true  # [blas_impl == "mkl"]
+
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
   # We use python to build libtorch as well because it is easier
