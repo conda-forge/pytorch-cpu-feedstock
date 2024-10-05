@@ -380,6 +380,7 @@ about:
 
 extra:
   recipe-maintainers:
+    - jjerphan
     - hmaarrfk
     - sodre
     - benjaminrwilson
