@@ -107,7 +107,7 @@ fi
 
 if [[ "$PKG_NAME" == "pytorch" ]]; then
   PIP_ACTION=install
-  sed "s/3\.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
+  sed "s/3.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
 else
   # For the main script we just build a wheel for so that the C++/CUDA
   # parts are built. Then they are reused in each python version.
