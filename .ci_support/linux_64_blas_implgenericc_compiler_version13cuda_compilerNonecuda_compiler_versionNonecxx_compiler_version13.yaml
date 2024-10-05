@@ -22,8 +22,6 @@ cuda_compiler:
 - None
 cuda_compiler_version:
 - None
-cudnn:
-- '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -44,8 +42,6 @@ megabuild:
 - 'true'
 mkl:
 - '2023'
-nccl:
-- '2'
 numpy:
 - '2.0'
 - '2.0'
