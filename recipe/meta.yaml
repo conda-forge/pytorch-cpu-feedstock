@@ -40,7 +40,7 @@ source:
     # Fix linker script inclusion for aarch64
     # Already merged, can remove on Pytorch 2.4.1+
     # https://github.com/pytorch/pytorch/pull/130370
-    # - patches/130370.patch
+    - patches/130370.patch
 
     # See https://github.com/pytorch/pytorch/pull/137331
     # for status
@@ -65,11 +65,6 @@ build:
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
-
-  # For speed
-  skip: true  # [not linux64]
-  skip: true  # [cuda_compiler_version != "None"]
-  skip: true  # [blas_impl == "mkl"]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
