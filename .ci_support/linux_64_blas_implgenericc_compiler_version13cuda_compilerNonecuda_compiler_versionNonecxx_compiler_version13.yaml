@@ -22,8 +22,6 @@ cuda_compiler:
 - None
 cuda_compiler_version:
 - None
-cudnn:
-- '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -33,27 +31,23 @@ docker_image:
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 libabseil:
-- '20240116'
+- '20240722'
 libcblas:
 - 3.9 *netlib
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- 4.25.3
+- 5.27.5
 megabuild:
 - 'true'
 mkl:
 - '2023'
-nccl:
-- '2'
 numpy:
 - '2.0'
 - '2.0'
 - '2.0'
 - '2'
 - '2.0'
-orc:
-- 2.0.2
 pin_run_as_build:
   python:
     min_pin: x.x
