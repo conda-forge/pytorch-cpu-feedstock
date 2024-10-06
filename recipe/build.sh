@@ -110,6 +110,7 @@ if [[ "$PKG_NAME" == "pytorch" ]]; then
   # Trick Cmake into thinking python hasn't changed
   sed "s/3\.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
   sed -i.bak "s/3;12/${PY_VER%.*};${PY_VER#*.}/g" build/CMakeCache.txt
+  sed -i.bak "s/cpython-312/cpython-${PY_VER%.*}${PY_VER#*.}/g" build/CMakeCache.txt
 else
   # For the main script we just build a wheel for so that the C++/CUDA
   # parts are built. Then they are reused in each python version.
