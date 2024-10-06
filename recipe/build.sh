@@ -107,15 +107,10 @@ fi
 
 if [[ "$PKG_NAME" == "pytorch" ]]; then
   PIP_ACTION=install
-  sed "s/3.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
-  # We use a fan-out build to avoid the long rebuild of libtorch
-  # However, the location of the numpy headers changes between python 3.8
-  # and 3.9+ since numpy 2.0 only exists for 3.9+
-  if [[ "$PY_VER" == "3.8" ]]; then
-    sed -i.bak "s#numpy/_core/include#numpy/core/include#g" build/CMakeCache.txt
-  else
-    sed -i.bak "s#numpy/core/include#numpy/_core/include#g" build/CMakeCache.txt
-  fi
+  # Trick Cmake into thinking python hasn't changed
+  sed "s/3\.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
+  sed -i.bak "s/3;12/${PY_VER%.*};${PY_VER#*.}/g" build/CMakeCache.txt
+  sed -i.bak "s/cpython-312/cpython-${PY_VER%.*}${PY_VER#*.}/g" build/CMakeCache.txt
 else
   # For the main script we just build a wheel for so that the C++/CUDA
   # parts are built. Then they are reused in each python version.
@@ -137,6 +132,11 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export USE_MKLDNN=0
     fi
 elif [[ ${cuda_compiler_version} != "None" ]]; then
+    if [[ "$target_platform" == "linux-aarch64" ]]; then
+        # https://github.com/pytorch/pytorch/pull/121975
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/264
+        export USE_PRIORITIZED_TEXT_FOR_LD=1
+    fi
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
     # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
