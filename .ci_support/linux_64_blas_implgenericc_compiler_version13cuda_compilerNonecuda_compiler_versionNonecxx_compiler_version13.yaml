@@ -12,10 +12,7 @@ cdt_name:
 - cos7
 channel_sources:
 - conda-forge
-- conda-forge
-- conda-forge
 - conda-forge/label/python_rc,conda-forge
-- conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -28,8 +25,6 @@ cxx_compiler_version:
 - '13'
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
-github_actions_labels:
-- cirun-openstack-gpu-2xlarge
 libabseil:
 - '20240722'
 libcblas:
@@ -42,24 +37,6 @@ megabuild:
 - 'true'
 mkl:
 - '2023'
-numpy:
-- '2.0'
-- '2.0'
-- '2.0'
-- '2'
-- '2.0'
-pin_run_as_build:
-  python:
-    min_pin: x.x
-    max_pin: x.x
-python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
-- 3.13.* *_cp313
-- 3.9.* *_cpython
-pytorch:
-- '2.4'
 target_platform:
 - linux-64
 zip_keys:
@@ -70,6 +47,3 @@ zip_keys:
   - cuda_compiler
   - cuda_compiler_version
   - docker_image
-- - python
-  - numpy
-  - channel_sources
