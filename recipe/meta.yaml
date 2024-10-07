@@ -67,9 +67,10 @@ build:
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
 
   # skip things for speed
-  skip: true  # [not linux64]
-  skip: true  # [cuda_compiler_version != "None"]
-  skip: true  # [blas_impl == "mkl"]
+  # skip: true  # [not linux64]
+  # skip: true  # [cuda_compiler_version != "None"]
+  # skip: true  # [blas_impl == "mkl"]
+  skip: true  # [py!=311]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
@@ -196,6 +197,7 @@ outputs:
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
       skip: true  # [win]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
+      skip: true  # [py!=311]
 
     script: build_pytorch.sh   # [unix]
     script: build_pytorch.bat  # [win]
