@@ -8,8 +8,24 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13:
-        CONFIG: linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13
+      ? linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2.0python3.10.____cpython
+      : CONFIG: linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2.0python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2.0python3.11.____cpython
+      : CONFIG: linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2.0python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2.0python3.12.____cpython
+      : CONFIG: linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2.0python3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2.0python3.9.____cpython
+      : CONFIG: linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2.0python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2python3.13.____cp313
+      : CONFIG: linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13numpy2python3.13.____cp313
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
   timeoutInMinutes: 360

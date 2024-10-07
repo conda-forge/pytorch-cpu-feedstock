@@ -12,7 +12,6 @@ cdt_name:
 - cos7
 channel_sources:
 - conda-forge
-- conda-forge/label/python_rc,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -34,9 +33,19 @@ liblapack:
 libprotobuf:
 - 5.27.5
 megabuild:
-- 'true'
+- 'false'
 mkl:
 - '2023'
+numpy:
+- '2.0'
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+python:
+- 3.12.* *_cpython
+pytorch:
+- '2.4'
 target_platform:
 - linux-64
 zip_keys:
@@ -47,3 +56,6 @@ zip_keys:
   - cuda_compiler
   - cuda_compiler_version
   - docker_image
+- - python
+  - numpy
+  - channel_sources
