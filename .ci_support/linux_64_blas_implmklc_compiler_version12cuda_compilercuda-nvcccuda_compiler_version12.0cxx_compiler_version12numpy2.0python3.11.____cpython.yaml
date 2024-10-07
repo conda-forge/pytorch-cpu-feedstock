@@ -1,9 +1,9 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - gcc
 c_compiler_version:
-- '13'
+- '12'
 c_stdlib:
 - sysroot
 c_stdlib_version:
@@ -15,13 +15,15 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.0'
+cudnn:
+- '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '13'
+- '12'
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
 libabseil:
@@ -36,14 +38,18 @@ megabuild:
 - 'false'
 mkl:
 - '2023'
+nccl:
+- '2'
 numpy:
 - '2.0'
+orc:
+- 2.0.2
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.12.* *_cpython
+- 3.11.* *_cpython
 pytorch:
 - '2.4'
 target_platform:

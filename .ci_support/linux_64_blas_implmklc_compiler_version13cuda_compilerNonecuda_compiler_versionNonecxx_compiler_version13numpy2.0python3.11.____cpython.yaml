@@ -1,5 +1,5 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - gcc
 c_compiler_version:
@@ -11,13 +11,15 @@ c_stdlib_version:
 cdt_name:
 - cos7
 channel_sources:
-- conda-forge/label/python_rc,conda-forge
+- conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
 - None
 cuda_compiler_version:
 - None
+cudnn:
+- '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -36,14 +38,18 @@ megabuild:
 - 'false'
 mkl:
 - '2023'
-numpy:
+nccl:
 - '2'
+numpy:
+- '2.0'
+orc:
+- 2.0.2
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.13.* *_cp313
+- 3.11.* *_cpython
 pytorch:
 - '2.4'
 target_platform:
