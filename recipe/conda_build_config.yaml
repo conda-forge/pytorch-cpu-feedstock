@@ -50,5 +50,6 @@ blas_impl:
 # - cirun-openstack-gpu-2xlarge   # [linux]
 
 megabuild:
-- true      # [linux]
-- false     # [osx]
+  - false
+# - true      # [linux]
+# - false     # [osx]
