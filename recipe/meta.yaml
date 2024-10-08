@@ -68,9 +68,9 @@ build:
 
   # skip things for speed
   # skip: true  # [not linux64]
-  # skip: true  # [cuda_compiler_version != "None"]
+  skip: true  # [cuda_compiler_version != "None"]
   # skip: true  # [blas_impl == "mkl"]
-  skip: true  # [py!=311]
+  skip: true  # [py!=311 and osx]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
