@@ -191,7 +191,6 @@ outputs:
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
       skip: true  # [win]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-      skip: true  # [py!=311 and osx]
 
     script: build_pytorch.sh   # [unix]
     script: build_pytorch.bat  # [win]
