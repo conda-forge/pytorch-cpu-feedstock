@@ -1,5 +1,7 @@
 azure:
   free_disk_space: true
+  settings_linux:
+    timeoutInMinutes: 1
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
@@ -9,13 +11,15 @@ conda_forge_output_validation: true
 github:
   branch_name: main
   tooling_branch_name: main
-# github_actions:
-#   self_hosted: true
-#   timeout_minutes: 720
-#   triggers:
-#   - push
-#   - pull_request
+github_actions:
+  self_hosted: true
+  timeout_minutes: 720
+  triggers:
+  - push
+  - pull_request
+os_version:
+  linux_64: cos7
 provider:
-  # linux_64: github_actions
+  linux_64: github_actions
   linux_aarch64: azure
 test: native_and_emulated
