@@ -34,6 +34,8 @@ cxx_compiler_version:
 - '12'
 docker_image:
 - quay.io/condaforge/linux-anvil-alma-x86_64:8
+github_actions_labels:
+- cirun-openstack-gpu-2xlarge
 libabseil:
 - '20240722'
 libcblas:
