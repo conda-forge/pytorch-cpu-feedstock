@@ -16,10 +16,6 @@ cdt_name:
 - cos7
 channel_sources:
 - conda-forge
-- conda-forge
-- conda-forge
-- conda-forge/label/python_rc,conda-forge
-- conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -37,13 +33,13 @@ docker_image:
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 libabseil:
-- '20240116'
+- '20240722'
 libcblas:
 - 3.9 *netlib
 liblapack:
 - 3.9 *netlib
 libprotobuf:
-- 4.25.3
+- 5.27.5
 megabuild:
 - 'true'
 mkl:
@@ -82,4 +78,3 @@ zip_keys:
   - docker_image
 - - python
   - numpy
-  - channel_sources
