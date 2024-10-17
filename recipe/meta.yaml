@@ -94,6 +94,7 @@ requirements:
     - libcurand-dev                          # [build_platform != target_platform]
     - libcusolver-dev                        # [build_platform != target_platform]
     - libcusparse-dev                        # [build_platform != target_platform]
+    - nvtx-c
     {% endif %}
     # Dec 2020: it seems that git is broken on windows, so we use m2-git
     - patch     # [not win]
@@ -127,6 +128,7 @@ requirements:
     - libcurand-dev
     - libcusolver-dev
     - libcusparse-dev
+    - nvtx-c
     {% endif %}
     # other requirements
     - python 3.12  # [megabuild]
