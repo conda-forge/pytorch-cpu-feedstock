@@ -36,6 +36,7 @@ source:
     - patches/0003-Force-usage-of-python-3-and-error-without-numpy.patch
     # https://github.com/pytorch/pytorch/pull/137084
     - patches/0004-Help-find-numpy.patch
+    - patches/0005-Use-system-nvtx3.patch
 
     # Fix linker script inclusion for aarch64
     # Already merged, can remove on Pytorch 2.4.1+
