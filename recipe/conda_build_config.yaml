@@ -2,7 +2,7 @@ c_stdlib_version:  # [osx and x86_64]
   - 10.15          # [osx and x86_64]
 
 MACOSX_SDK_VERSION:         # [osx]
-  - 12.3                    # [osx]
+  - 13.3                    # [osx]
 
 # Needs higher stdlib for CUDNN9
 # CUDA 12 on aarch needs newer glibc, which requires us to override
