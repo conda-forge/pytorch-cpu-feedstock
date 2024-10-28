@@ -1,7 +1,7 @@
 {% set version = "2.4.1" %}
 # Set the RC number to build release candidates. Set to None otherwise
 {% set rc = None %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
