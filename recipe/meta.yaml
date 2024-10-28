@@ -1,3 +1,4 @@
+# if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.5.1" %}
 {% set build = 9 %}
 
@@ -19,8 +20,14 @@ package:
   version: {{ version }}
 
 source:
+{% if "rc" in version %}
+  git_url: https://github.com/pytorch/pytorch.git
+  git_rev: v{{ version.replace(".rc", "-rc") }}
+{% else %}
+  # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
   sha256: 740eb5fff95e33cfe699bad43be83523f569c7cc7f9c285c2a255416443dd266
+{% endif %}
   patches:
     - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
     # https://github.com/pytorch/pytorch/pull/137084
@@ -56,6 +63,14 @@ build:
   skip: true  # [win]
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
+  # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
+  # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
+{% if "rc" in version %}
+  skip: true  # [not is_rc]
+{% else %}
+  skip: true  # [is_rc]
+{% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
