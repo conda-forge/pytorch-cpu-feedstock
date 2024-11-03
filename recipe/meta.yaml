@@ -31,6 +31,7 @@ source:
     # sympy 1.13.2 was reported to result in test failures on Windows and mac
     # https://github.com/pytorch/pytorch/pull/133235
     - patches/0006-Update-sympy-version.patch
+    - patches/0007-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
     # https://github.com/pytorch/pytorch/pull/137331
     - patches/137331.patch
 
