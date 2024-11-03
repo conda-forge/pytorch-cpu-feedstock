@@ -1,5 +1,5 @@
-{% set version = "2.4.1" %}
-{% set build = 3 %}
+{% set version = "2.5.1" %}
+{% set build = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -21,29 +21,18 @@ package:
 
 source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-  sha256: 39666a43c0c10f5fd46c1a7ca95dc74d3bc39de2678b70066481cbf02e58384f
+  sha256: 740eb5fff95e33cfe699bad43be83523f569c7cc7f9c285c2a255416443dd266
   patches:
-    # The patch below is probably OK for other versions too, but it is untested with them
-    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/203#issuecomment-1797352452
-    # https://github.com/pytorch/pytorch/pull/82695/files#diff-8e5cb190cc46be808993381a31fe9c027705d356b6bc0460368c0310ae82b273R61-R66
-    # https://github.com/pytorch/pytorch/pull/108932
-    # cross compiling CUDA also needs to delete the check
-    - patches/0001-Allow-splayed-layouts.patch  # [cuda_compiler_version == "12.0" or (build_platform != target_platform and cuda_compiler_version != "None")]
-    # https://github.com/pytorch/pytorch/issues/101135
-    # the following patch was transcribed to work wit 2.1.0
-    # https://gist.github.com/andreigh/f78f631e0039f0af410b269acbb0c8dc
-    - patches/0002-Use-new-nvtoolset.patch      # [cuda_compiler_version == "12.0"]
     - patches/0003-Force-usage-of-python-3-and-error-without-numpy.patch
     # https://github.com/pytorch/pytorch/pull/137084
     - patches/0004-Help-find-numpy.patch
-
-    # Fix linker script inclusion for aarch64
-    # Already merged, can remove on Pytorch 2.4.1+
-    # https://github.com/pytorch/pytorch/pull/130370
-    - patches/130370.patch
-
-    # See https://github.com/pytorch/pytorch/pull/137331
-    # for status
+    # https://github.com/pytorch/pytorch/pull/138287
+    - patches/0005-Use-system-nvtx3.patch
+    # sympy 1.13.2 was reported to result in test failures on Windows and mac
+    # https://github.com/pytorch/pytorch/pull/133235
+    - patches/0006-Update-sympy-version.patch
+    - patches/0007-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
+    # https://github.com/pytorch/pytorch/pull/137331
     - patches/137331.patch
 
 build:
@@ -80,6 +69,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+    - nvtx-c                                 # [cuda_compiler_version != "None" and build_platform != target_platform]
     {% if cuda_major >= 12 %}
     - cuda-driver-dev                        # [build_platform != target_platform]
     - cuda-cudart-dev                        # [build_platform != target_platform]
@@ -94,11 +84,11 @@ requirements:
     - libcusparse-dev                        # [build_platform != target_platform]
     {% endif %}
     # Dec 2020: it seems that git is broken on windows, so we use m2-git
-    - patch     # [not win]
     - m2-patch  # [win]
-    - git       # [not win]
     - m2-git    # [win]
-    - libgomp   # [linux]
+    - patch     # [not win]
+    - git       # [not win]
+    - libgomp        # [linux]
     - llvm-openmp    # [osx]
     - cmake
     - ninja
@@ -113,6 +103,7 @@ requirements:
     - nccl                            # [cuda_compiler_version != "None"]
     - magma                           # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+    - nvtx-c                          # [cuda_compiler_version != "None"]
     {% if cuda_major >= 12 %}
     - cuda-driver-dev
     - cuda-cudart-dev
@@ -202,7 +193,8 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+        - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+        - nvtx-c                                 # [cuda_compiler_version != "None" and build_platform != target_platform]
         {% if cuda_major >= 12 %}
         - cuda-driver-dev                        # [build_platform != target_platform]
         - cuda-cudart-dev                        # [build_platform != target_platform]
@@ -236,6 +228,7 @@ outputs:
         - nccl                            # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+        - nvtx-c                          # [cuda_compiler_version != "None"]
         {% if cuda_major >= 12 %}
         - cuda-driver-dev
         - cuda-cudart-dev
@@ -278,8 +271,10 @@ outputs:
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
         - python
-        - typing_extensions >=4.8.0
-        - sympy >=1.13.1
+        - typing_extensions
+        # sympy 1.13.2 was reported to result in test failures on Windows and mac
+        # https://github.com/pytorch/pytorch/pull/133235
+        - sympy >=1.13.1,!=1.13.2
         - filelock
         - jinja2
         - networkx
@@ -288,7 +283,7 @@ outputs:
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
         - libtorch {{ version }}
-        - setuptools  # [py>=312]
+        - setuptools
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
@@ -303,6 +298,7 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - boto3
         - hypothesis
         - pytest
         - tabulate
