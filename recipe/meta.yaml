@@ -32,6 +32,8 @@ source:
     # https://github.com/pytorch/pytorch/pull/133235
     - patches/0006-Update-sympy-version.patch
     - patches/0007-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
+    # https://github.com/pytorch/pytorch/pull/136034
+    - patches/0008-Fix-pickler-error.patch
     # https://github.com/pytorch/pytorch/pull/137331
     - patches/137331.patch
 
