@@ -365,6 +365,7 @@ about:
 
 extra:
   recipe-maintainers:
+    - jeongseok-meta
     - hmaarrfk
     - sodre
     - benjaminrwilson
