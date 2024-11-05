@@ -20,8 +20,8 @@ export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 if [[ "$c_compiler" == "clang" ]]; then
-    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
-    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
+    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument -Wno-error=vla-cxx-extension"
+    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument -Wno-error=vla-cxx-extension"
 else
     export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
     export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
@@ -171,6 +171,13 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
         export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9+PTX"
         export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
     elif [[ ${cuda_compiler_version} == 12.0 ]]; then
+        export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+        # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
+        export CUDA_TOOLKIT_ROOT_DIR="${PREFIX}"
+        if [[ "${target_platform}" != "${build_platform}" ]]; then
+            export CUDA_TOOLKIT_ROOT=${PREFIX}
+        fi
+    elif [[ ${cuda_compiler_version} == 12.6 ]]; then
         export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
         # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
         export CUDA_TOOLKIT_ROOT_DIR="${PREFIX}"
