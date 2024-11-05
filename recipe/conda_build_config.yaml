@@ -42,6 +42,17 @@ cuda_compiler_version:                              # [linux and aarch64]
   - 12.0                                            # [linux and aarch64]
 # end override of monster zip
 
+channel_targets:
+  - conda-forge main
+  - conda-forge rc
+rc:
+  - None
+  - rc
+zip_keys:
+  -
+    - channel_targets
+    - rc
+
 blas_impl:
   - mkl                         # [x86_64]
   - generic

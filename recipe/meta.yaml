@@ -1,6 +1,5 @@
+# Set to e.g. x.y.z-rc5 for a release candidate
 {% set version = "2.4.1" %}
-# Set the RC number to build release candidates. Set to None otherwise
-{% set rc = None %}
 {% set build = 4 %}
 
 {% if cuda_compiler_version != "None" %}
@@ -24,7 +23,7 @@ package:
 source:
 {% if rc != None %}
   git_url: https://github.com/pytorch/pytorch.git
-  git_rev: v{{ version }}-rc{{ rc }}
+  git_rev: v{{ version }}
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
@@ -73,6 +72,8 @@ build:
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
+  skip: true  # [rc == None and "rc" in version]
+  skip: true  # [rc == rc and "rc" not in version]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
