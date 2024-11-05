@@ -39,7 +39,7 @@ libprotobuf:
 megabuild:
 - 'true'
 mkl:
-- '2023'
+- '2024'
 nccl:
 - '2'
 numpy:
