@@ -63,8 +63,11 @@ build:
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
-  skip: true  # [rc == None and "rc" in version]
-  skip: true  # [rc == rc and "rc" not in version]
+{% if "rc" in version %}
+  skip: true  # [rc == "None"]
+{% else %}
+  skip: true  # [rc == "rc"]
+{% endif %}
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
