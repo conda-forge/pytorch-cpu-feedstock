@@ -1,13 +1,13 @@
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - gcc
 c_compiler_version:
-- '12'
+- '13'
 c_stdlib:
 - sysroot
 c_stdlib_version:
-- '2.28'
+- '2.17'
 cdt_name:
 - cos7
 channel_sources:
@@ -15,17 +15,17 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- cuda-nvcc
+- None
 cuda_compiler_version:
-- '12.6'
+- None
 cudnn:
 - '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '12'
+- '13'
 docker_image:
-- quay.io/condaforge/linux-anvil-alma-x86_64:8
+- quay.io/condaforge/linux-anvil-cos7-x86_64
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 libabseil:
@@ -62,6 +62,8 @@ python:
 - 3.9.* *_cpython
 pytorch:
 - '2.4'
+rc:
+- None
 target_platform:
 - linux-64
 zip_keys:
@@ -72,5 +74,7 @@ zip_keys:
   - cuda_compiler
   - cuda_compiler_version
   - docker_image
+- - channel_targets
+  - rc
 - - python
   - numpy

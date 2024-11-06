@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 MACOSX_SDK_VERSION:
 - '13.3'
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - clang
 c_compiler_version:
@@ -52,10 +52,14 @@ python:
 - 3.9.* *_cpython
 pytorch:
 - '2.4'
+rc:
+- None
 target_platform:
 - osx-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+- - channel_targets
+  - rc
 - - python
   - numpy

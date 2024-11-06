@@ -1,5 +1,5 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - gcc
 c_compiler_version:
@@ -62,6 +62,8 @@ python:
 - 3.9.* *_cpython
 pytorch:
 - '2.4'
+rc:
+- None
 target_platform:
 - linux-64
 zip_keys:
@@ -72,5 +74,7 @@ zip_keys:
   - cuda_compiler
   - cuda_compiler_version
   - docker_image
+- - channel_targets
+  - rc
 - - python
   - numpy

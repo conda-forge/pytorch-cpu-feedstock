@@ -1,29 +1,37 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '10.15'
-MACOSX_SDK_VERSION:
-- '13.3'
+BUILD:
+- aarch64-conda_cos7-linux-gnu
 blas_impl:
 - generic
 c_compiler:
-- clang
+- gcc
 c_compiler_version:
-- '18'
+- '12'
 c_stdlib:
-- macosx_deployment_target
+- sysroot
 c_stdlib_version:
-- '10.15'
+- '2.28'
+cdt_arch:
+- aarch64
+cdt_name:
+- cos7
 channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.6'
+cudnn:
+- '9'
 cxx_compiler:
-- clangxx
+- gxx
 cxx_compiler_version:
-- '18'
+- '12'
+docker_image:
+- quay.io/condaforge/linux-anvil-alma-x86_64:8
+github_actions_labels:
+- cirun-openstack-gpu-2xlarge
 libabseil:
 - '20240722'
 libcblas:
@@ -32,16 +40,18 @@ liblapack:
 - 3.9 *netlib
 libprotobuf:
 - 5.28.2
-llvm_openmp:
-- '18'
-macos_machine:
-- x86_64-apple-darwin13.4.0
 megabuild:
-- 'false'
+- 'true'
 mkl:
 - '2023'
-numpy:
+nccl:
 - '2'
+numpy:
+- '2.0'
+- '2.0'
+- '2.0'
+- '2'
+- '2.0'
 orc:
 - 2.0.2
 pin_run_as_build:
@@ -49,13 +59,26 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
+- 3.10.* *_cpython
+- 3.11.* *_cpython
+- 3.12.* *_cpython
 - 3.13.* *_cp313
+- 3.9.* *_cpython
 pytorch:
 - '2.4'
+rc:
+- None
 target_platform:
-- osx-64
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+  - c_stdlib_version
+  - cdt_name
+  - cuda_compiler
+  - cuda_compiler_version
+  - docker_image
+- - channel_targets
+  - rc
 - - python
   - numpy

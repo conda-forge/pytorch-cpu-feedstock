@@ -52,10 +52,14 @@ python:
 - 3.12.* *_cpython
 pytorch:
 - '2.4'
+rc:
+- None
 target_platform:
 - osx-arm64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+- - channel_targets
+  - rc
 - - python
   - numpy

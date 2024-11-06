@@ -41,7 +41,7 @@ megabuild:
 mkl:
 - '2023'
 numpy:
-- '2'
+- '2.0'
 orc:
 - 2.0.2
 pin_run_as_build:
@@ -49,13 +49,17 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.13.* *_cp313
+- 3.11.* *_cpython
 pytorch:
 - '2.4'
+rc:
+- None
 target_platform:
 - osx-arm64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+- - channel_targets
+  - rc
 - - python
   - numpy
