@@ -1,6 +1,6 @@
 # Set to w.x.y-rcz for a release candidate
 {% set version = "2.5.1" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -383,6 +383,7 @@ about:
 
 extra:
   recipe-maintainers:
+    - jeongseok-meta
     - hmaarrfk
     - sodre
     - benjaminrwilson
