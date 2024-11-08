@@ -139,7 +139,7 @@ requirements:
     - llvm-openmp    # [osx]
     - libabseil
     - libprotobuf
-    - onednn
+    - onednn                # [cuda_compiler_version == "None" and target_platform != "osx-arm64"]
     - sleef
     - typing
     - libuv
@@ -263,7 +263,7 @@ outputs:
         - llvm-openmp    # [osx]
         - libabseil
         - libprotobuf
-        - onednn
+        - onednn                # [cuda_compiler_version == "None" and target_platform != "osx-arm64"]
         - sleef
         - typing
         - libuv
