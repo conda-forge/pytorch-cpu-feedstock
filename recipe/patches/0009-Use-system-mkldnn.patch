@@ -1,0 +1,51 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 98593c2d..94a9d63d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -470,6 +470,7 @@ option(USE_SYSTEM_FXDIV "Use system-provided fxdiv." OFF)
+ option(USE_SYSTEM_BENCHMARK "Use system-provided google benchmark." OFF)
+ option(USE_SYSTEM_ONNX "Use system-provided onnx." OFF)
+ option(USE_SYSTEM_XNNPACK "Use system-provided xnnpack." OFF)
++option(USE_SYSTEM_MKLDNN "Use system-provided mkl-dnn (oneAPI)." OFF)
+ option(USE_GOLD_LINKER "Use ld.gold to link" OFF)
+ if(USE_SYSTEM_LIBS)
+   set(USE_SYSTEM_CPUINFO ON)
+@@ -488,6 +489,7 @@ if(USE_SYSTEM_LIBS)
+   if(USE_NCCL)
+     set(USE_SYSTEM_NCCL ON)
+   endif()
++  set(USE_SYSTEM_MKLDNN ON)
+ endif()
+ 
+ # /Z7 override option When generating debug symbols, CMake default to use the
+diff --git a/cmake/Modules/FindMKLDNN.cmake b/cmake/Modules/FindMKLDNN.cmake
+index 234d361d..5614f071 100644
+--- a/cmake/Modules/FindMKLDNN.cmake
++++ b/cmake/Modules/FindMKLDNN.cmake
+@@ -18,6 +18,18 @@ IF(NOT MKLDNN_FOUND)
+ 
+   SET(IDEEP_ROOT "${PROJECT_SOURCE_DIR}/third_party/ideep")
+   SET(MKLDNN_ROOT "${PROJECT_SOURCE_DIR}/third_party/ideep/mkl-dnn")
++  FIND_PATH(IDEEP_INCLUDE_DIR ideep.hpp PATHS ${IDEEP_ROOT} PATH_SUFFIXES include)
++
++  if(USE_SYSTEM_MKLDNN)
++    FIND_PACKAGE(DNNL REQUIRED)
++    LIST(APPEND MKLDNN_LIBRARIES DNNL::dnnl)
++    LIST(APPEND MKLDNN_INCLUDE_DIR ${IDEEP_INCLUDE_DIR})
++    SET(MKLDNN_FOUND TRUE)
++    # TODO: do we actually need it, or just https://github.com/oneapi-src/oneDNN/pull/2211?
++    ADD_DEFINITIONS(-DDNNL_EXPERIMENTAL_UKERNEL)
++    MESSAGE(STATUS "Found MKL-DNN: SYSTEM")
++    RETURN()
++  endif()
+ 
+   if(USE_XPU) # Build oneDNN GPU library
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+@@ -93,7 +105,6 @@ IF(NOT MKLDNN_FOUND)
+   ENDIF(EXISTS "${MKLDNN_ROOT}/include/oneapi/dnnl/dnnl_ukernel.hpp")
+ 
+   FIND_PACKAGE(BLAS)
+-  FIND_PATH(IDEEP_INCLUDE_DIR ideep.hpp PATHS ${IDEEP_ROOT} PATH_SUFFIXES include)
+   FIND_PATH(MKLDNN_INCLUDE_DIR dnnl.hpp dnnl.h dnnl_ukernel.hpp dnnl_ukernel.h PATHS ${MKLDNN_ROOT} PATH_SUFFIXES include/oneapi/dnnl)
+   IF(NOT MKLDNN_INCLUDE_DIR)
+     MESSAGE("MKLDNN_INCLUDE_DIR not found")
