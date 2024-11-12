@@ -24,6 +24,8 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '18'
+dpcpp_compiler_version:
+- None
 libabseil:
 - '20240722'
 libcblas:
