@@ -346,5 +346,6 @@ Feedstock Maintainers
 * [@beckermr](https://github.com/beckermr/)
 * [@benjaminrwilson](https://github.com/benjaminrwilson/)
 * [@hmaarrfk](https://github.com/hmaarrfk/)
+* [@jeongseok-meta](https://github.com/jeongseok-meta/)
 * [@sodre](https://github.com/sodre/)
 

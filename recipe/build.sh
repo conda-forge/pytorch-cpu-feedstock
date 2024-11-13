@@ -68,6 +68,7 @@ export INSTALL_TEST=0
 export BUILD_TEST=0
 
 export USE_SYSTEM_SLEEF=1
+export USE_SYSTEM_MKLDNN=1
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc

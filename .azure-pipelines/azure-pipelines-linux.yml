@@ -52,7 +52,7 @@ jobs:
         CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-  timeoutInMinutes: 1
+  timeoutInMinutes: 360
   variables: {}
 
   steps:
