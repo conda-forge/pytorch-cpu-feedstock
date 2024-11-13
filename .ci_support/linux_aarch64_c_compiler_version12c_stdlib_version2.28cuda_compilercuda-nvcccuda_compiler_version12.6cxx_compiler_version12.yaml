@@ -15,7 +15,7 @@ cdt_arch:
 cdt_name:
 - cos7
 channel_sources:
-- conda-forge
+- https://mgorny.github.io/conda-channel/mgorny,conda-forge
 channel_targets:
 - conda-forge main
 cuda_compiler:
