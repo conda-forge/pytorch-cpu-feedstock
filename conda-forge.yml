@@ -1,7 +1,7 @@
 azure:
   free_disk_space: true
-  settings_linux:
-    timeoutInMinutes: 1
+#   settings_linux:
+#     timeoutInMinutes: 1
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
