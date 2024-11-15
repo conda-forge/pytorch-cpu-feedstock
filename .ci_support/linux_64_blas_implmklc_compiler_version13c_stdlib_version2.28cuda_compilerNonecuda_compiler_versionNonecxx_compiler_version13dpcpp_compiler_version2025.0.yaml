@@ -32,8 +32,8 @@ github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 libabseil:
 - '20240722'
-libcblas:
-- 3.9 *netlib
+# libcblas:
+# - 3.9 *netlib
 liblapack:
 - 3.9 *netlib
 libprotobuf:

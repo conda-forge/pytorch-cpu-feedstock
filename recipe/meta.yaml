@@ -136,7 +136,7 @@ requirements:
     - future
     - six
     - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
-    - libcblas * *_mkl      # [blas_impl == "mkl"]
+    # - libcblas * *_mkl      # [blas_impl == "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
     - onemkl-sycl-blas         # [dpcpp_compiler_version != "None"]
@@ -273,7 +273,7 @@ outputs:
         - future
         - six
         - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
-        - libcblas * *_mkl      # [blas_impl == "mkl"]
+        # - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
         - onemkl-sycl-blas         # [dpcpp_compiler_version != "None"]
