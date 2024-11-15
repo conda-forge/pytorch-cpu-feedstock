@@ -36,6 +36,9 @@ source:
     - patches/0008-Fix-pickler-error.patch
     # https://github.com/pytorch/pytorch/pull/137331
     - patches/137331.patch
+    # Updated cmake should be included with 2.6.0 release
+    # https://github.com/pytorch/pytorch/pull/139258
+    - patches/0009-Update-FindSYCLToolkit.patch
 
 build:
   number: {{ build }}
@@ -76,7 +79,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - nvtx-c                                 # [cuda_compiler_version != "None" and build_platform != target_platform]
-    - {{ compiler('dpcpp') }}                # [dpcpp_compiler_version != "None"]
+    - {{ compiler('dpcpp') }}                # [linux64 and dpcpp_compiler_version != "None"]
     {% if cuda_major >= 12 %}
     - cuda-driver-dev                        # [build_platform != target_platform]
     - cuda-cudart-dev                        # [build_platform != target_platform]
@@ -147,6 +150,7 @@ requirements:
     - onemkl-sycl-sparse       # [dpcpp_compiler_version != "None"]
     - onemkl-sycl-stats        # [dpcpp_compiler_version != "None"]
     - onemkl-sycl-vm           # [dpcpp_compiler_version != "None"]
+    - intel-opencl-rt          # [dpcpp_compiler_version != "None"]
     - libgomp        # [linux and dpcpp_compiler_version == "None"]
     - llvm-openmp    # [osx or dpcpp_compiler_version != "None"]
     - libabseil
@@ -284,6 +288,7 @@ outputs:
         - onemkl-sycl-sparse       # [dpcpp_compiler_version != "None"]
         - onemkl-sycl-stats        # [dpcpp_compiler_version != "None"]
         - onemkl-sycl-vm           # [dpcpp_compiler_version != "None"]
+        - intel-opencl-rt          # [dpcpp_compiler_version != "None"]
         - libgomp        # [linux and dpcpp_compiler_version == "None"]
         - llvm-openmp    # [osx or dpcpp_compiler_version != "None"]
         - libabseil
