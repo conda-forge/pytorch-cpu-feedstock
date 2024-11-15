@@ -36,11 +36,15 @@ source:
     - patches/0008-Fix-pickler-error.patch
     # https://github.com/pytorch/pytorch/pull/137331
     - patches/137331.patch
+    # Updated cmake should be included with 2.6.0 release
+    # https://github.com/pytorch/pytorch/pull/139258
+    - patches/0009-Update-FindSYCLToolkit.patch
 
 build:
   number: {{ build }}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None" and dpcpp_compiler_version == "None"]
+  string: xpu_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [dpcpp_compiler_version != "None"]
   detect_binary_files_with_prefix: false
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -53,9 +57,12 @@ build:
     - numpy *                                # [megabuild]
   skip: true  # [win]
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
+  skip: true  # [dpcpp_compiler_version != "None" and (blas_impl != "mkl" or not linux64)]
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
+  # Prevent compilation using cuda and dpcpp compiler togather. Just a guard.
+  skip: true  # [cuda_compiler_version != "None" and dpcpp_compiler_version != "None"]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
@@ -72,6 +79,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - nvtx-c                                 # [cuda_compiler_version != "None" and build_platform != target_platform]
+    - {{ compiler('dpcpp') }}                # [linux64 and dpcpp_compiler_version != "None"]
     {% if cuda_major >= 12 %}
     - cuda-driver-dev                        # [build_platform != target_platform]
     - cuda-cudart-dev                        # [build_platform != target_platform]
@@ -131,11 +139,20 @@ requirements:
     - future
     - six
     - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
-    - libcblas * *_mkl      # [blas_impl == "mkl"]
+    # - libcblas * *_mkl      # [blas_impl == "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - onemkl-sycl-blas         # [dpcpp_compiler_version != "None"]
+    - onemkl-sycl-datafitting  # [dpcpp_compiler_version != "None"]
+    - onemkl-sycl-dft          # [dpcpp_compiler_version != "None"]
+    - onemkl-sycl-lapack       # [dpcpp_compiler_version != "None"]
+    - onemkl-sycl-rng          # [dpcpp_compiler_version != "None"]
+    - onemkl-sycl-sparse       # [dpcpp_compiler_version != "None"]
+    - onemkl-sycl-stats        # [dpcpp_compiler_version != "None"]
+    - onemkl-sycl-vm           # [dpcpp_compiler_version != "None"]
+    - intel-opencl-rt          # [dpcpp_compiler_version != "None"]
+    - libgomp        # [linux and dpcpp_compiler_version == "None"]
+    - llvm-openmp    # [osx or dpcpp_compiler_version != "None"]
     - libabseil
     - libprotobuf
     - sleef
@@ -143,6 +160,7 @@ requirements:
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
+    - intel-pti  # [dpcpp_compiler_version != "None"]
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
@@ -177,13 +195,17 @@ outputs:
   - name: pytorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None" and dpcpp_compiler_version == "None"]
+      string: xpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [dpcpp_compiler_version != "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
       skip: true  # [win]
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
+      skip: true  # [dpcpp_compiler_version != "None" and (blas_impl != "mkl" or not linux64)]
+      # Prevent compilation using cuda and dpcpp compiler togather. Just a guard.
+      skip: true  # [cuda_compiler_version != "None" and dpcpp_compiler_version != "None"]
 
     script: build_pytorch.sh   # [unix]
     script: build_pytorch.bat  # [win]
@@ -197,6 +219,7 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         - nvtx-c                                 # [cuda_compiler_version != "None" and build_platform != target_platform]
+        - {{ compiler('dpcpp') }}                # [dpcpp_compiler_version != "None"]
         {% if cuda_major >= 12 %}
         - cuda-driver-dev                        # [build_platform != target_platform]
         - cuda-cudart-dev                        # [build_platform != target_platform]
@@ -254,11 +277,20 @@ outputs:
         - future
         - six
         - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
-        - libcblas * *_mkl      # [blas_impl == "mkl"]
+        # - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - onemkl-sycl-blas         # [dpcpp_compiler_version != "None"]
+        - onemkl-sycl-datafitting  # [dpcpp_compiler_version != "None"]
+        - onemkl-sycl-dft          # [dpcpp_compiler_version != "None"]
+        - onemkl-sycl-lapack       # [dpcpp_compiler_version != "None"]
+        - onemkl-sycl-rng          # [dpcpp_compiler_version != "None"]
+        - onemkl-sycl-sparse       # [dpcpp_compiler_version != "None"]
+        - onemkl-sycl-stats        # [dpcpp_compiler_version != "None"]
+        - onemkl-sycl-vm           # [dpcpp_compiler_version != "None"]
+        - intel-opencl-rt          # [dpcpp_compiler_version != "None"]
+        - libgomp        # [linux and dpcpp_compiler_version == "None"]
+        - llvm-openmp    # [osx or dpcpp_compiler_version != "None"]
         - libabseil
         - libprotobuf
         - sleef
@@ -266,6 +298,7 @@ outputs:
         - libuv
         - pkg-config  # [unix]
         - typing_extensions
+        - intel-pti  # [dpcpp_compiler_version != "None"]
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
         - llvm-openmp    # [osx]

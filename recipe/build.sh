@@ -195,6 +195,28 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_NCCL=0
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
+elif [[ ${dpcpp_compiler_version} != "None" ]]; then
+    export CC=x86_64-conda-linux-gnu-gcc
+    export CXX=x86_64-conda-linux-gnu-g++
+    export USE_XPU=1
+    export USE_MKLDNN=1
+    # export SYCL_ROOT=$BUILD_PREFIX
+    export SYCL_ROOT=$PREFIX
+    export INTEL_MKL_DIR=$PREFIX
+    # export INTEL_COMPILER_DIR=$BUILD_PREFIX
+    export INTEL_COMPILER_DIR=$PREFIX
+    # export SYCL_PACKAGE_DIR=$PREFIX
+    export VERBOSE=1
+    # VERBOSE=1 DEBUG=1
+    export USE_DISTRIBUTED=1
+    # USE_CUDA=0
+    # BUILD_TEST=0
+    # USE_FBGEMM=0
+    # USE_NNPACK=0
+    # USE_QNNPACK=0
+    # USE_XNNPACK=0
+    # LD_LIBRARY_PATH=$CONDA_PREFIX/lib
+    export BUILD_CUSTOM_PROTOBUF=0
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
