@@ -60,6 +60,7 @@ for ARG in $CMAKE_ARGS; do
     export ${cmake_arg}
   fi
 done
+CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
@@ -212,7 +213,6 @@ else
     # for CPU builds. Not to be confused with MKL.
     export USE_MKLDNN=1
     export USE_CUDA=0
-    export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
 
 echo '${CXX}'=${CXX}
