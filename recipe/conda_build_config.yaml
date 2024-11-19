@@ -94,7 +94,7 @@ cuda_compiler_version:                              # [linux64]
 
 channel_targets:
   - conda-forge main
-  - conda-forge rc
+  - conda-forge pytorch_rc
 rc:
   - None
   - rc
