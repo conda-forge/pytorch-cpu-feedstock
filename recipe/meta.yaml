@@ -19,7 +19,7 @@
 
 package:
   name: libtorch
-  version: {{ version }}
+  version: {{ version }}{{ version_rc_suffix }
 
 source:
 {% if rc != None %}
