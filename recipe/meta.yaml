@@ -1,6 +1,4 @@
-{% set version = "2.5.1" %}
-# Set to empty if not required, or rc<x> for rc version x
-{% set version_rc_suffix = "rc1" %}
+{% set version = "2.5.1rc1" %}
 {% set build = 3 %}
 
 {% if cuda_compiler_version != "None" %}
@@ -19,12 +17,12 @@
 
 package:
   name: libtorch
-  version: {{ version }}{{ version_rc_suffix }
+  version: {{ version }}
 
 source:
 {% if rc != None %}
   git_url: https://github.com/pytorch/pytorch.git
-  git_rev: v{{ version }}-{{ version_rc_suffix }}
+  git_rev: v{{ version.replace("rc", "-rc") }}
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
@@ -64,7 +62,7 @@ build:
   # 2024/04 This build seems to fail due to disk space on the CIs
   # We can potentially re-enable it at a later time
   skip: true  # [cuda_compiler_version == "11.8" and aarch64]
-{% if version_rc_suffix %}
+{% if "rc" in version %}
   skip: true  # [rc == "None"]
 {% else %}
   skip: true  # [rc == "rc"]
