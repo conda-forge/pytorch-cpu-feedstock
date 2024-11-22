@@ -52,7 +52,6 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   skip: true  # [win]
-  skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
