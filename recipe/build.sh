@@ -142,6 +142,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
     export USE_MKLDNN=OFF
     export USE_CUDA=1
+    export USE_CUFILE=1
     # PyTorch Vendors an old version of FindCUDA
     # https://gitlab.kitware.com/cmake/cmake/-/blame/master/Modules/FindCUDA.cmake#L891
     # They are working on updating it pytorch/pytorch#76082

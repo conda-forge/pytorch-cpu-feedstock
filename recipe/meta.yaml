@@ -1,5 +1,5 @@
 {% set version = "2.5.1" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -36,6 +36,9 @@ source:
     - patches/0008-Fix-pickler-error.patch
     # https://github.com/pytorch/pytorch/pull/137331
     - patches/137331.patch
+    # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
+    # for their PyPI wheel builds
+    - patches/0009-Allow-libcufile-for-conda-builds.patch
 
 build:
   number: {{ build }}
@@ -80,6 +83,7 @@ requirements:
     - cuda-nvml-dev                          # [build_platform != target_platform]
     - cuda-profiler-api                      # [build_platform != target_platform]
     - libcublas-dev                          # [build_platform != target_platform]
+    - libcufile-dev                          # [build_platform != target_platform and linux]
     - libcufft-dev                           # [build_platform != target_platform]
     - libcurand-dev                          # [build_platform != target_platform]
     - libcusolver-dev                        # [build_platform != target_platform]
@@ -114,6 +118,7 @@ requirements:
     - cuda-nvml-dev
     - cuda-profiler-api
     - libcublas-dev
+    - libcufile-dev                   # [linux]
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
@@ -205,6 +210,7 @@ outputs:
         - cuda-nvml-dev                          # [build_platform != target_platform]
         - cuda-profiler-api                      # [build_platform != target_platform]
         - libcublas-dev                          # [build_platform != target_platform]
+        - libcufile-dev                          # [build_platform != target_platform]
         - libcufft-dev                           # [build_platform != target_platform]
         - libcurand-dev                          # [build_platform != target_platform]
         - libcusolver-dev                        # [build_platform != target_platform]
@@ -239,6 +245,7 @@ outputs:
         - cuda-nvml-dev
         - cuda-profiler-api
         - libcublas-dev
+        - libcufile-dev
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
