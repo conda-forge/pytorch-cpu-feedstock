@@ -57,7 +57,6 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   skip: true  # [win]
-  skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
 
