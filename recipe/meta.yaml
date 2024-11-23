@@ -84,10 +84,7 @@ requirements:
     - cuda-nvml-dev                          # [build_platform != target_platform]
     - cuda-profiler-api                      # [build_platform != target_platform]
     - libcublas-dev                          # [build_platform != target_platform]
-    - libcufile-dev                          # [build_platform != target_platform and linux64]
-    {% if cuda_major > 12 or cuda_minor >= 2 %}
-    - libcufile-dev                          # [build_platform != target_platform and aarch64]
-    {% endif %}
+    - libcufile-dev                          # [build_platform != target_platform]
     - libcufft-dev                           # [build_platform != target_platform]
     - libcurand-dev                          # [build_platform != target_platform]
     - libcusolver-dev                        # [build_platform != target_platform]
@@ -122,10 +119,7 @@ requirements:
     - cuda-nvml-dev
     - cuda-profiler-api
     - libcublas-dev
-    - libcufile-dev                   # [linux64]
-    {% if cuda_major > 12 or cuda_minor >= 2 %}
-    - libcufile-dev                   # [aarch64]
-    {% endif %}
+    - libcufile-dev
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
@@ -217,10 +211,7 @@ outputs:
         - cuda-nvml-dev                          # [build_platform != target_platform]
         - cuda-profiler-api                      # [build_platform != target_platform]
         - libcublas-dev                          # [build_platform != target_platform]
-        - libcufile-dev                          # [build_platform != target_platform and linux64]
-        {% if cuda_major > 12 or cuda_minor >= 2 %}
-        - libcufile-dev                          # [build_platform != target_platform and aarch64]
-        {% endif %}
+        - libcufile-dev                          # [build_platform != target_platform]
         - libcufft-dev                           # [build_platform != target_platform]
         - libcurand-dev                          # [build_platform != target_platform]
         - libcusolver-dev                        # [build_platform != target_platform]
@@ -255,10 +246,7 @@ outputs:
         - cuda-nvml-dev
         - cuda-profiler-api
         - libcublas-dev
-        - libcufile-dev                   # [linux64]
-        {% if cuda_major > 12 or cuda_minor >= 2 %}
-        - libcufile-dev                   # [aarch64]
-        {% endif %}
+        - libcufile-dev
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
