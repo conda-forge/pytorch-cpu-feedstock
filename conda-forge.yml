@@ -17,8 +17,6 @@ github_actions:
   triggers:
   - push
   - pull_request
-os_version:
-  linux_64: cos7
 provider:
   linux_64: azure
   linux_aarch64: azure
