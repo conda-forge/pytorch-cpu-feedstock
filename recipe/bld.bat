@@ -7,7 +7,6 @@ set PYTORCH_BUILD_NUMBER=%PKG_BUILDNUM%
 if "%pytorch_variant%" == "gpu" (
     set build_with_cuda=1
     set desired_cuda=%CUDA_VERSION:~0,-1%.%CUDA_VERSION:~-1,1%
-    set USE_CUFILE=1
 ) else (
     set build_with_cuda=
     set USE_CUDA=0
