@@ -17,9 +17,6 @@ github_actions:
   triggers:
   - push
   - pull_request
-os_version:
-  # see https://github.com/conda-forge/conda-smithy/issues/2163
-  linux_aarch64: alma8
 provider:
   linux_64: github_actions
   linux_aarch64: azure
