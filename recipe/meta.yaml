@@ -60,6 +60,8 @@ build:
   skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
   # dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  # debug; we only want docker startup
+  skip: true
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
