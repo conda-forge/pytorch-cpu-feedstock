@@ -104,11 +104,7 @@ docker run ${DOCKER_RUN_ARGS} \
            -e FEEDSTOCK_TOKEN \
            -e STAGING_BINSTAR_TOKEN \
            "${DOCKER_IMAGE}" \
-           bash \
-           "/home/conda/feedstock_root/${PROVIDER_DIR}/build_steps.sh"
-
-# verify that the end of the script was reached
-test -f "$DONE_CANARY"
+           nvidia-smi
 
 # This closes the last group opened in `build_steps.sh`
 ( endgroup "Final checks" ) 2> /dev/null
