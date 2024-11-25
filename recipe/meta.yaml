@@ -57,7 +57,7 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   skip: true  # [win]
-  # dropped due to maintenance effort, see discussion in #177
+  # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
 
 requirements:
