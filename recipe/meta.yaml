@@ -1,4 +1,4 @@
-{% set version = "2.5.1rc1" %}
+{% set version = "2.5.1.rc1" %}
 {% set build = 3 %}
 
 {% if cuda_compiler_version != "None" %}
