@@ -162,6 +162,13 @@ requirements:
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+    # See following link for sysroot consraint addition
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/293#issuecomment-2503611320
+    # 2024/12 hmaarrfk's summary:
+    #   The medium term solution is to add such a constraint to libcufile
+    #   The long term solution is to add such a constraint to all packages
+    #   that depend on a specific sysroot at building.
+    - sysroot_{{ target_platform }} >={{ c_stdlib_version }}
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
