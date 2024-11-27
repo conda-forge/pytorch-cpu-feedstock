@@ -1,3 +1,4 @@
+# if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.5.1.rc1" %}
 {% set build = 3 %}
 
@@ -22,7 +23,7 @@ package:
 source:
 {% if rc != None %}
   git_url: https://github.com/pytorch/pytorch.git
-  git_rev: v{{ version.replace("rc", "-rc") }}
+  git_rev: v{{ version.replace(".rc", "-rc") }}
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
