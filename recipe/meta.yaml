@@ -41,6 +41,8 @@ source:
     # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
     # for their PyPI wheel builds
     - patches/0009-Allow-libcufile-for-conda-builds.patch
+    # conda-specific patch, lets us override CUDA paths
+    - patches/0010-Allow-overriding-CUDA-related-paths.patch
 
 build:
   number: {{ build }}

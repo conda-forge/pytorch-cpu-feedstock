@@ -145,11 +145,24 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_MKLDNN=1
     export USE_CUDA=1
     export USE_CUFILE=1
-    # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
-    export CUDA_TOOLKIT_ROOT_DIR="${PREFIX}"
+    # PyTorch has multiple different bits of logic finding CUDA, override
+    # all of them.
+    export CUDAToolkit_BIN_DIR=${BUILD_PREFIX}/bin
+    export CUDAToolkit_ROOT_DIR=${PREFIX}
     if [[ "${target_platform}" != "${build_platform}" ]]; then
         export CUDA_TOOLKIT_ROOT=${PREFIX}
     fi
+    case ${target_platform} in
+        linux-64)
+            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
+            ;;
+        linux-aarch64)
+            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
+            ;;
+        *)
+            echo "unknown CUDA arch, edit build.sh"
+            exit 1
+    esac
     case ${cuda_compiler_version} in
         12.6)
             export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
