@@ -131,7 +131,6 @@ requirements:
     - libabseil
     - libprotobuf
     - sleef
-    - typing
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
@@ -248,7 +247,6 @@ outputs:
         - libabseil
         - libprotobuf
         - sleef
-        - typing
         - libuv
         - pkg-config  # [unix]
         - typing_extensions
