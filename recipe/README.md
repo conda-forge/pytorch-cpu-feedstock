@@ -89,7 +89,6 @@ of 2024-11-28:
 | sleef     | 3.6+           |        | 3.7         | `third_party/sleef`                 |
 | filelock  |                |        | 3.16.1      | (wheel metadata)                    |
 | fsspec    |                |        | 2024.10.0   | (wheel metadata)                    |
-| future    | not used?      |        | 1.0.0       |                                     |
 | jinja2    |                |        | 3.1.4       | (wheel metadata)                    |
 | networkx  |                |        | 3.4.2       | (wheel metadata)                    |
 | numpy     | (2.0.2 for build) | *   | 2.1.3       | `.ci/pytorch/build.sh`              |

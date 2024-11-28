@@ -120,7 +120,6 @@ requirements:
     - setuptools
     - pyyaml
     - requests
-    - future
     - six
     - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
     - libcblas * *_mkl      # [blas_impl == "mkl"]
@@ -236,7 +235,6 @@ outputs:
         - setuptools
         - pyyaml
         - requests
-        - future
         - six
         - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
         - libcblas * *_mkl      # [blas_impl == "mkl"]
