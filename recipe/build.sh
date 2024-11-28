@@ -12,6 +12,7 @@ rm -rf pyproject.toml
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
+export USE_CUFILE=0
 export USE_NUMA=0
 export USE_ITT=0
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
@@ -59,6 +60,7 @@ for ARG in $CMAKE_ARGS; do
     export ${cmake_arg}
   fi
 done
+CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
@@ -139,8 +141,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     fi
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
-    # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
-    export USE_MKLDNN=OFF
+    # with no NVIDIA GPUs.
+    export USE_MKLDNN=1
     export USE_CUDA=1
     # PyTorch Vendors an old version of FindCUDA
     # https://gitlab.kitware.com/cmake/cmake/-/blame/master/Modules/FindCUDA.cmake#L891
@@ -177,6 +179,10 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
         if [[ "${target_platform}" != "${build_platform}" ]]; then
             export CUDA_TOOLKIT_ROOT=${PREFIX}
         fi
+        if [[ "$target_platform" != "linux-aarch64" ]]; then
+            # 12.0 features cufile on x86_64 only
+            export USE_CUFILE=1
+        fi
     elif [[ ${cuda_compiler_version} == 12.6 ]]; then
         export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
         # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
@@ -184,6 +190,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
         if [[ "${target_platform}" != "${build_platform}" ]]; then
             export CUDA_TOOLKIT_ROOT=${PREFIX}
         fi
+        # 12.6 features cufile on x86_64 and aarch64
+        export USE_CUFILE=1
     else
         echo "unsupported cuda version. edit build_pytorch.sh"
         exit 1
@@ -205,7 +213,6 @@ else
     # for CPU builds. Not to be confused with MKL.
     export USE_MKLDNN=1
     export USE_CUDA=0
-    export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
 
 echo '${CXX}'=${CXX}

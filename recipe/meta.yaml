@@ -1,5 +1,5 @@
 {% set version = "2.5.1" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -11,8 +11,10 @@
 
 {% if cuda_compiler_version in (None, "None", True, False) %}
 {% set cuda_major = 0 %}
+{% set cuda_minor = 0 %}
 {% else %}
 {% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
+{% set cuda_minor = environ.get("cuda_compiler_version", "11.8").split(".")[1] | int %}
 {% endif %}
 
 package:
@@ -36,6 +38,9 @@ source:
     - patches/0008-Fix-pickler-error.patch
     # https://github.com/pytorch/pytorch/pull/137331
     - patches/137331.patch
+    # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
+    # for their PyPI wheel builds
+    - patches/0009-Allow-libcufile-for-conda-builds.patch
 
 build:
   number: {{ build }}
@@ -52,10 +57,8 @@ build:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
   skip: true  # [win]
-  skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-  # 2024/04 This build seems to fail due to disk space on the CIs
-  # We can potentially re-enable it at a later time
-  skip: true  # [cuda_compiler_version == "11.8" and aarch64]
+  # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
+  skip: true  # [cuda_compiler_version == "11.8"]
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
@@ -80,6 +83,7 @@ requirements:
     - cuda-nvml-dev                          # [build_platform != target_platform]
     - cuda-profiler-api                      # [build_platform != target_platform]
     - libcublas-dev                          # [build_platform != target_platform]
+    - libcufile-dev                          # [build_platform != target_platform]
     - libcufft-dev                           # [build_platform != target_platform]
     - libcurand-dev                          # [build_platform != target_platform]
     - libcusolver-dev                        # [build_platform != target_platform]
@@ -114,6 +118,7 @@ requirements:
     - cuda-nvml-dev
     - cuda-profiler-api
     - libcublas-dev
+    - libcufile-dev
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
@@ -157,6 +162,13 @@ requirements:
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+    # See following link for sysroot consraint addition
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/293#issuecomment-2503611320
+    # 2024/12 hmaarrfk's summary:
+    #   The medium term solution is to add such a constraint to libcufile
+    #   The long term solution is to add such a constraint to all packages
+    #   that depend on a specific sysroot at building.
+    - sysroot_{{ target_platform }} >={{ c_stdlib_version }}
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
@@ -205,6 +217,7 @@ outputs:
         - cuda-nvml-dev                          # [build_platform != target_platform]
         - cuda-profiler-api                      # [build_platform != target_platform]
         - libcublas-dev                          # [build_platform != target_platform]
+        - libcufile-dev                          # [build_platform != target_platform]
         - libcufft-dev                           # [build_platform != target_platform]
         - libcurand-dev                          # [build_platform != target_platform]
         - libcusolver-dev                        # [build_platform != target_platform]
@@ -239,6 +252,7 @@ outputs:
         - cuda-nvml-dev
         - cuda-profiler-api
         - libcublas-dev
+        - libcufile-dev
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
