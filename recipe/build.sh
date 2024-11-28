@@ -74,6 +74,9 @@ export USE_SYSTEM_SLEEF=1
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
 
+# prevent six from being downloaded
+> third_party/NNPACK/cmake/DownloadSix.cmake
+
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     # It helps cross compiled builds without emulation support to complete
     # Use BUILD PREFIX protoc instead of the one that is from the host platform
