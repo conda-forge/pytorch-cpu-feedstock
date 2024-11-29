@@ -9,14 +9,6 @@
 {% set build = build + 100 %}
 {% endif %}
 
-{% if cuda_compiler_version in (None, "None", True, False) %}
-{% set cuda_major = 0 %}
-{% set cuda_minor = 0 %}
-{% else %}
-{% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
-{% set cuda_minor = environ.get("cuda_compiler_version", "11.8").split(".")[1] | int %}
-{% endif %}
-
 package:
   name: libtorch
   version: {{ version }}
@@ -97,7 +89,7 @@ requirements:
     - magma                           # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
     - nvtx-c                          # [cuda_compiler_version != "None"]
-    {% if cuda_major >= 12 %}
+    {% if cuda_compiler_version != "None" %}
     - cuda-driver-dev
     - cuda-cudart-dev
     - cuda-nvrtc-dev
@@ -214,7 +206,7 @@ outputs:
         - magma                           # [cuda_compiler_version != "None"]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
-        {% if cuda_major >= 12 %}
+        {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev
         - cuda-cudart-dev
         - cuda-nvrtc-dev
