@@ -32,8 +32,6 @@ liblapack:
 - 3.9 *netlib
 libprotobuf:
 - 5.28.2
-libtorch:
-- '2.4'
 llvm_openmp:
 - '18'
 macos_machine:
@@ -44,6 +42,8 @@ mkl:
 - '2023'
 numpy:
 - '2.0'
+orc:
+- 2.0.3
 pin_run_as_build:
   python:
     min_pin: x.x
