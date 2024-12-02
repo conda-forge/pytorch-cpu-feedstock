@@ -1,5 +1,5 @@
 {% set version = "2.5.1" %}
-{% set build = 4 %}
+{% set build = 5 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -7,14 +7,6 @@
 
 {% if blas_impl == "mkl" %}
 {% set build = build + 100 %}
-{% endif %}
-
-{% if cuda_compiler_version in (None, "None", True, False) %}
-{% set cuda_major = 0 %}
-{% set cuda_minor = 0 %}
-{% else %}
-{% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
-{% set cuda_minor = environ.get("cuda_compiler_version", "11.8").split(".")[1] | int %}
 {% endif %}
 
 package:
@@ -41,6 +33,8 @@ source:
     # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
     # for their PyPI wheel builds
     - patches/0009-Allow-libcufile-for-conda-builds.patch
+    # conda-specific patch, lets us override CUDA paths
+    - patches/0010-Allow-overriding-CUDA-related-paths.patch
 
 build:
   number: {{ build }}
@@ -74,21 +68,6 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - nvtx-c                                 # [cuda_compiler_version != "None" and build_platform != target_platform]
-    {% if cuda_major >= 12 %}
-    - cuda-driver-dev                        # [build_platform != target_platform]
-    - cuda-cudart-dev                        # [build_platform != target_platform]
-    - cuda-nvrtc-dev                         # [build_platform != target_platform]
-    - cuda-nvtx-dev                          # [build_platform != target_platform]
-    - cuda-nvml-dev                          # [build_platform != target_platform]
-    - cuda-profiler-api                      # [build_platform != target_platform]
-    - libcublas-dev                          # [build_platform != target_platform]
-    - libcufile-dev                          # [build_platform != target_platform]
-    - libcufft-dev                           # [build_platform != target_platform]
-    - libcurand-dev                          # [build_platform != target_platform]
-    - libcusolver-dev                        # [build_platform != target_platform]
-    - libcusparse-dev                        # [build_platform != target_platform]
-    {% endif %}
     # Dec 2020: it seems that git is broken on windows, so we use m2-git
     - m2-patch  # [win]
     - m2-git    # [win]
@@ -110,7 +89,7 @@ requirements:
     - magma                           # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
     - nvtx-c                          # [cuda_compiler_version != "None"]
-    {% if cuda_major >= 12 %}
+    {% if cuda_compiler_version != "None" %}
     - cuda-driver-dev
     - cuda-cudart-dev
     - cuda-nvrtc-dev
@@ -133,7 +112,6 @@ requirements:
     - setuptools
     - pyyaml
     - requests
-    - future
     - six
     - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
     - libcblas * *_mkl      # [blas_impl == "mkl"]
@@ -144,7 +122,6 @@ requirements:
     - libabseil
     - libprotobuf
     - sleef
-    - typing
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
@@ -208,21 +185,6 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - nvtx-c                                 # [cuda_compiler_version != "None" and build_platform != target_platform]
-        {% if cuda_major >= 12 %}
-        - cuda-driver-dev                        # [build_platform != target_platform]
-        - cuda-cudart-dev                        # [build_platform != target_platform]
-        - cuda-nvrtc-dev                         # [build_platform != target_platform]
-        - cuda-nvtx-dev                          # [build_platform != target_platform]
-        - cuda-nvml-dev                          # [build_platform != target_platform]
-        - cuda-profiler-api                      # [build_platform != target_platform]
-        - libcublas-dev                          # [build_platform != target_platform]
-        - libcufile-dev                          # [build_platform != target_platform]
-        - libcufft-dev                           # [build_platform != target_platform]
-        - libcurand-dev                          # [build_platform != target_platform]
-        - libcusolver-dev                        # [build_platform != target_platform]
-        - libcusparse-dev                        # [build_platform != target_platform]
-        {% endif %}
         # Dec 2020: it seems that git is broken on windows, so we use m2-git
         - patch     # [not win]
         - m2-patch  # [win]
@@ -244,7 +206,7 @@ outputs:
         - magma                           # [cuda_compiler_version != "None"]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
-        {% if cuda_major >= 12 %}
+        {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev
         - cuda-cudart-dev
         - cuda-nvrtc-dev
@@ -265,7 +227,6 @@ outputs:
         - setuptools
         - pyyaml
         - requests
-        - future
         - six
         - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
         - libcblas * *_mkl      # [blas_impl == "mkl"]
@@ -276,7 +237,6 @@ outputs:
         - libabseil
         - libprotobuf
         - sleef
-        - typing
         - libuv
         - pkg-config  # [unix]
         - typing_extensions
