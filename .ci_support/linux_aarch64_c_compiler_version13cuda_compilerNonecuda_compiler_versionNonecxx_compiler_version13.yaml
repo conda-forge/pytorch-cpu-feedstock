@@ -64,6 +64,9 @@ pytorch:
 - '2.4'
 target_platform:
 - linux-aarch64
+use_magma:
+- 'false'
+- 'true'
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
