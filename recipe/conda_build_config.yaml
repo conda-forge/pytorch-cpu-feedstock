@@ -1,11 +1,4 @@
-# See following link for c_stdlib sysroot constraint addition
-# https://github.com/conda-forge/pytorch-cpu-feedstock/pull/293#issuecomment-2503611320
-# 2024/12 hmaarrfk's summary:
-#   The medium term solution is to add such a constraint to libcufile
-#   The long term solution is to add such a constraint to all packages
-#   that depend on a specific sysroot at building.
 c_stdlib_version:  # [unix]
-  - 2.28           # [linux and aarch64]
   - 10.15          # [osx and x86_64]
 
 MACOSX_SDK_VERSION:         # [osx]
