@@ -12,8 +12,20 @@ jobs:
       : CONFIG: linux_64_blas_implgenericc_compiler_version11c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.8
+      ? linux_64_blas_implgenericc_compiler_version11c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc
+      : CONFIG: linux_64_blas_implgenericc_compiler_version11c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.8
       ? linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
       : CONFIG: linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc
+      : CONFIG: linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-alma-x86_64:8
+      ? linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
+      : CONFIG: linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
       ? linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc
@@ -24,12 +36,28 @@ jobs:
       : CONFIG: linux_64_blas_implgenericc_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implgenericc_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
+      : CONFIG: linux_64_blas_implgenericc_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
       ? linux_64_blas_implmklc_compiler_version11c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc
       : CONFIG: linux_64_blas_implmklc_compiler_version11c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.8
+      ? linux_64_blas_implmklc_compiler_version11c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc
+      : CONFIG: linux_64_blas_implmklc_compiler_version11c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cuda:11.8
       ? linux_64_blas_implmklc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
       : CONFIG: linux_64_blas_implmklc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implmklc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc
+      : CONFIG: linux_64_blas_implmklc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-alma-x86_64:8
+      ? linux_64_blas_implmklc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
+      : CONFIG: linux_64_blas_implmklc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
       ? linux_64_blas_implmklc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc
@@ -40,6 +68,18 @@ jobs:
       : CONFIG: linux_64_blas_implmklc_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_64_blas_implmklc_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
+      : CONFIG: linux_64_blas_implmklc_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_aarch64_c_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
+      : CONFIG: linux_aarch64_c_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-alma-x86_64:8
+      ? linux_aarch64_c_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc
+      : CONFIG: linux_aarch64_c_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-alma-x86_64:8
       ? linux_aarch64_c_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
       : CONFIG: linux_aarch64_c_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc
         UPLOAD_PACKAGES: 'True'
@@ -50,6 +90,10 @@ jobs:
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-alma-x86_64:8
       ? linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
       : CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      ? linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
+      : CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
   timeoutInMinutes: 1
