@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if [[ ( "$PKG_NAME" == "libtorch-split" || "$PKG_NAME" == "pytorch" ) && "$cuda_compiler_version" != "None" ]]; then
-  # we build top-level with use_magma
-  export use_magma=true
-fi
-
 echo "=== Building ${PKG_NAME} (magma: ${use_magma}; py: ${PY_VER}) ==="
 
 set -ex
@@ -118,15 +113,10 @@ else
 fi
 
 if [[ "$PKG_NAME" == "pytorch" ]]; then
-  PIP_ACTION=install
   # Trick Cmake into thinking python hasn't changed
   sed "s/3\.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
   sed -i.bak "s/3;12/${PY_VER%.*};${PY_VER#*.}/g" build/CMakeCache.txt
   sed -i.bak "s/cpython-312/cpython-${PY_VER%.*}${PY_VER#*.}/g" build/CMakeCache.txt
-else
-  # For the main script we just build a wheel for so that the C++/CUDA
-  # parts are built. Then they are reused in each python version.
-  PIP_ACTION=wheel
 fi
 
 # MacOS build is simple, and will not be for CUDA
@@ -188,7 +178,10 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_NCCL=0
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
-    export USE_MAGMA=${use_magma}
+    # Perform the initial build without magma enabled, we'll enable
+    # it for the remaining builds (particularly, to have it enabled
+    # for pytorch).
+    export USE_MAGMA=0
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
@@ -201,46 +194,46 @@ else
     export USE_CUDA=0
 fi
 
-if [[ "${PKG_NAME}" == "libtorch-cuda-linalg" ]]; then
-  sed -i -e "/USE_MAGMA/s:=.*:=${use_magma}:" build/CMakeCache.txt
-fi
-
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
-$PREFIX/bin/python -m pip $PIP_ACTION . --no-deps -vvv --no-clean \
-    | sed "s,${CXX},\$\{CXX\},g" \
-    | sed "s,${PREFIX},\$\{PREFIX\},g"
 
 case ${PKG_NAME} in
   libtorch-split)
-    mkdir -p $SRC_DIR/dist
+    # Call setup.py directly to avoid spending time on unnecessarily
+    # packing and unpacking the wheel.
+    $PREFIX/bin/python setup.py build
+
+    mkdir -p dist-libtorch/include dist-libtorch-cuda-linalg-{magma,nomagma}/lib
+    mv build/lib.*/torch/{bin,lib,share} dist-libtorch/
+    mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} dist-libtorch/include/
+    rm dist-libtorch/lib/libtorch_python.*
+    mv dist-libtorch/lib/libtorch_cuda_linalg.* dist-libtorch-cuda-linalg-nomagma/lib/
+
+    # Now rebuild with magma enabled.
+    sed -i -e "/USE_MAGMA/s:=.*:=1:" build/CMakeCache.txt
+    $PREFIX/bin/python setup.py build
+    mv build/lib.*/torch/lib/libtorch_cuda_linalg.* dist-libtorch-cuda-linalg-magma/lib/
 
     # Keep the original backed up to sed later
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
     ;;
   libtorch)
-    pushd $SRC_DIR/dist
-      wheel unpack ../torch-*.whl
-    popd
-    pushd $SRC_DIR/dist/torch-*
-      mv torch/bin/* ${PREFIX}/bin
-      mv torch/lib/* ${PREFIX}/lib
-      mv torch/share/* ${PREFIX}/share
-      for f in ATen caffe2 tensorpipe torch c10; do
-        mv torch/include/$f ${PREFIX}/include/$f
-      done
-      rm ${PREFIX}/lib/libtorch_python.*
-    popd
+    mv dist-libtorch/bin/* ${PREFIX}/bin/
+    mv dist-libtorch/lib/* ${PREFIX}/lib/
+    mv dist-libtorch/share/* ${PREFIX}/share/
+    mv dist-libtorch/include/* ${PREFIX}/include/
     ;;
   libtorch-cuda-linalg)
-    pushd $SRC_DIR/dist
-      wheel unpack ../torch-*.whl
-    popd
-    pushd $SRC_DIR/dist/torch-*
-      mv torch/lib/libtorch_cuda_linalg.so ${PREFIX}/lib
-    popd
+    if [[ ${use_magma} == true ]]; then
+      mv dist-libtorch-cuda-linalg-magma/lib/* ${PREFIX}/lib/
+    else
+      mv dist-libtorch-cuda-linalg-nomagma/lib/* ${PREFIX}/lib/
+    fi
     ;;
   pytorch)
+    $PREFIX/bin/python -m pip install . --no-deps -vvv --no-clean \
+        | sed "s,${CXX},\$\{CXX\},g" \
+        | sed "s,${PREFIX},\$\{PREFIX\},g"
     # Keep this in ${PREFIX}/lib so that the library can be found by
     # TorchConfig.cmake.
     # With upstream non-split build, `libtorch_python.so`
