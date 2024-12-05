@@ -117,8 +117,8 @@ requirements:
 outputs:
   - name: libtorch-cuda-linalg
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_magma_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [use_magma]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_nomagma_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [not use_magma]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_magma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [use_magma]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_nomagma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [not use_magma]
       skip: true  # [win or cuda_compiler_version == "None"]
       ignore_run_exports_from:
         - python *                               # [megabuild]
