@@ -98,3 +98,86 @@ of 2024-11-28:
 | sympy     | ==1.13.1       | >=1.13.1, !=1.13.2 | 1.13.3 | (wheel metadata)             |
 | typing-extensions | >=4.8.0 |       | 4.12.2      | (wheel metadata)                    |
 | triton    | 3.1.0          | none   | 3.1.0       | (wheel metadata)                    |
+
+
+Maintenance notes
+=================
+
+Packages built by the recipe
+----------------------------
+The recipe currently builds four packages:
+
+1. `libtorch` that installs the common libraries, executables and data files
+   that are independent of selected Python version and are therefore shared
+   by all Python versions.
+
+2. `libtorch-cuda-linalg` that provides the shared `libtorch_cuda_linalg.so`
+   library, in variant linked to `magma` or not, and is built only for
+   GPU-enabled variants.
+
+3. `pytorch` that installs the library and other files for a specific Python
+   version.
+
+4. `pytorch-cpu` or `pytorch-gpu` backwards compatibility metapackage.
+
+These packages can be built in the following variants:
+
+- `cpu` variant that does not use CUDA, or `cuda` variant built using
+  specific CUDA version (`libtorch-cuda-linalg` is built only in `cuda`
+  variants).
+
+- `mkl` variant that uses MKL to provide BLAS/LAPACK, as well as a set
+  of additional functions, and `generic` variant that can use any BLAS/LAPACK
+  provider (created by patching on OpenBLAS support upstream).
+
+Some of the platforms support only a subset of these variants.
+
+The recipe supports a `megabuild` mode that is currently used for Linux
+configurations. In this mode, PyTorch is built for all Python versions
+in a single run. As a result, the shared bits (`libtorch*`) are only built once.
+
+As the `megabuild` mode imposes high disk space requirements on the CI builders,
+it is not used on other platforms currently. For this reason, there are separate
+configurations for every Python version there.
+
+
+The build process
+-----------------
+The upstream build system consists of a heavily customize `setup.py` script,
+based on the setuptools build system that performs some preparations related
+to building C++ code and then calls into CMake to build it (i.e. it's not
+suitable to use CMake directly). The build process can be customized using
+environment variables, some of them processed directly by the setup script,
+others converted into `-D` options for CMake. When looking for available
+options, `setup.py` and `tools/setup_helpers/cmake.py` are the two primary
+files to look at.
+
+Normally, the setup code only runs the `cmake` generate step if `CMakeCache.txt`
+does not exist yet. Therefore, on subsequent calls environment variables do not
+affect the CMake build. It is technically possible to force rerunning it via
+appending `--cmake` option, but that usually causes the build system to consider
+all targets out of date, and therefore rebuild everything from scratch. Instead,
+we are editing `CMakeCache.txt` directly, therefore triggering the build step
+to detect changes and regenerate.
+
+To facilitate split package builds, we perform the build in the following steps:
+
+1. For the top-level rule (`libtorch-split`), we perform the base environment
+   setup and run `setup.py build` to build the libraries and collect the data
+   files without actually installing them. Then we move the files we need
+   into temporary directories for repackaging.
+
+   a. If `megabuild` is enabled, we build against a fixed Python version.
+      Otherwise, we build using the final Python version.
+
+   b. If CUDA support is enabled, we build with `magma` disabled first.
+      Then we copy the resulting library, and rebuild with `magma` enabled.
+      This way, we obtain the two version of the library to repackage.
+
+2. For the `libtorch` and `libtorch-cuda-linalg` packages, we manually install
+   files that were prepared earlier.
+
+3. For the final `pytorch` package(s), we invoke `pip install` to build
+   and install the complete package. Importantly, this reuses previously built
+   targets, so only Python-related bits are rebuilt. In `megabuild` mode,
+   we patch `CMakeCache.txt` to set the correct Python version.
