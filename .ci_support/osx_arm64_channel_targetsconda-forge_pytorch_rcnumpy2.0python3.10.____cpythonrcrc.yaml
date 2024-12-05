@@ -15,7 +15,7 @@ c_stdlib_version:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
 - None
 cuda_compiler_version:
@@ -32,6 +32,8 @@ liblapack:
 - 3.9 *netlib
 libprotobuf:
 - 5.28.2
+libtorch:
+- '2.4'
 llvm_openmp:
 - '18'
 macos_machine:
@@ -42,20 +44,22 @@ mkl:
 - '2023'
 numpy:
 - '2.0'
-orc:
-- 2.0.3
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.12.* *_cpython
+- 3.10.* *_cpython
 pytorch:
 - '2.4'
+rc:
+- rc
 target_platform:
 - osx-arm64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+- - channel_targets
+  - rc
 - - python
   - numpy

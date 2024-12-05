@@ -3,7 +3,7 @@ blas_impl:
 c_compiler:
 - gcc
 c_compiler_version:
-- '13'
+- '12'
 c_stdlib:
 - sysroot
 c_stdlib_version:
@@ -13,17 +13,17 @@ cdt_name:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.6'
 cudnn:
 - '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '13'
+- '12'
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
 github_actions_labels:
@@ -36,6 +36,8 @@ liblapack:
 - 3.9 *netlib
 libprotobuf:
 - 5.28.2
+libtorch:
+- '2.4'
 megabuild:
 - 'true'
 mkl:
@@ -48,8 +50,6 @@ numpy:
 - '2.0'
 - '2'
 - '2.0'
-orc:
-- 2.0.3
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -62,6 +62,8 @@ python:
 - 3.9.* *_cpython
 pytorch:
 - '2.4'
+rc:
+- rc
 target_platform:
 - linux-64
 zip_keys:
@@ -70,5 +72,7 @@ zip_keys:
   - cuda_compiler
   - cuda_compiler_version
   - docker_image
+- - channel_targets
+  - rc
 - - python
   - numpy
