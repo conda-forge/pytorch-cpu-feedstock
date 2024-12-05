@@ -12,6 +12,7 @@ rm -rf pyproject.toml
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
+export USE_CUFILE=0
 export USE_NUMA=0
 export USE_ITT=0
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
@@ -59,6 +60,7 @@ for ARG in $CMAKE_ARGS; do
     export ${cmake_arg}
   fi
 done
+CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
@@ -71,6 +73,9 @@ export USE_SYSTEM_SLEEF=1
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
+
+# prevent six from being downloaded
+> third_party/NNPACK/cmake/DownloadSix.cmake
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     # It helps cross compiled builds without emulation support to complete
@@ -139,55 +144,36 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     fi
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
-    # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
-    export USE_MKLDNN=OFF
+    # with no NVIDIA GPUs.
+    export USE_MKLDNN=1
     export USE_CUDA=1
-    # PyTorch Vendors an old version of FindCUDA
-    # https://gitlab.kitware.com/cmake/cmake/-/blame/master/Modules/FindCUDA.cmake#L891
-    # They are working on updating it pytorch/pytorch#76082
-    # See: https://github.com/conda-forge/pytorch-cpu-feedstock/pull/224#discussion_r1522698939
+    export USE_CUFILE=1
+    # PyTorch has multiple different bits of logic finding CUDA, override
+    # all of them.
+    export CUDAToolkit_BIN_DIR=${BUILD_PREFIX}/bin
+    export CUDAToolkit_ROOT_DIR=${PREFIX}
     if [[ "${target_platform}" != "${build_platform}" ]]; then
-        export CUDA_TOOLKIT_ROOT=${CUDA_HOME}
+        export CUDA_TOOLKIT_ROOT=${PREFIX}
     fi
-    if [[ ${cuda_compiler_version} == 9.0* ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 9.2* ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 10.* ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 11.0* ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 11.1 ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 11.2 ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 11.8 ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 12.0 ]]; then
-        export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
-        # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
-        export CUDA_TOOLKIT_ROOT_DIR="${PREFIX}"
-        if [[ "${target_platform}" != "${build_platform}" ]]; then
-            export CUDA_TOOLKIT_ROOT=${PREFIX}
-        fi
-    elif [[ ${cuda_compiler_version} == 12.6 ]]; then
-        export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
-        # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
-        export CUDA_TOOLKIT_ROOT_DIR="${PREFIX}"
-        if [[ "${target_platform}" != "${build_platform}" ]]; then
-            export CUDA_TOOLKIT_ROOT=${PREFIX}
-        fi
-    else
-        echo "unsupported cuda version. edit build_pytorch.sh"
-        exit 1
-    fi
+    case ${target_platform} in
+        linux-64)
+            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
+            ;;
+        linux-aarch64)
+            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
+            ;;
+        *)
+            echo "unknown CUDA arch, edit build.sh"
+            exit 1
+    esac
+    case ${cuda_compiler_version} in
+        12.6)
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+            ;;
+        *)
+            echo "unsupported cuda version. edit build.sh"
+            exit 1
+    esac
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
     export NCCL_ROOT_DIR=$PREFIX
     export NCCL_INCLUDE_DIR=$PREFIX/include
@@ -205,7 +191,6 @@ else
     # for CPU builds. Not to be confused with MKL.
     export USE_MKLDNN=1
     export USE_CUDA=0
-    export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
 
 echo '${CXX}'=${CXX}

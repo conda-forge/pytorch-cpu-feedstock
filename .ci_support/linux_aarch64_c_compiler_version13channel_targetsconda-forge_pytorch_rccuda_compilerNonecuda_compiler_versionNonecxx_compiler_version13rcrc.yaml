@@ -1,5 +1,5 @@
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - gcc
 c_compiler_version:
@@ -9,7 +9,7 @@ c_stdlib:
 c_stdlib_version:
 - '2.28'
 cdt_name:
-- cos7
+- conda
 channel_sources:
 - conda-forge
 channel_targets:
@@ -25,7 +25,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '13'
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+- quay.io/condaforge/linux-anvil-x86_64:alma9
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 libabseil:
@@ -65,7 +65,7 @@ pytorch:
 rc:
 - rc
 target_platform:
-- linux-64
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version

@@ -9,7 +9,7 @@ c_stdlib:
 c_stdlib_version:
 - '2.17'
 cdt_name:
-- cos7
+- conda
 channel_sources:
 - conda-forge
 channel_targets:
@@ -17,7 +17,7 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.0'
+- '12.6'
 cudnn:
 - '9'
 cxx_compiler:
@@ -25,7 +25,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '12'
 docker_image:
-- quay.io/condaforge/linux-anvil-alma-x86_64:8
+- quay.io/condaforge/linux-anvil-x86_64:alma9
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 libabseil:
@@ -65,7 +65,7 @@ pytorch:
 rc:
 - rc
 target_platform:
-- linux-aarch64
+- linux-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version

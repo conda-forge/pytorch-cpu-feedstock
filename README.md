@@ -29,157 +29,45 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_blas_implgenericc_compiler_version11c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc</td>
+              <td>linux_64_blas_implgenericc_compiler_version12channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version11c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version12channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implgenericc_compiler_version11c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc</td>
+              <td>linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version11c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc</td>
+              <td>linux_64_blas_implmklc_compiler_version12channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version12channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
+              <td>linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc</td>
+              <td>linux_aarch64_c_compiler_version12channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version12channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
+              <td>linux_aarch64_c_compiler_version13channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implgenericc_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implgenericc_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version11c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version11c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version11c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version11c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_c_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_c_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version12c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_c_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_c_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version12c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13channel_targetsconda-forge_pytorch_rccuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13rcrc" alt="variant">
                 </a>
               </td>
             </tr><tr>
