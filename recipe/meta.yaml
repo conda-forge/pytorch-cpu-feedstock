@@ -434,10 +434,12 @@ outputs:
         - pytest
         - tabulate
         - pydot
-        - mock  # [linux]
         - pip
         - expecttest
         - xmlrunner
+        - pytest-flakefinder
+        - pytest-rerunfailures
+        - pytest-xdist
       imports:
         - torch  # [not (aarch64 and cuda_compiler_version != "None")]
       source_files:
