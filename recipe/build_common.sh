@@ -207,12 +207,14 @@ case ${PKG_NAME} in
     mv build/lib.*/torch/{bin,lib,share} dist-libtorch/
     mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} dist-libtorch/include/
     rm dist-libtorch/lib/libtorch_python.*
-    mv dist-libtorch/lib/libtorch_cuda_linalg.* dist-libtorch-cuda-linalg-nomagma/lib/
+    if [[ ${cuda_compiler_version} != "None" ]]; then
+        mv dist-libtorch/lib/libtorch_cuda_linalg.* dist-libtorch-cuda-linalg-nomagma/lib/
 
-    # Now rebuild with magma enabled.
-    sed -i -e "/USE_MAGMA/s:=.*:=1:" build/CMakeCache.txt
-    $PREFIX/bin/python setup.py build
-    mv build/lib.*/torch/lib/libtorch_cuda_linalg.* dist-libtorch-cuda-linalg-magma/lib/
+        # Now rebuild with magma enabled.
+        sed -i -e "/USE_MAGMA/s:=.*:=1:" build/CMakeCache.txt
+        $PREFIX/bin/python setup.py build
+        mv build/lib.*/torch/lib/libtorch_cuda_linalg.* dist-libtorch-cuda-linalg-magma/lib/
+    fi
 
     # Keep the original backed up to sed later
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
