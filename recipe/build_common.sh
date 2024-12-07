@@ -241,7 +241,10 @@ case ${PKG_NAME} in
     # With upstream non-split build, `libtorch_python.so`
     # and TorchConfig.cmake are both in ${SP_DIR}/torch/lib and therefore
     # this is not needed.
-    mv ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
+    #
+    # NB: we are using cp rather than mv, so that the loop below symlinks it
+    # back.
+    cp ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
 
     pushd $SP_DIR/torch
     # Make symlinks for libraries and headers from libtorch into $SP_DIR/torch
