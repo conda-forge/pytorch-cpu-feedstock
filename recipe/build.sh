@@ -2,6 +2,7 @@
 
 set -ex
 
+# This is used to detect if it's in the process of building pytorch
 export IN_PYTORCH_BUILD
 
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/243
