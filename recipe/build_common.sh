@@ -242,6 +242,19 @@ case ${PKG_NAME} in
     # and TorchConfig.cmake are both in ${SP_DIR}/torch/lib and therefore
     # this is not needed.
     mv ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
+
+    pushd $SP_DIR/torch
+    # Make symlinks for libraries and headers from libtorch into $SP_DIR/torch
+    # Also remove the vendorered libraries they seem to include
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/243
+    # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
+    for f in bin/* lib/* share/* include/*; do
+      if [[ -e "$PREFIX/$f" ]]; then
+        rm -rf $f
+        ln -sf $PREFIX/$f $PWD/$f
+      fi
+    done
+    popd
     ;;
   *)
     echo "Unknown package name, edit build.sh"
