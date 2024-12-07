@@ -230,5 +230,8 @@ else
   # With upstream non-split build, `libtorch_python.so`
   # and TorchConfig.cmake are both in ${SP_DIR}/torch/lib and therefore
   # this is not needed.
-  mv ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
+  #
+  # NB: we are using cp rather than mv, so that the loop in build_pytorch.sh
+  # symlinks it back.
+  cp ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
 fi
