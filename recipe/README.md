@@ -130,6 +130,12 @@ These packages can be built in the following variants:
   of additional functions, and `generic` variant that can use any BLAS/LAPACK
   provider (created by patching on OpenBLAS support upstream).
 
+Additionally, `libtorch-cuda-linalg` can be built in `magma` or `nomagma`
+variant. The former links against libmagma, while the latter avoids this
+significant dependency. Both versions support the built-in cuSOLVER backend,
+and the `magma` version normally uses a heuristic to choose between them,
+in order to achieve the best performance for a given operation.
+
 Some of the platforms support only a subset of these variants.
 
 The recipe supports a `megabuild` mode that is currently used for Linux
