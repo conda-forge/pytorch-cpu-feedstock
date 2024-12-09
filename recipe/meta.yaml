@@ -450,8 +450,10 @@ outputs:
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
       commands:
-        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win and not (aarch64 and cuda_compiler_version != "None")]
-        - python ./test/run_test.py  # [win]
+        # the whole test suite takes forever, but we should get a good enough coverage
+        # for potential packaging problems by running a fixed subset
+        - OMP_NUM_THREADS=4 python ./test/run_test.py --core --keep-going --shard 1 5  # [not win and not (aarch64 and cuda_compiler_version != "None")]
+        - python ./test/run_test.py --core --keep-going --shard 1 5  # [win]
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
