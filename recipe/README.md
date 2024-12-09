@@ -83,7 +83,7 @@ of 2024-11-28:
 | magma     | 2.6.1          |        | 2.8.0       | `.ci/docker/common/instal_magma.sh` |
 | libabseil | indirect?      |        | 20240722.0  |                                     |
 | libuv     |                |        | 1.49.2      | (not pinned)                        |
-| mkl       | 2024.2.0       |        | 2024.2.2    | `.ci/docker/common/install_mkl.sh`  |
+| mkl       | 2024.2.0       | <2024  | 2023.2.0    | `.ci/docker/common/install_mkl.sh`  |
 | nccl      | 2.21.5+        |        | 2.23.4.1    | `third_party/nccl/nccl`             |
 | protobuf  | 3.7.0rc2+      |        | 5.28.2      | `third_party/protobuf`              |
 | sleef     | 3.6+           |        | 3.7         | `third_party/sleef`                 |

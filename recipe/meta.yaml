@@ -9,6 +9,8 @@
 {% set build = build + 100 %}
 {% endif %}
 
+{% set mkl = "<2024" %}
+
 package:
   name: libtorch-split
   version: {{ version }}
