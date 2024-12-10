@@ -431,6 +431,7 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - ninja
         - boto3
         - hypothesis
         - pytest
