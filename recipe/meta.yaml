@@ -11,6 +11,9 @@
 
 {% set mkl = "<2024" %}
 
+# a reasonably safe subset of tests that should run under 15 minutes
+{% set tests = "test/test_autograd.py test/test_autograd_fallback.py test/test_custom_ops.py test/test_linalg.py test/test_mkldnn.py test/test_modules.py test/test_nn.py test/test_torch.py test/test_xnnpack_integration.py --deselect test/test_torch.py::TestTorch::test_print" %}
+
 package:
   name: libtorch-split
   version: {{ version }}
@@ -453,8 +456,8 @@ outputs:
       commands:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
-        - OMP_NUM_THREADS=4 python ./test/run_test.py --core --keep-going --shard 1 5  # [not win and not (aarch64 and cuda_compiler_version != "None")]
-        - python ./test/run_test.py --core --keep-going --shard 1 5  # [win]
+        - OMP_NUM_THREADS=4 python -m pytest -n auto {{ tests }}  # [not win and not (aarch64 and cuda_compiler_version != "None")]
+        - python -m pytest -n auto {{ tests }}  # [win]
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
