@@ -108,7 +108,7 @@ fi
 if [[ "$blas_impl" == "generic" ]]; then
     # Fake openblas
     export BLAS=OpenBLAS
-    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB ${PREFIX}/lib/liblapack${SHLIB_EXT} ${PREFIX}/lib/libcblas${SHLIB_EXT} ${PREFIX}/lib/libblas${SHLIB_EXT})#g" cmake/Modules/FindOpenBLAS.cmake
+    export OpenBLAS_HOME=%PREFIX%
 else
     export BLAS=MKL
 fi
@@ -123,6 +123,8 @@ else
   # For the main script we just build a wheel for so that the C++/CUDA
   # parts are built. Then they are reused in each python version.
   PIP_ACTION=wheel
+
+  export BUILD_PYTHON=OFF
 fi
 
 # MacOS build is simple, and will not be for CUDA
@@ -196,12 +198,23 @@ else
     export USE_CUDA=0
 fi
 
+# Configure sccache
+export CMAKE_C_COMPILER_LAUNCHER=sccache
+export CMAKE_CXX_COMPILER_LAUNCHER=sccache
+export CMAKE_CUDA_COMPILER_LAUNCHER=sccache
+
+sccache --stop-server
+sccache --start-server
+sccache --zero-stats
+
+# Execute the build
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
 $PREFIX/bin/python -m pip $PIP_ACTION . --no-deps -vvv --no-clean \
     | sed "s,${CXX},\$\{CXX\},g" \
     | sed "s,${PREFIX},\$\{PREFIX\},g"
 
+# Create split packages
 if [[ "$PKG_NAME" == "libtorch" ]]; then
   mkdir -p $SRC_DIR/dist
   pushd $SRC_DIR/dist
