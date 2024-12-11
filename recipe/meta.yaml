@@ -151,7 +151,7 @@ requirements:
     #   The medium term solution is to add such a constraint to libcufile
     #   The long term solution is to add such a constraint to all packages
     #   that depend on a specific sysroot at building.
-    - sysroot_{{ target_platform }} >={{ c_stdlib_version }}
+    - sysroot_{{ target_platform }} >={{ c_stdlib_version }}  # [not win]
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
