@@ -12,7 +12,8 @@
 {% set mkl = "<2024" %}
 
 # a reasonably safe subset of tests that should run under 15 minutes
-{% set tests = "test/test_autograd.py test/test_autograd_fallback.py test/test_custom_ops.py test/test_linalg.py test/test_mkldnn.py test/test_modules.py test/test_nn.py test/test_torch.py test/test_xnnpack_integration.py --deselect test/test_torch.py::TestTorch::test_print" %}
+# disable hypothesis because it randomly yields health check errors
+{% set tests = "test/test_autograd.py test/test_autograd_fallback.py test/test_custom_ops.py test/test_linalg.py test/test_mkldnn.py test/test_modules.py test/test_nn.py test/test_torch.py test/test_xnnpack_integration.py --deselect test/test_torch.py::TestTorch::test_print -m 'not hypothesis'" %}
 {% set tests_3_13_deselects = "--deselect test/test_custom_ops.py::TestCustomOp::test_data_dependent_compile --deselect test/test_custom_ops.py::TestCustomOp::test_functionalize_error --deselect test/test_custom_ops.py::TestCustomOpAPI::test_compile --deselect test/test_custom_ops.py::TestCustomOpAPI::test_fake -k 'not test_compile_int4_mm and not test_compile_int8_mm'" %}
 
 package:
