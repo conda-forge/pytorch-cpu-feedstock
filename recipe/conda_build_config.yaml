@@ -11,6 +11,17 @@ c_stdlib_version:  # [unix]
 MACOSX_SDK_VERSION:         # [osx]
   - 13.3                    # [osx]
 
+channel_targets:
+  - conda-forge main
+  - conda-forge pytorch_rc
+rc:
+  - None
+  - rc
+zip_keys:
+  -
+    - channel_targets
+    - rc
+
 blas_impl:
   - mkl                         # [x86_64]
   - generic
