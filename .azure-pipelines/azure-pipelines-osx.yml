@@ -8,50 +8,50 @@ jobs:
     vmImage: macOS-13
   strategy:
     matrix:
-      osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.10.____cpythonrcrc:
-        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.10.____cpythonrcrc
+      osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2.0python3.10.____cpythonrcNone:
+        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2.0python3.10.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.11.____cpythonrcrc:
-        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.11.____cpythonrcrc
+      osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2.0python3.11.____cpythonrcNone:
+        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2.0python3.11.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.12.____cpythonrcrc:
-        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.12.____cpythonrcrc
+      osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2.0python3.12.____cpythonrcNone:
+        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2.0python3.12.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.9.____cpythonrcrc:
-        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.9.____cpythonrcrc
+      osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2.0python3.9.____cpythonrcNone:
+        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2.0python3.9.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2python3.13.____cp313rcrc:
-        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcnumpy2python3.13.____cp313rcrc
+      osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2python3.13.____cp313rcNone:
+        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainnumpy2python3.13.____cp313rcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.10.____cpythonrcrc:
-        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.10.____cpythonrcrc
+      osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2.0python3.10.____cpythonrcNone:
+        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2.0python3.10.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.11.____cpythonrcrc:
-        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.11.____cpythonrcrc
+      osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2.0python3.11.____cpythonrcNone:
+        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2.0python3.11.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.12.____cpythonrcrc:
-        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.12.____cpythonrcrc
+      osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2.0python3.12.____cpythonrcNone:
+        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2.0python3.12.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.9.____cpythonrcrc:
-        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2.0python3.9.____cpythonrcrc
+      osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2.0python3.9.____cpythonrcNone:
+        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2.0python3.9.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2python3.13.____cp313rcrc:
-        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcnumpy2python3.13.____cp313rcrc
+      osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2python3.13.____cp313rcNone:
+        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainnumpy2python3.13.____cp313rcNone
         UPLOAD_PACKAGES: 'True'
-      osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2.0python3.10.____cpythonrcrc:
-        CONFIG: osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2.0python3.10.____cpythonrcrc
+      osx_arm64_channel_targetsconda-forge_mainnumpy2.0python3.10.____cpythonrcNone:
+        CONFIG: osx_arm64_channel_targetsconda-forge_mainnumpy2.0python3.10.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2.0python3.11.____cpythonrcrc:
-        CONFIG: osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2.0python3.11.____cpythonrcrc
+      osx_arm64_channel_targetsconda-forge_mainnumpy2.0python3.11.____cpythonrcNone:
+        CONFIG: osx_arm64_channel_targetsconda-forge_mainnumpy2.0python3.11.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2.0python3.12.____cpythonrcrc:
-        CONFIG: osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2.0python3.12.____cpythonrcrc
+      osx_arm64_channel_targetsconda-forge_mainnumpy2.0python3.12.____cpythonrcNone:
+        CONFIG: osx_arm64_channel_targetsconda-forge_mainnumpy2.0python3.12.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2.0python3.9.____cpythonrcrc:
-        CONFIG: osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2.0python3.9.____cpythonrcrc
+      osx_arm64_channel_targetsconda-forge_mainnumpy2.0python3.9.____cpythonrcNone:
+        CONFIG: osx_arm64_channel_targetsconda-forge_mainnumpy2.0python3.9.____cpythonrcNone
         UPLOAD_PACKAGES: 'True'
-      osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2python3.13.____cp313rcrc:
-        CONFIG: osx_arm64_channel_targetsconda-forge_pytorch_rcnumpy2python3.13.____cp313rcrc
+      osx_arm64_channel_targetsconda-forge_mainnumpy2python3.13.____cp313rcNone:
+        CONFIG: osx_arm64_channel_targetsconda-forge_mainnumpy2python3.13.____cp313rcNone
         UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
   variables: {}
