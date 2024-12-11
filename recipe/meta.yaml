@@ -40,6 +40,11 @@ source:
     - patches/0009-Allow-libcufile-for-conda-builds.patch
     # conda-specific patch, lets us override CUDA paths
     - patches/0010-Allow-overriding-CUDA-related-paths.patch
+    # NumPy 2 fixes:
+    # https://github.com/pytorch/pytorch/pull/136800
+    - patches/0011-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
+    # https://github.com/pytorch/pytorch/pull/137740
+    - patches/0012-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
 
 build:
   number: {{ build }}
