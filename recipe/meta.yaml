@@ -139,6 +139,8 @@ outputs:
       ignore_run_exports:
         - python *                               # [megabuild]
         - numpy *                                # [megabuild]
+      track_features:
+        - nomagma                                # [not use_magma]
     script: build_common.sh     # [unix]
     script: build_common.bat    # [win]
     requirements:
