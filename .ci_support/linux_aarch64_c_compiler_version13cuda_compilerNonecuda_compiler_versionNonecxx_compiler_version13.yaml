@@ -40,6 +40,8 @@ libtorch:
 - '2.4'
 megabuild:
 - 'true'
+mkl:
+- '2024'
 nccl:
 - '2'
 numpy:
