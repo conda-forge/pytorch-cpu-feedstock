@@ -1,6 +1,14 @@
 {% set version = "2.5.1" %}
 {% set build = 6 %}
 
+{% if cuda_compiler_version != "None" %}
+{% set build = build + 200 %}
+{% endif %}
+
+{% if blas_impl == "mkl" %}
+{% set build = build + 100 %}
+{% endif %}
+
 {% set mkl = "<2024" %}
 
 # a reasonably safe subset of tests that should run under 15 minutes
@@ -133,7 +141,6 @@ outputs:
         - numpy *                                # [megabuild]
       track_features:
         - nomagma                                # [not use_magma]
-        - generic-blas                           # [blas_impl != "mkl"]
     script: build_common.sh     # [unix]
     script: build_common.bat    # [win]
     requirements:
@@ -219,9 +226,6 @@ outputs:
       ignore_run_exports:
         - python *                               # [megabuild]
         - numpy *                                # [megabuild]
-      track_features:
-        - cpu                                    # [cuda_compiler_version == "None"]
-        - generic-blas                           # [blas_impl != "mkl"]
     script: build.sh   # [unix]
     script: bld.bat    # [win]
     requirements:
@@ -336,9 +340,6 @@ outputs:
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
-      track_features:
-        - cpu                                    # [cuda_compiler_version == "None"]
-        - generic-blas                           # [blas_impl != "mkl"]
 
     script: build_pytorch.sh   # [unix]
     script: build_pytorch.bat  # [win]
@@ -495,8 +496,7 @@ outputs:
       detect_binary_files_with_prefix: false
       # weigh down cpu implementation and give cuda preference
       track_features:
-        - cpu                                 # [cuda_compiler_version == "None"]
-        - generic-blas                        # [blas_impl != "mkl"]
+        - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
         - pytorch {{ version }}=cuda_{{ blas_impl }}*{{ PKG_BUILDNUM }}   # [megabuild and cuda_compiler_version != "None"]
