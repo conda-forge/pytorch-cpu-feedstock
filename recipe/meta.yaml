@@ -114,7 +114,8 @@ requirements:
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
-    - setuptools
+    # see https://github.com/pytorch/pytorch/issues/136541
+    - setuptools <=72.1.0
     - pyyaml
     - requests
     - six
@@ -252,7 +253,8 @@ outputs:
         - python
         - numpy
         - pip
-        - setuptools
+        # see https://github.com/pytorch/pytorch/issues/136541
+        - setuptools <=72.1.0
         - pyyaml
         - requests
         - six
