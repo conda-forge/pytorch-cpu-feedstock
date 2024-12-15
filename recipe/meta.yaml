@@ -84,8 +84,8 @@ requirements:
     - ninja
     # Keep libprotobuf here so that a compatibile version
     # of protobuf is installed between build and host
-    - libprotobuf  # [not win]
-    - protobuf     # [not win]
+    - libprotobuf
+    - protobuf
     - make      # [linux]
     - sccache
   host:
@@ -128,7 +128,7 @@ requirements:
     - libgomp   # [linux]
     - llvm-openmp    # [osx]
     - libabseil      # [not win]
-    - libprotobuf    # [not win]
+    - libprotobuf
     - sleef
     - libuv
     - pkg-config  # [unix]
@@ -225,8 +225,8 @@ outputs:
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
         # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
-        - libprotobuf  # [not win]
-        - protobuf     # [not win]
+        - libprotobuf
+        - protobuf
         - make      # [linux]
         - sccache
       host:
@@ -266,8 +266,8 @@ outputs:
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
         # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
-        - libabseil      # [not win]
-        - libprotobuf    # [not win]
+        - libabseil
+        - libprotobuf
         - sleef
         - libuv
         - pkg-config  # [unix]
