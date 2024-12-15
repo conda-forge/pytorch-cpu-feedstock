@@ -109,7 +109,8 @@ set "USE_SYSTEM_SLEEF=ON"
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
 @REM TODO(baszalmstra): There are link errors because of conflicting symbols with caffe2_protos.lib
-set "BUILD_CUSTOM_PROTOBUF=ON"
+set "BUILD_CUSTOM_PROTOBUF=OFF"
+set "CAFFE2_LINK_LOCAL_PROTOBUF=OFF"
 
 @REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
 set "USE_OPENMP=0"
