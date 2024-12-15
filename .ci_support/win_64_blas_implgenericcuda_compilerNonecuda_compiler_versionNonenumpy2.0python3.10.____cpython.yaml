@@ -1,5 +1,5 @@
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - vs2019
 c_stdlib:
@@ -29,14 +29,10 @@ libprotobuf:
 libtorch:
 - '2.4'
 megabuild:
-- 'true'
+- 'false'
 mkl:
 - '2024'
 numpy:
-- '2.0'
-- '2.0'
-- '2.0'
-- '2'
 - '2.0'
 pin_run_as_build:
   python:
@@ -44,10 +40,6 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
-- 3.13.* *_cp313
-- 3.9.* *_cpython
 pytorch:
 - '2.4'
 target_platform:
