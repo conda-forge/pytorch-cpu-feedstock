@@ -21,46 +21,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNonenumpy2.0python3.10.____cpython
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implgenericcuda_compile_h6f177f213d', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNonenumpy2.0python3.11.____cpython
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implgenericcuda_compile_hcc30431492', 'windows', 'x64', 'self-hosted']
           - CONFIG: win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNonenumpy2.0python3.12.____cpython
             UPLOAD_PACKAGES: True
             os: windows
             runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implgenericcuda_compile_hf12bedb30a', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNonenumpy2.0python3.9.____cpython
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implgenericcuda_compile_ha7b60371ea', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNonenumpy2python3.13.____cp313
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implgenericcuda_compile_he75510b30c', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNonenumpy2.0python3.10.____cpython
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implmklcuda_compilerNon_hbd7e68c683', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNonenumpy2.0python3.11.____cpython
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implmklcuda_compilerNon_h20b600a17d', 'windows', 'x64', 'self-hosted']
           - CONFIG: win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNonenumpy2.0python3.12.____cpython
             UPLOAD_PACKAGES: True
             os: windows
             runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implmklcuda_compilerNon_hde22d4e70d', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNonenumpy2.0python3.9.____cpython
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implmklcuda_compilerNon_hb501c4c34c', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNonenumpy2python3.13.____cp313
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implmklcuda_compilerNon_hcbb0020cee', 'windows', 'x64', 'self-hosted']
     steps:
 
     - name: Checkout code
