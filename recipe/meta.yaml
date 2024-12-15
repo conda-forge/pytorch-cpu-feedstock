@@ -36,6 +36,7 @@ source:
     # conda-specific patch, lets us override CUDA paths
     - patches/0010-Allow-overriding-CUDA-related-paths.patch
     - patches/0011-Fix-FindOpenBLAS.patch
+    - patches/0012-Fix-Python313-Windows.patch
 
 build:
   number: {{ build }}
