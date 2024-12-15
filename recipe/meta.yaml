@@ -55,6 +55,7 @@ build:
 
   # TODO(baszalmstra): Remove this before merging
   skip: true  # [not win or not (cuda_compiler_version == "12.0" or cuda_compiler == "None")]
+  skip: true  # [py!=312]
 
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
