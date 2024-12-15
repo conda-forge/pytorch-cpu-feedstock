@@ -25,4 +25,3 @@ provider:
   linux_aarch64: azure
   win_64: github_actions
 test: native_and_emulated
-
