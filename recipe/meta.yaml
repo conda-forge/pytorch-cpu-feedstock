@@ -211,7 +211,7 @@ outputs:
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}
       run_constrained:
-        - magma <0.0a0  # [not use_magma]
+        - libmagma <0.0a0  # [not use_magma]
 
   - name: libtorch
     build:
