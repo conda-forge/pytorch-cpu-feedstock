@@ -104,7 +104,7 @@ requirements:
     - cuda-nvml-dev
     - cuda-profiler-api
     - libcublas-dev
-    - libcufile-dev
+    - libcufile-dev  # [linux]
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
@@ -244,7 +244,7 @@ outputs:
         - cuda-nvml-dev
         - cuda-profiler-api
         - libcublas-dev
-        - libcufile-dev
+        - libcufile-dev  # [linux]
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
