@@ -2,6 +2,9 @@
 
 set -ex
 
+# This is used to detect if it's in the process of building pytorch
+export IN_PYTORCH_BUILD=1
+
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/243
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 export PACKAGE_TYPE=conda
@@ -12,6 +15,7 @@ rm -rf pyproject.toml
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
+export USE_CUFILE=0
 export USE_NUMA=0
 export USE_ITT=0
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
@@ -20,8 +24,8 @@ export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 if [[ "$c_compiler" == "clang" ]]; then
-    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
-    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument"
+    export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument -Wno-error=vla-cxx-extension"
+    export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument -Wno-error=vla-cxx-extension"
 else
     export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
     export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-error=maybe-uninitialized"
@@ -59,6 +63,7 @@ for ARG in $CMAKE_ARGS; do
     export ${cmake_arg}
   fi
 done
+CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
@@ -71,6 +76,9 @@ export USE_SYSTEM_SLEEF=1
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
+
+# prevent six from being downloaded
+> third_party/NNPACK/cmake/DownloadSix.cmake
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     # It helps cross compiled builds without emulation support to complete
@@ -107,15 +115,10 @@ fi
 
 if [[ "$PKG_NAME" == "pytorch" ]]; then
   PIP_ACTION=install
-  sed "s/3.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
-  # We use a fan-out build to avoid the long rebuild of libtorch
-  # However, the location of the numpy headers changes between python 3.8
-  # and 3.9+ since numpy 2.0 only exists for 3.9+
-  if [[ "$PY_VER" == "3.8" ]]; then
-    sed -i.bak "s#numpy/_core/include#numpy/core/include#g" build/CMakeCache.txt
-  else
-    sed -i.bak "s#numpy/core/include#numpy/_core/include#g" build/CMakeCache.txt
-  fi
+  # Trick Cmake into thinking python hasn't changed
+  sed "s/3\.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
+  sed -i.bak "s/3;12/${PY_VER%.*};${PY_VER#*.}/g" build/CMakeCache.txt
+  sed -i.bak "s/cpython-312/cpython-${PY_VER%.*}${PY_VER#*.}/g" build/CMakeCache.txt
 else
   # For the main script we just build a wheel for so that the C++/CUDA
   # parts are built. Then they are reused in each python version.
@@ -139,50 +142,43 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export USE_MKLDNN=0
     fi
 elif [[ ${cuda_compiler_version} != "None" ]]; then
+    if [[ "$target_platform" == "linux-aarch64" ]]; then
+        # https://github.com/pytorch/pytorch/pull/121975
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/264
+        export USE_PRIORITIZED_TEXT_FOR_LD=1
+    fi
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
-    # with no NVIDIA GPUs. However compilation fails with mkldnn and cuda enabled.
-    export USE_MKLDNN=OFF
+    # with no NVIDIA GPUs.
+    export USE_MKLDNN=1
     export USE_CUDA=1
-    # PyTorch Vendors an old version of FindCUDA
-    # https://gitlab.kitware.com/cmake/cmake/-/blame/master/Modules/FindCUDA.cmake#L891
-    # They are working on updating it pytorch/pytorch#76082
-    # See: https://github.com/conda-forge/pytorch-cpu-feedstock/pull/224#discussion_r1522698939
+    export USE_CUFILE=1
+    # PyTorch has multiple different bits of logic finding CUDA, override
+    # all of them.
+    export CUDAToolkit_BIN_DIR=${BUILD_PREFIX}/bin
+    export CUDAToolkit_ROOT_DIR=${PREFIX}
     if [[ "${target_platform}" != "${build_platform}" ]]; then
-        export CUDA_TOOLKIT_ROOT=${CUDA_HOME}
+        export CUDA_TOOLKIT_ROOT=${PREFIX}
     fi
-    if [[ ${cuda_compiler_version} == 9.0* ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;7.0+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 9.2* ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 10.* ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 11.0* ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 11.1 ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 11.2 ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 11.8 ]]; then
-        export TORCH_CUDA_ARCH_LIST="3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9+PTX"
-        export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
-    elif [[ ${cuda_compiler_version} == 12.0 ]]; then
-        export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
-        # $CUDA_HOME not set in CUDA 12.0. Using $PREFIX
-        export CUDA_TOOLKIT_ROOT_DIR="${PREFIX}"
-        if [[ "${target_platform}" != "${build_platform}" ]]; then
-            export CUDA_TOOLKIT_ROOT=${PREFIX}
-        fi
-    else
-        echo "unsupported cuda version. edit build_pytorch.sh"
-        exit 1
-    fi
+    case ${target_platform} in
+        linux-64)
+            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
+            ;;
+        linux-aarch64)
+            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
+            ;;
+        *)
+            echo "unknown CUDA arch, edit build.sh"
+            exit 1
+    esac
+    case ${cuda_compiler_version} in
+        12.6)
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+            ;;
+        *)
+            echo "unsupported cuda version. edit build.sh"
+            exit 1
+    esac
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
     export NCCL_ROOT_DIR=$PREFIX
     export NCCL_INCLUDE_DIR=$PREFIX/include
@@ -200,7 +196,6 @@ else
     # for CPU builds. Not to be confused with MKL.
     export USE_MKLDNN=1
     export USE_CUDA=0
-    export CMAKE_TOOLCHAIN_FILE="${RECIPE_DIR}/cross-linux.cmake"
 fi
 
 # Configure sccache
@@ -237,4 +232,11 @@ if [[ "$PKG_NAME" == "libtorch" ]]; then
 
   # Keep the original backed up to sed later
   cp build/CMakeCache.txt build/CMakeCache.txt.orig
+else
+  # Keep this in ${PREFIX}/lib so that the library can be found by
+  # TorchConfig.cmake.
+  # With upstream non-split build, `libtorch_python.so`
+  # and TorchConfig.cmake are both in ${SP_DIR}/torch/lib and therefore
+  # this is not needed.
+  mv ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
 fi

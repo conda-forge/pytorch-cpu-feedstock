@@ -1,0 +1,28 @@
+From 9ae0c429738edb272c25cd06f3ffdd1c2c77c9de Mon Sep 17 00:00:00 2001
+From: atalman <atalman@fb.com>
+Date: Wed, 16 Oct 2024 11:04:57 -0700
+Subject: CD Enable Python 3.13 on windows
+
+diff --git a/functorch/csrc/dim/dim_opcode.c b/functorch/csrc/dim/dim_opcode.c
+index 81ba62a378110..1b5d067734450 100644
+--- a/functorch/csrc/dim/dim_opcode.c
++++ b/functorch/csrc/dim/dim_opcode.c
+@@ -1,6 +1,17 @@
+ #include <torch/csrc/utils/python_compat.h>
+ #if defined(_WIN32) && IS_PYTHON_3_11_PLUS
+ #define Py_BUILD_CORE
+-#define NEED_OPCODE_TABLES
++#define NEED_OPCODE_TABLES // To get _PyOpcode_Deopt, _PyOpcode_Caches
++
++#if IS_PYTHON_3_13_PLUS
++#include <cpython/code.h> // To get PyUnstable_Code_GetFirstFree
++#define NEED_OPCODE_METADATA
++#include "internal/pycore_opcode_metadata.h"
++#undef NEED_OPCODE_METADATA
++#else
+ #include "internal/pycore_opcode.h"
+ #endif
++
++#undef NEED_OPCODE_TABLES
++#undef Py_BUILD_CORE
++#endif
