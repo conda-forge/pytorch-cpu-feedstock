@@ -104,6 +104,7 @@ set "BUILD_TEST=0"
 
 set "libuv_ROOT=%LIBRARY_PREFIX%"
 set "USE_SYSTEM_SLEEF=ON"
+set "USE_SYSTEM_ONNX=ON"
 
 @REM uncomment to debug cmake build
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
@@ -112,6 +113,7 @@ set "USE_SYSTEM_SLEEF=ON"
 set "BUILD_CUSTOM_PROTOBUF=OFF"
 set "CAFFE2_LINK_LOCAL_PROTOBUF=OFF"
 set "ONNX_USE_PROTOBUF_SHARED_LIBS=ON"
+set "USE_PROTOBUF_SHARED_LIBS=ON"
 
 @REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
 set "USE_OPENMP=0"
