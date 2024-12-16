@@ -12,6 +12,8 @@ cuda_compiler:
 - None
 cuda_compiler_version:
 - None
+cudnn:
+- '9'
 cxx_compiler:
 - vs2019
 github_actions_labels:

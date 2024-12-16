@@ -1,5 +1,5 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - vs2019
 c_stdlib:
@@ -9,9 +9,9 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.6'
 cudnn:
 - '9'
 cxx_compiler:
