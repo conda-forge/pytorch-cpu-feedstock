@@ -54,7 +54,7 @@ build:
     - numpy *                                # [megabuild]
 
   # TODO(baszalmstra): Remove this before merging
-  skip: true  # [not win or not (cuda_compiler_version == "12.0" or cuda_compiler == "None")]
+  skip: true  # [not win or not (cuda_compiler_version == "12.6" or cuda_compiler == "None")]
   skip: true  # [py!=312]
 
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
@@ -128,7 +128,7 @@ requirements:
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
     - llvm-openmp    # [osx]
-    - libabseil      # [not win]
+    - libabseil
     - libprotobuf
     - sleef
     - libuv
@@ -225,7 +225,6 @@ outputs:
         - ninja
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
-        # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
         - libprotobuf
         - protobuf
         - make      # [linux]
@@ -266,7 +265,6 @@ outputs:
         - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
         - libabseil
         - libprotobuf
         - sleef
