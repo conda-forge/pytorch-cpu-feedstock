@@ -47,6 +47,8 @@ source:
     - patches/0011-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
     # https://github.com/pytorch/pytorch/pull/137740
     - patches/0012-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
+    # conda-specific patch for libtorch_cuda_linalg split
+    - patches/0013-Adjust-CUDAHooks-hasMAGMA-for-libtorch_cuda_linalg.s.patch
 
 build:
   number: {{ build }}
