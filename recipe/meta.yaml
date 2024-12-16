@@ -134,7 +134,6 @@ requirements:
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
-    - onnx 1.16  # [win]
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
@@ -274,7 +273,6 @@ outputs:
         - libuv
         - pkg-config  # [unix]
         - typing_extensions
-        - onnx 1.16  # [win]
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
         - llvm-openmp    # [osx]
