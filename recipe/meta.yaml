@@ -85,8 +85,8 @@ requirements:
     - ninja
     # Keep libprotobuf here so that a compatibile version
     # of protobuf is installed between build and host
-    - libprotobuf  # [not win]
-    - protobuf     # [not win]
+    - libprotobuf
+    - protobuf
     - make      # [linux]
     - sccache
   host:
@@ -104,6 +104,7 @@ requirements:
     - cuda-nvml-dev
     - cuda-profiler-api
     - libcublas-dev
+    - libcufile-dev  # [linux]
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
@@ -115,10 +116,10 @@ requirements:
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
-    - setuptools
+    # see https://github.com/pytorch/pytorch/issues/136541
+    - setuptools <=72.1.0
     - pyyaml
     - requests
-    - future
     - six
     - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
     - libcblas * *_mkl      # [blas_impl == "mkl"]
@@ -126,10 +127,10 @@ requirements:
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
-    - llvm-openmp  # [osx]
-    - libprotobuf  # [not win]
+    - llvm-openmp    # [osx]
+    - libabseil
+    - libprotobuf
     - sleef
-    - typing
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
@@ -224,9 +225,8 @@ outputs:
         - ninja
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
-        # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
-        - libprotobuf  # [not win]
-        - protobuf     # [not win]
+        - libprotobuf
+        - protobuf
         - make      # [linux]
         - sccache
       host:
@@ -244,6 +244,7 @@ outputs:
         - cuda-nvml-dev
         - cuda-profiler-api
         - libcublas-dev
+        - libcufile-dev  # [linux]
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
@@ -253,10 +254,10 @@ outputs:
         - python
         - numpy
         - pip
-        - setuptools
+        # see https://github.com/pytorch/pytorch/issues/136541
+        - setuptools <=72.1.0
         - pyyaml
         - requests
-        - future
         - six
         - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
         - libcblas * *_mkl      # [blas_impl == "mkl"]
@@ -264,10 +265,9 @@ outputs:
         - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        # TODO(baszalmstra): There are linker errors on Windows when using protobuf from conda-forge
-        - libprotobuf   # [not win]
+        - libabseil
+        - libprotobuf
         - sleef
-        - typing
         - libuv
         - pkg-config  # [unix]
         - typing_extensions

@@ -59,17 +59,7 @@ if not "%cuda_compiler_version%" == "None" (
     REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
     REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
 
-    set TORCH_CUDA_ARCH_LIST=3.5;5.0+PTX
-    if "%cuda_compiler_version%" == "11.8" (
-        set TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9+PTX
-        set CUDA_TOOLKIT_ROOT_DIR=%CUDA_HOME%
-    ) else if "%cuda_compiler_version%" == "12.0" (
-        set TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX
-        set CUDA_TOOLKIT_ROOT_DIR=%PREFIX%
-    ) else (
-        echo "unsupported cuda version. edit build_pytorch.bat"
-        exit /b 1
-    )
+    set TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX
 
     set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
 
@@ -119,7 +109,8 @@ set "USE_SYSTEM_SLEEF=ON"
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
 @REM TODO(baszalmstra): There are link errors because of conflicting symbols with caffe2_protos.lib
-set "BUILD_CUSTOM_PROTOBUF=ON"
+set "BUILD_CUSTOM_PROTOBUF=OFF"
+set "USE_LITE_PROTO=ON"
 
 @REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
 set "USE_OPENMP=0"
