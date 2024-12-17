@@ -470,7 +470,7 @@ outputs:
         - pytest-rerunfailures
         - pytest-xdist
       imports:
-        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
+        - torch  # [cuda_compiler_version == "None"]
       source_files:
         - test
         # tools/ is needed to optimise test run
@@ -479,18 +479,16 @@ outputs:
       commands:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
-        - OMP_NUM_THREADS=4 python -m pytest -n auto {{ tests }}  # [not win and not (aarch64 and cuda_compiler_version != "None") and py != 313]
-        - python -m pytest -n auto {{ tests }}  # [win and py != 313]
+        - OMP_NUM_THREADS=4 python -m pytest -n auto {{ tests }}    # [not win and cuda_compiler_version == "None" and py != 313]
+        - python -m pytest -n auto {{ tests }}                      # [win and py != 313]
         # dynamo does not support python 3.13
-        - OMP_NUM_THREADS=4 python -m pytest -n auto {{ tests_3_13_deselects }} {{ tests }}  # [not win and not (aarch64 and cuda_compiler_version != "None") and py == 313]
-        - python -m pytest -n auto {{ tests_3_13_deselects }} {{ tests }}  # [win and py == 313]
+        - OMP_NUM_THREADS=4 python -m pytest -n auto {{ tests_3_13_deselects }} {{ tests }}  # [not win and cuda_compiler_version == "None" and py == 313]
+        - python -m pytest -n auto {{ tests_3_13_deselects }} {{ tests }}                    # [win and py == 313]
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
-        - python -c "import torch; print(torch.__version__)"                       # [not (aarch64 and cuda_compiler_version != "None")]
+        - python -c "import torch; print(torch.__version__)"                       # [cuda_compiler_version == "None"]
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
-        # Running tests on aarch64 + cuda is not supported until we move to Alma Linux 8
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/267#issuecomment-2387225526
         - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
         # At conda-forge, we target versions of OSX that are too old for MPS support
         # But if users install a newer version of OSX, they will have MPS support
