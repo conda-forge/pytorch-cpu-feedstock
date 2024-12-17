@@ -63,13 +63,12 @@ if not "%cuda_compiler_version%" == "None" (
 
     set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
 
-    REM set USE_SYSTEM_NCCL=1
-    set USE_STATIC_NCCL=0
     set USE_STATIC_CUDNN=0
     set MAGMA_HOME=%PREFIX%
 
     REM NCCL is not available on windows
     set USE_NCCL=0
+    set USE_STATIC_NCCL=0
 
     set MAGMA_HOME=%LIBRARY_PREFIX%
 
@@ -108,13 +107,8 @@ set "USE_SYSTEM_SLEEF=ON"
 @REM uncomment to debug cmake build
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
-@REM TODO(baszalmstra): There are link errors because of conflicting symbols with caffe2_protos.lib
 set "BUILD_CUSTOM_PROTOBUF=OFF"
-set "CAFFE2_LINK_LOCAL_PROTOBUF=OFF"
-set "ONNX_USE_PROTOBUF_SHARED_LIBS=ON"
-set "USE_PROTOBUF_SHARED_LIBS=ON"
 set "USE_LITE_PROTO=ON"
-set "CAFFE2_USE_LITE_PROTO=ON"
 
 @REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
 set "USE_OPENMP=0"

@@ -117,7 +117,8 @@ requirements:
     - numpy        # [not megabuild]
     - pip
     # see https://github.com/pytorch/pytorch/issues/136541
-    - setuptools <=72.1.0
+    - setuptools <=72.1.0  # [win]
+    - setuptools  # [not win]
     - pyyaml
     - requests
     - six
@@ -154,7 +155,7 @@ requirements:
     #   The medium term solution is to add such a constraint to libcufile
     #   The long term solution is to add such a constraint to all packages
     #   that depend on a specific sysroot at building.
-    - sysroot_{{ target_platform }} >={{ c_stdlib_version }}  # [not win]
+    - sysroot_{{ target_platform }} >={{ c_stdlib_version }}  # [unix]
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
@@ -255,7 +256,8 @@ outputs:
         - numpy
         - pip
         # see https://github.com/pytorch/pytorch/issues/136541
-        - setuptools <=72.1.0
+        - setuptools <=72.1.0  # [win]
+        - setuptools  # [not win]
         - pyyaml
         - requests
         - six
