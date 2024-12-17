@@ -17,6 +17,12 @@ rm -rf pyproject.toml
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
+# In cross-compiling case, pytorch thinks we are using a f2c/g77
+# calling conventions which returns a float with sdot instead of a double.
+# This tells pytorch to use CBLAS API instead of BLAS API.
+export PYTORCH_BLAS_F2C=OFF
+export PYTORCH_BLAS_USE_CBLAS_DOT=ON
+
 export USE_CUFILE=0
 export USE_NUMA=0
 export USE_ITT=0
