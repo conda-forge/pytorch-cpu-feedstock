@@ -305,7 +305,7 @@ outputs:
         - pytest-flakefinder
         - pytest-xdist
       imports:
-        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
+        - torch  # [cuda_compiler_version == "None"]
       source_files:
         # Only include the source_files if we are actually going to run the tests.
         - test
