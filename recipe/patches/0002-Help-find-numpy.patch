@@ -1,0 +1,29 @@
+From d79c9df23809c13b603126955f639726c1446cef Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Tue, 1 Oct 2024 00:28:40 -0400
+Subject: [PATCH 02/12] Help find numpy
+
+---
+ tools/setup_helpers/cmake.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
+index 4b605fe597..bde41323c7 100644
+--- a/tools/setup_helpers/cmake.py
++++ b/tools/setup_helpers/cmake.py
+@@ -305,9 +305,15 @@ class CMake:
+             sys.exit(1)
+         build_options.update(cmake__options)
+ 
++        Python_NumPy_INCLUDE_DIR = os.environ.get("Python_NumPy_INCLUDE_DIR")
++        if Python_NumPy_INCLUDE_DIR is None:
++            import numpy as np
++            Python_NumPy_INCLUDE_DIR = np.get_include()
++
+         CMake.defines(
+             args,
+             Python_EXECUTABLE=sys.executable,
++            Python_NumPy_INCLUDE_DIR=Python_NumPy_INCLUDE_DIR,
+             TORCH_BUILD_VERSION=version,
+             **build_options,
+         )

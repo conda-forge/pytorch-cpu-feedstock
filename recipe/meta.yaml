@@ -42,31 +42,31 @@ source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
   sha256: 740eb5fff95e33cfe699bad43be83523f569c7cc7f9c285c2a255416443dd266
   patches:
-    - patches/0003-Force-usage-of-python-3-and-error-without-numpy.patch
+    - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
     # https://github.com/pytorch/pytorch/pull/137084
-    - patches/0004-Help-find-numpy.patch
+    - patches/0002-Help-find-numpy.patch
     # https://github.com/pytorch/pytorch/pull/138287
-    - patches/0005-Use-system-nvtx3.patch
+    - patches/0003-Add-USE_SYSTEM_NVTX-option-138287.patch
     # sympy 1.13.2 was reported to result in test failures on Windows and mac
     # https://github.com/pytorch/pytorch/pull/133235
-    - patches/0006-Update-sympy-version.patch
-    - patches/0007-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
+    - patches/0004-Update-sympy-version.patch
+    - patches/0005-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
     # https://github.com/pytorch/pytorch/pull/136034
-    - patches/0008-Fix-pickler-error.patch
+    - patches/0006-3.13-fix-3.13-pickle-error-in-serialization.py-13603.patch
     # https://github.com/pytorch/pytorch/pull/137331
-    - patches/137331.patch
+    - patches/0007-Allow-users-to-overwrite-ld-with-environment-variabl.patch
     # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
     # for their PyPI wheel builds
-    - patches/0009-Allow-libcufile-for-conda-builds.patch
+    - patches/0008-Allow-libcufile-for-conda-builds.patch
     # conda-specific patch, lets us override CUDA paths
-    - patches/0010-Allow-overriding-CUDA-related-paths.patch
+    - patches/0009-Allow-overriding-CUDA-related-paths.patch
     # NumPy 2 fixes:
     # https://github.com/pytorch/pytorch/pull/136800
-    - patches/0011-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
+    - patches/0010-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
     # https://github.com/pytorch/pytorch/pull/137740
-    - patches/0012-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
+    - patches/0011-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
     # conda-specific patch for libtorch_cuda_linalg split
-    - patches/0013-Adjust-CUDAHooks-hasMAGMA-for-libtorch_cuda_linalg.s.patch
+    - patches/0012-Adjust-CUDAHooks-hasMAGMA-for-libtorch_cuda_linalg.s.patch
 
 build:
   number: {{ build }}

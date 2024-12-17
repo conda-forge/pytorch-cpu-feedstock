@@ -1,0 +1,51 @@
+From 2ad0e3972eecf67bc9941447e42795511246c275 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Mon, 16 Dec 2024 13:50:44 +0100
+Subject: [PATCH 12/12] Adjust CUDAHooks::hasMAGMA() for
+ libtorch_cuda_linalg.so replacement in conda-forge
+
+Update CUDAHooks::hasMAGMA() to detect whether the currently installed
+version of `libtorch_cuda_linalg.so` has been linked against magma or
+not.  Since the non-magma-enabled version cannot be installed alongside
+magma, use the presence of `libmagma.so` to determine which version
+we're using.
+---
+ aten/src/ATen/cuda/detail/CUDAHooks.cpp | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/aten/src/ATen/cuda/detail/CUDAHooks.cpp b/aten/src/ATen/cuda/detail/CUDAHooks.cpp
+index c6e83fad1a..d908fc8a8c 100644
+--- a/aten/src/ATen/cuda/detail/CUDAHooks.cpp
++++ b/aten/src/ATen/cuda/detail/CUDAHooks.cpp
+@@ -41,6 +41,10 @@
+ #include <functional>
+ #include <memory>
+ 
++#include <dlfcn.h>
++#include <libgen.h>
++#include <sys/stat.h>
++
+ namespace c10::cuda::_internal {
+ void setHasPrimaryContext(bool (*func)(DeviceIndex));
+ }
+@@ -159,6 +163,20 @@ bool CUDAHooks::hasCUDA() const {
+ }
+ 
+ bool CUDAHooks::hasMAGMA() const {
++  // Conda patch: we support swapping magma-enabled libtroch_cuda_linalg.so
++  // for non-magma-enabled.  The latter cannot be installed along with
++  // libmagma.so, so check for its presence to determine which one is
++  // installed.
++  Dl_info info;
++  if (dladdr(reinterpret_cast<void*>(&set_magma_init_fn), &info)) {
++    struct stat st;
++    std::string path = info.dli_fname;
++    char* directory = dirname(path.data());
++    path = directory;
++    path += "/libmagma.so";
++    return !stat(path.c_str(), &st) && S_ISREG(st.st_mode);
++  }
++
+ #if AT_MAGMA_ENABLED()
+   return true;
+ #else
