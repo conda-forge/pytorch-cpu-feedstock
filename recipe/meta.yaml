@@ -230,6 +230,9 @@ outputs:
         - {{ pin_compatible('cudnn') }}
       run_constrained:
         - libmagma <0.0a0  # [not use_magma]
+    test:
+      commands:
+        - test -f $PREFIX/lib/libtorch_cuda_linalg.so
 
   - name: libtorch
     build:
