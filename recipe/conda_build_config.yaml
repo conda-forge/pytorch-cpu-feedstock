@@ -23,5 +23,5 @@ github_actions_labels:          # [linux or win]
 megabuild:
 - true      # [linux]
 - false     # [osx]
-- false     # [win]
+- true      # [win]
 
