@@ -3,7 +3,15 @@ blas_impl:
 c_compiler:
 - vs2019
 c_stdlib:
+<<<<<<<< HEAD:.ci_support/win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.0.yaml
 - vs
+========
+- sysroot
+c_stdlib_version:
+- '2.17'
+cdt_name:
+- conda
+>>>>>>>> main:.ci_support/linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12.yaml
 channel_sources:
 - conda-forge
 channel_targets:
@@ -11,26 +19,51 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.0'
+- '12.6'
 cudnn:
-- '8'
+- '9'
 cxx_compiler:
+<<<<<<<< HEAD:.ci_support/win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.0.yaml
 - vs2019
 github_actions_labels:
 - cirun-azure-windows-2xlarge
+========
+- gxx
+cxx_compiler_version:
+- '12'
+docker_image:
+- quay.io/condaforge/linux-anvil-x86_64:alma9
+github_actions_labels:
+- cirun-openstack-gpu-2xlarge
+libabseil:
+- '20240722'
+>>>>>>>> main:.ci_support/linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12.yaml
 libcblas:
 - 3.9 *netlib
 liblapack:
 - 3.9 *netlib
+<<<<<<<< HEAD:.ci_support/win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.0.yaml
 megabuild:
 - 'true'
 mkl:
 - '2023'
+========
+libprotobuf:
+- 5.28.2
+libtorch:
+- '2.4'
+megabuild:
+- 'true'
+mkl:
+- '2024'
+nccl:
+- '2'
+>>>>>>>> main:.ci_support/linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12.yaml
 numpy:
 - '2.0'
 - '2.0'
 - '2.0'
-- '1.22'
+- '2'
 - '2.0'
 pin_run_as_build:
   python:
@@ -40,14 +73,20 @@ python:
 - 3.10.* *_cpython
 - 3.11.* *_cpython
 - 3.12.* *_cpython
-- 3.8.* *_cpython
+- 3.13.* *_cp313
 - 3.9.* *_cpython
 pytorch:
-- '2.3'
+- '2.4'
 target_platform:
 - win-64
 zip_keys:
+<<<<<<<< HEAD:.ci_support/win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.0.yaml
 - - cuda_compiler
+========
+- - c_compiler_version
+  - cxx_compiler_version
+  - cuda_compiler
+>>>>>>>> main:.ci_support/linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12.yaml
   - cuda_compiler_version
 - - python
   - numpy
