@@ -367,10 +367,7 @@ outputs:
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
-      host:
-        - python
       run:
-        - python
         - pytorch {{ version }}=cuda*{{ PKG_BUILDNUM }}                   # [megabuild and cuda_compiler_version != "None"]
         - pytorch {{ version }}=cpu_{{ blas_impl }}*{{ PKG_BUILDNUM }}    # [megabuild and cuda_compiler_version == "None"]
         - {{ pin_subpackage("pytorch", exact=True) }}                     # [not megabuild]
