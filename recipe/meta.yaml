@@ -9,6 +9,9 @@
 {% set build = build + 100 %}
 {% endif %}
 
+{% set build_magma = build + 50 %}
+{% set build_nomagma = build %}
+
 {% set mkl = "<2024" %}
 
 # a reasonably safe subset of tests that should run under 15 minutes
@@ -153,8 +156,10 @@ requirements:
 outputs:
   - name: libtorch-cuda-linalg
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_magma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}    # [use_magma]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_nomagma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [not use_magma]
+      number: {{ build_magma }}    # [use_magma]
+      number: {{ build_nomagma }}  # [not use_magma]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_magma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build_magma }}    # [use_magma]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_nomagma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build_nomagma }}  # [not use_magma]
       skip: true  # [win or cuda_compiler_version == "None"]
       ignore_run_exports_from:
         - python *                               # [megabuild]
