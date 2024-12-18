@@ -524,7 +524,7 @@ outputs:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
-        - pytorch {{ version }}=cuda_{{ blas_impl }}*{{ PKG_BUILDNUM }}   # [megabuild and cuda_compiler_version != "None"]
+        - pytorch {{ version }}=cuda*_{{ blas_impl }}*{{ PKG_BUILDNUM }}  # [megabuild and cuda_compiler_version != "None"]
         - pytorch {{ version }}=cpu_{{ blas_impl }}*{{ PKG_BUILDNUM }}    # [megabuild and cuda_compiler_version == "None"]
         - {{ pin_subpackage("pytorch", exact=True) }}                     # [not megabuild]
     test:
