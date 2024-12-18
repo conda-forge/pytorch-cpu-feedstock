@@ -106,6 +106,7 @@ requirements:
     # other requirements
     - python 3.12  # [megabuild]
     - python       # [not megabuild]
+    - wheel
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
