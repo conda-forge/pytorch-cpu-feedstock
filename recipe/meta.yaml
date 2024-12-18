@@ -17,7 +17,8 @@ source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
   sha256: 740eb5fff95e33cfe699bad43be83523f569c7cc7f9c285c2a255416443dd266
   patches:
-    - patches/0003-Force-usage-of-python-3-and-error-without-numpy.patch
+    - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
+    - patches/0002-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
     # https://github.com/pytorch/pytorch/pull/137084
     - patches/0004-Help-find-numpy.patch
     # https://github.com/pytorch/pytorch/pull/138287
