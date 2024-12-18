@@ -26,6 +26,8 @@
     "--deselect test/test_torch.py::TestTorch::test_print",
     "-m 'not hypothesis'",
 ]) %}
+# tolerance violation with openblas
+{% set tests = tests ~ " --deselect test/test_linalg.py::TestLinalgCPU::test_1_sized_with_0_strided_cpu_float32" %}  # [osx]
 {% set tests_3_13_deselects = " ".join([
     "--deselect test/test_custom_ops.py::TestCustomOp::test_data_dependent_compile",
     "--deselect test/test_custom_ops.py::TestCustomOp::test_functionalize_error",
