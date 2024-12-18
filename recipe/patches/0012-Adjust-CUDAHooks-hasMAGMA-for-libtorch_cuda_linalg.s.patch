@@ -1,7 +1,7 @@
 From 2ad0e3972eecf67bc9941447e42795511246c275 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Mon, 16 Dec 2024 13:50:44 +0100
-Subject: [PATCH 12/12] Adjust CUDAHooks::hasMAGMA() for
+Subject: [PATCH 12/13] Adjust CUDAHooks::hasMAGMA() for
  libtorch_cuda_linalg.so replacement in conda-forge
 
 Update CUDAHooks::hasMAGMA() to detect whether the currently installed
