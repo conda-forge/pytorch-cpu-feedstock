@@ -80,6 +80,7 @@ of 2024-11-28:
 | Package   | Upstream       | Recipe | Conda-forge | Source                              |
 |-----------|----------------|--------|-------------|-------------------------------------|
 | cuda      | 11.8/12.1/12.4 | 12.6   | 12.6        | `.ci/docker/build.sh`               |
+| cuda-cupti| 12.4.127       |        | 12.6.80     | `.github/scripts/generate_binary_build_matrix.py` |
 | magma     | 2.6.1          |        | 2.8.0       | `.ci/docker/common/instal_magma.sh` |
 | libabseil | indirect?      |        | 20240722.0  |                                     |
 | libuv     |                |        | 1.49.2      | (not pinned)                        |

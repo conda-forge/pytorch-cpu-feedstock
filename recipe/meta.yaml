@@ -97,6 +97,7 @@ requirements:
     {% if cuda_compiler_version != "None" %}
     - cuda-driver-dev
     - cuda-cudart-dev
+    - cuda-cupti-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
     - cuda-nvml-dev
@@ -198,6 +199,7 @@ outputs:
         {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev
         - cuda-cudart-dev
+        - cuda-cupti-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
