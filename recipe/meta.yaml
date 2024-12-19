@@ -118,6 +118,7 @@ requirements:
     {% if cuda_major >= 12 %}
     - cuda-driver-dev
     - cuda-cudart-dev
+    - cuda-cupti-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
     - cuda-nvml-dev
@@ -239,6 +240,7 @@ outputs:
         {% if cuda_major >= 12 %}
         - cuda-driver-dev
         - cuda-cudart-dev
+        - cuda-cupti-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
