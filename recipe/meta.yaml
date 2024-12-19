@@ -105,6 +105,7 @@ requirements:
     - cuda-profiler-api
     - cusparselt
     - libcublas-dev
+    - libcudss-dev
     - libcufile-dev
     - libcufft-dev
     - libcurand-dev
@@ -207,6 +208,7 @@ outputs:
         - cuda-profiler-api
         - cusparselt
         - libcublas-dev
+        - libcudss-dev
         - libcufile-dev
         - libcufft-dev
         - libcurand-dev
