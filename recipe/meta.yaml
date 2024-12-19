@@ -130,6 +130,7 @@ requirements:
     - cuda-nvtx-dev
     - cuda-nvml-dev
     - cuda-profiler-api
+    - cusparselt
     - libcublas-dev
     - libcufile-dev
     - libcufft-dev
@@ -212,6 +213,7 @@ outputs:
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
+        - cusparselt
         - libcublas-dev
         - libcufile-dev
         - libcufft-dev
@@ -301,6 +303,7 @@ outputs:
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
+        - cusparselt
         - libcublas-dev
         - libcufile-dev
         - libcufft-dev
@@ -402,6 +405,7 @@ outputs:
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
+        - cusparselt
         - libcublas-dev
         - libcufile-dev
         - libcufft-dev
