@@ -36,6 +36,8 @@ liblapack:
 - 3.9 *netlib
 libprotobuf:
 - 5.28.2
+libtorch:
+- '2.4'
 megabuild:
 - 'true'
 mkl:
@@ -48,8 +50,6 @@ numpy:
 - '2.0'
 - '2'
 - '2.0'
-orc:
-- 2.0.3
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -64,7 +64,7 @@ pytorch:
 - '2.4'
 target_platform:
 - linux-64
-use_magma:
+with_magma:
 - 'false'
 - 'true'
 zip_keys:

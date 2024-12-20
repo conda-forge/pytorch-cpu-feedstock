@@ -16,27 +16,21 @@ jobs:
   build:
     name: ${{ matrix.CONFIG }}
     runs-on: ${{ matrix.runs_on }}
-    timeout-minutes: 720
+    timeout-minutes: 900
     strategy:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_blas_implgenericc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_compiler_ha302c1dcb9', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_compiler_h55a08dafba', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_64_blas_implmklc_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12
+          - CONFIG: linux_64_blas_implgenericc_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklc_compiler_ver_hf981f13b11', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_compiler_hcea8f4d73b', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_64_blas_implmklc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13
@@ -45,16 +39,22 @@ jobs:
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklc_compiler_ver_h3b58d95c2f', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_aarch64_c_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version12
+          - CONFIG: linux_64_blas_implmklc_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_c_compiler_version12c_hf2672871f3', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklc_compiler_ver_h980a1415dd', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_aarch64_c_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_c_compiler_version13c_h048947eff7', 'linux', 'x64', 'self-hosted']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+          - CONFIG: linux_aarch64_c_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_c_compiler_version13c_h50dc5357dd', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
     steps:
