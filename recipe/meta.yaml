@@ -31,6 +31,17 @@
 ]) %}
 # tolerance violation with openblas
 {% set tests = tests ~ " --deselect test/test_linalg.py::TestLinalgCPU::test_1_sized_with_0_strided_cpu_float32" %}  # [osx]
+# timeouts and failures on aarch, see https://github.com/conda-forge/pytorch-cpu-feedstock/pull/298#issuecomment-2555888508
+{% set switch = True %}   # [aarch]
+{% set switch = False %}  # [not aarch]
+{% set tests = " ".join([tests] + switch * [
+    "--deselect test/test_autograd.py::TestAutograd::test_pynode_destruction_deadlock",
+    "--deselect test/test_linalg.py::TestLinalgCPU::test_cholesky_cpu_float32",
+    "--deselect test/test_linalg.py::TestLinalgCPU::test_pca_lowrank_cpu",
+    "--deselect test/test_linalg.py::TestLinalgCPU::test_svd_lowrank_cpu_complex128",
+    "--deselect test/test_linalg.py::TestLinalgCPU::test_svd_lowrank_cpu_float64",
+    "--deselect test/test_mkldnn.py::TestMkldnnCPU::test_lstm_cpu",
+]) %}
 {% set tests_3_13_deselects = " ".join([
     "--deselect test/test_custom_ops.py::TestCustomOp::test_data_dependent_compile",
     "--deselect test/test_custom_ops.py::TestCustomOp::test_functionalize_error",
