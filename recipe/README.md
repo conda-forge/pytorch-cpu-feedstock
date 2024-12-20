@@ -108,36 +108,25 @@ Maintenance notes
 
 Packages built by the recipe
 ----------------------------
-The recipe currently builds four packages:
+The recipe currently builds three packages:
 
 1. `libtorch` that installs the common libraries, executables and data files
    that are independent of selected Python version and are therefore shared
    by all Python versions.
 
-2. `libtorch-cuda-linalg` that provides the shared `libtorch_cuda_linalg.so`
-   library, in variant linked to `magma` or not, and is built only for
-   GPU-enabled variants.
-
-3. `pytorch` that installs the library and other files for a specific Python
+2. `pytorch` that installs the library and other files for a specific Python
    version.
 
-4. `pytorch-cpu` or `pytorch-gpu` backwards compatibility metapackage.
+3. `pytorch-cpu` or `pytorch-gpu` backwards compatibility metapackage.
 
 These packages can be built in the following variants:
 
 - `cpu` variant that does not use CUDA, or `cuda` variant built using
-  specific CUDA version (`libtorch-cuda-linalg` is built only in `cuda`
-  variants).
+  specific CUDA version.
 
 - `mkl` variant that uses MKL to provide BLAS/LAPACK, as well as a set
   of additional functions, and `generic` variant that can use any BLAS/LAPACK
   provider (created by patching on OpenBLAS support upstream).
-
-Additionally, `libtorch-cuda-linalg` can be built in `magma` or `nomagma`
-variant. The former links against libmagma, while the latter avoids this
-significant dependency. Both versions support the built-in cuSOLVER backend,
-and the `magma` version normally uses a heuristic to choose between them,
-in order to achieve the best performance for a given operation.
 
 Some of the platforms support only a subset of these variants.
 
@@ -146,6 +135,7 @@ configurations. In this mode, PyTorch is built for all Python versions
 in a single run. As a result, the shared bits (`libtorch*`) are only built once.
 
 As the `megabuild` mode imposes high disk space requirements on the CI builders,
+and more importantly, cannot be built within the 6h time limit imposed by azure,
 it is not used on other platforms currently. For this reason, there are separate
 configurations for every Python version there.
 
@@ -179,12 +169,7 @@ To facilitate split package builds, we perform the build in the following steps:
    a. If `megabuild` is enabled, we build against a fixed Python version.
       Otherwise, we build using the final Python version.
 
-   b. If CUDA support is enabled, we build with `magma` disabled first.
-      Then we copy the resulting library, and rebuild with `magma` enabled.
-      This way, we obtain the two version of the library to repackage.
-
-2. For the `libtorch` and `libtorch-cuda-linalg` packages, we manually install
-   files that were prepared earlier.
+2. For the `libtorch` package, we manually install files that were prepared earlier.
 
 3. For the final `pytorch` package(s), we invoke `pip install` to build
    and install the complete package. Importantly, this reuses previously built
