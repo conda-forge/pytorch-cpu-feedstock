@@ -123,6 +123,8 @@ requirements:
 
 outputs:
   - name: libtorch
+    script: build.sh    # [unix]
+    script: bld.bat     # [win]
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
@@ -136,8 +138,6 @@ outputs:
       ignore_run_exports:
         - python *                               # [megabuild]
         - numpy *                                # [megabuild]
-    script: build.sh   # [unix]
-    script: bld.bat    # [win]
     requirements:
       build:
         # When you change 3.12 here, change it in build.sh as well
@@ -231,6 +231,8 @@ outputs:
         {% endfor %}
 
   - name: pytorch
+    script: build.sh    # [unix]
+    script: bld.bat     # [win]
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
@@ -238,9 +240,6 @@ outputs:
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
-
-    script: build_pytorch.sh   # [unix]
-    script: build_pytorch.bat  # [win]
     requirements:
       build:
         - python                                 # [build_platform != target_platform]
