@@ -16,6 +16,6 @@ megabuild:
 - true      # [linux]
 - false     # [osx]
 
-use_magma:
+with_magma:
 - true
 - false

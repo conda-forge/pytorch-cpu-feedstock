@@ -104,6 +104,7 @@ requirements:
     - libprotobuf
     - protobuf
     - make      # [linux]
+    - grep      # [unix]
   host:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
@@ -151,10 +152,10 @@ requirements:
 outputs:
   - name: libtorch-cuda-linalg
     build:
-      number: {{ build_magma }}    # [use_magma]
-      number: {{ build_nomagma }}  # [not use_magma]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_magma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build_magma }}    # [use_magma]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_nomagma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build_nomagma }}  # [not use_magma]
+      number: {{ build_magma }}    # [with_magma]
+      number: {{ build_nomagma }}  # [not with_magma]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_magma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build_magma }}      # [with_magma]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_nomagma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build_nomagma }}  # [not with_magma]
       skip: true  # [win or cuda_compiler_version == "None"]
       ignore_run_exports_from:
         - python *                               # [megabuild]
@@ -164,7 +165,7 @@ outputs:
         - python *                               # [megabuild]
         - numpy *                                # [megabuild]
       track_features:
-        - nomagma                                # [not use_magma]
+        - nomagma                                # [not with_magma]
     script: build_common.sh     # [unix]
     script: build_common.bat    # [win]
     requirements:
@@ -179,8 +180,6 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - patch
-        - git
         - libgomp
         - cmake
         - ninja
@@ -189,6 +188,7 @@ outputs:
         - libprotobuf
         - protobuf
         - make
+        - grep
       host:
         # GPU requirements
         - cudnn
@@ -207,7 +207,7 @@ outputs:
         - libcurand-dev
         - libcusolver-dev
         - libcusparse-dev
-        - magma        # [use_magma]
+        - magma        # [with_magma]
         # other requirements
         - python 3.12  # [megabuild]
         - python       # [not megabuild]
@@ -233,7 +233,7 @@ outputs:
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}
       run_constrained:
-        - libmagma <0.0a0  # [not use_magma]
+        - libmagma <0.0a0  # [not with_magma]
     test:
       commands:
         - test -f $PREFIX/lib/libtorch_cuda_linalg.so
@@ -276,6 +276,7 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
+        - grep      # [unix]
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]

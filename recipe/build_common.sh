@@ -1,6 +1,15 @@
 #!/bin/bash
 
-echo "=== Building ${PKG_NAME} (magma: ${use_magma}; py: ${PY_VER}) ==="
+# pytorch build uses `USE_MAGMA` to determine magma-support; we cannot use this
+# name as the switch in CBC though, because the magma/nomagma builds are built
+# together (i.e. using `USE_MAGMA=0` unconditionally at first);
+# more imporantly, we need to avoid conda-build picking up `with_m/a/g/m/a` as a
+# used variable here (-> reason for the slashes), because this would cause the CI jobs
+# to be split. Aside from not writing out `with_...` fully in this comment, obfuscate
+# its evaluation enough to trick conda-build and assign it to yet another name:
+export CF_MAGMA=$(env | grep -E '^[hitw]{4}_magma=' | cut -d'=' -f2)
+
+echo "=== Building ${PKG_NAME} (magma: ${CF_MAGMA}; py: ${PY_VER}) ==="
 
 set -ex
 
@@ -230,7 +239,7 @@ case ${PKG_NAME} in
     mv dist-libtorch/include/* ${PREFIX}/include/
     ;;
   libtorch-cuda-linalg)
-    if [[ ${use_magma} == true ]]; then
+    if [[ ${CF_MAGMA} == true ]]; then
       mv dist-libtorch-cuda-linalg-magma/lib/* ${PREFIX}/lib/
     else
       mv dist-libtorch-cuda-linalg-nomagma/lib/* ${PREFIX}/lib/
