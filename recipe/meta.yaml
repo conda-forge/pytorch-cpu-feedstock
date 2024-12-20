@@ -11,42 +11,6 @@
 
 {% set mkl = "<2024" %}
 
-# a reasonably safe subset of tests that should run under 15 minutes
-# disable hypothesis because it randomly yields health check errors
-{% set tests = " ".join([
-    "test/test_autograd.py",
-    "test/test_autograd_fallback.py",
-    "test/test_custom_ops.py",
-    "test/test_linalg.py",
-    "test/test_mkldnn.py",
-    "test/test_modules.py",
-    "test/test_nn.py",
-    "test/test_torch.py",
-    "test/test_xnnpack_integration.py",
-    "--deselect test/test_torch.py::TestTorch::test_print",
-    "-m 'not hypothesis'",
-]) %}
-# tolerance violation with openblas
-{% set tests = tests ~ " --deselect test/test_linalg.py::TestLinalgCPU::test_1_sized_with_0_strided_cpu_float32" %}  # [osx]
-# timeouts and failures on aarch, see https://github.com/conda-forge/pytorch-cpu-feedstock/pull/298#issuecomment-2555888508
-{% set switch = True %}   # [aarch]
-{% set switch = False %}  # [not aarch]
-{% set tests = " ".join([tests] + switch * [
-    "--deselect test/test_autograd.py::TestAutograd::test_pynode_destruction_deadlock",
-    "--deselect test/test_linalg.py::TestLinalgCPU::test_cholesky_cpu_float32",
-    "--deselect test/test_linalg.py::TestLinalgCPU::test_pca_lowrank_cpu",
-    "--deselect test/test_linalg.py::TestLinalgCPU::test_svd_lowrank_cpu_complex128",
-    "--deselect test/test_linalg.py::TestLinalgCPU::test_svd_lowrank_cpu_float64",
-    "--deselect test/test_mkldnn.py::TestMkldnnCPU::test_lstm_cpu",
-]) %}
-{% set tests_3_13_deselects = " ".join([
-    "--deselect test/test_custom_ops.py::TestCustomOp::test_data_dependent_compile",
-    "--deselect test/test_custom_ops.py::TestCustomOp::test_functionalize_error",
-    "--deselect test/test_custom_ops.py::TestCustomOpAPI::test_compile",
-    "--deselect test/test_custom_ops.py::TestCustomOpAPI::test_fake",
-    "-k 'not test_compile_int4_mm and not test_compile_int8_mm'",
-]) %}
-
 package:
   name: libtorch-split
   version: {{ version }}
@@ -393,12 +357,6 @@ outputs:
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
       commands:
-        # the whole test suite takes forever, but we should get a good enough coverage
-        # for potential packaging problems by running a fixed subset
-        - export OMP_NUM_THREADS=4  # [unix]
-        - python -m pytest -n auto {{ tests }} --durations=50              # [py != 313 and not (aarch64 and cuda_compiler_version != "None")]
-        # dynamo does not support python 3.13
-        - python -m pytest -n auto {{ tests_3_13_deselects }} {{ tests }}  # [py == 313 and not (aarch64 and cuda_compiler_version != "None")]
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
@@ -409,7 +367,46 @@ outputs:
         # But if users install a newer version of OSX, they will have MPS support
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
         # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
+
+        # python-version-specific library (default location in SP_DIR symlinks back to this)
         - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
+
+        # a reasonably safe subset of tests that should run under 15 minutes
+        # disable hypothesis because it randomly yields health check errors
+        {% set tests = " ".join([
+            "test/test_autograd.py",
+            "test/test_autograd_fallback.py",
+            "test/test_custom_ops.py",
+            "test/test_linalg.py",
+            "test/test_mkldnn.py",
+            "test/test_modules.py",
+            "test/test_nn.py",
+            "test/test_torch.py",
+            "test/test_xnnpack_integration.py",
+            "-m 'not hypothesis'",
+        ]) %}
+
+        {% set skips = "TestTorch::test_print" %}
+        # tolerance violation with openblas
+        {% set skips = skips ~ " or test_1_sized_with_0_strided_cpu_float32" %}     # [osx]
+        # timeouts and failures on aarch, see https://github.com/conda-forge/pytorch-cpu-feedstock/pull/298#issuecomment-2555888508
+        {% set skips = skips ~ " or test_pynode_destruction_deadlock" %}            # [aarch64]
+        {% set skips = skips ~ " or TestLinalgCPU::test_cholesky_cpu_float32" %}    # [aarch64]
+        {% set skips = skips ~ " or TestLinalgCPU::test_pca_lowrank_cpu" %}         # [aarch64]
+        {% set skips = skips ~ " or TestLinalgCPU::test_svd_lowrank_cpu" %}         # [aarch64]
+        {% set skips = skips ~ " or TestMkldnnCPU::test_lstm_cpu" %}                # [aarch64]
+        # dynamo does not support python 3.13
+        {% set skips = skips ~ " or TestCustomOp::test_data_dependent_compile" %}   # [py==313]
+        {% set skips = skips ~ " or TestCustomOp::test_functionalize_error" %}      # [py==313]
+        {% set skips = skips ~ " or TestCustomOpAPI::test_compile" %}               # [py==313]
+        {% set skips = skips ~ " or TestCustomOpAPI::test_fake" %}                  # [py==313]
+        {% set skips = skips ~ " or test_compile_int4_mm" %}                        # [py==313]
+        {% set skips = skips ~ " or test_compile_int8_mm" %}                        # [py==313]
+
+        # the whole test suite takes forever, but we should get a good enough coverage
+        # for potential packaging problems by running a fixed subset
+        - export OMP_NUM_THREADS=4  # [unix]
+        - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50  # [not (aarch64 and cuda_compiler_version != "None")]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
