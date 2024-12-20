@@ -110,7 +110,6 @@ requirements:
     - libprotobuf
     - protobuf
     - make      # [linux]
-    - grep      # [unix]
   host:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
@@ -196,7 +195,6 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
-        - grep      # [unix]
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
