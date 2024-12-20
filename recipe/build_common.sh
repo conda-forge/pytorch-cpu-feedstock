@@ -1,15 +1,6 @@
 #!/bin/bash
 
-# pytorch build uses `USE_MAGMA` to determine magma-support; we cannot use this
-# name as the switch in CBC though, because the magma/nomagma builds are built
-# together (i.e. using `USE_MAGMA=0` unconditionally at first);
-# more imporantly, we need to avoid conda-build picking up `with_m/a/g/m/a` as a
-# used variable here (-> reason for the slashes), because this would cause the CI jobs
-# to be split. Aside from not writing out `with_...` fully in this comment, obfuscate
-# its evaluation enough to trick conda-build and assign it to yet another name:
-export CF_MAGMA=$(env | grep -E '^[hitw]{4}_magma=' | cut -d'=' -f2)
-
-echo "=== Building ${PKG_NAME} (magma: ${CF_MAGMA}; py: ${PY_VER}) ==="
+echo "=== Building ${PKG_NAME} (py: ${PY_VER}) ==="
 
 set -ex
 
@@ -187,10 +178,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_NCCL=0
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
-    # Perform the initial build without magma enabled, we'll enable
-    # it for the remaining builds (particularly, to have it enabled
-    # for pytorch).
-    export USE_MAGMA=0
+    export USE_MAGMA=1
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
@@ -212,18 +200,10 @@ case ${PKG_NAME} in
     # packing and unpacking the wheel.
     $PREFIX/bin/python setup.py build
 
-    mkdir -p dist-libtorch/include dist-libtorch-cuda-linalg-{magma,nomagma}/lib
+    mkdir -p dist-libtorch/include
     mv build/lib.*/torch/{bin,lib,share} dist-libtorch/
     mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} dist-libtorch/include/
     rm dist-libtorch/lib/libtorch_python.*
-    if [[ ${cuda_compiler_version} != "None" ]]; then
-        mv dist-libtorch/lib/libtorch_cuda_linalg.* dist-libtorch-cuda-linalg-nomagma/lib/
-
-        # Now rebuild with magma enabled.
-        sed -i -e "/USE_MAGMA/s:=.*:=1:" build/CMakeCache.txt
-        $PREFIX/bin/python setup.py build
-        mv build/lib.*/torch/lib/libtorch_cuda_linalg.* dist-libtorch-cuda-linalg-magma/lib/
-    fi
 
     # Keep the original backed up to sed later
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
@@ -233,13 +213,6 @@ case ${PKG_NAME} in
     mv dist-libtorch/lib/* ${PREFIX}/lib/
     mv dist-libtorch/share/* ${PREFIX}/share/
     mv dist-libtorch/include/* ${PREFIX}/include/
-    ;;
-  libtorch-cuda-linalg)
-    if [[ ${CF_MAGMA} == true ]]; then
-      mv dist-libtorch-cuda-linalg-magma/lib/* ${PREFIX}/lib/
-    else
-      mv dist-libtorch-cuda-linalg-nomagma/lib/* ${PREFIX}/lib/
-    fi
     ;;
   pytorch)
     $PREFIX/bin/python -m pip install . --no-deps -vvv --no-clean \

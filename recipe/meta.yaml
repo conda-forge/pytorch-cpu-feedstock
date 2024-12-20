@@ -9,9 +9,6 @@
 {% set build = build + 100 %}
 {% endif %}
 
-{% set build_magma = build + 50 %}
-{% set build_nomagma = build %}
-
 {% set mkl = "<2024" %}
 
 # a reasonably safe subset of tests that should run under 15 minutes
@@ -81,8 +78,6 @@ source:
     - patches/0010-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
     # https://github.com/pytorch/pytorch/pull/137740
     - patches/0011-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
-    # conda-specific patch for libtorch_cuda_linalg split
-    - patches/0012-Adjust-CUDAHooks-hasMAGMA-for-libtorch_cuda_linalg.s.patch
     # fix BLAS calling convention for openblas
     - patches/0013-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
 
@@ -164,97 +159,6 @@ requirements:
     - typing_extensions
 
 outputs:
-  - name: libtorch-cuda-linalg
-    build:
-      number: {{ build_magma }}    # [with_magma]
-      number: {{ build_nomagma }}  # [not with_magma]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_magma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build_magma }}      # [with_magma]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_nomagma_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build_nomagma }}  # [not with_magma]
-      skip: true  # [win or cuda_compiler_version == "None"]
-      ignore_run_exports_from:
-        - python *                               # [megabuild]
-        - numpy *                                # [megabuild]
-        - cross-python_{{ target_platform }}     # [megabuild and build_platform != target_platform]
-      ignore_run_exports:
-        - python *                               # [megabuild]
-        - numpy *                                # [megabuild]
-      track_features:
-        - nomagma                                # [not with_magma]
-    script: build_common.sh     # [unix]
-    script: build_common.bat    # [win]
-    requirements:
-      build:
-        # When you change 3.12 here, change it in build.sh as well
-        - python 3.12                            # [megabuild and build_platform != target_platform]
-        - python                                 # [not megabuild and build_platform != target_platform]
-        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-        - numpy  *                               # [megabuild and build_platform != target_platform]
-        - numpy                                  # [not megabuild and build_platform != target_platform]
-        - {{ stdlib('c') }}
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}
-        - libgomp
-        - cmake
-        - ninja
-        # Keep libprotobuf here so that a compatibile version
-        # of protobuf is installed between build and host
-        - libprotobuf
-        - protobuf
-        - make
-        - grep
-      host:
-        # GPU requirements
-        - cudnn
-        - nccl
-        - cuda-version {{ cuda_compiler_version }}
-        - nvtx-c
-        - cuda-driver-dev
-        - cuda-cudart-dev
-        - cuda-cupti-dev
-        - cuda-nvrtc-dev
-        - cuda-nvtx-dev
-        - cuda-nvml-dev
-        - cuda-profiler-api
-        - cusparselt
-        - libcublas-dev
-        - libcudss-dev
-        - libcufile-dev
-        - libcufft-dev
-        - libcurand-dev
-        - libcusolver-dev
-        - libcusparse-dev
-        - magma        # [with_magma]
-        # other requirements
-        - python 3.12  # [megabuild]
-        - python       # [not megabuild]
-        - numpy *      # [megabuild]
-        - numpy        # [not megabuild]
-        - pip
-        - setuptools
-        - pyyaml
-        - requests
-        - six
-        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
-        - libcblas * *_mkl      # [blas_impl == "mkl"]
-        - libcblas              # [blas_impl != "mkl"]
-        - liblapack             # [blas_impl != "mkl"]
-        - libgomp
-        - libabseil
-        - libprotobuf
-        - sleef
-        - libuv
-        - pkg-config
-        - typing_extensions
-      run:
-        # GPU requirements without run_exports
-        - {{ pin_compatible('cudnn') }}
-      run_constrained:
-        - libmagma <0.0a0  # [not with_magma]
-    test:
-      commands:
-        - test -f $PREFIX/lib/libtorch_cuda_linalg.so
-
   - name: libtorch
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
@@ -263,7 +167,6 @@ outputs:
       run_exports:
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
       ignore_run_exports_from:
-        - magma *
         - python *                               # [megabuild]
         - numpy *                                # [megabuild]
         - cross-python_{{ target_platform }}     # [megabuild and build_platform != target_platform]
@@ -300,6 +203,7 @@ outputs:
         - nccl                            # [cuda_compiler_version != "None"]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
+        - magma                           # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev
         - cuda-cudart-dev
@@ -339,9 +243,7 @@ outputs:
         - libuv
         - pkg-config  # [unix]
         - typing_extensions
-        - libtorch-cuda-linalg {{ version }}                  # [cuda_compiler_version != "None"]
       run:
-        - libtorch-cuda-linalg {{ version }}                  # [cuda_compiler_version != "None"]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
       run_constrained:
@@ -371,8 +273,6 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
-      ignore_run_exports_from:
-        - magma
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
