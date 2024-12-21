@@ -315,27 +315,26 @@ outputs:
             "-m 'not hypothesis'",
         ]) %}
 
-        {% set skips = "TestTorch::test_print" %}
+        {% set skips = "(TestTorch and test_print)" %}
         # tolerance violation with openblas
-        {% set skips = skips ~ " or test_1_sized_with_0_strided_cpu_float32" %}     # [osx]
+        {% set skips = skips ~ " or test_1_sized_with_0_strided_cpu_float32" %}         # [osx]
         # timeouts and failures on aarch, see https://github.com/conda-forge/pytorch-cpu-feedstock/pull/298#issuecomment-2555888508
-        {% set skips = skips ~ " or test_pynode_destruction_deadlock" %}            # [aarch64]
-        {% set skips = skips ~ " or TestLinalgCPU::test_cholesky_cpu_float32" %}    # [aarch64]
-        {% set skips = skips ~ " or TestLinalgCPU::test_pca_lowrank_cpu" %}         # [aarch64]
-        {% set skips = skips ~ " or TestLinalgCPU::test_svd_lowrank_cpu" %}         # [aarch64]
-        {% set skips = skips ~ " or TestMkldnnCPU::test_lstm_cpu" %}                # [aarch64]
+        {% set skips = skips ~ " or test_pynode_destruction_deadlock" %}                # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_cholesky_cpu_float32)" %}   # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_pca_lowrank_cpu)" %}        # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_svd_lowrank_cpu)" %}        # [aarch64]
+        {% set skips = skips ~ " or (TestMkldnnCPU and test_lstm_cpu)" %}               # [aarch64]
         # dynamo does not support python 3.13
-        {% set skips = skips ~ " or TestCustomOp::test_data_dependent_compile" %}   # [py==313]
-        {% set skips = skips ~ " or TestCustomOp::test_functionalize_error" %}      # [py==313]
-        {% set skips = skips ~ " or TestCustomOpAPI::test_compile" %}               # [py==313]
-        {% set skips = skips ~ " or TestCustomOpAPI::test_fake" %}                  # [py==313]
-        {% set skips = skips ~ " or test_compile_int4_mm" %}                        # [py==313]
-        {% set skips = skips ~ " or test_compile_int8_mm" %}                        # [py==313]
+        {% set skips = skips ~ " or (TestCustomOp and test_data_dependent_compile)" %}  # [py==313]
+        {% set skips = skips ~ " or (TestCustomOp and test_functionalize_error)" %}     # [py==313]
+        {% set skips = skips ~ " or (TestCustomOpAPI and test_compile)" %}              # [py==313]
+        {% set skips = skips ~ " or (TestCustomOpAPI and test_fake)" %}                 # [py==313]
+        {% set skips = skips ~ " or test_compile_int4_mm or test_compile_int8_mm" %}    # [py==313]
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
-        - python -m pytest -n auto -k "not ({{ skips }})" {{ tests }} --durations=50  # [not (aarch64 and cuda_compiler_version != "None")]
+        - python -m pytest -n auto -k "not ({{ skips }})" {{ tests }} --durations=50    # [not (aarch64 and cuda_compiler_version != "None")]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
