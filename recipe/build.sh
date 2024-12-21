@@ -195,24 +195,19 @@ echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
 
 case ${PKG_NAME} in
-  libtorch-split)
+  libtorch)
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.
     $PREFIX/bin/python setup.py build
 
-    mkdir -p dist-libtorch/include
-    mv build/lib.*/torch/{bin,lib,share} dist-libtorch/
-    mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} dist-libtorch/include/
-    rm dist-libtorch/lib/libtorch_python.*
+    mv build/lib.*/torch/bin/* ${PREFIX}/bin/
+    mv build/lib.*/torch/lib/* ${PREFIX}/lib/
+    mv build/lib.*/torch/share/* ${PREFIX}/share/
+    mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
+    rm ${PREFIX}/lib/libtorch_python.*
 
     # Keep the original backed up to sed later
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
-    ;;
-  libtorch)
-    mv dist-libtorch/bin/* ${PREFIX}/bin/
-    mv dist-libtorch/lib/* ${PREFIX}/lib/
-    mv dist-libtorch/share/* ${PREFIX}/share/
-    mv dist-libtorch/include/* ${PREFIX}/include/
     ;;
   pytorch)
     $PREFIX/bin/python -m pip install . --no-deps -vvv --no-clean \
