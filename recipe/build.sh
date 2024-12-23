@@ -168,7 +168,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     esac
     case ${cuda_compiler_version} in
         12.6)
-            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+            # Keep this list in sync with https://github.com/pytorch/pytorch/blob/07fa6e2c8b003319f85a469307f1b1dd73f6026c/.ci/manywheel/build_cuda.sh#L60
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;7.5;8.0;8.6;9.0+PTX"
             ;;
         *)
             echo "unsupported cuda version. edit build.sh"
