@@ -161,17 +161,14 @@ to detect changes and regenerate.
 
 To facilitate split package builds, we perform the build in the following steps:
 
-1. For the top-level rule (`libtorch-split`), we perform the base environment
-   setup and run `setup.py build` to build the libraries and collect the data
-   files without actually installing them. Then we move the files we need
-   into temporary directories for repackaging.
+1. For the top-level rule (`libtorch`), we perform the base environment setup
+   and run `setup.py build` to build the libraries, collect the data files
+   and install the common parts corresponding to the `libtorch` package.
 
    a. If `megabuild` is enabled, we build against a fixed Python version.
       Otherwise, we build using the final Python version.
 
-2. For the `libtorch` package, we manually install files that were prepared earlier.
-
-3. For the final `pytorch` package(s), we invoke `pip install` to build
-   and install the complete package. Importantly, this reuses previously built
-   targets, so only Python-related bits are rebuilt. In `megabuild` mode,
-   we patch `CMakeCache.txt` to set the correct Python version.
+2. For the `pytorch` package(s), we invoke `pip install` to build and install
+   the complete package. Importantly, this reuses previously built targets,
+   so only Python-related bits are rebuilt. In `megabuild` mode, we patch
+   `CMakeCache.txt` to set the correct Python version.
