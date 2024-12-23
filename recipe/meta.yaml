@@ -62,6 +62,7 @@ build:
   ignore_run_exports:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
+    - libmagma_sparse
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
@@ -170,6 +171,8 @@ outputs:
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
+      ignore_run_exports:
+        - libmagma_sparse
     requirements:
       build:
         - python                                 # [build_platform != target_platform]
