@@ -81,7 +81,6 @@ of 2024-11-28:
 |-----------|----------------|--------|-------------|-------------------------------------|
 | cuda      | 11.8/12.1/12.4 | 12.6   | 12.6        | `.ci/docker/build.sh`               |
 | cusparselt| 0.6.2.3+others |        | 0.6.3.2     | `.ci/docker/common/install_cuda.sh` |
-| libcudss  | 0.3.0.9        |        | 0.4.0.2     | `.ci/docker/common/install_cudss.sh`|
 | magma     | 2.6.1          |        | 2.8.0       | `.ci/docker/common/instal_magma.sh` |
 | libabseil | indirect?      |        | 20240722.0  |                                     |
 | libuv     |                |        | 1.49.2      | (not pinned)                        |
