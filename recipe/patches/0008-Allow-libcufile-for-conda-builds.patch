@@ -1,0 +1,22 @@
+From 2578bf017b0453c8eb028a09b7523fb150429eca Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Fri, 22 Nov 2024 17:50:53 +0100
+Subject: [PATCH 08/14] Allow libcufile for conda builds
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae3c3f2cbd5..3a845151cf8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -255,7 +255,7 @@ cmake_dependent_option(USE_CUDSS "Use cuDSS" ON "USE_CUDA" OFF)
+ # Binary builds will fail for cufile due to https://github.com/pytorch/builder/issues/1924
+ # Using TH_BINARY_BUILD to check whether is binary build.
+ # USE_ROCM is guarded against in Dependencies.cmake because USE_ROCM is not properly defined here
+-if(DEFINED ENV{TH_BINARY_BUILD})
++if(FALSE)
+   cmake_dependent_option(USE_CUFILE "Use cuFile" OFF
+                          "USE_CUDA AND NOT $ENV{TH_BINARY_BUILD} AND NOT WIN32" OFF)
+ else()

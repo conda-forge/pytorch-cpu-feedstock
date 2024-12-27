@@ -16,6 +16,199 @@ Current build status
 
 
 <table>
+    
+  <tr>
+    <td>Azure</td>
+    <td>
+      <details>
+        <summary>
+          <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+            <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main">
+          </a>
+        </summary>
+        <table>
+          <thead><tr><th>Variant</th><th>Status</th></tr></thead>
+          <tbody><tr>
+              <td>linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_blas_implgenericc_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_blas_implmklc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_blas_implmklc_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13cuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implgenericnumpy2.0python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericnumpy2.0python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implgenericnumpy2.0python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericnumpy2.0python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implgenericnumpy2.0python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericnumpy2.0python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implgenericnumpy2.0python3.9.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericnumpy2.0python3.9.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implgenericnumpy2python3.13.____cp313</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericnumpy2python3.13.____cp313" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implmklnumpy2.0python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklnumpy2.0python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implmklnumpy2.0python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklnumpy2.0python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implmklnumpy2.0python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklnumpy2.0python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implmklnumpy2.0python3.9.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklnumpy2.0python3.9.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_blas_implmklnumpy2python3.13.____cp313</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklnumpy2python3.13.____cp313" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2.0python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2.0python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2.0python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2.0python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2.0python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2.0python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2.0python3.9.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2.0python3.9.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2python3.13.____cp313</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2python3.13.____cp313" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNone</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=win&configuration=win%20win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNone" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>win_64_blas_implgenericcuda_compilercuda-nvcccuda_compiler_version12.6</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=win&configuration=win%20win_64_blas_implgenericcuda_compilercuda-nvcccuda_compiler_version12.6" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNone</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=win&configuration=win%20win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNone" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.6</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=win&configuration=win%20win_64_blas_implmklcuda_compilercuda-nvcccuda_compiler_version12.6" alt="variant">
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+    </td>
+  </tr>
 </table>
 
 Current release info

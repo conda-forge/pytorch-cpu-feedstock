@@ -1,0 +1,52 @@
+From a52ad18c25788f7bd7a19c89b6e30764d707e476 Mon Sep 17 00:00:00 2001
+From: atalman <atalman@fb.com>
+Date: Tue, 12 Nov 2024 12:28:10 +0000
+Subject: [PATCH 14/14] CD Enable Python 3.13 on windows (#138095)
+
+Adding CD windows. Part of: https://github.com/pytorch/pytorch/issues/130249
+Builder PR landed with smoke test: https://github.com/pytorch/builder/pull/2035
+
+Pull Request resolved: https://github.com/pytorch/pytorch/pull/138095
+Approved by: https://github.com/Skylion007, https://github.com/malfet
+
+Cherry-pick-note: minus changes in `.github/*`
+---
+ functorch/csrc/dim/dim.cpp      |  1 +
+ functorch/csrc/dim/dim_opcode.c | 13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/functorch/csrc/dim/dim.cpp b/functorch/csrc/dim/dim.cpp
+index 722618efbb0..f98818bfdcc 100644
+--- a/functorch/csrc/dim/dim.cpp
++++ b/functorch/csrc/dim/dim.cpp
+@@ -38,6 +38,7 @@ PyObject* Dim_init() {
+ #include "python_variable_simple.h"
+ 
+ #if IS_PYTHON_3_11_PLUS
++
+ #define Py_BUILD_CORE
+ #include "internal/pycore_opcode.h"
+ #undef Py_BUILD_CORE
+diff --git a/functorch/csrc/dim/dim_opcode.c b/functorch/csrc/dim/dim_opcode.c
+index 81ba62a3781..1b5d0677344 100644
+--- a/functorch/csrc/dim/dim_opcode.c
++++ b/functorch/csrc/dim/dim_opcode.c
+@@ -1,6 +1,17 @@
+ #include <torch/csrc/utils/python_compat.h>
+ #if defined(_WIN32) && IS_PYTHON_3_11_PLUS
+ #define Py_BUILD_CORE
+-#define NEED_OPCODE_TABLES
++#define NEED_OPCODE_TABLES // To get _PyOpcode_Deopt, _PyOpcode_Caches
++
++#if IS_PYTHON_3_13_PLUS
++#include <cpython/code.h> // To get PyUnstable_Code_GetFirstFree
++#define NEED_OPCODE_METADATA
++#include "internal/pycore_opcode_metadata.h"
++#undef NEED_OPCODE_METADATA
++#else
+ #include "internal/pycore_opcode.h"
+ #endif
++
++#undef NEED_OPCODE_TABLES
++#undef Py_BUILD_CORE
++#endif

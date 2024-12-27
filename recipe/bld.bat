@@ -32,8 +32,8 @@ set "USE_KINETO=OFF"
 
 if "%PKG_NAME%" == "pytorch" (
   set "PIP_ACTION=install"
-  :: We build libtorch for a specific python version. 
-  :: This ensures its only build once. However, when that version changes 
+  :: We build libtorch for a specific python version.
+  :: This ensures its only build once. However, when that version changes
   :: we need to make sure to update that here.
   :: Get the full python version string
   for /f "tokens=2" %%a in ('python --version 2^>^&1') do set PY_VERSION_FULL=%%a
@@ -55,7 +55,7 @@ if "%PKG_NAME%" == "pytorch" (
   @REM and 3.9+ since numpy 2.0 only exists for 3.9+
   if "%PY_VER%" == "3.8" (
     sed -i.bak "s#numpy\\\\_core\\\\include#numpy\\\\core\\\\include#g" build/CMakeCache.txt
-  ) else ( 
+  ) else (
     sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
   )
 
@@ -90,7 +90,7 @@ if not "%cuda_compiler_version%" == "None" (
 
 ) else (
     set USE_CUDA=0
-    
+
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     @REM for CPU builds. Not to be confused with MKL.
     set "USE_MKLDNN=1"
@@ -125,7 +125,7 @@ set "USE_LITE_PROTO=ON"
 @REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
 set "USE_OPENMP=0"
 
-@REM The activation script for cuda-nvcc doesnt add the CUDA_CFLAGS on windows. 
+@REM The activation script for cuda-nvcc doesnt add the CUDA_CFLAGS on windows.
 @REM Therefor we do this manually here. See:
 @REM https://github.com/conda-forge/cuda-nvcc-feedstock/issues/47
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
@@ -152,11 +152,11 @@ cmake --build build --target clean
 if errorlevel 1 exit /b 1
 
 @REM Here we split the build into two parts.
-@REM 
+@REM
 @REM Both the packages libtorch and pytorch use this same build script.
-@REM - The output of the libtorch package should just contain the binaries that are 
+@REM - The output of the libtorch package should just contain the binaries that are
 @REM   not related to Python.
-@REM - The output of the pytorch package contains everything except for the 
+@REM - The output of the pytorch package contains everything except for the
 @REM   non-python specific binaries.
 @REM
 @REM This ensures that a user can quickly switch between python versions without the
@@ -181,15 +181,29 @@ if "%PKG_NAME%" == "libtorch" (
         robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %SP_DIR%\torch\include\%%f\
     )
 
-    @REM Remove the python binary file, that is placed in the site-packages 
+    @REM Remove the python binary file, that is placed in the site-packages
     @REM directory by the specific python specific pytorch package.
     del %SP_DIR%\torch\lib\torch_python.*
-    
+
     popd
     popd
 
     @REM Keep the original backed up to sed later
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
+) else if "%PKG_NAME%" == "pytorch" (
+    rmdir /s /q %SP_DIR%\torch\bin
+    rmdir /s /q %SP_DIR%\torch\share
+    for %%f in (ATen caffe2 torch c10) do (
+        rmdir /s /q %SP_DIR%\torch\include\%%f
+    )
+
+    @REM Delete all files from the lib directory that do not start with torch_python
+    for %%f in (%SP_DIR%\torch\lib\*) do (
+        set "FILENAME=%%~nf"
+        if "!FILENAME:~0,12!" neq "torch_python" (
+            del %%f
+        )
+    )
 )
 
 @REM Show the sccache stats.

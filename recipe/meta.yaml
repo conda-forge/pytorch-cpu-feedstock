@@ -1,5 +1,5 @@
 {% set version = "2.5.1" %}
-{% set build = 6 %}
+{% set build = 7 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -9,6 +9,8 @@
 {% set build = build + 100 %}
 {% endif %}
 
+{% set mkl = "<2024" %}
+
 package:
   name: libtorch
   version: {{ version }}
@@ -17,31 +19,43 @@ source:
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
   sha256: 740eb5fff95e33cfe699bad43be83523f569c7cc7f9c285c2a255416443dd266
   patches:
-    - patches/0003-Force-usage-of-python-3-and-error-without-numpy.patch
+    - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
     # https://github.com/pytorch/pytorch/pull/137084
-    - patches/0004-Help-find-numpy.patch
+    - patches/0002-Help-find-numpy.patch
     # https://github.com/pytorch/pytorch/pull/138287
-    - patches/0005-Use-system-nvtx3.patch
+    - patches/0003-Add-USE_SYSTEM_NVTX-option-138287.patch
     # sympy 1.13.2 was reported to result in test failures on Windows and mac
     # https://github.com/pytorch/pytorch/pull/133235
-    - patches/0006-Update-sympy-version.patch
-    - patches/0007-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
+    - patches/0004-Update-sympy-version.patch
+    - patches/0005-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
     # https://github.com/pytorch/pytorch/pull/136034
-    - patches/0008-Fix-pickler-error.patch
+    - patches/0006-fix-3.13-pickle-error-in-serialization.py-136034.patch
     # https://github.com/pytorch/pytorch/pull/137331
-    - patches/137331.patch
+    - patches/0007-Allow-users-to-overwrite-ld-with-environment-variabl.patch
     # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
     # for their PyPI wheel builds
-    - patches/0009-Allow-libcufile-for-conda-builds.patch
+    - patches/0008-Allow-libcufile-for-conda-builds.patch
     # conda-specific patch, lets us override CUDA paths
-    - patches/0010-Allow-overriding-CUDA-related-paths.patch
-    - patches/0011-Fix-FindOpenBLAS.patch
-    - patches/0012-Fix-Python313-Windows.patch
+    - patches/0009-Allow-overriding-CUDA-related-paths.patch
+    # NumPy 2 fixes:
+    # https://github.com/pytorch/pytorch/pull/136800
+    - patches/0010-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
+    # https://github.com/pytorch/pytorch/pull/137740
+    - patches/0011-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
+    # fix BLAS calling convention for openblas
+    - patches/0012-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+    - patches/0013-Fix-FindOpenBLAS.patch
+    # backport https://github.com/pytorch/pytorch/pull/138095
+    - patches/0014-CD-Enable-Python-3.13-on-windows-138095.patch
 
 build:
   number: {{ build }}
-  string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+  # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
+  skip: true  # [cuda_compiler_version == "11.8"]
+  # TODO(baszalmstra): Remove this before merging
+  skip: true  # [not win or not (cuda_compiler_version == "12.6" or cuda_compiler == "None")]
+  string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -52,12 +66,7 @@ build:
   ignore_run_exports:
     - python *                               # [megabuild]
     - numpy *                                # [megabuild]
-
-  # TODO(baszalmstra): Remove this before merging
-  skip: true  # [not win or not (cuda_compiler_version == "12.6" or cuda_compiler == "None")]
-
-  # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
-  skip: true  # [cuda_compiler_version == "11.8"]
+    - libmagma_sparse
 
 requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
@@ -142,8 +151,8 @@ requirements:
     - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
     - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
-    - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-    - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+    - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+    - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
@@ -156,7 +165,7 @@ test:
     - test -f $PREFIX/lib/lib{{ each_lib }}.dylib                 # [osx]
     - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
     {% endfor %}
-    
+
     # Windows specific .LIB files
     {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu'] %}
     - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
@@ -167,7 +176,7 @@ test:
     - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
     - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
     {% endfor %}
-    
+
     # Cuda only libraries
     {% for each_lib in ['c10_cuda', 'caffe2_nvrtc', 'torch_cuda'] %}
     - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
@@ -183,17 +192,17 @@ test:
 outputs:
   - name: libtorch
   - name: pytorch
+    script: build.sh    # [unix]
+    script: bld.bat     # [win]
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
-      skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
-
-    script: build_pytorch.sh   # [not win]
-    script: build_pytorch.bat  # [win]
+      ignore_run_exports:
+        - libmagma_sparse
     requirements:
       build:
         - python                                 # [build_platform != target_platform]
@@ -217,9 +226,9 @@ outputs:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None" and linux]
-        - magma                           # [cuda_compiler_version != "None"]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
+        - magma                           # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
@@ -290,22 +299,22 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - ninja
         - boto3
         - hypothesis
         - pytest
         - tabulate
         - pydot
-        - mock  # [linux]
         - pip
         - expecttest
         - xmlrunner
         # Required by run_test.py
+        - pytest-flakefinder
         - pytest-rerunfailures
         - pytest-shard
-        - pytest-flakefinder
         - pytest-xdist
       imports:
-        - torch  # [cuda_compiler_version == "None"]
+        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
       source_files:
         # Only include the source_files if we are actually going to run the tests.
         - test
@@ -313,25 +322,55 @@ outputs:
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
       commands:
-        - OMP_NUM_THREADS=4 python ./test/run_test.py || true  # [not win and not (aarch64 and cuda_compiler_version != "None")]
-
-        # TODO(baszalmstra): Getting all sorts of test failures, disabling for now, should take a look later.
-        # Using `cmd.exe /c` to not fail if this test fails (similar to `|| true`).
-        - cmd.exe /c "python ./test/run_test.py" || ver > nul 2> nul    # [win and cuda_compiler_version == "None"]
-        
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
         - python -c "import torch; print(torch.__version__)"                       # [not (aarch64 and cuda_compiler_version != "None")]
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
-        # Running tests on aarch64 + cuda is not supported until we move to Alma Linux 8
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/267#issuecomment-2387225526
         - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
         # At conda-forge, we target versions of OSX that are too old for MPS support
         # But if users install a newer version of OSX, they will have MPS support
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
         # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
+
+        # python-version-specific library (default location in SP_DIR symlinks back to this)
         - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
+
+        # a reasonably safe subset of tests that should run under 15 minutes
+        # disable hypothesis because it randomly yields health check errors
+        {% set tests = " ".join([
+            "test/test_autograd.py",
+            "test/test_autograd_fallback.py",
+            "test/test_custom_ops.py",
+            "test/test_linalg.py",
+            "test/test_mkldnn.py",
+            "test/test_modules.py",
+            "test/test_nn.py",
+            "test/test_torch.py",
+            "test/test_xnnpack_integration.py",
+            "-m 'not hypothesis'",
+        ]) %}
+
+        {% set skips = "(TestTorch and test_print)" %}
+        # tolerance violation with openblas
+        {% set skips = skips ~ " or test_1_sized_with_0_strided_cpu_float32" %}         # [osx]
+        # timeouts and failures on aarch, see https://github.com/conda-forge/pytorch-cpu-feedstock/pull/298#issuecomment-2555888508
+        {% set skips = skips ~ " or test_pynode_destruction_deadlock" %}                # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_cholesky_cpu_float32)" %}   # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_pca_lowrank_cpu)" %}        # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_svd_lowrank_cpu)" %}        # [aarch64]
+        {% set skips = skips ~ " or (TestMkldnnCPU and test_lstm_cpu)" %}               # [aarch64]
+        # dynamo does not support python 3.13
+        {% set skips = skips ~ " or (TestCustomOp and test_data_dependent_compile)" %}  # [py==313]
+        {% set skips = skips ~ " or (TestCustomOp and test_functionalize_error)" %}     # [py==313]
+        {% set skips = skips ~ " or (TestCustomOpAPI and test_compile)" %}              # [py==313]
+        {% set skips = skips ~ " or (TestCustomOpAPI and test_fake)" %}                 # [py==313]
+        {% set skips = skips ~ " or test_compile_int4_mm or test_compile_int8_mm" %}    # [py==313]
+
+        # the whole test suite takes forever, but we should get a good enough coverage
+        # for potential packaging problems by running a fixed subset
+        - export OMP_NUM_THREADS=4  # [unix]
+        - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50    # [not (aarch64 and cuda_compiler_version != "None")]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
@@ -340,18 +379,17 @@ outputs:
   {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                  # [megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                # [megabuild and cuda_compiler_version == "None"]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [not megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                # [not megabuild and cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                  # [megabuild and cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                                # [megabuild and cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [not megabuild and cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                # [not megabuild and cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
-      skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       # weigh down cpu implementation and give cuda preference
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
-        - pytorch {{ version }}=cuda*{{ PKG_BUILDNUM }}                   # [megabuild and cuda_compiler_version != "None"]
+        - pytorch {{ version }}=cuda*_{{ blas_impl }}*{{ PKG_BUILDNUM }}  # [megabuild and cuda_compiler_version != "None"]
         - pytorch {{ version }}=cpu_{{ blas_impl }}*{{ PKG_BUILDNUM }}    # [megabuild and cuda_compiler_version == "None"]
         - {{ pin_subpackage("pytorch", exact=True) }}                     # [not megabuild]
     test:
