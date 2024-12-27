@@ -10,6 +10,8 @@
 {% endif %}
 
 {% set mkl = "<2024" %}
+# see .ci/docker/ci_commit_pins/triton.txt
+{% set triton = "3.1.0" %}
 
 package:
   name: libtorch
@@ -249,6 +251,7 @@ outputs:
         - __cuda  # [cuda_compiler_version != "None"]
         - libtorch {{ version }}
         - setuptools
+        - triton {{ triton }}   # [cuda_compiler_version != "None"]
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure

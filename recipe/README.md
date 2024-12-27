@@ -97,7 +97,7 @@ of 2024-11-28:
 | six       | 1.11.0         |        | 1.16.0      | `third_party/NNPACK/cmake/DownloadSix.cmake` |
 | sympy     | ==1.13.1       | >=1.13.1, !=1.13.2 | 1.13.3 | (wheel metadata)             |
 | typing-extensions | >=4.8.0 |       | 4.12.2      | (wheel metadata)                    |
-| triton    | 3.1.0          | none   | 3.1.0       | (wheel metadata)                    |
+| triton    | 3.1.0          | 3.1.0  | 3.1.0       | (wheel metadata)                    |
 
 
 Maintenance notes
