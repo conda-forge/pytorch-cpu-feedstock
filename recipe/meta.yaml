@@ -311,8 +311,11 @@ outputs:
         # Required by run_test.py
         - pytest-flakefinder
         - pytest-rerunfailures
-        - pytest-shard
         - pytest-xdist
+        # danpetry/TF: Pytorch includes their own edited version of pytest-shard and adding
+        # it into the test deps as well results in the --shard-id option being added twice.
+        # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
+        # - pytest-shard
       imports:
         - torch  # [not (aarch64 and cuda_compiler_version != "None")]
       source_files:
