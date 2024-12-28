@@ -10,6 +10,8 @@
 {% endif %}
 
 # see .ci/docker/ci_commit_pins/triton.txt
+# pytorch and triton are released in tandem, see notes in their release process
+# https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
 {% set triton = "3.1.0" %}
 
 package:
