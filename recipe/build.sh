@@ -110,7 +110,7 @@ fi
 if [[ "$blas_impl" == "generic" ]]; then
     # Fake openblas
     export BLAS=OpenBLAS
-    export OpenBLAS_HOME=%PREFIX%
+    export OpenBLAS_HOME=${PREFIX}
 else
     export BLAS=MKL
 fi
