@@ -53,7 +53,8 @@ build:
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
   # TODO(baszalmstra): Remove this before merging
-  skip: true  # [not win or not (cuda_compiler_version == "12.6" or cuda_compiler == "None")]
+  # skip: true  # [not win or not (cuda_compiler_version == "12.6" or cuda_compiler == "None")]
+  skip: true  # [not win or not cuda_compiler == "None" or not blas_impl == "mkl"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -297,8 +298,9 @@ outputs:
 
     test:
       requires:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
+        # TF: DEBUG - remove before merge
+        # - {{ compiler('c') }}
+        # - {{ compiler('cxx') }}
         - ninja
         - boto3
         - hypothesis
