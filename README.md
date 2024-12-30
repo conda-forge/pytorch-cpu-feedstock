@@ -310,6 +310,7 @@ Feedstock Maintainers
 * [@Tobias-Fischer](https://github.com/Tobias-Fischer/)
 * [@beckermr](https://github.com/beckermr/)
 * [@benjaminrwilson](https://github.com/benjaminrwilson/)
+* [@h-vetinari](https://github.com/h-vetinari/)
 * [@hmaarrfk](https://github.com/hmaarrfk/)
 * [@jeongseok-meta](https://github.com/jeongseok-meta/)
 * [@sodre](https://github.com/sodre/)
