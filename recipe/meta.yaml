@@ -345,7 +345,7 @@ outputs:
         # disable hypothesis because it randomly yields health check errors
         {% set tests = " ".join([
             "test/test_autograd.py",
-            "-m 'not hypothesis'",
+            "-m \"not hypothesis\"",
         ]) %}
 
         {% set skips = "(TestTorch and test_print)" %}
