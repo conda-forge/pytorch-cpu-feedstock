@@ -345,14 +345,6 @@ outputs:
         # disable hypothesis because it randomly yields health check errors
         {% set tests = " ".join([
             "test/test_autograd.py",
-            "test/test_autograd_fallback.py",
-            "test/test_custom_ops.py",
-            "test/test_linalg.py",
-            "test/test_mkldnn.py",
-            "test/test_modules.py",
-            "test/test_nn.py",
-            "test/test_torch.py",
-            "test/test_xnnpack_integration.py",
             "-m 'not hypothesis'",
         ]) %}
 
