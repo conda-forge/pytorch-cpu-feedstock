@@ -21,10 +21,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: win_64_blas_implmklcuda_compilerNonecuda_compiler_versionNone
+          - CONFIG: win_64_blas_implgenericcuda_compilerNonecuda_compiler_versionNone
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implmklcuda_compilerNon_ha94fa4b9ab', 'windows', 'x64', 'self-hosted']
+            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_blas_implgenericcuda_compile_h4a9b946200', 'windows', 'x64', 'self-hosted']
     steps:
 
     - name: Checkout code
