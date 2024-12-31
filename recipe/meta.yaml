@@ -47,6 +47,7 @@ source:
     - patches/0013-Fix-FindOpenBLAS.patch
     # backport https://github.com/pytorch/pytorch/pull/138095
     - patches/0014-CD-Enable-Python-3.13-on-windows-138095.patch
+    - patches/0015-fix-cuda-test-win.patch
 
 build:
   number: {{ build }}
