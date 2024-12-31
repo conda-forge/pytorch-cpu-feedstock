@@ -90,6 +90,11 @@ if not "%cuda_compiler_version%" == "None" (
 
 ) else (
     set USE_CUDA=0
+    REM On windows, env vars are case-insensitive and setup.py
+    REM passes all env vars starting with CUDA_*, CMAKE_* to
+    REM to cmake
+    set "cuda_compiler_version="
+    set "cuda_compiler="
 
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     @REM for CPU builds. Not to be confused with MKL.
