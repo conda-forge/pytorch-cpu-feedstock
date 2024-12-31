@@ -128,7 +128,7 @@ set "BUILD_CUSTOM_PROTOBUF=OFF"
 set "USE_LITE_PROTO=ON"
 
 @REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
-set "USE_OPENMP=0"
+set "USE_OPENMP=OFF"
 
 @REM The activation script for cuda-nvcc doesnt add the CUDA_CFLAGS on windows.
 @REM Therefor we do this manually here. See:
