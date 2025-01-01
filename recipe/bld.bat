@@ -95,6 +95,7 @@ if not "%cuda_compiler_version%" == "None" (
     REM to cmake
     set "cuda_compiler_version="
     set "cuda_compiler="
+    set "CUDA_VERSION="
 
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     @REM for CPU builds. Not to be confused with MKL.
