@@ -8,10 +8,6 @@ set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 set PYTORCH_BUILD_NUMBER=%PKG_BUILDNUM%
 
-REM Fix address sanitizer issues
-REM https://github.com/actions/runner-images/issues/8891
-set ASAN_WIN_CONTINUE_ON_INTERCEPTION_FAILURE=1
-
 REM I don't know where this folder comes from, but it's interfering with the build in osx-64
 if EXIST %PREFIX%\git RD /S /Q %PREFIX%\git
 
@@ -140,9 +136,9 @@ set "USE_OPENMP=OFF"
 @REM https://github.com/conda-forge/cuda-nvcc-feedstock/issues/47
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 set "CUDA_CFLAGS=-I%PREFIX%/Library/include -I%BUILD_PREFIX%/Library/include"
-set "CFLAGS=%CFLAGS% %CUDA_CFLAGS% /fsanitize=address"
+set "CFLAGS=%CFLAGS% %CUDA_CFLAGS%"
 set "CPPFLAGS=%CPPFLAGS% %CUDA_CFLAGS%"
-set "CXXFLAGS=%CXXFLAGS% %CUDA_CFLAGS% /fsanitize=address"
+set "CXXFLAGS=%CXXFLAGS% %CUDA_CFLAGS%"
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 echo "CXXFLAGS=%CXXFLAGS%"
 
