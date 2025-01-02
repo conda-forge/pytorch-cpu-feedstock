@@ -8,6 +8,10 @@ set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 set PYTORCH_BUILD_NUMBER=%PKG_BUILDNUM%
 
+# Fix address sanitizer issues
+# https://github.com/actions/runner-images/issues/8891
+set ASAN_WIN_CONTINUE_ON_INTERCEPTION_FAILURE=1
+
 REM I don't know where this folder comes from, but it's interfering with the build in osx-64
 if EXIST %PREFIX%\git RD /S /Q %PREFIX%\git
 
