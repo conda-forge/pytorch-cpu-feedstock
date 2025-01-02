@@ -376,7 +376,7 @@ outputs:
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
         - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50    # [not win and not (aarch64 and cuda_compiler_version != "None")]
-        - python -m pytest -s {{ tests }} -k "not ({{ skips }})" --durations=50            # [win and not (aarch64 and cuda_compiler_version != "None")]
+        - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50            # [win and not (aarch64 and cuda_compiler_version != "None")]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
