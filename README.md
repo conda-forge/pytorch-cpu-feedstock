@@ -314,4 +314,3 @@ Feedstock Maintainers
 * [@hmaarrfk](https://github.com/hmaarrfk/)
 * [@jeongseok-meta](https://github.com/jeongseok-meta/)
 * [@sodre](https://github.com/sodre/)
-
