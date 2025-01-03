@@ -54,7 +54,7 @@ build:
   skip: true  # [cuda_compiler_version == "11.8"]
   # TODO(baszalmstra): Remove this before merging
   # skip: true  # [not win or not (cuda_compiler_version == "12.6" or cuda_compiler == "None")]
-  skip: true  # [not win or not cuda_compiler == "None" or blas_impl == "mkl"]
+  skip: true  # [not win or not cuda_compiler == "None" or blas_impl != "mkl"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
