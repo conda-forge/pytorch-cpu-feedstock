@@ -381,6 +381,7 @@ about:
 
 extra:
   recipe-maintainers:
+    - h-vetinari
     - jeongseok-meta
     - hmaarrfk
     - sodre
