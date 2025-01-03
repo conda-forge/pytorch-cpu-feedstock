@@ -1,5 +1,5 @@
 {% set version = "2.5.1" %}
-{% set build = 7 %}
+{% set build = 8 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -9,7 +9,10 @@
 {% set build = build + 100 %}
 {% endif %}
 
-{% set mkl = "<2024" %}
+# see .ci/docker/ci_commit_pins/triton.txt
+# pytorch and triton are released in tandem, see notes in their release process
+# https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
+{% set triton = "3.1.0" %}
 
 package:
   name: libtorch
@@ -44,6 +47,9 @@ source:
     - patches/0011-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
     # fix BLAS calling convention for openblas
     - patches/0013-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+    # fix mkl-2024 issue
+    # https://github.com/pytorch/pytorch/pull/143894
+    - patches/0014-fix-issue-142484.patch
 
 build:
   number: {{ build }}
@@ -101,7 +107,9 @@ requirements:
     - cuda-nvtx-dev
     - cuda-nvml-dev
     - cuda-profiler-api
+    - cusparselt
     - libcublas-dev
+    - libcudss-dev
     - libcufile-dev
     - libcufft-dev
     - libcurand-dev
@@ -202,7 +210,9 @@ outputs:
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
+        - cusparselt
         - libcublas-dev
+        - libcudss-dev
         - libcufile-dev
         - libcufft-dev
         - libcurand-dev
@@ -249,6 +259,7 @@ outputs:
         - __cuda  # [cuda_compiler_version != "None"]
         - libtorch {{ version }}
         - setuptools
+        - triton {{ triton }}   # [cuda_compiler_version != "None"]
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
