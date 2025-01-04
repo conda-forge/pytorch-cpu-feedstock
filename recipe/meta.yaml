@@ -84,7 +84,8 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - libgomp        # [linux]
-    - llvm-openmp    # [osx or win]
+    - llvm-openmp    # [osx]
+    - intel-openmp  # [win]
     - libuv          # [win]
     - cmake
     - ninja
@@ -133,7 +134,8 @@ requirements:
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
-    - llvm-openmp    # [osx or win]
+    - llvm-openmp    # [osx]
+    - intel-openmp  # [win]
     - libabseil
     - libprotobuf
     - sleef
@@ -154,7 +156,7 @@ requirements:
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
-    - intel-openmp <0a0  # [win]
+    - llvm-openmp <0a0  # [win]
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
@@ -216,6 +218,7 @@ outputs:
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
+        - intel-openmp  # [win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -261,6 +264,7 @@ outputs:
         - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
+        - intel-openmp  # [win]
         - libabseil
         - libprotobuf
         - sleef
@@ -270,6 +274,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
         - llvm-openmp    # [osx]
+        - intel-openmp  # [win]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
