@@ -85,7 +85,7 @@ requirements:
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - libgomp        # [linux]
     - llvm-openmp    # [osx]
-    - intel-openmp  # [win]
+    - intel-openmp {{ mkl }}  # [win]
     - libuv          # [win]
     - cmake
     - ninja
@@ -135,7 +135,7 @@ requirements:
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
     - llvm-openmp    # [osx]
-    - intel-openmp  # [win]
+    - intel-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
     - sleef
@@ -218,7 +218,7 @@ outputs:
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        - intel-openmp  # [win]
+        - intel-openmp {{ mkl }}  # [win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -264,7 +264,7 @@ outputs:
         - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        - intel-openmp  # [win]
+        - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
         - sleef
@@ -274,7 +274,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
         - llvm-openmp    # [osx]
-        - intel-openmp  # [win]
+        - intel-openmp {{ mkl }}  # [win]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
