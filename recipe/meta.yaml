@@ -85,6 +85,7 @@ requirements:
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - libgomp        # [linux]
     - llvm-openmp    # [osx or win]
+    - intel-openmp <0a0  # [win]
     - libuv          # [win]
     - cmake
     - ninja
@@ -134,6 +135,7 @@ requirements:
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
     - llvm-openmp    # [osx or win]
+    - intel-openmp <0a0  # [win]
     - libabseil
     - libprotobuf
     - sleef
@@ -154,6 +156,7 @@ requirements:
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+    - intel-openmp <0a0  # [win]
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
@@ -375,6 +378,7 @@ outputs:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
+        # - set KMP_DUPLICATE_LIB_OK=TRUE  # [win]
         - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50    # [not win and not (aarch64 and cuda_compiler_version != "None")]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50            # [win and not (aarch64 and cuda_compiler_version != "None")]
 
