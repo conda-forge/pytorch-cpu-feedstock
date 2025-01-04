@@ -85,7 +85,7 @@ requirements:
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - libgomp        # [linux]
     - llvm-openmp    # [osx or win]
-    - intel-openmp <0a0  # [win]
+    # - intel-openmp <0a0  # [win]
     - libuv          # [win]
     - cmake
     - ninja
@@ -135,7 +135,7 @@ requirements:
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
     - llvm-openmp    # [osx or win]
-    - intel-openmp <0a0  # [win]
+    # - intel-openmp <0a0  # [win]
     - libabseil
     - libprotobuf
     - sleef
