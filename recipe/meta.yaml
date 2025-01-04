@@ -9,7 +9,7 @@
 {% set build = build + 100 %}
 {% endif %}
 
-{% set mkl = "2025" %}
+{% set mkl = "<2024" %}
 
 package:
   name: libtorch
