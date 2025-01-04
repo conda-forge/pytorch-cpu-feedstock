@@ -85,7 +85,7 @@ requirements:
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - libgomp        # [linux]
     - llvm-openmp    # [osx]
-    - intel-openmp {{ mkl }}  # [win]
+    - llvm-openmp {{ mkl }}  # [win]
     - libuv          # [win]
     - cmake
     - ninja
@@ -135,7 +135,7 @@ requirements:
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
     - llvm-openmp    # [osx]
-    - intel-openmp {{ mkl }}  # [win]
+    - llvm-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
     - sleef
@@ -218,7 +218,7 @@ outputs:
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        - intel-openmp {{ mkl }}  # [win]
+        - llvm-openmp {{ mkl }}  # [win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -264,7 +264,7 @@ outputs:
         - liblapack             # [blas_impl != "mkl"]
         - libgomp   # [linux]
         - llvm-openmp    # [osx]
-        - intel-openmp {{ mkl }}  # [win]
+        - llvm-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
         - sleef
@@ -274,7 +274,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
         - llvm-openmp    # [osx]
-        - intel-openmp {{ mkl }}  # [win]
+        - llvm-openmp {{ mkl }}  # [win]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
@@ -381,7 +381,7 @@ outputs:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
-        # - set KMP_DUPLICATE_LIB_OK=TRUE  # [win]
+        - set KMP_DUPLICATE_LIB_OK=TRUE  # [win]
         - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50    # [not win and not (aarch64 and cuda_compiler_version != "None")]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50            # [win and not (aarch64 and cuda_compiler_version != "None")]
 
