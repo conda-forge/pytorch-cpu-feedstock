@@ -156,7 +156,7 @@ requirements:
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
-    - llvm-openmp <0a0  # [win]
+    # - llvm-openmp <0a0  # [win]
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
