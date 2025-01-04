@@ -29,7 +29,7 @@ source:
     - patches/0004-Update-sympy-version.patch
     - patches/0005-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
     # https://github.com/pytorch/pytorch/pull/136034
-    - patches/0006-3.13-fix-3.13-pickle-error-in-serialization.py-13603.patch
+    - patches/0006-fix-3.13-pickle-error-in-serialization.py-136034.patch
     # https://github.com/pytorch/pytorch/pull/137331
     - patches/0007-Allow-users-to-overwrite-ld-with-environment-variabl.patch
     # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
@@ -43,13 +43,18 @@ source:
     # https://github.com/pytorch/pytorch/pull/137740
     - patches/0011-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
     # fix BLAS calling convention for openblas
-    - patches/0013-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+    - patches/0012-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+    - patches/0013-Fix-FindOpenBLAS.patch
+    # backport https://github.com/pytorch/pytorch/pull/138095
+    - patches/0014-CD-Enable-Python-3.13-on-windows-138095.patch
 
 build:
   number: {{ build }}
-  skip: true  # [win]
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  # TODO(baszalmstra): Remove this before merging
+  # skip: true  # [not win or not (cuda_compiler_version == "12.6" or cuda_compiler == "None")]
+  skip: true  # [not win or not cuda_compiler == "None" or blas_impl != "mkl"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -68,7 +73,7 @@ requirements:
   # Keep this list synchronized (except for python*, numpy*) in outputs
   # We use python to build libtorch as well because it is easier
   build:
-    # When you change 3.12 here, change it in build.sh as well
+    # When you change 3.12 here, change it in build.sh/bld.bat as well
     - python 3.12                            # [megabuild and build_platform != target_platform]
     - python                                 # [not megabuild and build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
@@ -79,7 +84,9 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - libgomp        # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp    # [osx or win]
+    # - intel-openmp <0a0  # [win]
+    - libuv          # [win]
     - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
@@ -87,22 +94,23 @@ requirements:
     - libprotobuf
     - protobuf
     - make      # [linux]
+    - sccache
   host:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
-    - nccl                            # [cuda_compiler_version != "None"]
+    - nccl                            # [cuda_compiler_version != "None" and linux]
     - magma                           # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
     - nvtx-c                          # [cuda_compiler_version != "None"]
     {% if cuda_compiler_version != "None" %}
-    - cuda-driver-dev
+    - cuda-driver-dev                 # [linux]
     - cuda-cudart-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
     - cuda-nvml-dev
     - cuda-profiler-api
     - libcublas-dev
-    - libcufile-dev
+    - libcufile-dev  # [linux]
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
@@ -114,16 +122,20 @@ requirements:
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
-    - setuptools
+    # see https://github.com/pytorch/pytorch/issues/136541
+    - setuptools <=72.1.0  # [win]
+    - setuptools  # [not win]
     - pyyaml
     - requests
     - six
     - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
     - libcblas * *_mkl      # [blas_impl == "mkl"]
+    - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
     - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp    # [osx or win]
+    # - intel-openmp <0a0  # [win]
     - libabseil
     - libprotobuf
     - sleef
@@ -144,16 +156,41 @@ requirements:
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+    - intel-openmp <0a0  # [win]
 
+# these tests are for the libtorch output below, but due to
+# a particularity of conda-build, that output is defined in
+# the global build stage, including tests
 test:
   commands:
     # libraries
-    {% for each_lib in [ 'libc10', 'libshm', 'libtorch', 'libtorch_cpu', 'libtorch_global_deps'] %}
-    - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux]
-    - test -f $PREFIX/lib/{{ each_lib }}.dylib  # [osx]
+    {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu', 'torch_global_deps'] %}
+    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux]
+    - test -f $PREFIX/lib/lib{{ each_lib }}.dylib                 # [osx]
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
     {% endfor %}
-    {% for each_lib in ['libc10_cuda', 'libcaffe2_nvrtc', 'libtorch_cuda', 'libtorch_cuda_linalg'] %}
-    - test -f $PREFIX/lib/{{ each_lib }}.so     # [linux and cuda_compiler_version != "None"]
+
+    # Windows specific .LIB files
+    {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu'] %}
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
+    {% endfor %}
+
+    # Windows specific libraries
+    {% for each_lib in [ 'asmjit', 'fbgemm'] %}
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
+    {% endfor %}
+
+    # Cuda only libraries
+    {% for each_lib in ['c10_cuda', 'caffe2_nvrtc', 'torch_cuda'] %}
+    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win and cuda_compiler_version != "None"]
+    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win and cuda_compiler_version != "None"]
+    {% endfor %}
+
+    # Linux specific cuda libraries
+    {% for each_lib in [ 'torch_cuda_linalg'] %}
+    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
     {% endfor %}
 
 outputs:
@@ -188,22 +225,23 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
+        - sccache
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None"]
+        - nccl                            # [cuda_compiler_version != "None" and linux]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
         - magma                           # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
-        - cuda-driver-dev
+        - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
         - libcublas-dev
-        - libcufile-dev
+        - libcufile-dev  # [linux]
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
@@ -213,7 +251,9 @@ outputs:
         - python
         - numpy
         - pip
-        - setuptools
+        # see https://github.com/pytorch/pytorch/issues/136541
+        - setuptools <=72.1.0  # [win]
+        - setuptools  # [not win]
         - pyyaml
         - requests
         - six
@@ -261,8 +301,9 @@ outputs:
 
     test:
       requires:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
+        # TF: DEBUG - remove before merge
+        # - {{ compiler('c') }}
+        # - {{ compiler('cxx') }}
         - ninja
         - boto3
         - hypothesis
@@ -272,12 +313,18 @@ outputs:
         - pip
         - expecttest
         - xmlrunner
+        # Required by run_test.py
         - pytest-flakefinder
         - pytest-rerunfailures
         - pytest-xdist
+        # danpetry/TF: Pytorch includes their own edited version of pytest-shard and adding
+        # it into the test deps as well results in the --shard-id option being added twice.
+        # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
+        # - pytest-shard
       imports:
         - torch  # [not (aarch64 and cuda_compiler_version != "None")]
       source_files:
+        # Only include the source_files if we are actually going to run the tests.
         - test
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
@@ -309,7 +356,7 @@ outputs:
             "test/test_nn.py",
             "test/test_torch.py",
             "test/test_xnnpack_integration.py",
-            "-m 'not hypothesis'",
+            "-m \"not hypothesis\"",
         ]) %}
 
         {% set skips = "(TestTorch and test_print)" %}
@@ -331,7 +378,9 @@ outputs:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
-        - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50    # [not (aarch64 and cuda_compiler_version != "None")]
+        # - set KMP_DUPLICATE_LIB_OK=TRUE  # [win]
+        - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50    # [not win and not (aarch64 and cuda_compiler_version != "None")]
+        - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50            # [win and not (aarch64 and cuda_compiler_version != "None")]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
@@ -377,4 +426,5 @@ extra:
     - benjaminrwilson
     - Tobias-Fischer
     - beckermr
+    - baszalmstra
   feedstock-name: pytorch-cpu

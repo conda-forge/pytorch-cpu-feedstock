@@ -110,7 +110,7 @@ fi
 if [[ "$blas_impl" == "generic" ]]; then
     # Fake openblas
     export BLAS=OpenBLAS
-    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB ${PREFIX}/lib/liblapack${SHLIB_EXT} ${PREFIX}/lib/libcblas${SHLIB_EXT} ${PREFIX}/lib/libblas${SHLIB_EXT})#g" cmake/Modules/FindOpenBLAS.cmake
+    export OpenBLAS_HOME=${PREFIX}
 else
     export BLAS=MKL
 fi
@@ -195,6 +195,16 @@ else
     export USE_CUDA=0
 fi
 
+# Configure sccache
+export CMAKE_C_COMPILER_LAUNCHER=sccache
+export CMAKE_CXX_COMPILER_LAUNCHER=sccache
+export CMAKE_CUDA_COMPILER_LAUNCHER=sccache
+
+sccache --stop-server
+sccache --start-server
+sccache --zero-stats
+
+# Execute the build
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
 
