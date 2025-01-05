@@ -81,6 +81,8 @@ of 2024-11-28:
 |-----------|----------------|--------|-------------|-------------------------------------|
 | cuda      | 11.8/12.1/12.4 | 12.6   | 12.6        | `.ci/docker/build.sh`               |
 | cuda-cupti| 12.4.127       |        | 12.6.80     | `.github/scripts/generate_binary_build_matrix.py` |
+| cusparselt| 0.6.2.3+others |        | 0.6.3.2     | `.ci/docker/common/install_cuda.sh` |
+| libcudss  | 0.3.0.9        |        | 0.4.0.2     | `.ci/docker/common/install_cudss.sh`|
 | magma     | 2.6.1          |        | 2.8.0       | `.ci/docker/common/instal_magma.sh` |
 | libabseil | indirect?      |        | 20240722.0  |                                     |
 | libuv     |                |        | 1.49.2      | (not pinned)                        |
@@ -98,7 +100,7 @@ of 2024-11-28:
 | six       | 1.11.0         |        | 1.16.0      | `third_party/NNPACK/cmake/DownloadSix.cmake` |
 | sympy     | ==1.13.1       | >=1.13.1, !=1.13.2 | 1.13.3 | (wheel metadata)             |
 | typing-extensions | >=4.8.0 |       | 4.12.2      | (wheel metadata)                    |
-| triton    | 3.1.0          | none   | 3.1.0       | (wheel metadata)                    |
+| triton    | 3.1.0          | 3.1.0  | 3.1.0       | (wheel metadata)                    |
 
 
 Maintenance notes
@@ -170,3 +172,82 @@ To facilitate split package builds, we perform the build in the following steps:
    the complete package. Importantly, this reuses previously built targets,
    so only Python-related bits are rebuilt. In `megabuild` mode, we patch
    `CMakeCache.txt` to set the correct Python version.
+
+
+Speeding up development builds
+==============================
+Building PyTorch can take significant time. This can be especially problematic
+when working on the recipe, as that may require rebuilding it multiple times.
+This section provides a few hints that can be used to speed this up, saving
+both time and resources.
+
+
+Using ccache
+------------
+PyTorch supports using `ccache` to copy C, C++ and CUDA compilation results
+to a disk cache. In a subsequent build, if the source files match the cached
+result, ccache can retrieve it immediately without having to call the compiler
+again. With an up-to-date cache, the compilation step can be shortened
+to a few minutes.
+
+Furthermore, ccache can also speed up sequential builds of different package
+variants. Since large parts of the shared code do not change between different
+variants, ccache can reuse large parts of the previous cached compilations
+and recompile only files that are actually different.
+
+The simplest way of using ccache is to run `conda-build` directly
+in an environment where ccache is installed. Start by installing ccache:
+
+```
+$ conda install ccache
+```
+
+Configure ccache by creating `~/.config/ccache/ccache.conf` file.
+The recommended configuration follows:
+
+```
+compiler_check = none
+compression = true
+sloppiness = pch_defines,time_macros
+hash_dir = false
+base_dir = /var/tmp/conda-bld
+max_size = 6G
+```
+
+This example uses `/var/tmp/conda-bld` as the top directory for all conda
+builds. Replace it with the directory you are going to use. See `man ccache`
+for more options.
+
+Afterwards, run build by calling `conda-build` directly, e.g.:
+
+```
+$ conda build --no-build-id --croot /var/tmp/conda-bld -m .ci_support/linux_64_blas_implmklc_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13.yaml --clobber-file .ci_support/linux_64_blas_implmklc_compiler_version13cuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13.yaml .
+```
+
+Note that it is important to specify `--croot` as the same directory
+as ccache's `base_dir`, and to use `--no-build-id` to avoid path variation.
+
+PyTorch's CMake automatically detects and uses `ccache`.
+
+
+Limiting CUDA targets
+---------------------
+Normally, CUDA-enabled versions of PyTorch are compiled for a wide range
+of GPUs. This causes every CUDA compilation to take significant amounts
+of time and space. For testing purposes, you may want to instead change
+the list to a single GPU. For example, if you are using a sm75 GPU, you
+can change `TORCH_CUDA_ARCH_LIST` in the build script to:
+
+```
+export TORCH_CUDA_ARCH_LIST="7.5"
+```
+
+
+Limiting Python targets (for megabuild)
+---------------------------------------
+While megabuild generally saves time by reusing the same base build for
+multiple Python targets, building and testing for multiple versions of Python
+can significantly slow up development builds. If you don't need to do that,
+you can edit the generated `*.yaml` file in `.ci_support`, and remove
+the entries for `python` versions you don't need. Note that Python versions
+are zipped to `numpy` versions, so you'll have to remove them in pairs.
