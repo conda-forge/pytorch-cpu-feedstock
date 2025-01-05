@@ -1,7 +1,7 @@
 From 2578bf017b0453c8eb028a09b7523fb150429eca Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Fri, 22 Nov 2024 17:50:53 +0100
-Subject: [PATCH 08/14] Allow libcufile for conda builds
+Subject: [PATCH 08/15] Allow libcufile for conda builds
 
 ---
  CMakeLists.txt | 2 +-
