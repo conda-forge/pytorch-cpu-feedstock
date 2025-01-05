@@ -99,7 +99,7 @@ if not "%cuda_compiler_version%" == "None" (
 
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     @REM for CPU builds. Not to be confused with MKL.
-    set "USE_MKLDNN=1"
+    set "USE_MKLDNN=0"
 )
 
 set DISTUTILS_USE_SDK=1
