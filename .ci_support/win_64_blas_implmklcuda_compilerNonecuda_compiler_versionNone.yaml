@@ -12,20 +12,12 @@ cuda_compiler:
 - None
 cuda_compiler_version:
 - None
-cudnn:
-- '9'
 cxx_compiler:
 - vs2019
 github_actions_labels:
 - cirun-azure-windows-2xlarge
 libabseil:
 - '20240722'
-libblas:
-- 3.9 *netlib
-libcblas:
-- 3.9 *netlib
-liblapack:
-- 3.9 *netlib
 libprotobuf:
 - 5.28.2
 libtorch:
