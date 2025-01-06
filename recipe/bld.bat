@@ -38,6 +38,8 @@ if "%PKG_NAME%" == "pytorch" (
   :: Get the full python version string
   for /f "tokens=2" %%a in ('python --version 2^>^&1') do set PY_VERSION_FULL=%%a
 
+  copy build\CMakeCache.txt.orig build\CMakeCache.txt
+
   :: Replace Python312 or python312 with ie Python311 or python311
   :: sed "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
 
