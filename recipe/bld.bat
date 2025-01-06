@@ -154,7 +154,7 @@ sccache --start-server
 sccache --zero-stats
 
 @REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
-cmake --build build --target clean
+:: cmake --build build --target clean
 
 %PYTHON% -m pip %PIP_ACTION% . --no-deps -vvv --no-clean
 if errorlevel 1 exit /b 1
