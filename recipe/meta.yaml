@@ -83,7 +83,7 @@ requirements:
   # We use python to build libtorch as well because it is easier
   build:
     # When you change 3.12 here, change it in build.sh/bld.bat as well
-    - python 3.12                            # [megabuild and build_platform != target_platform]
+    - python 3.12                            # [megabuild and (build_platform != target_platform or win)]
     - python                                 # [not megabuild and build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - numpy  *                               # [megabuild and build_platform != target_platform]
@@ -220,7 +220,7 @@ outputs:
         - libmagma_sparse
     requirements:
       build:
-        - python                                 # [build_platform != target_platform]
+        - python 3.12                            # [build_platform != target_platform or win]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
         - {{ stdlib('c') }}
