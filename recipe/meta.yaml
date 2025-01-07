@@ -153,6 +153,10 @@ requirements:
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+    # if using OpenBLAS, ensure that a version compatible with OpenMP is used
+    # otherwise, we get the following warnings:
+    # OpenBLAS Warning : Detect OpenMP Loop and this application may hang. Please rebuild the library with USE_OPENMP=1 option.
+    - openblas * openmp_*          # [blas_impl != "mkl"]
 
 test:
   commands:
