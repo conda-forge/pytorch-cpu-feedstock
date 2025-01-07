@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "=== Building ${PKG_NAME} (py: ${PY_VER}) ==="
+
 set -ex
 
 # This is used to detect if it's in the process of building pytorch
@@ -114,15 +116,10 @@ else
 fi
 
 if [[ "$PKG_NAME" == "pytorch" ]]; then
-  PIP_ACTION=install
   # Trick Cmake into thinking python hasn't changed
   sed "s/3\.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
   sed -i.bak "s/3;12/${PY_VER%.*};${PY_VER#*.}/g" build/CMakeCache.txt
   sed -i.bak "s/cpython-312/cpython-${PY_VER%.*}${PY_VER#*.}/g" build/CMakeCache.txt
-else
-  # For the main script we just build a wheel for so that the C++/CUDA
-  # parts are built. Then they are reused in each python version.
-  PIP_ACTION=wheel
 fi
 
 # MacOS build is simple, and will not be for CUDA
@@ -181,9 +178,11 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export NCCL_ROOT_DIR=$PREFIX
     export NCCL_INCLUDE_DIR=$PREFIX/include
     export USE_SYSTEM_NCCL=1
+    export USE_SYSTEM_NVTX=1
     export USE_STATIC_NCCL=0
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
+    export USE_MAGMA=1
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
@@ -198,32 +197,50 @@ fi
 
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
-$PREFIX/bin/python -m pip $PIP_ACTION . --no-deps -vvv --no-clean \
-    | sed "s,${CXX},\$\{CXX\},g" \
-    | sed "s,${PREFIX},\$\{PREFIX\},g"
 
-if [[ "$PKG_NAME" == "libtorch" ]]; then
-  mkdir -p $SRC_DIR/dist
-  pushd $SRC_DIR/dist
-  wheel unpack ../torch-*.whl
-  pushd torch-*
-  mv torch/bin/* ${PREFIX}/bin
-  mv torch/lib/* ${PREFIX}/lib
-  mv torch/share/* ${PREFIX}/share
-  for f in ATen caffe2 tensorpipe torch c10; do
-    mv torch/include/$f ${PREFIX}/include/$f
-  done
-  rm ${PREFIX}/lib/libtorch_python.*
-  popd
-  popd
+case ${PKG_NAME} in
+  libtorch)
+    # Call setup.py directly to avoid spending time on unnecessarily
+    # packing and unpacking the wheel.
+    $PREFIX/bin/python setup.py build
 
-  # Keep the original backed up to sed later
-  cp build/CMakeCache.txt build/CMakeCache.txt.orig
-else
-  # Keep this in ${PREFIX}/lib so that the library can be found by
-  # TorchConfig.cmake.
-  # With upstream non-split build, `libtorch_python.so`
-  # and TorchConfig.cmake are both in ${SP_DIR}/torch/lib and therefore
-  # this is not needed.
-  mv ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
-fi
+    mv build/lib.*/torch/bin/* ${PREFIX}/bin/
+    mv build/lib.*/torch/lib/* ${PREFIX}/lib/
+    mv build/lib.*/torch/share/* ${PREFIX}/share/
+    mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
+    rm ${PREFIX}/lib/libtorch_python.*
+
+    # Keep the original backed up to sed later
+    cp build/CMakeCache.txt build/CMakeCache.txt.orig
+    ;;
+  pytorch)
+    $PREFIX/bin/python -m pip install . --no-deps -vvv --no-clean \
+        | sed "s,${CXX},\$\{CXX\},g" \
+        | sed "s,${PREFIX},\$\{PREFIX\},g"
+    # Keep this in ${PREFIX}/lib so that the library can be found by
+    # TorchConfig.cmake.
+    # With upstream non-split build, `libtorch_python.so`
+    # and TorchConfig.cmake are both in ${SP_DIR}/torch/lib and therefore
+    # this is not needed.
+    #
+    # NB: we are using cp rather than mv, so that the loop below symlinks it
+    # back.
+    cp ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
+
+    pushd $SP_DIR/torch
+    # Make symlinks for libraries and headers from libtorch into $SP_DIR/torch
+    # Also remove the vendorered libraries they seem to include
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/243
+    # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
+    for f in bin/* lib/* share/* include/*; do
+      if [[ -e "$PREFIX/$f" ]]; then
+        rm -rf $f
+        ln -sf $PREFIX/$f $PWD/$f
+      fi
+    done
+    popd
+    ;;
+  *)
+    echo "Unknown package name, edit build.sh"
+    exit 1
+esac
