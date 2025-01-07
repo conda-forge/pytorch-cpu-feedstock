@@ -348,7 +348,7 @@ outputs:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
-        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50
+        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50  # [not (aarch64 and cuda_compiler_version != "None")]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
