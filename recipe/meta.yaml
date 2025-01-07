@@ -169,6 +169,8 @@ requirements:
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
+    - pybind11
+    - eigen
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
@@ -307,6 +309,8 @@ outputs:
         - pkg-config  # [unix]
         - typing_extensions
         - {{ pin_subpackage('libtorch', exact=True) }}
+        - pybind11
+        - eigen
       run:
         - llvm-openmp    # [osx]
         - intel-openmp {{ mkl }}  # [win]
@@ -479,7 +483,6 @@ about:
   license_file:
     - LICENSE
     - NOTICE
-    - third_party/pybind11/LICENSE
   summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
 
 extra:
