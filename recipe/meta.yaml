@@ -2,6 +2,9 @@
 {% set version = "2.5.1" %}
 {% set build = 9 %}
 
+# Use a higher build number for the CUDA variant, to ensure that it's
+# preferred by conda's solver, and it's preferentially
+# installed where the platform supports it.
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
 {% endif %}

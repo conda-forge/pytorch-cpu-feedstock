@@ -4,6 +4,12 @@ setlocal enabledelayedexpansion
 REM remove pyproject.toml to avoid installing deps from pip
 if EXIST pyproject.toml DEL pyproject.toml
 
+:: The PyTorch test suite includes some symlinks, which aren't resolved on Windows, leading to packaging errors.
+:: ATTN! These change and have to be updated manually, often with each release.
+:: (no current symlinks being packaged. Leaving this information here as it took some months to find the issue. Look out
+:: for a failure with error message: "conda_package_handling.exceptions.ArchiveCreationError: <somefile> Cannot stat
+:: while writing file")
+
 set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 :: Always pass 0 to avoid appending ".post" to version string.

@@ -4,6 +4,10 @@ echo "=== Building ${PKG_NAME} (py: ${PY_VER}) ==="
 
 set -ex
 
+echo "####################################################################"
+echo "Building PyTorch using BLAS implementation: $blas_impl              "
+echo "####################################################################"
+
 # This is used to detect if it's in the process of building pytorch
 export IN_PYTORCH_BUILD=1
 
@@ -20,9 +24,17 @@ rm -rf pyproject.toml
 export USE_CUFILE=0
 export USE_NUMA=0
 export USE_ITT=0
+
+#################### ADJUST COMPILER AND LINKER FLAGS #####################
+# The below three lines expose symbols that would otherwise be hidden or
+# optimised away. They were here before, so removing them would potentially
+# break users' programs
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
+# The default conda LDFLAGs include -Wl,-dead_strip_dylibs, which removes all the
+# MKL sequential, core, etc. libraries, resulting in a "Symbol not found: _mkl_blas_caxpy"
+# error on osx-64.
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 if [[ "$c_compiler" == "clang" ]]; then
@@ -45,6 +57,7 @@ fi
 # can be imported on system without a GPU
 LDFLAGS="${LDFLAGS//-Wl,-z,now/-Wl,-z,lazy}"
 
+################ CONFIGURE CMAKE FOR CONDA ENVIRONMENT ###################
 export CMAKE_GENERATOR=Ninja
 export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
 export CMAKE_PREFIX_PATH=$PREFIX
@@ -62,6 +75,7 @@ done
 CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
+# Use our build version and number for inserting into binaries
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 # Always pass 0 to avoid appending ".post" to version string.
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
@@ -164,12 +178,19 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
             echo "unknown CUDA arch, edit build.sh"
             exit 1
     esac
+    # Warning from pytorch v1.12.1: In the future we will require one to
+    # explicitly pass TORCH_CUDA_ARCH_LIST to cmake instead of implicitly
+    # setting it as an env variable.
+    #
+    # See:
+    # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
+    # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     case ${cuda_compiler_version} in
         12.6)
             export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
             ;;
         *)
-            echo "unsupported cuda version. edit build.sh"
+            echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
             exit 1
     esac
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
