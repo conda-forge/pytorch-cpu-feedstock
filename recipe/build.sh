@@ -127,8 +127,11 @@ if [[ "$blas_impl" == "generic" ]]; then
     # Fake openblas
     export BLAS=OpenBLAS
     export OpenBLAS_HOME=${PREFIX}
-else
+elif [[ "$blas_impl" == "mkl" ]]; then
     export BLAS=MKL
+else
+    echo "[ERROR] Unsupported BLAS implementation '${blas_impl}'" >&2
+    exit 1
 fi
 
 if [[ "$PKG_NAME" == "pytorch" ]]; then
