@@ -26,6 +26,10 @@ export USE_NUMA=0
 export USE_ITT=0
 
 #################### ADJUST COMPILER AND LINKER FLAGS #####################
+# Pytorch's build system doesn't like us setting the c++ standard and will
+# issue a warning:
+# https://github.com/pytorch/pytorch/blob/3beb7006dd5a415dfa236081ad5d55ae38346324/CMakeLists.txt#L41
+export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-std=c++[0-9][0-9]//g')"
 # The below three lines expose symbols that would otherwise be hidden or
 # optimised away. They were here before, so removing them would potentially
 # break users' programs
