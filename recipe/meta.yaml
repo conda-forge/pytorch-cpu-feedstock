@@ -293,7 +293,7 @@ outputs:
         - pytest-rerunfailures
         - pytest-xdist
       imports:
-        - torch  # [not (aarch64 and cuda_compiler_version != "None")]
+        - torch
       source_files:
         - test
         # tools/ is needed to optimise test run
@@ -303,7 +303,7 @@ outputs:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
-        - python -c "import torch; print(torch.__version__)"                       # [not (aarch64 and cuda_compiler_version != "None")]
+        - python -c "import torch; print(torch.__version__)"
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
         - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
         # At conda-forge, we target versions of OSX that are too old for MPS support
@@ -348,7 +348,7 @@ outputs:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
-        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50  # [not (aarch64 and cuda_compiler_version != "None")]
+        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
