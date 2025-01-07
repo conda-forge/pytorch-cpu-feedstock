@@ -118,7 +118,9 @@ if [[ "${CI}" == "github_actions" ]]; then
     # cirun-openstack-gpu-2xlarge, which has 32GB RAM, 8 CPUs
     export MAX_JOBS=4
 else
-    export MAX_JOBS=${CPU_COUNT}
+    # Leave a spare core for other tasks. This may need to be reduced further
+    # if we get out of memory errors.
+    export MAX_JOBS=$((CPU_COUNT > 1 ? CPU_COUNT - 1 : 1))
 fi
 
 if [[ "$blas_impl" == "generic" ]]; then
