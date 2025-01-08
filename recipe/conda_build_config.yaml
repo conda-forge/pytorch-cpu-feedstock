@@ -7,9 +7,9 @@ MACOSX_SDK_VERSION:         # [osx]
 channel_targets:
   - conda-forge main
   - conda-forge pytorch_rc
-rc:
-  - None
-  - rc
+is_rc:
+  - False
+  - True
 zip_keys:
   -
     - channel_targets
