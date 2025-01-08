@@ -63,9 +63,9 @@ build:
   skip: true  # [win]
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
-  # This logic allows two variants to be defined in the conda_build_config, but only one to be actually built each time
-  # (the one we want). We want to be able to define two variants in the cbc so we can assign different labels to each upon
-  # upload (by zipping the variants with channel_targets).
+  # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
+  # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
+  # (by zipping is_rc with channel_targets), which prevents rc builds being used unless specifically requested.
 {% if "rc" in version %}
   skip: true  # [not is_rc]
 {% else %}
