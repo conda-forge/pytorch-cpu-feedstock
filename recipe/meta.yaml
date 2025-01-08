@@ -56,7 +56,7 @@ source:
     - patches/0014-Fix-FindOpenBLAS.patch
     # backport https://github.com/pytorch/pytorch/pull/138095
     - patches/0015-CD-Enable-Python-3.13-on-windows-138095.patch
-    - patches/0016-use-environment-build-type.patch
+    - # patches/0016-use-environment-build-type.patch
 
 build:
   number: {{ build }}
@@ -84,7 +84,7 @@ requirements:
   # We use python to build libtorch as well because it is easier
   build:
     # When you change 3.12 here, change it in build.sh/bld.bat as well
-    - python 3.12                            # [megabuild and (build_platform != target_platform or win)]
+    - python 3.12                            # [megabuild and build_platform != target_platform]
     - python                                 # [not megabuild and build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - numpy  *                               # [megabuild and build_platform != target_platform]
@@ -221,7 +221,7 @@ outputs:
         - libmagma_sparse
     requirements:
       build:
-        - python 3.12                            # [build_platform != target_platform or win]
+        - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
         - {{ stdlib('c') }}
