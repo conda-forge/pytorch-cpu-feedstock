@@ -306,7 +306,7 @@ outputs:
         - __cuda  # [cuda_compiler_version != "None"]
         - libtorch {{ version }}
         - setuptools
-        - triton {{ triton }}   # [cuda_compiler_version != "None"]
+        - triton {{ triton }}   # [cuda_compiler_version != "None" and not win]
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
