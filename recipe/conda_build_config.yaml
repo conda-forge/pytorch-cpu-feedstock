@@ -13,7 +13,7 @@ is_rc:
 zip_keys:
   -
     - channel_targets
-    - rc
+    - is_rc
 
 blas_impl:
   - mkl                         # [x86_64]
