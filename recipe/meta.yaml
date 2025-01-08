@@ -20,7 +20,7 @@ package:
   version: {{ version }}
 
 source:
-{% if rc != None %}
+{% if "rc" in version %}
   git_url: https://github.com/pytorch/pytorch.git
   git_rev: v{{ version.replace(".rc", "-rc") }}
 {% else %}
@@ -63,10 +63,13 @@ build:
   skip: true  # [win]
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  # This logic allows two variants to be defined in the conda_build_config, but only one to be actually built each time
+  # (the one we want). We want to be able to define two variants in the cbc so we can assign different labels to each upon
+  # upload (by zipping the variants with channel_targets).
 {% if "rc" in version %}
-  skip: true  # [rc == "None"]
+  skip: true  # [not is_rc]
 {% else %}
-  skip: true  # [rc == "rc"]
+  skip: true  # [is_rc]
 {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
