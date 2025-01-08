@@ -38,19 +38,17 @@ if "%PKG_NAME%" == "pytorch" (
   :: Get the full python version string
   for /f "tokens=2" %%a in ('python --version 2^>^&1') do set PY_VERSION_FULL=%%a
 
-  copy build\CMakeCache.txt.orig build\CMakeCache.txt
-
   :: Replace Python312 or python312 with ie Python311 or python311
-  :: sed "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
+  sed "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
 
   :: Replace version string v3.12.8() with ie v3.11.11()
-  :: sed -i.bak -E "s/v3\.12\.[0-9]+/v%PY_VERSION_FULL%/g" build/CMakeCache.txt
+  sed -i.bak -E "s/v3\.12\.[0-9]+/v%PY_VERSION_FULL%/g" build/CMakeCache.txt
 
   :: Replace interpreter properties Python;3;12;8;64 with ie Python;3;11;11;64
-  :: sed -i.bak -E "s/Python;3;12;[0-9]+;64/Python;%PY_VERSION_FULL:.=;%;64/g" build/CMakeCache.txt
+  sed -i.bak -E "s/Python;3;12;[0-9]+;64/Python;%PY_VERSION_FULL:.=;%;64/g" build/CMakeCache.txt
 
   :: Replace cp312-win_amd64 with ie cp311-win_amd64
-  :: sed -i.bak "s/cp312/cp%CONDA_PY%/g" build/CMakeCache.txt
+  sed -i.bak "s/cp312/cp%CONDA_PY%/g" build/CMakeCache.txt
 
   @REM We use a fan-out build to avoid the long rebuild of libtorch
   @REM However, the location of the numpy headers changes between python 3.8
@@ -101,7 +99,7 @@ if not "%cuda_compiler_version%" == "None" (
 
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     @REM for CPU builds. Not to be confused with MKL.
-    set "USE_MKLDNN=0"
+    set "USE_MKLDNN=1"
 )
 
 set DISTUTILS_USE_SDK=1
@@ -154,7 +152,7 @@ sccache --start-server
 sccache --zero-stats
 
 @REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
-:: cmake --build build --target clean
+cmake --build build --target clean
 
 %PYTHON% -m pip %PIP_ACTION% . --no-deps -vvv --no-clean
 if errorlevel 1 exit /b 1
