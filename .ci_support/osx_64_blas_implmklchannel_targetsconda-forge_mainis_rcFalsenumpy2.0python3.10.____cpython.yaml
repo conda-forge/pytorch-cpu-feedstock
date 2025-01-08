@@ -24,6 +24,8 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '18'
+is_rc:
+- 'False'
 libabseil:
 - '20240722'
 libcblas:
@@ -52,14 +54,12 @@ python:
 - 3.10.* *_cpython
 pytorch:
 - '2.4'
-rc:
-- None
 target_platform:
 - osx-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
 - - channel_targets
-  - rc
+  - is_rc
 - - python
   - numpy
