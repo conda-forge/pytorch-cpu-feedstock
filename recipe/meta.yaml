@@ -56,7 +56,7 @@ source:
     - patches/0014-Fix-FindOpenBLAS.patch
     # backport https://github.com/pytorch/pytorch/pull/138095
     - patches/0015-CD-Enable-Python-3.13-on-windows-138095.patch
-    - # patches/0016-use-environment-build-type.patch
+    # - patches/0016-use-environment-build-type.patch
 
 build:
   number: {{ build }}
