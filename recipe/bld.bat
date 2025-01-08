@@ -115,6 +115,9 @@ set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
 set "CMAKE_INCLUDE_PATH=%LIBRARY_INC%"
 set "CMAKE_LIBRARY_PATH=%LIBRARY_LIB%"
 set "CMAKE_BUILD_TYPE=Release"
+:: This is so that CMake finds the environment's Python, not another one
+set Python_EXECUTABLE=%PYTHON%
+set Python3_EXECUTABLE=%PYTHON%
 
 set "INSTALL_TEST=0"
 set "BUILD_TEST=0"
@@ -154,7 +157,7 @@ sccache --zero-stats
 @REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
 cmake --build build --target clean
 
-%PYTHON% -m pip %PIP_ACTION% . --no-deps -vvv --no-clean
+%PYTHON% -m pip %PIP_ACTION% . -no-build-isolation --no-deps -vvv --no-clean
 if errorlevel 1 exit /b 1
 
 @REM Here we split the build into two parts.
