@@ -195,16 +195,6 @@ else
     export USE_CUDA=0
 fi
 
-# Configure sccache
-export CMAKE_C_COMPILER_LAUNCHER=sccache
-export CMAKE_CXX_COMPILER_LAUNCHER=sccache
-export CMAKE_CUDA_COMPILER_LAUNCHER=sccache
-
-sccache --stop-server
-sccache --start-server
-sccache --zero-stats
-
-# Execute the build
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
 
