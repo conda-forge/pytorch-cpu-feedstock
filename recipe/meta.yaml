@@ -156,6 +156,7 @@ requirements:
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
+    - intel-openmp {{ mkl }}  # [win]
   run_constrained:
     # These constraints ensure conflict between pytorch and
     # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
