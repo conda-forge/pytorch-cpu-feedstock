@@ -103,7 +103,7 @@ requirements:
     - libprotobuf
     - protobuf
     - make      # [linux]
-    - sccache
+    - sccache   # [win]
   host:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
@@ -138,7 +138,6 @@ requirements:
     - setuptools  # [not win]
     - pyyaml
     - requests
-    - six
     - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
     - libcblas * *_mkl      # [blas_impl == "mkl"]
     - libblas               # [blas_impl != "mkl"]
@@ -168,7 +167,6 @@ requirements:
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
-    # - llvm-openmp <0a0  # [win]
 
 # these tests are for the libtorch output below, but due to
 # a particularity of conda-build, that output is defined in
@@ -271,7 +269,6 @@ outputs:
         - setuptools  # [not win]
         - pyyaml
         - requests
-        - six
         - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
@@ -399,7 +396,6 @@ outputs:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
-        # - set KMP_DUPLICATE_LIB_OK=TRUE  # [win]
         - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50    # [not win and not (aarch64 and cuda_compiler_version != "None")]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50      # [win and not (aarch64 and cuda_compiler_version != "None")]
 
