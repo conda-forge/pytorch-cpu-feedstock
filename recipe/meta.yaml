@@ -368,14 +368,13 @@ outputs:
             "test/test_autograd_fallback.py",
             "test/test_custom_ops.py",
             "test/test_linalg.py",
+            "test/test_mkldnn.py",
             "test/test_modules.py",
             "test/test_nn.py",
             "test/test_torch.py",
             "test/test_xnnpack_integration.py",
             "-m \"not hypothesis\"",
         ]) %}
-        # TODO: Re-add
-        #            "test/test_mkldnn.py",
 
         {% set skips = "(TestTorch and test_print)" %}
         # tolerance violation with openblas
