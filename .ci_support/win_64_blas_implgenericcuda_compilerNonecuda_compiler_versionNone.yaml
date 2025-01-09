@@ -1,5 +1,5 @@
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - vs2019
 c_stdlib:
