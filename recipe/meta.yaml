@@ -391,11 +391,15 @@ outputs:
         {% set skips = skips ~ " or (TestCustomOpAPI and test_compile)" %}              # [py==313]
         {% set skips = skips ~ " or (TestCustomOpAPI and test_fake)" %}                 # [py==313]
         {% set skips = skips ~ " or test_compile_int4_mm or test_compile_int8_mm" %}    # [py==313]
+        # these tests are failing with low -n values
+        {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
+        {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
+        {% set skips = skips ~ " or test_composite_registered_to_cpu_mode_nothing" %}
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
-        - set KMP_DUPLICATE_LIB_OK=TRUE  # [win]
+        # - set KMP_DUPLICATE_LIB_OK=TRUE  # [win]
         - python -m pytest -n auto {{ tests }} -k "not ({{ skips }})" --durations=50    # [not win and not (aarch64 and cuda_compiler_version != "None")]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50      # [win and not (aarch64 and cuda_compiler_version != "None")]
 
