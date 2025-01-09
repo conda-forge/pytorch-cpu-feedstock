@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 MACOSX_SDK_VERSION:
 - '13.3'
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - clang
 c_compiler_version:
@@ -24,6 +24,8 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '18'
+is_rc:
+- 'False'
 libabseil:
 - '20240722'
 libcblas:
@@ -49,7 +51,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.10.* *_cpython
 pytorch:
 - '2.4'
 target_platform:
@@ -57,5 +59,7 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+- - channel_targets
+  - is_rc
 - - python
   - numpy
