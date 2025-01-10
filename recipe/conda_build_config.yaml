@@ -6,7 +6,8 @@ MACOSX_SDK_VERSION:         # [osx]
 
 blas_impl:
   - mkl                         # [x86_64]
-  - generic
+  # deprioritized on windows, would be nice to have
+  - generic                     # [unix]
 
 # https://github.com/conda-forge/.cirun
 github_actions_labels:          # [linux or win]
