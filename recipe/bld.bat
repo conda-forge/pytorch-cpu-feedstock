@@ -2,7 +2,9 @@
 
 set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
-set PYTORCH_BUILD_NUMBER=%PKG_BUILDNUM%
+:: Always pass 0 to avoid appending ".post" to version string.
+:: https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
+set PYTORCH_BUILD_NUMBER=0
 
 if "%pytorch_variant%" == "gpu" (
     set build_with_cuda=1
