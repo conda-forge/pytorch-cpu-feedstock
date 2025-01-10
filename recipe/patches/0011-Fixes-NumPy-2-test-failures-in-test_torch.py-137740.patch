@@ -1,7 +1,7 @@
-From 3009c1400c1707ef016501827c7d90c46cd802a7 Mon Sep 17 00:00:00 2001
+From a1ced1daa37fdcf5345aa0c3095cab8674c1cded Mon Sep 17 00:00:00 2001
 From: Haifeng Jin <haifeng-jin@users.noreply.github.com>
 Date: Sat, 12 Oct 2024 02:40:17 +0000
-Subject: [PATCH 11/13] Fixes NumPy 2 test failures in test_torch.py (#137740)
+Subject: [PATCH 11/15] Fixes NumPy 2 test failures in test_torch.py (#137740)
 
 Related to #107302
 
@@ -24,7 +24,7 @@ Approved by: https://github.com/ezyang
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/test/test_torch.py b/test/test_torch.py
-index be4d618081..c6fd6ac9f1 100644
+index be4d6180819..c6fd6ac9f19 100644
 --- a/test/test_torch.py
 +++ b/test/test_torch.py
 @@ -2891,7 +2891,7 @@ else:

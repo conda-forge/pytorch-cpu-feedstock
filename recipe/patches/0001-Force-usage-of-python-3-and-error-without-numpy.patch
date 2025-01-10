@@ -1,14 +1,14 @@
-From 95310cd1178bee8a2df8406a25f1ca80af83f053 Mon Sep 17 00:00:00 2001
+From f3a0f9aab6dce56eea590b946f60256014b61bf7 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Sun, 1 Sep 2024 17:35:40 -0400
-Subject: [PATCH 01/13] Force usage of python 3 and error without numpy
+Subject: [PATCH 01/15] Force usage of python 3 and error without numpy
 
 ---
  cmake/Dependencies.cmake | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index e78305e0a8..15c6254860 100644
+index e78305e0a8e..15c62548601 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -861,9 +861,9 @@ if(BUILD_PYTHON)
