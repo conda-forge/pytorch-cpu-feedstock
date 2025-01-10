@@ -412,9 +412,13 @@ outputs:
         {% set skips = skips ~ " or illcondition_matrix_input_should_not_crash_cpu" %}  # [aarch64 and cuda_compiler_version != "None"]
         # may crash spuriously
         {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}
+        {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
         # trivial accuracy problems
-        {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [blas_impl != "mkl" and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [blas_impl != "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [unix and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda " %}                # [unix and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [unix and cuda_compiler_version != "None"]
+        # MKL problems
+        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}  # [unix and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # these tests are failing with low -n values
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
