@@ -255,7 +255,7 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
-        - sccache
+        - sccache   # [win]
       host:
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
