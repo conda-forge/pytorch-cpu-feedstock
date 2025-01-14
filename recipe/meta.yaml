@@ -401,7 +401,7 @@ outputs:
 
         # the smoke test script takes a bunch of env variables, defined below
         - set MATRIX_GPU_ARCH_VERSION="{{ '.'.join(cuda_compiler_version.split('.')[:2]) }}"    # [(cuda_compiler_version != "None") and (win)]
-        - set MATRIX_GPU_ARCH_TYPE="cuda"                                                       # [(gpu_variant or "").startswith("cuda") and (win)]
+        - set MATRIX_GPU_ARCH_TYPE="cuda"                                                       # [(cuda_compiler_version != "None") and (win)]
         - set MATRIX_GPU_ARCH_VERSION="none"                                                    # [(cuda_compiler_version == "None") and (win)]
         - set MATRIX_GPU_ARCH_TYPE="none"                                                       # [(cuda_compiler_version == "None") and (win)]
         - set MATRIX_CHANNEL="defaults"                                                         # [win]
@@ -424,6 +424,7 @@ outputs:
 
         # a reasonably safe subset of tests that should run under 15 minutes
         # disable hypothesis because it randomly yields health check errors
+        # The inductor tests test torch.compile
         {% set tests = " ".join([
             "test/test_autograd.py",
             "test/test_autograd_fallback.py",
@@ -434,7 +435,6 @@ outputs:
             "test/test_nn.py",
             "test/test_torch.py",
             "test/test_xnnpack_integration.py",
-            # The inductor tests test torch.compile
             "test/inductor/test_torchinductor.py",                                      # [cuda_compiler_version != "None"]
             "-m \"not hypothesis\"",
         ]) %}
