@@ -1,7 +1,7 @@
-From 56b15e05ca8018c4691d0ebf6c71376dd0cec9b7 Mon Sep 17 00:00:00 2001
+From 52e530f222f2d30531c8da889695ac2674964245 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Wed, 27 Nov 2024 13:47:23 +0100
-Subject: [PATCH 09/13] Allow overriding CUDA-related paths
+Subject: [PATCH 09/15] Allow overriding CUDA-related paths
 
 ---
  cmake/Modules/FindCUDAToolkit.cmake | 2 +-
@@ -9,7 +9,7 @@ Subject: [PATCH 09/13] Allow overriding CUDA-related paths
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cmake/Modules/FindCUDAToolkit.cmake b/cmake/Modules/FindCUDAToolkit.cmake
-index ec9ae530aa..b7c0bd9fc5 100644
+index ec9ae530aa6..b7c0bd9fc51 100644
 --- a/cmake/Modules/FindCUDAToolkit.cmake
 +++ b/cmake/Modules/FindCUDAToolkit.cmake
 @@ -497,7 +497,7 @@ Result variables
@@ -22,7 +22,7 @@ index ec9ae530aa..b7c0bd9fc5 100644
    set(CUDAToolkit_LIBRARY_ROOT "${CMAKE_CUDA_COMPILER_LIBRARY_ROOT}")
    set(CUDAToolkit_VERSION "${CMAKE_CUDA_COMPILER_TOOLKIT_VERSION}")
 diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
-index bde41323c7..b171837cd4 100644
+index bde41323c76..b171837cd4a 100644
 --- a/tools/setup_helpers/cmake.py
 +++ b/tools/setup_helpers/cmake.py
 @@ -252,7 +252,7 @@ class CMake:

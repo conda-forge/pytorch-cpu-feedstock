@@ -4,14 +4,28 @@ c_stdlib_version:  # [unix]
 MACOSX_SDK_VERSION:         # [osx]
   - 13.3                    # [osx]
 
+channel_targets:
+  - conda-forge main
+  - conda-forge pytorch_rc
+is_rc:
+  - False
+  - True
+zip_keys:
+  -
+    - channel_targets
+    - is_rc
+
 blas_impl:
   - mkl                         # [x86_64]
-  - generic
+  # deprioritized on windows, would be nice to have
+  - generic                     # [unix]
 
 # https://github.com/conda-forge/.cirun
-github_actions_labels:          # [linux]
+github_actions_labels:          # [linux or win]
 - cirun-openstack-gpu-2xlarge   # [linux]
+- cirun-azure-windows-2xlarge   # [win]
 
 megabuild:
 - true      # [linux]
 - false     # [osx]
+- true      # [win]

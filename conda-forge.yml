@@ -2,6 +2,9 @@ azure:
   free_disk_space: true
   settings_linux:
     timeoutInMinutes: 1
+  settings_win:
+    variables:
+      CONDA_BLD_PATH: C:\\bld\\
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
@@ -20,4 +23,5 @@ github_actions:
 provider:
   linux_64: github_actions
   linux_aarch64: azure
+  win_64: github_actions
 test: native_and_emulated

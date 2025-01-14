@@ -36,12 +36,6 @@ fi
 # This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
 export _GLIBCXX_USE_CXX11_ABI=1
 
-# KINETO seems to require CUPTI and will look quite hard for it.
-# CUPTI seems to cause trouble when users install a version of
-# cudatoolkit different than the one specified at compile time.
-# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/135
-export USE_KINETO=OFF
-
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
@@ -69,7 +63,9 @@ CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
-export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
+# Always pass 0 to avoid appending ".post" to version string.
+# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
+export PYTORCH_BUILD_NUMBER=0
 
 export INSTALL_TEST=0
 export BUILD_TEST=0
@@ -110,7 +106,7 @@ fi
 if [[ "$blas_impl" == "generic" ]]; then
     # Fake openblas
     export BLAS=OpenBLAS
-    sed -i.bak "s#FIND_LIBRARY.*#set(OpenBLAS_LIB ${PREFIX}/lib/liblapack${SHLIB_EXT} ${PREFIX}/lib/libcblas${SHLIB_EXT} ${PREFIX}/lib/libblas${SHLIB_EXT})#g" cmake/Modules/FindOpenBLAS.cmake
+    export OpenBLAS_HOME=${PREFIX}
 else
     export BLAS=MKL
 fi
@@ -155,6 +151,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     if [[ "${target_platform}" != "${build_platform}" ]]; then
         export CUDA_TOOLKIT_ROOT=${PREFIX}
     fi
+    # for CUPTI
+    export CUDA_TOOLKIT_ROOT_DIR=${PREFIX}
     case ${target_platform} in
         linux-64)
             export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
