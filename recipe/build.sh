@@ -119,6 +119,8 @@ if [[ "${CI}" == "github_actions" ]]; then
     # reduce parallelism to avoid getting OOM-killed on
     # cirun-openstack-gpu-2xlarge, which has 32GB RAM, 8 CPUs
     export MAX_JOBS=4
+elif [[ "${CI}" == "azure" ]]; then
+    export MAX_JOBS=${CPU_COUNT}
 else
     # Leave a spare core for other tasks. This may need to be reduced further
     # if we get out of memory errors.
