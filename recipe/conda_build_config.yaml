@@ -10,6 +10,9 @@ cxx_compiler_version:       # [osx]
   - 17                      # [osx]
 llvm_openmp:                # [osx]
   - 17                      # [osx]
+
+mkl:
+  - 2023
 libprotobuf:
   - 5.28.2
 
