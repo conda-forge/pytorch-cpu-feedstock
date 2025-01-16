@@ -25,7 +25,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '13'
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+- quay.io/condaforge/linux-anvil-x86_64:alma9
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 libabseil:
@@ -36,10 +36,12 @@ liblapack:
 - 3.9 *netlib
 libprotobuf:
 - 5.28.2
+libtorch:
+- '2.4'
 megabuild:
 - 'true'
 mkl:
-- '2023'
+- '2024'
 nccl:
 - '2'
 numpy:
@@ -48,8 +50,6 @@ numpy:
 - '2.0'
 - '2'
 - '2.0'
-orc:
-- 2.0.2
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -67,8 +67,6 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-  - c_stdlib_version
-  - cdt_name
   - cuda_compiler
   - cuda_compiler_version
   - docker_image
