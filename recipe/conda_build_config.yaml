@@ -4,6 +4,12 @@ c_stdlib_version:  # [osx and x86_64]
 MACOSX_SDK_VERSION:         # [osx]
   - 12.3                    # [osx]
 
+c_compiler_version:         # [osx]
+  - 17                      # [osx]
+cxx_compiler_version:       # [osx]
+  - 17                      # [osx]
+llvm_openmp:                # [osx]
+  - 17                      # [osx]
 libprotobuf:
   - 5.28.2
 
