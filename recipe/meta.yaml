@@ -40,11 +40,11 @@ source:
     # Fix linker script inclusion for aarch64
     # Already merged, can remove on Pytorch 2.4.1+
     # https://github.com/pytorch/pytorch/pull/130370
-    - patches/130370.patch
+    - patches/0005-CMAKE-Avoid-double-setting-of-LDFLAGS-130370.patch
 
     # See https://github.com/pytorch/pytorch/pull/137331
     # for status
-    - patches/137331.patch
+    - patches/0006-Allow-users-to-overwrite-ld-with-environment-variabl.patch
 
 build:
   number: {{ build }}
