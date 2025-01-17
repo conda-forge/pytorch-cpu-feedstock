@@ -46,6 +46,8 @@ source:
     # for status
     - patches/0006-Allow-users-to-overwrite-ld-with-environment-variabl.patch
 
+    - patches/0007-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
+
 build:
   number: {{ build }}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]

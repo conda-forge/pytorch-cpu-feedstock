@@ -1,0 +1,24 @@
+From f61b413da8f70fa720a44f384ff1946173aaff12 Mon Sep 17 00:00:00 2001
+From: Jeongseok Lee <jeongseok@meta.com>
+Date: Sun, 3 Nov 2024 01:12:36 -0700
+Subject: [PATCH 7/7] Fix duplicate linker script
+
+---
+ setup.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 499e0b06ef2..2ccba3bd205 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1152,7 +1152,9 @@ def main():
+             filein="cmake/prioritized_text.txt", fout="cmake/linker_script.ld"
+         )
+         linker_script_path = os.path.abspath("cmake/linker_script.ld")
+-        os.environ["LDFLAGS"] = os.getenv("LDFLAGS", "") + f" -T{linker_script_path}"
++        ldflags = os.getenv("LDFLAGS", "")
++        if f"-T{linker_script_path}" not in ldflags:
++            os.environ["LDFLAGS"] = ldflags + f" -T{linker_script_path}"
+         os.environ["CFLAGS"] = (
+             os.getenv("CFLAGS", "") + " -ffunction-sections -fdata-sections"
+         )

@@ -1,7 +1,7 @@
 From 65c465aa1353711ccd0d16edee2455757a7a641a Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Tue, 26 Nov 2024 22:54:21 +0000
-Subject: [PATCH 6/6] Allow users to overwrite ld with environment variable in
+Subject: [PATCH 6/7] Allow users to overwrite ld with environment variable in
  linker optimization script (#137331)
 
 This should help in the case of cross compilation.

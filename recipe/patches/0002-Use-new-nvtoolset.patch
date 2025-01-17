@@ -1,7 +1,7 @@
 From cab00a2caffd4c4b4d64443827fa81a68c625852 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Sun, 12 May 2024 09:17:00 -0400
-Subject: [PATCH 2/6] Use new nvtoolset
+Subject: [PATCH 2/7] Use new nvtoolset
 
 ---
  caffe2/CMakeLists.txt   | 11 +++++++++--

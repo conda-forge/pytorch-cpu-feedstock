@@ -1,7 +1,7 @@
 From 9f39eccd9373934dcae125edc4e270d52e4a294c Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Tue, 1 Oct 2024 00:28:40 -0400
-Subject: [PATCH 4/6] Help find numpy
+Subject: [PATCH 4/7] Help find numpy
 
 ---
  tools/setup_helpers/cmake.py | 6 ++++++

@@ -1,7 +1,7 @@
 From 1cb18db694f997058d7f3b901370a2c6d81642f2 Mon Sep 17 00:00:00 2001
 From: Aidyn-A <aidyn.b.aitzhan@gmail.com>
 Date: Tue, 30 Jul 2024 18:16:04 +0000
-Subject: [PATCH 5/6] [CMAKE] Avoid double setting of LDFLAGS (#130370)
+Subject: [PATCH 5/7] [CMAKE] Avoid double setting of LDFLAGS (#130370)
 
 It was observed that in some environments `LDFLAGS` gets directly appended to `CMAKE_SHARED_LINKER_FLAGS`. As the result, the same linker flag can appear twice in `CMAKE_SHARED_LINKER_FLAGS` due to manual set:
 https://github.com/pytorch/pytorch/blob/1bf4a44b335b53ba9f9c7056a54ed8e4010e561b/CMakeLists.txt#L541-L542
