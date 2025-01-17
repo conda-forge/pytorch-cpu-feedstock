@@ -122,9 +122,7 @@ if [[ "${CI}" == "github_actions" ]]; then
 elif [[ "${CI}" == "azure" ]]; then
     export MAX_JOBS=${CPU_COUNT}
 else
-    # Leave a spare core for other tasks. This may need to be reduced further
-    # if we get out of memory errors.
-    export MAX_JOBS=$((CPU_COUNT > 1 ? CPU_COUNT - 1 : 1))
+    export MAX_JOBS=${CPU_COUNT}
 fi
 
 if [[ "$blas_impl" == "generic" ]]; then
