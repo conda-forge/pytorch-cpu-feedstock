@@ -1,79 +1,66 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.15'
+MACOSX_SDK_VERSION:
+- '13.3'
 blas_impl:
-- mkl
+- generic
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '13'
+- '18'
 c_stdlib:
-- sysroot
+- macosx_deployment_target
 c_stdlib_version:
-- '2.17'
-cdt_name:
-- conda
+- '10.15'
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
 - None
 cuda_compiler_version:
 - None
-cudnn:
-- '9'
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '13'
-docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
-github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- '18'
 is_rc:
-- 'False'
+- 'True'
 libabseil:
 - '20240722'
 libblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 libcblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 liblapack:
-- 3.9 *netlib
+- 3.9.* *netlib
 libprotobuf:
 - 5.28.3
 libtorch:
 - '2.4'
+llvm_openmp:
+- '18'
+macos_machine:
+- x86_64-apple-darwin13.4.0
 megabuild:
-- 'true'
+- 'false'
 mkl:
-- '2024'
-nccl:
-- '2'
+- '2023'
 numpy:
-- '2.0'
-- '2.0'
-- '2.0'
-- '2'
 - '2.0'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
 - 3.11.* *_cpython
-- 3.12.* *_cpython
-- 3.13.* *_cp313
-- 3.9.* *_cpython
 pytorch:
 - '2.4'
 target_platform:
-- linux-64
+- osx-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-  - cuda_compiler
-  - cuda_compiler_version
-  - docker_image
 - - channel_targets
   - is_rc
 - - python

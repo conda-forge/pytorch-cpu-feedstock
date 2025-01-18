@@ -13,11 +13,11 @@ cdt_name:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
-- cuda-nvcc
+- None
 cuda_compiler_version:
-- '12.6'
+- None
 cudnn:
 - '9'
 cxx_compiler:
@@ -29,15 +29,15 @@ docker_image:
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 is_rc:
-- 'False'
+- 'True'
 libabseil:
 - '20240722'
 libblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 libcblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 liblapack:
-- 3.9 *netlib
+- 3.9.* *netlib
 libprotobuf:
 - 5.28.3
 libtorch:

@@ -15,7 +15,7 @@ c_stdlib_version:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
 - None
 cuda_compiler_version:
@@ -25,15 +25,15 @@ cxx_compiler:
 cxx_compiler_version:
 - '18'
 is_rc:
-- 'False'
+- 'True'
 libabseil:
 - '20240722'
 libblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 libcblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 liblapack:
-- 3.9 *netlib
+- 3.9.* *netlib
 libprotobuf:
 - 5.28.3
 libtorch:
@@ -53,7 +53,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.12.* *_cpython
 pytorch:
 - '2.4'
 target_platform:
