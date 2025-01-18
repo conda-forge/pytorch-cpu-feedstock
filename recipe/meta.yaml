@@ -33,36 +33,23 @@ source:
 {% endif %}
   patches:
     - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
-    # https://github.com/pytorch/pytorch/pull/137084
+    # backport https://github.com/pytorch/pytorch/pull/137084
     - patches/0002-Help-find-numpy.patch
-    # https://github.com/pytorch/pytorch/pull/138287
-    - patches/0003-Add-USE_SYSTEM_NVTX-option-138287.patch
-    # sympy 1.13.2 was reported to result in test failures on Windows and mac
+    # unpin sympy; 1.13.2 was reported to result in test failures on Windows and mac, see
     # https://github.com/pytorch/pytorch/pull/133235
-    - patches/0004-Update-sympy-version.patch
-    - patches/0005-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
-    # https://github.com/pytorch/pytorch/pull/136034
-    - patches/0006-fix-3.13-pickle-error-in-serialization.py-136034.patch
-    # https://github.com/pytorch/pytorch/pull/137331
-    - patches/0007-Allow-users-to-overwrite-ld-with-environment-variabl.patch
+    - patches/0003-Update-sympy-version.patch
+    - patches/0004-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
     # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
     # for their PyPI wheel builds
-    - patches/0008-Allow-libcufile-for-conda-builds.patch
+    - patches/0005-Allow-libcufile-for-conda-builds.patch
     # conda-specific patch, lets us override CUDA paths
-    - patches/0009-Allow-overriding-CUDA-related-paths.patch
-    # NumPy 2 fixes:
-    # https://github.com/pytorch/pytorch/pull/136800
-    - patches/0010-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
-    # https://github.com/pytorch/pytorch/pull/137740
-    - patches/0011-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
+    - patches/0006-Allow-overriding-CUDA-related-paths.patch
     # fix BLAS calling convention for openblas
-    - patches/0012-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+    - patches/0007-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
     # fix mkl-2024 issue
     # https://github.com/pytorch/pytorch/pull/143894
-    - patches/0013-fix-issue-142484.patch
-    - patches/0014-Fix-FindOpenBLAS.patch
-    # backport https://github.com/pytorch/pytorch/pull/138095
-    - patches/0015-CD-Enable-Python-3.13-on-windows-138095.patch
+    - patches/0008-fix-issue-142484.patch
+    - patches/0009-Fix-FindOpenBLAS.patch
 
 build:
   number: {{ build }}
