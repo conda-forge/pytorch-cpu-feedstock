@@ -1,7 +1,7 @@
-From 8571816718e3f035bbeba8c72f8ff16f849903ee Mon Sep 17 00:00:00 2001
+From cab00a2caffd4c4b4d64443827fa81a68c625852 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Sun, 12 May 2024 09:17:00 -0400
-Subject: [PATCH 2/3] Use new nvtoolset
+Subject: [PATCH 2/7] Use new nvtoolset
 
 ---
  caffe2/CMakeLists.txt   | 11 +++++++++--
@@ -10,10 +10,10 @@ Subject: [PATCH 2/3] Use new nvtoolset
  3 files changed, 15 insertions(+), 9 deletions(-)
 
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index a6b6f0f7..a3c06482 100644
+index 89c31fab113..ed5be9b74b3 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -1615,7 +1615,14 @@ if(USE_CUDA)
+@@ -1576,7 +1576,14 @@ if(USE_CUDA)
      target_link_libraries(torch_cpu PRIVATE torch::cudart)
    endif()
    target_link_libraries(torch_cuda INTERFACE torch::cudart)
@@ -29,20 +29,20 @@ index a6b6f0f7..a3c06482 100644
  
    target_include_directories(
        torch_cuda INTERFACE $<INSTALL_INTERFACE:include>)
-@@ -1685,7 +1692,7 @@ if(BUILD_SHARED_LIBS)
+@@ -1649,7 +1656,7 @@ if(BUILD_SHARED_LIBS)
    # not find them, because they're usually in non-standard locations)
    if(USE_CUDA)
      target_link_libraries(torch_global_deps ${Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS})
 -    target_link_libraries(torch_global_deps torch::cudart torch::nvtoolsext)
 +    target_link_libraries(torch_global_deps torch::cudart)
    endif()
-   if(USE_TBB)
-     target_link_libraries(torch_global_deps TBB::tbb)
+   install(TARGETS torch_global_deps DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ endif()
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index 39e7af74..1a3f026d 100644
+index 77f4aecf0d3..2cfb0554494 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
-@@ -203,12 +203,6 @@ else()
+@@ -172,12 +172,6 @@ else()
          CUDA::cudart)
  endif()
  
@@ -56,10 +56,10 @@ index 39e7af74..1a3f026d 100644
  add_library(caffe2::cublas INTERFACE IMPORTED)
  if(CAFFE2_STATIC_LINK_CUDA AND NOT WIN32)
 diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
-index 97a72eed..444ef988 100644
+index 10a44af747b..5bb5e36dec4 100644
 --- a/torch/CMakeLists.txt
 +++ b/torch/CMakeLists.txt
-@@ -131,7 +131,12 @@ if(USE_CUDA)
+@@ -134,7 +134,12 @@ if(USE_CUDA)
          list(APPEND TORCH_PYTHON_COMPILE_DEFINITIONS USE_CUDNN)
      endif()
  

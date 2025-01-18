@@ -62,7 +62,9 @@ done
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
-export PYTORCH_BUILD_NUMBER=$PKG_BUILDNUM
+# Always pass 0 to avoid appending ".post" to version string.
+# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
+export PYTORCH_BUILD_NUMBER=0
 
 export INSTALL_TEST=0
 export BUILD_TEST=0
@@ -230,5 +232,8 @@ else
   # With upstream non-split build, `libtorch_python.so`
   # and TorchConfig.cmake are both in ${SP_DIR}/torch/lib and therefore
   # this is not needed.
-  mv ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
+  #
+  # NB: we are using cp rather than mv, so that the loop in build_pytorch.sh
+  # symlinks it back.
+  cp ${SP_DIR}/torch/lib/libtorch_python${SHLIB_EXT} ${PREFIX}/lib
 fi

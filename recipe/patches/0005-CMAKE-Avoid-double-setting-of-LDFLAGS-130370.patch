@@ -1,0 +1,38 @@
+From 1cb18db694f997058d7f3b901370a2c6d81642f2 Mon Sep 17 00:00:00 2001
+From: Aidyn-A <aidyn.b.aitzhan@gmail.com>
+Date: Tue, 30 Jul 2024 18:16:04 +0000
+Subject: [PATCH 5/7] [CMAKE] Avoid double setting of LDFLAGS (#130370)
+
+It was observed that in some environments `LDFLAGS` gets directly appended to `CMAKE_SHARED_LINKER_FLAGS`. As the result, the same linker flag can appear twice in `CMAKE_SHARED_LINKER_FLAGS` due to manual set:
+https://github.com/pytorch/pytorch/blob/1bf4a44b335b53ba9f9c7056a54ed8e4010e561b/CMakeLists.txt#L541-L542
+This flag collision causes the build failures at the `cmake` stage.
+This PR adds an instruction to `CMakeLists.txt` to avoid double setting of `LDFLAGS` into `CMAKE_SHARED_LINKER_FLAGS`.
+
+Co-authored-by: Nikita Shulga <2453524+malfet@users.noreply.github.com>
+Pull Request resolved: https://github.com/pytorch/pytorch/pull/130370
+Approved by: https://github.com/atalman, https://github.com/tinglvv, https://github.com/malfet
+---
+ CMakeLists.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c4cd4b2c2a9..562ee2d57d2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -539,8 +539,14 @@ option(BUILD_EXECUTORCH "Master flag to build Executorch" ON)
+ if(LINUX)
+   set(CMAKE_SHARED_LINKER_FLAGS
+       "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-as-needed")
+-  set(CMAKE_SHARED_LINKER_FLAGS
+-      "${CMAKE_SHARED_LINKER_FLAGS} $ENV{LDFLAGS}")
++
++  set(ENV_LDFLAGS "$ENV{LDFLAGS}")
++  string(STRIP "${ENV_LDFLAGS}" ENV_LDFLAGS)
++  # Do not append linker flags passed via env var if they already there
++  if(NOT ${CMAKE_SHARED_LINKER_FLAGS} MATCHES "${ENV_LDFLAGS}")
++     set(CMAKE_SHARED_LINKER_FLAGS
++         "${CMAKE_SHARED_LINKER_FLAGS} ${ENV_LDFLAGS}")
++  endif()
+ endif()
+ 
+ if(MSVC)
