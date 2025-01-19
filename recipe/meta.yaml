@@ -330,6 +330,7 @@ outputs:
         - eigen
         - zlib
       run:
+        - {{ pin_subpackage('libtorch', exact=True) }}
         - llvm-openmp                   # [unix]
         - intel-openmp {{ mkl }}        # [win]
         - libblas * *{{ blas_impl }}    # [blas_impl == "mkl"]
@@ -349,7 +350,6 @@ outputs:
         - fsspec
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
-        - libtorch {{ version }}
         - setuptools
         - triton {{ triton }}   # [cuda_compiler_version != "None" and not win]
       run_constrained:
