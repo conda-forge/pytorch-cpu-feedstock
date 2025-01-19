@@ -304,11 +304,12 @@ outputs:
         - fsspec
         - jinja2
         - networkx
+        - optree >=0.13.0
         - setuptools
         # sympy 1.13.2 was reported to result in test failures on Windows and mac
         # https://github.com/pytorch/pytorch/pull/133235
         - sympy >=1.13.1,!=1.13.2
-        - typing_extensions
+        - typing_extensions >=4.10.0
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
