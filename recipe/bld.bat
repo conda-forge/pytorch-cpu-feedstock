@@ -26,12 +26,6 @@ if "%blas_impl%" == "generic" (
 SET "USE_NUMA=0"
 SET "USE_ITT=0"
 
-@REM KINETO seems to require CUPTI and will look quite hard for it.
-@REM CUPTI seems to cause trouble when users install a version of
-@REM cudatoolkit different than the one specified at compile time.
-@REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/135
-set "USE_KINETO=OFF"
-
 if "%PKG_NAME%" == "pytorch" (
   set "PIP_ACTION=install"
   :: We build libtorch for a specific python version.

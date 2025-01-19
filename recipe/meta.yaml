@@ -126,14 +126,14 @@ requirements:
     {% if cuda_compiler_version != "None" %}
     - cuda-driver-dev                 # [linux]
     - cuda-cudart-dev
-    - cuda-cupti-dev    # [linux]
+    - cuda-cupti-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
     - cuda-nvml-dev
     - cuda-profiler-api
-    - cusparselt     # [linux]
+    - cusparselt
     - libcublas-dev
-    - libcudss-dev   # [linux]
+    - libcudss-dev
     - libcufile-dev  # [linux]
     - libcufft-dev
     - libcurand-dev
@@ -266,14 +266,14 @@ outputs:
         {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
-        - cuda-cupti-dev    # [linux]
+        - cuda-cupti-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
-        - cusparselt     # [linux]
+        - cusparselt
         - libcublas-dev
-        - libcudss-dev   # [linux]
+        - libcudss-dev
         - libcufile-dev  # [linux]
         - libcufft-dev
         - libcurand-dev
