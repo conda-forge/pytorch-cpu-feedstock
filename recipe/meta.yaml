@@ -288,27 +288,27 @@ outputs:
         - typing_extensions
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
+        - libtorch {{ version }}
         - llvm-openmp    # [osx]
         - intel-openmp {{ mkl }}  # [win]
         - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
+        - nomkl                       # [blas_impl != "mkl"]
         # GPU requirements without run_exports
-        - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
-        # other requirements
+        - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
+        - triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
+        # avoid that people without GPUs needlessly download ~0.5-1GB
+        - __cuda                            # [cuda_compiler_version != "None"]
         - python
-        - typing_extensions
+        # other requirements, see https://github.com/pytorch/pytorch/blame/main/requirements.txt
+        - filelock
+        - fsspec
+        - jinja2
+        - networkx
+        - setuptools
         # sympy 1.13.2 was reported to result in test failures on Windows and mac
         # https://github.com/pytorch/pytorch/pull/133235
         - sympy >=1.13.1,!=1.13.2
-        - filelock
-        - jinja2
-        - networkx
-        - nomkl                 # [blas_impl != "mkl"]
-        - fsspec
-        # avoid that people without GPUs needlessly download ~0.5-1GB
-        - __cuda  # [cuda_compiler_version != "None"]
-        - libtorch {{ version }}
-        - setuptools
-        - triton {{ triton }}   # [cuda_compiler_version != "None" and not win]
+        - typing_extensions
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
