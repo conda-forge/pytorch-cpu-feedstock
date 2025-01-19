@@ -288,7 +288,7 @@ outputs:
         - typing_extensions
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
-        - libtorch {{ version }}
+        - {{ pin_subpackage('libtorch', exact=True) }}
         - llvm-openmp    # [osx]
         - intel-openmp {{ mkl }}  # [win]
         - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
