@@ -1,7 +1,7 @@
 @echo On
 setlocal enabledelayedexpansion
 
-REM remove pyproject.toml to avoid installing deps from pip
+@REM remove pyproject.toml to avoid installing deps from pip
 if EXIST pyproject.toml (
   DEL pyproject.toml
   if %ERRORLEVEL% neq 0 exit 1
@@ -9,13 +9,13 @@ if EXIST pyproject.toml (
 
 set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
-:: Always pass 0 to avoid appending ".post" to version string.
-:: https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
+@REM Always pass 0 to avoid appending ".post" to version string.
+@REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
 
 @REM Setup BLAS
 if "%blas_impl%" == "generic" (
-    REM Fake openblas
+    @REM Fake openblas
     SET BLAS=OpenBLAS
     SET OpenBLAS_HOME=%LIBRARY_PREFIX%
 ) else (
@@ -28,25 +28,25 @@ SET "USE_ITT=0"
 
 if "%PKG_NAME%" == "pytorch" (
   set "PIP_ACTION=install"
-  :: We build libtorch for a specific python version.
-  :: This ensures its only build once. However, when that version changes
-  :: we need to make sure to update that here.
-  :: Get the full python version string
+  @REM We build libtorch for a specific python version.
+  @REM This ensures its only build once. However, when that version changes
+  @REM we need to make sure to update that here.
+  @REM Get the full python version string
   for /f "tokens=2" %%a in ('python --version 2^>^&1') do set PY_VERSION_FULL=%%a
 
-  :: Replace Python312 or python312 with ie Python311 or python311
+  @REM Replace Python312 or python312 with ie Python311 or python311
   sed "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
   if %ERRORLEVEL% neq 0 exit 1
 
-  :: Replace version string v3.12.8() with ie v3.11.11()
+  @REM Replace version string v3.12.8() with ie v3.11.11()
   sed -i.bak -E "s/v3\.12\.[0-9]+/v%PY_VERSION_FULL%/g" build/CMakeCache.txt
   if %ERRORLEVEL% neq 0 exit 1
 
-  :: Replace interpreter properties Python;3;12;8;64 with ie Python;3;11;11;64
+  @REM Replace interpreter properties Python;3;12;8;64 with ie Python;3;11;11;64
   sed -i.bak -E "s/Python;3;12;[0-9]+;64/Python;%PY_VERSION_FULL:.=;%;64/g" build/CMakeCache.txt
   if %ERRORLEVEL% neq 0 exit 1
 
-  :: Replace cp312-win_amd64 with ie cp311-win_amd64
+  @REM Replace cp312-win_amd64 with ie cp311-win_amd64
   sed -i.bak "s/cp312/cp%CONDA_PY%/g" build/CMakeCache.txt
   if %ERRORLEVEL% neq 0 exit 1
 
@@ -62,8 +62,8 @@ if "%PKG_NAME%" == "pytorch" (
 if not "%cuda_compiler_version%" == "None" (
     set USE_CUDA=1
 
-    REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
-    REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
+    @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
+    @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
 
     set TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX
 
@@ -72,7 +72,7 @@ if not "%cuda_compiler_version%" == "None" (
     set USE_STATIC_CUDNN=0
     set MAGMA_HOME=%PREFIX%
 
-    REM NCCL is not available on windows
+    @REM NCCL is not available on windows
     set USE_NCCL=0
     set USE_STATIC_NCCL=0
 
@@ -84,9 +84,9 @@ if not "%cuda_compiler_version%" == "None" (
 
 ) else (
     set USE_CUDA=0
-    REM On windows, env vars are case-insensitive and setup.py
-    REM passes all env vars starting with CUDA_*, CMAKE_* to
-    REM to cmake
+    @REM On windows, env vars are case-insensitive and setup.py
+    @REM passes all env vars starting with CUDA_*, CMAKE_* to
+    @REM to cmake
     set "cuda_compiler_version="
     set "cuda_compiler="
     set "CUDA_VERSION="
@@ -109,7 +109,7 @@ set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
 set "CMAKE_INCLUDE_PATH=%LIBRARY_INC%"
 set "CMAKE_LIBRARY_PATH=%LIBRARY_LIB%"
 set "CMAKE_BUILD_TYPE=Release"
-:: This is so that CMake finds the environment's Python, not another one
+@REM This is so that CMake finds the environment's Python, not another one
 set Python_EXECUTABLE=%PYTHON%
 set Python3_EXECUTABLE=%PYTHON%
 
