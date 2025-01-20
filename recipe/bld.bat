@@ -185,20 +185,22 @@ if "%PKG_NAME%" == "libtorch" (
     if %ERRORLEVEL% neq 0 exit 1
 
     @REM Move the binaries into the packages site-package directory
-    robocopy /NP /NFL /NDL /NJH /E torch\bin %SP_DIR%\torch\bin\
+    robocopy /NP /NFL /NDL /NJH /E torch\bin\*.* %LIBRARY_BIN%\
     if %ERRORLEVEL% neq 1 exit 1
-    robocopy /NP /NFL /NDL /NJH /E torch\lib %SP_DIR%\torch\lib\
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\*.dll %LIBRARY_BIN%\
     if %ERRORLEVEL% neq 1 exit 1
-    robocopy /NP /NFL /NDL /NJH /E torch\share %SP_DIR%\torch\share\
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\*.lib %LIBRARY_LIB%\
+    if %ERRORLEVEL% neq 1 exit 1
+    robocopy /NP /NFL /NDL /NJH /E torch\share %LIBRARY_PREFIX%\
     if %ERRORLEVEL% neq 1 exit 1
     for %%f in (ATen caffe2 torch c10) do (
-        robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %SP_DIR%\torch\include\%%f\
+        robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %LIBRARY_INC%\%%f\
         if %ERRORLEVEL% neq 1 exit 1
     )
 
     @REM Remove the python binary file, that is placed in the site-packages
     @REM directory by the specific python specific pytorch package.
-    del %SP_DIR%\torch\lib\torch_python.*
+    del %LIBRARY_BIN%\torch_python.* %LIBRARY_LIB%\torch_python.*
     if %ERRORLEVEL% neq 0 exit 1
 
     popd

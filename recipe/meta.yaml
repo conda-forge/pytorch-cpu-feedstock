@@ -198,25 +198,25 @@ test:
     {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu', 'torch_global_deps'] %}
     - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux]
     - test -f $PREFIX/lib/lib{{ each_lib }}.dylib                 # [osx]
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
+    - if not exist %LIBRARY_BIN%\{{ each_lib }}.dll exit 1   # [win]
     {% endfor %}
 
     # Windows specific .LIB files
     {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu'] %}
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
+    - if not exist %LIBRARY_LIB%\{{ each_lib }}.lib exit 1   # [win]
     {% endfor %}
 
     # Windows specific libraries
     {% for each_lib in [ 'asmjit', 'fbgemm'] %}
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
+    - if not exist %LIBRARY_BIN%\{{ each_lib }}.dll exit 1   # [win]
+    - if not exist %LIBRARY_LIB%\{{ each_lib }}.lib exit 1   # [win]
     {% endfor %}
 
     # Cuda only libraries
     {% for each_lib in ['c10_cuda', 'caffe2_nvrtc', 'torch_cuda'] %}
     - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win and cuda_compiler_version != "None"]
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win and cuda_compiler_version != "None"]
+    - if not exist %LIBRARY_BIN%\{{ each_lib }}.dll exit 1   # [win and cuda_compiler_version != "None"]
+    - if not exist %LIBRARY_LIB%\{{ each_lib }}.lib exit 1   # [win and cuda_compiler_version != "None"]
     {% endfor %}
 
     # Linux specific cuda libraries
