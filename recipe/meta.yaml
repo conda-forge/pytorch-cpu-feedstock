@@ -487,6 +487,7 @@ extra:
     - h-vetinari
     - hmaarrfk
     - jeongseok-meta
+    - mgorny
     - sodre
     - Tobias-Fischer
   feedstock-name: pytorch-cpu
