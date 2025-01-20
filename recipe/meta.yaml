@@ -426,7 +426,7 @@ outputs:
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
-        - export OMP_NUM_THREADS=4  # [unix]
+        - export OMP_NUM_THREADS=2  # [unix]
         # reduced paralellism to avoid OOM; test only one python version on aarch because emulation is super-slow
         - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50   # [unix and (not aarch64 or py==312)]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50  # [win]
