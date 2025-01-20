@@ -2,7 +2,10 @@
 setlocal enabledelayedexpansion
 
 REM remove pyproject.toml to avoid installing deps from pip
-if EXIST pyproject.toml DEL pyproject.toml
+if EXIST pyproject.toml (
+  DEL pyproject.toml
+  if %ERRORLEVEL% neq 0 exit 1
+)
 
 set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
@@ -33,17 +36,22 @@ if "%PKG_NAME%" == "pytorch" (
 
   :: Replace Python312 or python312 with ie Python311 or python311
   sed "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
   :: Replace version string v3.12.8() with ie v3.11.11()
   sed -i.bak -E "s/v3\.12\.[0-9]+/v%PY_VERSION_FULL%/g" build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
   :: Replace interpreter properties Python;3;12;8;64 with ie Python;3;11;11;64
   sed -i.bak -E "s/Python;3;12;[0-9]+;64/Python;%PY_VERSION_FULL:.=;%;64/g" build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
   :: Replace cp312-win_amd64 with ie cp311-win_amd64
   sed -i.bak "s/cp312/cp%CONDA_PY%/g" build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
   sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
 ) else (
   @REM For the main script we just build a wheel for so that the C++/CUDA
@@ -138,13 +146,16 @@ set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
 
 sccache --stop-server
 sccache --start-server
+if %ERRORLEVEL% neq 0 exit 1
 sccache --zero-stats
+if %ERRORLEVEL% neq 0 exit 1
 
 @REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
 cmake --build build --target clean
+if %ERRORLEVEL% neq 0 exit 1
 
 %PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps -vvv --no-clean
-if errorlevel 1 exit /b 1
+if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.
 @REM
@@ -161,35 +172,49 @@ if "%PKG_NAME%" == "libtorch" (
     @REM Extract the compiled wheel into a temporary directory
     if not exist "%SRC_DIR%/dist" mkdir %SRC_DIR%/dist
     pushd %SRC_DIR%/dist
+    if %ERRORLEVEL% neq 0 exit 1
     for %%f in (../torch-*.whl) do (
         wheel unpack %%f
+        if %ERRORLEVEL% neq 0 exit 1
     )
 
     @REM Navigate into the unpacked wheel
     pushd torch-*
+    if %ERRORLEVEL% neq 0 exit 1
 
     @REM Move the binaries into the packages site-package directory
     robocopy /NP /NFL /NDL /NJH /E torch\bin %SP_DIR%\torch\bin\
+    if %ERRORLEVEL% neq 1 exit 1
     robocopy /NP /NFL /NDL /NJH /E torch\lib %SP_DIR%\torch\lib\
+    if %ERRORLEVEL% neq 1 exit 1
     robocopy /NP /NFL /NDL /NJH /E torch\share %SP_DIR%\torch\share\
+    if %ERRORLEVEL% neq 1 exit 1
     for %%f in (ATen caffe2 torch c10) do (
         robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %SP_DIR%\torch\include\%%f\
+        if %ERRORLEVEL% neq 1 exit 1
     )
 
     @REM Remove the python binary file, that is placed in the site-packages
     @REM directory by the specific python specific pytorch package.
     del %SP_DIR%\torch\lib\torch_python.*
+    if %ERRORLEVEL% neq 0 exit 1
 
     popd
+    if %ERRORLEVEL% neq 0 exit 1
     popd
+    if %ERRORLEVEL% neq 0 exit 1
 
     @REM Keep the original backed up to sed later
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
+    if %ERRORLEVEL% neq 0 exit 1
 ) else if "%PKG_NAME%" == "pytorch" (
     rmdir /s /q %SP_DIR%\torch\bin
+    if %ERRORLEVEL% neq 0 exit 1
     rmdir /s /q %SP_DIR%\torch\share
+    if %ERRORLEVEL% neq 0 exit 1
     for %%f in (ATen caffe2 torch c10) do (
         rmdir /s /q %SP_DIR%\torch\include\%%f
+        if %ERRORLEVEL% neq 0 exit 1
     )
 
     @REM Delete all files from the lib directory that do not start with torch_python
@@ -197,9 +222,16 @@ if "%PKG_NAME%" == "libtorch" (
         set "FILENAME=%%~nf"
         if "!FILENAME:~0,12!" neq "torch_python" (
             del %%f
+            if %ERRORLEVEL% neq 0 exit 1
         )
     )
 )
 
 @REM Show the sccache stats.
 sccache --show-stats
+
+goto :EOF
+
+:error
+echo Failed with error %errorlevel%
+exit /b %errorlevel%
