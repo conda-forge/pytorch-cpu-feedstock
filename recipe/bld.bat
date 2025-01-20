@@ -43,14 +43,7 @@ if "%PKG_NAME%" == "pytorch" (
   :: Replace cp312-win_amd64 with ie cp311-win_amd64
   sed -i.bak "s/cp312/cp%CONDA_PY%/g" build/CMakeCache.txt
 
-  @REM We use a fan-out build to avoid the long rebuild of libtorch
-  @REM However, the location of the numpy headers changes between python 3.8
-  @REM and 3.9+ since numpy 2.0 only exists for 3.9+
-  if "%PY_VER%" == "3.8" (
-    sed -i.bak "s#numpy\\\\_core\\\\include#numpy\\\\core\\\\include#g" build/CMakeCache.txt
-  ) else (
-    sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
-  )
+  sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
 
 ) else (
   @REM For the main script we just build a wheel for so that the C++/CUDA
