@@ -10,9 +10,6 @@ set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 :: https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
 
-REM I don't know where this folder comes from, but it's interfering with the build in osx-64
-if EXIST %PREFIX%\git RD /S /Q %PREFIX%\git
-
 @REM Setup BLAS
 if "%blas_impl%" == "generic" (
     REM Fake openblas
