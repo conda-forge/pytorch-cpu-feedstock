@@ -291,7 +291,9 @@ outputs:
         - typing_extensions
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
-        - {{ pin_subpackage('libtorch', exact=True) }}
+        - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
+        # for non-megabuild, allow libtorch from any python version
+        - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
         - llvm-openmp    # [osx]
         - intel-openmp {{ mkl }}  # [win]
         - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
