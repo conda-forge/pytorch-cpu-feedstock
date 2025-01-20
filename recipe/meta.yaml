@@ -481,12 +481,12 @@ about:
 
 extra:
   recipe-maintainers:
-    - h-vetinari
-    - jeongseok-meta
-    - hmaarrfk
-    - sodre
-    - benjaminrwilson
-    - Tobias-Fischer
-    - beckermr
     - baszalmstra
+    - benjaminrwilson
+    - beckermr
+    - h-vetinari
+    - hmaarrfk
+    - jeongseok-meta
+    - sodre
+    - Tobias-Fischer
   feedstock-name: pytorch-cpu
