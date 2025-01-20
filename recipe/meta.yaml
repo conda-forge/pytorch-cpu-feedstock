@@ -381,6 +381,8 @@ outputs:
 
         # python-version-specific library (default location in SP_DIR symlinks back to this)
         - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
+        - if not exist %LIBRARY_BIN%\torch_python.dll exit 1  # [win]
+        - if not exist %LIBRARY_LIB%\torch_python.lib exit 1  # [win]
 
         # a reasonably safe subset of tests that should run under 15 minutes
         # disable hypothesis because it randomly yields health check errors

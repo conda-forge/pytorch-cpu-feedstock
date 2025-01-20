@@ -221,14 +221,13 @@ if "%PKG_NAME%" == "libtorch" (
         if %ERRORLEVEL% neq 0 exit 1
     )
 
-    @REM Delete all files from the lib directory that do not start with torch_python
-    for %%f in (%SP_DIR%\torch\lib\*) do (
-        set "FILENAME=%%~nf"
-        if "!FILENAME:~0,12!" neq "torch_python" (
-            del %%f
-            if %ERRORLEVEL% neq 0 exit 1
-        )
-    )
+    @REM Move libtorch_python and remove the lib directory afterwards.
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.dll %LIBRARY_BIN%\
+    if %ERRORLEVEL% neq 1 exit 1
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.lib %LIBRARY_LIB%\
+    if %ERRORLEVEL% neq 1 exit 1
+    rmdir /s /q %SP_DIR%\torch\lib
+    if %ERRORLEVEL% neq 1 exit 1
 )
 
 @REM Show the sccache stats.
