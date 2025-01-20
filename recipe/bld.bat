@@ -151,8 +151,10 @@ sccache --zero-stats
 if %ERRORLEVEL% neq 0 exit 1
 
 @REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
-cmake --build build --target clean
-if %ERRORLEVEL% neq 0 exit 1
+if EXIST build (
+    cmake --build build --target clean
+    if %ERRORLEVEL% neq 0 exit 1
+)
 
 %PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps -vvv --no-clean
 if %ERRORLEVEL% neq 0 exit 1
