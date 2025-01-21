@@ -172,8 +172,8 @@ if %ERRORLEVEL% neq 0 exit 1
 
 if "%PKG_NAME%" == "libtorch" (
     @REM Extract the compiled wheel into a temporary directory
-    if not exist "%SRC_DIR%/dist" mkdir %SRC_DIR%/dist
-    pushd %SRC_DIR%/dist
+    if not exist "%SRC_DIR%\dist" mkdir %SRC_DIR%\dist
+    pushd %SRC_DIR%\dist
     for /f %%f in ('dir /b /S ..\torch-*.whl') do (
         wheel unpack %%f
         if %ERRORLEVEL% neq 0 exit 1
