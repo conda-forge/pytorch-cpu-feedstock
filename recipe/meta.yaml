@@ -399,7 +399,8 @@ outputs:
         # python-version-specific library (default location in SP_DIR symlinks back to this)
         - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
 
-        # the smoke test script takes a bunch of env variables, defined below
+        # See here for environment variables needed by the smoke test script
+        # https://github.com/pytorch/pytorch/blob/266fd35c5842902f6304aa8e7713b252cbfb243c/.ci/pytorch/smoke_test/smoke_test.py#L16
         - set MATRIX_GPU_ARCH_VERSION="{{ '.'.join(cuda_compiler_version.split('.')[:2]) }}"    # [(cuda_compiler_version != "None") and (win)]
         - set MATRIX_GPU_ARCH_TYPE="cuda"                                                       # [(cuda_compiler_version != "None") and (win)]
         - set MATRIX_GPU_ARCH_VERSION="none"                                                    # [(cuda_compiler_version == "None") and (win)]
