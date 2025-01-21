@@ -11,11 +11,6 @@ cxx_compiler_version:       # [osx]
 llvm_openmp:                # [osx]
   - 17                      # [osx]
 
-mkl:
-  - 2023
-libprotobuf:
-  - 5.28.2
-
 # override global pinning to stay on CUDA 12.0
 docker_image:                                       # [linux]
   - quay.io/condaforge/linux-anvil-x86_64:alma9     # [linux]
@@ -33,10 +28,6 @@ fortran_compiler_version:                           # [linux]
   - 13                                              # [linux]
   - 11                                              # [linux]
   - 12                                              # [linux]
-cdt_name:                                           # [linux]
-  - cos7                                            # [linux]
-  - cos7                                            # [linux]
-  - cos7                                            # [linux]
 cuda_compiler:                                      # [linux]
   - None                                            # [linux]
   - nvcc                                            # [linux]

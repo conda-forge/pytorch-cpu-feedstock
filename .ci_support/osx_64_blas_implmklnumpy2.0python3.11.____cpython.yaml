@@ -27,11 +27,11 @@ cxx_compiler_version:
 libabseil:
 - '20240722'
 libcblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 liblapack:
-- 3.9 *netlib
+- 3.9.* *netlib
 libprotobuf:
-- 5.28.2
+- 5.28.3
 libtorch:
 - '2.4'
 llvm_openmp:
