@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.5.1" %}
-{% set build = 9 %}
+{% set version = "2.6.0.rc7" %}
+{% set build = 0 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -33,36 +33,26 @@ source:
 {% endif %}
   patches:
     - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
-    # https://github.com/pytorch/pytorch/pull/137084
+    # backport https://github.com/pytorch/pytorch/pull/137084
     - patches/0002-Help-find-numpy.patch
-    # https://github.com/pytorch/pytorch/pull/138287
-    - patches/0003-Add-USE_SYSTEM_NVTX-option-138287.patch
-    # sympy 1.13.2 was reported to result in test failures on Windows and mac
+    # unpin sympy; 1.13.2 was reported to result in test failures on Windows and mac, see
     # https://github.com/pytorch/pytorch/pull/133235
-    - patches/0004-Update-sympy-version.patch
-    - patches/0005-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
-    # https://github.com/pytorch/pytorch/pull/136034
-    - patches/0006-fix-3.13-pickle-error-in-serialization.py-136034.patch
-    # https://github.com/pytorch/pytorch/pull/137331
-    - patches/0007-Allow-users-to-overwrite-ld-with-environment-variabl.patch
+    - patches/0003-Update-sympy-version.patch
+    - patches/0004-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
     # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
     # for their PyPI wheel builds
-    - patches/0008-Allow-libcufile-for-conda-builds.patch
+    - patches/0005-Allow-libcufile-for-conda-builds.patch
     # conda-specific patch, lets us override CUDA paths
-    - patches/0009-Allow-overriding-CUDA-related-paths.patch
-    # NumPy 2 fixes:
-    # https://github.com/pytorch/pytorch/pull/136800
-    - patches/0010-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
-    # https://github.com/pytorch/pytorch/pull/137740
-    - patches/0011-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
+    - patches/0006-Allow-overriding-CUDA-related-paths.patch
     # fix BLAS calling convention for openblas
-    - patches/0012-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+    - patches/0007-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
     # fix mkl-2024 issue
     # https://github.com/pytorch/pytorch/pull/143894
-    - patches/0013-fix-issue-142484.patch
-    - patches/0014-Fix-FindOpenBLAS.patch
-    # backport https://github.com/pytorch/pytorch/pull/138095
-    - patches/0015-CD-Enable-Python-3.13-on-windows-138095.patch
+    - patches/0008-fix-issue-142484.patch
+    - patches/0009-Fix-FindOpenBLAS.patch
+    # backport https://github.com/google/XNNPACK/commit/5f23827e66cca435fa400b6e221892ac95af0079
+    # for https://github.com/pytorch/pytorch/issues/141083
+    # - patches_submodules/0001-Fix-bazel-linux-aarch64-gcc13-workflow-and-resolve-a.patch
 
 build:
   number: {{ build }}
@@ -76,8 +66,8 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
-  string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+  string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -146,9 +136,7 @@ requirements:
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
-    # see https://github.com/pytorch/pytorch/issues/136541
-    - setuptools <=72.1.0  # [win]
-    - setuptools  # [not win]
+    - setuptools
     - pyyaml
     - requests
     - six
@@ -180,8 +168,8 @@ requirements:
     - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
     - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
     - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
-    - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-    - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+    - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ build }}  # [cuda_compiler_version != "None"]
+    - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ build }}                                                 # [cuda_compiler_version == "None"]
     # if using OpenBLAS, ensure that a version compatible with OpenMP is used
     # otherwise, we get the following warnings:
     # OpenBLAS Warning : Detect OpenMP Loop and this application may hang. Please rebuild the library with USE_OPENMP=1 option.
@@ -228,8 +216,8 @@ outputs:
     script: build.sh    # [unix]
     script: bld.bat     # [win]
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
@@ -284,9 +272,7 @@ outputs:
         - python
         - numpy
         - pip
-        # see https://github.com/pytorch/pytorch/issues/136541
-        - setuptools <=72.1.0  # [win]
-        - setuptools  # [not win]
+        - setuptools
         - pyyaml
         - requests
         - six
@@ -305,27 +291,31 @@ outputs:
         - typing_extensions
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
+        - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
+        # for non-megabuild, allow libtorch from any python version;
+        # pinning build number would be nice but breaks conda
+        - libtorch {{ version }}.*                      # [not megabuild]
         - llvm-openmp    # [osx]
         - intel-openmp {{ mkl }}  # [win]
         - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
+        - nomkl                       # [blas_impl != "mkl"]
         # GPU requirements without run_exports
-        - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
-        # other requirements
+        - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
+        - triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
+        # avoid that people without GPUs needlessly download ~0.5-1GB
+        - __cuda                            # [cuda_compiler_version != "None"]
         - python
-        - typing_extensions
+        # other requirements, see https://github.com/pytorch/pytorch/blame/main/requirements.txt
+        - filelock
+        - fsspec
+        - jinja2
+        - networkx
+        - optree >=0.13.0
+        - setuptools
         # sympy 1.13.2 was reported to result in test failures on Windows and mac
         # https://github.com/pytorch/pytorch/pull/133235
         - sympy >=1.13.1,!=1.13.2
-        - filelock
-        - jinja2
-        - networkx
-        - nomkl                 # [blas_impl != "mkl"]
-        - fsspec
-        # avoid that people without GPUs needlessly download ~0.5-1GB
-        - __cuda  # [cuda_compiler_version != "None"]
-        - libtorch {{ version }}
-        - setuptools
-        - triton {{ triton }}   # [cuda_compiler_version != "None" and not win]
+        - typing_extensions >=4.10.0
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
@@ -439,7 +429,7 @@ outputs:
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
-        - export OMP_NUM_THREADS=4  # [unix]
+        - export OMP_NUM_THREADS=2  # [unix]
         # reduced paralellism to avoid OOM; test only one python version on aarch because emulation is super-slow
         - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50   # [unix and (not aarch64 or py==312)]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50  # [win]
@@ -451,19 +441,19 @@ outputs:
   {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                  # [megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                                # [megabuild and cuda_compiler_version == "None"]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [not megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                # [not megabuild and cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                  # [megabuild and cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                                 # [megabuild and cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [not megabuild and cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                # [not megabuild and cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       # weigh down cpu implementation and give cuda preference
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
-        - pytorch {{ version }}=cuda*_{{ blas_impl }}*{{ PKG_BUILDNUM }}  # [megabuild and cuda_compiler_version != "None"]
-        - pytorch {{ version }}=cpu_{{ blas_impl }}*{{ PKG_BUILDNUM }}    # [megabuild and cuda_compiler_version == "None"]
-        - {{ pin_subpackage("pytorch", exact=True) }}                     # [not megabuild]
+        - pytorch {{ version }}=cuda*_{{ blas_impl }}*{{ build }}   # [megabuild and cuda_compiler_version != "None"]
+        - pytorch {{ version }}=cpu_{{ blas_impl }}*{{ build }}     # [megabuild and cuda_compiler_version == "None"]
+        - {{ pin_subpackage("pytorch", exact=True) }}               # [not megabuild]
     test:
       imports:
         - torch
