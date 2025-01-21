@@ -182,16 +182,11 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
             echo "unknown CUDA arch, edit build.sh"
             exit 1
     esac
-    # Warning from pytorch v1.12.1: In the future we will require one to
-    # explicitly pass TORCH_CUDA_ARCH_LIST to cmake instead of implicitly
-    # setting it as an env variable.
-    #
-    # See:
-    # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
-    # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
+
+    # Compatibility matrix for update: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
     case ${cuda_compiler_version} in
-        12.6)
-            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+        12.[0-6])
+            export CMAKE_ARGS="${CMAKE_ARGS} -DTORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
             ;;
         *)
             echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
