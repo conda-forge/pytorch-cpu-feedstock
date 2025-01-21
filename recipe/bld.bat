@@ -174,7 +174,6 @@ if "%PKG_NAME%" == "libtorch" (
     @REM Extract the compiled wheel into a temporary directory
     if not exist "%SRC_DIR%/dist" mkdir %SRC_DIR%/dist
     pushd %SRC_DIR%/dist
-    if %ERRORLEVEL% neq 0 exit 1
     for /f %%f in ('dir /b /S ..\torch-*.whl') do (
         wheel unpack %%f
         if %ERRORLEVEL% neq 0 exit 1
@@ -205,21 +204,16 @@ if "%PKG_NAME%" == "libtorch" (
     if %ERRORLEVEL% neq 0 exit 1
 
     popd
-    if %ERRORLEVEL% neq 0 exit 1
     popd
-    if %ERRORLEVEL% neq 0 exit 1
 
     @REM Keep the original backed up to sed later
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
     if %ERRORLEVEL% neq 0 exit 1
 ) else if "%PKG_NAME%" == "pytorch" (
     rmdir /s /q %SP_DIR%\torch\bin
-    if %ERRORLEVEL% neq 0 exit 1
     rmdir /s /q %SP_DIR%\torch\share
-    if %ERRORLEVEL% neq 0 exit 1
     for %%f in (ATen caffe2 torch c10) do (
         rmdir /s /q %SP_DIR%\torch\include\%%f
-        if %ERRORLEVEL% neq 0 exit 1
     )
 
     @REM Move libtorch_python and remove the lib directory afterwards.
@@ -228,14 +222,7 @@ if "%PKG_NAME%" == "libtorch" (
     robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.lib %LIBRARY_LIB%\
     if %ERRORLEVEL% neq 1 exit 1
     rmdir /s /q %SP_DIR%\torch\lib
-    if %ERRORLEVEL% neq 1 exit 1
 )
 
 @REM Show the sccache stats.
 sccache --show-stats
-
-goto :EOF
-
-:error
-echo Failed with error %errorlevel%
-exit /b %errorlevel%
