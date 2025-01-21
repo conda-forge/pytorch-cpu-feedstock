@@ -186,16 +186,11 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Move the binaries into the packages site-package directory
     robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\
-    if %ERRORLEVEL% neq 1 exit 1
     robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ *.dll
-    if %ERRORLEVEL% neq 1 exit 1
     robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ *.lib
-    if %ERRORLEVEL% neq 1 exit 1
     robocopy /NP /NFL /NDL /NJH /E torch\share %LIBRARY_PREFIX%\
-    if %ERRORLEVEL% neq 1 exit 1
     for %%f in (ATen caffe2 torch c10) do (
         robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %LIBRARY_INC%\%%f\
-        if %ERRORLEVEL% neq 1 exit 1
     )
 
     @REM Remove the python binary file, that is placed in the site-packages
@@ -218,9 +213,7 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Move libtorch_python and remove the lib directory afterwards.
     robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.dll %LIBRARY_BIN%\
-    if %ERRORLEVEL% neq 1 exit 1
     robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.lib %LIBRARY_LIB%\
-    if %ERRORLEVEL% neq 1 exit 1
     rmdir /s /q %SP_DIR%\torch\lib
 )
 
