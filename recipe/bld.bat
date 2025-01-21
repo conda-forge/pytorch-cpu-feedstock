@@ -188,7 +188,7 @@ if "%PKG_NAME%" == "libtorch" (
     robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\
     robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ *.dll
     robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ *.lib
-    robocopy /NP /NFL /NDL /NJH /E torch\share %LIBRARY_PREFIX%\
+    robocopy /NP /NFL /NDL /NJH /E torch\share\ %LIBRARY_PREFIX%\share
     for %%f in (ATen caffe2 torch c10) do (
         robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %LIBRARY_INC%\%%f\
     )
