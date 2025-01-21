@@ -185,11 +185,11 @@ if "%PKG_NAME%" == "libtorch" (
     if %ERRORLEVEL% neq 0 exit 1
 
     @REM Move the binaries into the packages site-package directory
-    robocopy /NP /NFL /NDL /NJH /E torch\bin\*.* %LIBRARY_BIN%\
+    robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\
     if %ERRORLEVEL% neq 1 exit 1
-    robocopy /NP /NFL /NDL /NJH /E torch\lib\*.dll %LIBRARY_BIN%\
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ *.dll
     if %ERRORLEVEL% neq 1 exit 1
-    robocopy /NP /NFL /NDL /NJH /E torch\lib\*.lib %LIBRARY_LIB%\
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ *.lib
     if %ERRORLEVEL% neq 1 exit 1
     robocopy /NP /NFL /NDL /NJH /E torch\share %LIBRARY_PREFIX%\
     if %ERRORLEVEL% neq 1 exit 1
