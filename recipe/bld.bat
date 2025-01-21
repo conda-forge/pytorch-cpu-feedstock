@@ -215,6 +215,10 @@ if "%PKG_NAME%" == "libtorch" (
     robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.dll %LIBRARY_BIN%\
     robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.lib %LIBRARY_LIB%\
     rmdir /s /q %SP_DIR%\torch\lib
+
+    @REM Copy libtorch_python.lib back -- that's much easier than the for loop
+    @REM needed to remove everything else.
+    robocopy /NP /NFL /NDL /NJH /E %LIBRARY_LIB%\torch_python.lib torch\lib\
 )
 
 @REM Show the sccache stats.
