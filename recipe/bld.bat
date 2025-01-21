@@ -175,13 +175,14 @@ if "%PKG_NAME%" == "libtorch" (
     if not exist "%SRC_DIR%/dist" mkdir %SRC_DIR%/dist
     pushd %SRC_DIR%/dist
     if %ERRORLEVEL% neq 0 exit 1
-    for %%f in (../torch-*.whl) do (
+    for /f %%f in ('dir /b /S ..\torch-*.whl') do (
         wheel unpack %%f
         if %ERRORLEVEL% neq 0 exit 1
     )
 
-    @REM Navigate into the unpacked wheel
-    pushd torch-*
+    @REM Navigate into the unpacked wheel; naming pattern of the folder is documented:
+    @REM https://github.com/pypa/wheel/blob/0.45.1/src/wheel/cli/unpack.py#L11-L12
+    pushd torch-%PKG_VERSION%
     if %ERRORLEVEL% neq 0 exit 1
 
     @REM Move the binaries into the packages site-package directory
