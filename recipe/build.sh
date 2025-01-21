@@ -67,15 +67,6 @@ export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
 export CMAKE_PREFIX_PATH=$PREFIX
 export CMAKE_BUILD_TYPE=Release
 
-for ARG in $CMAKE_ARGS; do
-  if [[ "$ARG" == "-DCMAKE_"* ]]; then
-    cmake_arg=$(echo $ARG | cut -d= -f1)
-    cmake_arg=$(echo $cmake_arg| cut -dD -f2-)
-    cmake_val=$(echo $ARG | cut -d= -f2-)
-    printf -v $cmake_arg "$cmake_val"
-    export ${cmake_arg}
-  fi
-done
 CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
