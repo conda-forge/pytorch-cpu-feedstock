@@ -120,6 +120,7 @@ requirements:
     - protobuf
     - make      # [linux]
     - sccache   # [win]
+    - rsync     # [unix]
   host:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
