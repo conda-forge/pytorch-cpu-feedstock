@@ -224,6 +224,10 @@ test:
     - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
     {% endfor %}
 
+    # CMake files in share
+    - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
+    - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
+
 outputs:
   - name: libtorch
   - name: pytorch
