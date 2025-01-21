@@ -70,7 +70,7 @@ export CMAKE_BUILD_TYPE=Release
 CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
 export TH_BINARY_BUILD=1
-# Use our build version and number for inserting into binaries
+# Use our build version for inserting into binaries
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 # Always pass 0 to avoid appending ".post" to version string.
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
