@@ -212,8 +212,8 @@ if "%PKG_NAME%" == "libtorch" (
     )
 
     @REM Move libtorch_python and remove the lib directory afterwards.
-    robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.dll %LIBRARY_BIN%\
-    robocopy /NP /NFL /NDL /NJH /E torch\lib\torch_python.lib %LIBRARY_LIB%\
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\torch_python.dll %LIBRARY_BIN%\
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\torch_python.lib %LIBRARY_LIB%\
     rmdir /s /q %SP_DIR%\torch\lib
 
     @REM Copy libtorch_python.lib back -- that's much easier than the for loop
