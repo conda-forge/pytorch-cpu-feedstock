@@ -205,16 +205,15 @@ if "%PKG_NAME%" == "libtorch" (
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
     if %ERRORLEVEL% neq 0 exit 1
 ) else if "%PKG_NAME%" == "pytorch" (
+    @REM Move libtorch_python and remove the other directories afterwards.
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\torch_python.dll %LIBRARY_BIN%\
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\torch_python.lib %LIBRARY_LIB%\
+    rmdir /s /q %SP_DIR%\torch\lib
     rmdir /s /q %SP_DIR%\torch\bin
     rmdir /s /q %SP_DIR%\torch\share
     for %%f in (ATen caffe2 torch c10) do (
         rmdir /s /q %SP_DIR%\torch\include\%%f
     )
-
-    @REM Move libtorch_python and remove the lib directory afterwards.
-    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\torch_python.dll %LIBRARY_BIN%\
-    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\torch_python.lib %LIBRARY_LIB%\
-    rmdir /s /q %SP_DIR%\torch\lib
 
     @REM Copy libtorch_python.lib back -- that's much easier than the for loop
     @REM needed to remove everything else.
