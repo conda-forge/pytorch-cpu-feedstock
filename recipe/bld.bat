@@ -184,9 +184,12 @@ if "%PKG_NAME%" == "libtorch" (
     pushd torch-%PKG_VERSION%
     if %ERRORLEVEL% neq 0 exit 1
 
-    @REM Do not package `fmt.lib`; delete before because it may exist in host before installation already
-    del %LIBRARY_LIB%\fmt.lib
+    @REM Do not package `fmt.lib` (and its metadata); delete it before the move into
+    @REM %LIBRARY_BIN% because it may exist in host before installation already
+    del torch\lib\fmt.lib torch\lib\pkgconfig\fmt.pc
     if %ERRORLEVEL% neq 0 exit 1
+    @REM also delete rest of fmt metadata
+    rmdir /s /q torch\lib\cmake\fmt
 
     @REM Move the binaries into the packages site-package directory
     robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\
