@@ -232,6 +232,8 @@ outputs:
     script: build.sh    # [unix]
     script: bld.bat     # [win]
     build:
+      # debug
+      skip: true  # [py!=312]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
