@@ -192,9 +192,9 @@ if "%PKG_NAME%" == "libtorch" (
     rmdir /s /q torch\lib\cmake\fmt
 
     @REM Move the binaries into the packages site-package directory
-    robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\
-    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ *.dll
-    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ *.lib
+    @REM the only content of torch\bin, {asmjit,fbgemm}.dll, also exists in torch\lib
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ torch*.dll
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ torch*.lib
     robocopy /NP /NFL /NDL /NJH /E torch\share\ %LIBRARY_PREFIX%\share
     for %%f in (ATen caffe2 torch c10) do (
         robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %LIBRARY_INC%\%%f\
