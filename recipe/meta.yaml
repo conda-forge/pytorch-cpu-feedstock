@@ -192,32 +192,24 @@ requirements:
 # the global build stage, including tests
 test:
   commands:
-    # libraries
-    {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu', 'torch_global_deps'] %}
+    # libraries; peculiar formatting to avoid linter false positives about selectors
+    {% set torch_libs = [
+        "c10", "shm", "torch", "torch_cpu", "torch_global_deps"
+    ] + (cuda_compiler_version != "None" and target_platform.startswith("linux")) * [
+        "c10_cuda", "caffe2_nvrtc", "torch_cuda_linalg"
+    ] + (cuda_compiler_version != "None") * [
+        "torch_cuda"
+    ] + target_platform.startswith("win") * [
+        "asmjit", "fbgemm"
+    ]
+    %}
+    {% for each_lib in torch_libs %}
     - test -f $PREFIX/lib/lib{{ each_lib }}.so              # [linux]
     - test -f $PREFIX/lib/lib{{ each_lib }}.dylib           # [osx]
-    {% endfor %}
-    {% for each_lib in [ 'torch', 'torch_cpu', 'torch_global_deps'] %}
     - if not exist %LIBRARY_BIN%\{{ each_lib }}.dll exit 1  # [win]
-    {% endfor %}
-
-    # Windows specific .LIB files
-    {% for each_lib in [ 'torch', 'torch_cpu'] %}
+    {% if each_lib != "torch_global_deps" %}
     - if not exist %LIBRARY_LIB%\{{ each_lib }}.lib exit 1  # [win]
-    {% endfor %}
-
-    # Cuda only libraries
-    {% for each_lib in ['c10_cuda', 'caffe2_nvrtc', 'torch_cuda'] %}
-    - test -f $PREFIX/lib/lib{{ each_lib }}.so              # [linux and cuda_compiler_version != "None"]
-    {% endfor %}
-    {% for each_lib in ['torch_cuda'] %}
-    - if not exist %LIBRARY_BIN%\{{ each_lib }}.dll exit 1  # [win and cuda_compiler_version != "None"]
-    - if not exist %LIBRARY_LIB%\{{ each_lib }}.lib exit 1  # [win and cuda_compiler_version != "None"]
-    {% endfor %}
-
-    # Linux specific cuda libraries
-    {% for each_lib in [ 'torch_cuda_linalg'] %}
-    - test -f $PREFIX/lib/lib{{ each_lib }}.so              # [linux and cuda_compiler_version != "None"]
+    {% endif %}
     {% endfor %}
 
     # CMake files in share
