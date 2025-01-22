@@ -184,6 +184,10 @@ if "%PKG_NAME%" == "libtorch" (
     pushd torch-%PKG_VERSION%
     if %ERRORLEVEL% neq 0 exit 1
 
+    @REM Do not package `fmt.lib`; delete before because it may exist in host before installation already
+    del %LIBRARY_LIB%\fmt.lib
+    if %ERRORLEVEL% neq 0 exit 1
+
     @REM Move the binaries into the packages site-package directory
     robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\
     robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ *.dll
