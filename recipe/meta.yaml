@@ -238,7 +238,7 @@ outputs:
         - libmagma_sparse
     requirements:
       build:
-        - python {{ python }}                    # [build_platform != target_platform]
+        - python
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
         - {{ stdlib('c') }}
