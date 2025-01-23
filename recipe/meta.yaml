@@ -200,9 +200,9 @@ test:
     {% set torch_libs = [
         "c10", "shm", "torch", "torch_cpu", "torch_global_deps"
     ] + (cuda_compiler_version != "None" and target_platform.startswith("linux")) * [
-        "c10_cuda", "caffe2_nvrtc", "torch_cuda_linalg"
+        "torch_cuda_linalg"
     ] + (cuda_compiler_version != "None") * [
-        "torch_cuda"
+        "c10_cuda", "caffe2_nvrtc", "torch_cuda"
     ] + target_platform.startswith("win") * [
         "asmjit", "fbgemm"
     ]
