@@ -63,6 +63,10 @@ source:
     - patches/0014-Fix-FindOpenBLAS.patch
     # backport https://github.com/pytorch/pytorch/pull/138095
     - patches/0015-CD-Enable-Python-3.13-on-windows-138095.patch
+    # backport https://github.com/pytorch/pytorch/pull/145480
+    - patches/0016-simplify-torch.utils.cpp_extension.include_paths-use.patch
+    # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
+    - patches/0017-point-include-paths-to-PREFIX-include.patch
 
 build:
   number: {{ build }}

@@ -1,7 +1,7 @@
 From a1ced1daa37fdcf5345aa0c3095cab8674c1cded Mon Sep 17 00:00:00 2001
 From: Haifeng Jin <haifeng-jin@users.noreply.github.com>
 Date: Sat, 12 Oct 2024 02:40:17 +0000
-Subject: [PATCH 11/15] Fixes NumPy 2 test failures in test_torch.py (#137740)
+Subject: [PATCH 11/17] Fixes NumPy 2 test failures in test_torch.py (#137740)
 
 Related to #107302
 

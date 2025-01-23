@@ -1,7 +1,7 @@
 From db0902077a0ef68d0a48ae42f3b60f9cff7b2248 Mon Sep 17 00:00:00 2001
 From: Haifeng Jin <haifeng-jin@users.noreply.github.com>
 Date: Tue, 1 Oct 2024 07:53:24 +0000
-Subject: [PATCH 10/15] Fix test/test_linalg.py for NumPy 2 (#136800)
+Subject: [PATCH 10/17] Fix test/test_linalg.py for NumPy 2 (#136800)
 
 Related to  #107302.
 
