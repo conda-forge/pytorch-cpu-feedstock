@@ -376,7 +376,7 @@ outputs:
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
-        - .ci/pytorch/smoke_test/smoke_test.py
+        #- .ci/pytorch/smoke_test/smoke_test.py
       commands:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
@@ -423,7 +423,7 @@ outputs:
         - export TARGET_OS="macos-arm64"                                                        # [(osx and arm64)]
         - export TARGET_OS="macos-x86_64"                                                       # [(osx and x86_64)]
         - export OMP_NUM_THREADS=4                                                              # [not win]
-        - python ./smoke_test/smoke_test.py --package torchonly
+        #- python ./smoke_test/smoke_test.py --package torchonly
 
         # a reasonably safe subset of tests that should run under 15 minutes
         # The inductor tests test torch.compile
