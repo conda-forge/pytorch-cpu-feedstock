@@ -279,7 +279,7 @@ outputs:
         - libcusparse-dev
         {% endif %}
         # other requirements
-        - python {{ python }}
+        - python
         - numpy
         - pip
         # see https://github.com/pytorch/pytorch/issues/136541
