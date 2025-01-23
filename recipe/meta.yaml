@@ -446,6 +446,12 @@ outputs:
         - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50   # [unix and (not aarch64 or py==312)]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50  # [win]
 
+        # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
+        # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
+        # obviously this test can only be done for other python versions.
+        - test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-313.pyc          # [py!=313 and unix]
+        - if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-313.pyc exit 1   # [py!=313 and win]
+
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
   # It helps the linter avoid errors on a package not having tests.
