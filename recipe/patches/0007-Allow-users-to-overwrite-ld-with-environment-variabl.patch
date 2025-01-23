@@ -1,7 +1,7 @@
-From 655f694854c3eafdd631235b60bc6c1b279218ed Mon Sep 17 00:00:00 2001
+From d5c8df70422afa07dc212266d420f923f5887f99 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Thu, 3 Oct 2024 22:49:56 -0400
-Subject: [PATCH 07/17] Allow users to overwrite ld with environment variables
+Subject: [PATCH 07/16] Allow users to overwrite ld with environment variables
 
 This should help in the case of cross compilation.
 
@@ -11,7 +11,7 @@ xref: https://github.com/conda-forge/pytorch-cpu-feedstock/pull/261
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/tools/setup_helpers/generate_linker_script.py b/tools/setup_helpers/generate_linker_script.py
-index 11c397a9e5f..e66fc197062 100644
+index 11c397a9e..e66fc1970 100644
 --- a/tools/setup_helpers/generate_linker_script.py
 +++ b/tools/setup_helpers/generate_linker_script.py
 @@ -1,3 +1,4 @@
@@ -30,3 +30,6 @@ index 11c397a9e5f..e66fc197062 100644
          "\n"
      )
  
+-- 
+2.48.1
+
