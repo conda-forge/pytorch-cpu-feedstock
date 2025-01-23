@@ -425,7 +425,6 @@ outputs:
         - python ./smoke_test/smoke_test.py --package torchonly
 
         # a reasonably safe subset of tests that should run under 15 minutes
-        # disable hypothesis because it randomly yields health check errors
         # The inductor tests test torch.compile
         {% set tests = " ".join([
             "test/test_autograd.py",
@@ -485,8 +484,9 @@ outputs:
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
         # reduced paralellism to avoid OOM; test only one python version on aarch because emulation is super-slow
-        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50   # [unix and (not aarch64 or py==312)]
-        - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50  # [win]
+        # disable hypothesis because it randomly yields health check errors
+        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50   # [unix and (not aarch64 or py==312)]
+        - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50  # [win]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
