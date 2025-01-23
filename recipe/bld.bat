@@ -7,7 +7,6 @@ if EXIST pyproject.toml (
   if %ERRORLEVEL% neq 0 exit 1
 )
 
-set TH_BINARY_BUILD=1
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM Always pass 0 to avoid appending ".post" to version string.
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
