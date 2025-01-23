@@ -153,7 +153,8 @@ requirements:
     - pip
     # see https://github.com/pytorch/pytorch/issues/136541
     - setuptools <=72.1.0  # [win]
-    - setuptools  # [not win]
+    # PEP 517 compliant, to support CMAKE_ARGS passthrough via --config-settings
+    - setuptools >=73.0.0  # [not win]
     - pyyaml
     - requests
     - six
