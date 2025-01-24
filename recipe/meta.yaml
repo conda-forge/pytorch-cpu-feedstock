@@ -357,8 +357,7 @@ outputs:
         - pydot
         - pip
         - expecttest
-        # unittest-xml-reporting supersedes xmlrunner
-        - unittest-xml-reporting
+        - xmlrunner
         # Required by run_test.py
         - pytest-flakefinder
         - pytest-rerunfailures
