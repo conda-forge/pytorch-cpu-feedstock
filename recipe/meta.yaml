@@ -401,7 +401,7 @@ outputs:
 
         # See here for environment variables needed by the smoke test script
         # https://github.com/pytorch/pytorch/blob/266fd35c5842902f6304aa8e7713b252cbfb243c/.ci/pytorch/smoke_test/smoke_test.py#L16
-        - set MATRIX_GPU_ARCH_VERSION="{{ '.'.join(cuda_compiler_version.split('.')[:2]) }}"    # [(cuda_compiler_version != "None") and (win)]
+        - set MATRIX_GPU_ARCH_VERSION="{{ '.'.join((cuda_compiler_version or "").split('.')[:2]) }}"   # [(cuda_compiler_version != "None") and (win)]
         - set MATRIX_GPU_ARCH_TYPE="cuda"                                                       # [(cuda_compiler_version != "None") and (win)]
         - set MATRIX_GPU_ARCH_VERSION="none"                                                    # [(cuda_compiler_version == "None") and (win)]
         - set MATRIX_GPU_ARCH_TYPE="none"                                                       # [(cuda_compiler_version == "None") and (win)]
@@ -410,7 +410,7 @@ outputs:
         - set MATRIX_PACKAGE_TYPE="conda"                                                       # [win]
         - set TARGET_OS="windows"                                                               # [win]
         - set OMP_NUM_THREADS=4                                                                 # [win]
-        - export MATRIX_GPU_ARCH_VERSION="{{ '.'.join(cuda_compiler_version.split('.')[:2]) }}" # [(cuda_compiler_version != "None") and (linux and x86_64)]
+        - export MATRIX_GPU_ARCH_VERSION="{{ '.'.join((cuda_compiler_version or "").split('.')[:2]) }}"  # [(cuda_compiler_version != "None") and (linux and x86_64)]
         - export MATRIX_GPU_ARCH_TYPE="cuda"                                                    # [(cuda_compiler_version != "None") and (linux and x86_64)]
         - export MATRIX_GPU_ARCH_VERSION="none"                                                 # [(cuda_compiler_version == "None") and (not win)]
         - export MATRIX_GPU_ARCH_TYPE="none"                                                    # [(cuda_compiler_version == "None") and (not win)]
