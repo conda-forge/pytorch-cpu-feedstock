@@ -233,7 +233,7 @@ case ${PKG_NAME} in
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
     ;;
   pytorch)
-    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation --config-settings="cmake.args=${CMAKE_ARGS}" -vvv --no-clean \
+    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -vvv --no-clean \
         | sed "s,${CXX},\$\{CXX\},g" \
         | sed "s,${PREFIX},\$\{PREFIX\},g"
     # Keep this in ${PREFIX}/lib so that the library can be found by
