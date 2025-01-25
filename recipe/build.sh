@@ -61,7 +61,6 @@ for ARG in $CMAKE_ARGS; do
 done
 CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
-export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 # Always pass 0 to avoid appending ".post" to version string.
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315

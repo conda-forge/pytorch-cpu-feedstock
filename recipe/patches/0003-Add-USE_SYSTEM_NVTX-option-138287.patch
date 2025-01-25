@@ -1,7 +1,7 @@
-From d1826af525db41eda5020a1404f5d5521d67a5dc Mon Sep 17 00:00:00 2001
+From 4ae61d17c81e9d66e091c2790ac6deae6bf31204 Mon Sep 17 00:00:00 2001
 From: Jeongseok Lee <jeongseok@meta.com>
 Date: Sat, 19 Oct 2024 04:26:01 +0000
-Subject: [PATCH 03/15] Add USE_SYSTEM_NVTX option (#138287)
+Subject: [PATCH 03/16] Add USE_SYSTEM_NVTX option (#138287)
 
 ## Summary
 
@@ -21,7 +21,7 @@ Approved by: https://github.com/albanD
  3 files changed, 22 insertions(+), 2 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 98593c2de97..ae3c3f2cbd5 100644
+index 98593c2de..ae3c3f2cb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -470,6 +470,7 @@ option(USE_SYSTEM_FXDIV "Use system-provided fxdiv." OFF)
@@ -41,7 +41,7 @@ index 98593c2de97..ae3c3f2cbd5 100644
  
  # /Z7 override option When generating debug symbols, CMake default to use the
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index afc1bc12abf..152fbdbe6dd 100644
+index afc1bc12a..152fbdbe6 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
 @@ -170,7 +170,11 @@ else()
@@ -58,7 +58,7 @@ index afc1bc12abf..152fbdbe6dd 100644
  if(nvtx3_FOUND)
    add_library(torch::nvtx3 INTERFACE IMPORTED)
 diff --git a/setup.py b/setup.py
-index 2b0cfa99d71..7174777ed4e 100644
+index 2b0cfa99d..7174777ed 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -183,7 +183,21 @@
@@ -84,3 +84,6 @@ index 2b0cfa99d71..7174777ed4e 100644
  #
  #   USE_MIMALLOC
  #      Static link mimalloc into C10, and use mimalloc in alloc_cpu & alloc_free.
+-- 
+2.48.1
+

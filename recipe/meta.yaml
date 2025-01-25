@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.5.1" %}
-{% set build = 9 %}
+{% set build = 10 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -15,7 +15,7 @@
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
 {% set triton = "3.1.0" %}
 
-# TODO Temporary pin, remove
+# TODO Temporary pin, remove me
 {% set mkl = "<2025" %}
 
 package:
@@ -45,24 +45,25 @@ source:
     - patches/0006-fix-3.13-pickle-error-in-serialization.py-136034.patch
     # https://github.com/pytorch/pytorch/pull/137331
     - patches/0007-Allow-users-to-overwrite-ld-with-environment-variabl.patch
-    # conda-specific patch, upstream force-disables libcufile w/ TH_BINARY_BUILD
-    # for their PyPI wheel builds
-    - patches/0008-Allow-libcufile-for-conda-builds.patch
     # conda-specific patch, lets us override CUDA paths
-    - patches/0009-Allow-overriding-CUDA-related-paths.patch
+    - patches/0008-Allow-overriding-CUDA-related-paths.patch
     # NumPy 2 fixes:
     # https://github.com/pytorch/pytorch/pull/136800
-    - patches/0010-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
+    - patches/0009-Fix-test-test_linalg.py-for-NumPy-2-136800.patch
     # https://github.com/pytorch/pytorch/pull/137740
-    - patches/0011-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
+    - patches/0010-Fixes-NumPy-2-test-failures-in-test_torch.py-137740.patch
     # fix BLAS calling convention for openblas
-    - patches/0012-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+    - patches/0011-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
     # fix mkl-2024 issue
     # https://github.com/pytorch/pytorch/pull/143894
-    - patches/0013-fix-issue-142484.patch
-    - patches/0014-Fix-FindOpenBLAS.patch
+    - patches/0012-fix-issue-142484.patch
+    - patches/0013-Fix-FindOpenBLAS.patch
     # backport https://github.com/pytorch/pytorch/pull/138095
-    - patches/0015-CD-Enable-Python-3.13-on-windows-138095.patch
+    - patches/0014-CD-Enable-Python-3.13-on-windows-138095.patch
+    # backport https://github.com/pytorch/pytorch/pull/145480
+    - patches/0015-simplify-torch.utils.cpp_extension.include_paths-use.patch
+    # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
+    - patches/0016-point-include-paths-to-PREFIX-include.patch
 
 build:
   number: {{ build }}
@@ -126,14 +127,14 @@ requirements:
     {% if cuda_compiler_version != "None" %}
     - cuda-driver-dev                 # [linux]
     - cuda-cudart-dev
-    - cuda-cupti-dev    # [linux]
+    - cuda-cupti-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
     - cuda-nvml-dev
     - cuda-profiler-api
-    - cusparselt     # [linux]
+    - cusparselt
     - libcublas-dev
-    - libcudss-dev   # [linux]
+    - libcudss-dev
     - libcufile-dev  # [linux]
     - libcufft-dev
     - libcurand-dev
@@ -192,35 +193,29 @@ requirements:
 # the global build stage, including tests
 test:
   commands:
-    # libraries
-    {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu', 'torch_global_deps'] %}
-    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux]
-    - test -f $PREFIX/lib/lib{{ each_lib }}.dylib                 # [osx]
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
+    # libraries; peculiar formatting to avoid linter false positives about selectors
+    {% set torch_libs = [
+        "c10", "shm", "torch", "torch_cpu", "torch_global_deps"
+    ] + (cuda_compiler_version != "None" and target_platform.startswith("linux")) * [
+        "torch_cuda_linalg"
+    ] + (cuda_compiler_version != "None") * [
+        "c10_cuda", "caffe2_nvrtc", "torch_cuda"
+    ] + target_platform.startswith("win") * [
+        "asmjit", "fbgemm"
+    ]
+    %}
+    {% for each_lib in torch_libs %}
+    - test -f $PREFIX/lib/lib{{ each_lib }}.so              # [linux]
+    - test -f $PREFIX/lib/lib{{ each_lib }}.dylib           # [osx]
+    - if not exist %LIBRARY_BIN%\{{ each_lib }}.dll exit 1  # [win]
+    {% if each_lib != "torch_global_deps" %}
+    - if not exist %LIBRARY_LIB%\{{ each_lib }}.lib exit 1  # [win]
+    {% endif %}
     {% endfor %}
 
-    # Windows specific .LIB files
-    {% for each_lib in [ 'c10', 'shm', 'torch', 'torch_cpu'] %}
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
-    {% endfor %}
-
-    # Windows specific libraries
-    {% for each_lib in [ 'asmjit', 'fbgemm'] %}
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win]
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win]
-    {% endfor %}
-
-    # Cuda only libraries
-    {% for each_lib in ['c10_cuda', 'caffe2_nvrtc', 'torch_cuda'] %}
-    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.dll exit 1   # [win and cuda_compiler_version != "None"]
-    - if not exist %SP_DIR%\torch\lib\{{ each_lib }}.lib exit 1   # [win and cuda_compiler_version != "None"]
-    {% endfor %}
-
-    # Linux specific cuda libraries
-    {% for each_lib in [ 'torch_cuda_linalg'] %}
-    - test -f $PREFIX/lib/lib{{ each_lib }}.so                    # [linux and cuda_compiler_version != "None"]
-    {% endfor %}
+    # CMake files in share
+    - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
+    - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
 
 outputs:
   - name: libtorch
@@ -238,7 +233,7 @@ outputs:
         - libmagma_sparse
     requirements:
       build:
-        - python                                 # [build_platform != target_platform]
+        - python
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
         - {{ stdlib('c') }}
@@ -266,14 +261,14 @@ outputs:
         {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
-        - cuda-cupti-dev    # [linux]
+        - cuda-cupti-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
-        - cusparselt     # [linux]
+        - cusparselt
         - libcublas-dev
-        - libcudss-dev   # [linux]
+        - libcudss-dev
         - libcufile-dev  # [linux]
         - libcufft-dev
         - libcurand-dev
@@ -379,6 +374,8 @@ outputs:
 
         # python-version-specific library (default location in SP_DIR symlinks back to this)
         - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
+        - if not exist %LIBRARY_BIN%\torch_python.dll exit 1  # [win]
+        - if not exist %LIBRARY_LIB%\torch_python.lib exit 1  # [win]
 
         # a reasonably safe subset of tests that should run under 15 minutes
         # disable hypothesis because it randomly yields health check errors
@@ -443,6 +440,12 @@ outputs:
         # reduced paralellism to avoid OOM; test only one python version on aarch because emulation is super-slow
         - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50   # [unix and (not aarch64 or py==312)]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50  # [win]
+
+        # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
+        # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
+        # obviously this test can only be done for other python versions.
+        - test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-313.pyc          # [py!=313 and unix]
+        - if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-313.pyc exit 1   # [py!=313 and win]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
