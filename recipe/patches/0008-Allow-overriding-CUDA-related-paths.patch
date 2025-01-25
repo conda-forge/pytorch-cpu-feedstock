@@ -1,0 +1,36 @@
+From f03bf82d9da9cccb2cf4d4833c1a6349622dc37d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Wed, 27 Nov 2024 13:47:23 +0100
+Subject: [PATCH 08/17] Allow overriding CUDA-related paths
+
+---
+ cmake/Modules/FindCUDAToolkit.cmake | 2 +-
+ tools/setup_helpers/cmake.py        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/Modules/FindCUDAToolkit.cmake b/cmake/Modules/FindCUDAToolkit.cmake
+index ec9ae530aa6..b7c0bd9fc51 100644
+--- a/cmake/Modules/FindCUDAToolkit.cmake
++++ b/cmake/Modules/FindCUDAToolkit.cmake
+@@ -497,7 +497,7 @@ Result variables
+ # CMAKE_CUDA_COMPILER_TOOLKIT_ROOT and CMAKE_CUDA_COMPILER_LIBRARY_ROOT.
+ # We compute the rest based on those here to avoid re-searching and to avoid finding a possibly
+ # different installation.
+-if(CMAKE_CUDA_COMPILER_TOOLKIT_ROOT)
++if(CMAKE_CUDA_COMPILER_TOOLKIT_ROOT AND NOT "$ENV{IN_PYTORCH_BUILD}" STREQUAL "1")
+   set(CUDAToolkit_ROOT_DIR "${CMAKE_CUDA_COMPILER_TOOLKIT_ROOT}")
+   set(CUDAToolkit_LIBRARY_ROOT "${CMAKE_CUDA_COMPILER_LIBRARY_ROOT}")
+   set(CUDAToolkit_VERSION "${CMAKE_CUDA_COMPILER_TOOLKIT_VERSION}")
+diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
+index bde41323c76..b171837cd4a 100644
+--- a/tools/setup_helpers/cmake.py
++++ b/tools/setup_helpers/cmake.py
+@@ -252,7 +252,7 @@ class CMake:
+             true_var = additional_options.get(var)
+             if true_var is not None:
+                 build_options[true_var] = val
+-            elif var.startswith(("BUILD_", "USE_", "CMAKE_")) or var.endswith(
++            elif var.startswith(("BUILD_", "USE_", "CMAKE_", "CUDA")) or var.endswith(
+                 ("EXITCODE", "EXITCODE__TRYRUN_OUTPUT")
+             ):
+                 build_options[var] = val

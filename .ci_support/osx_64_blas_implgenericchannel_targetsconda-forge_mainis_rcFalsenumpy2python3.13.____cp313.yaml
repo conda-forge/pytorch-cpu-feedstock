@@ -29,11 +29,11 @@ is_rc:
 libabseil:
 - '20240722'
 libblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 libcblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 liblapack:
-- 3.9 *netlib
+- 3.9.* *netlib
 libprotobuf:
 - 5.28.3
 libtorch:
@@ -48,6 +48,8 @@ mkl:
 - '2023'
 numpy:
 - '2'
+orc:
+- 2.0.3
 pin_run_as_build:
   python:
     min_pin: x.x

@@ -328,5 +328,6 @@ Feedstock Maintainers
 * [@h-vetinari](https://github.com/h-vetinari/)
 * [@hmaarrfk](https://github.com/hmaarrfk/)
 * [@jeongseok-meta](https://github.com/jeongseok-meta/)
+* [@mgorny](https://github.com/mgorny/)
 * [@sodre](https://github.com/sodre/)
 
