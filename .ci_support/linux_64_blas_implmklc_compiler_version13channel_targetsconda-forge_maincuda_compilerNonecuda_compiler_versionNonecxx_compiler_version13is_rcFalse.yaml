@@ -27,7 +27,7 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
 github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- cirun-openstack-cpu-2xlarge
 is_rc:
 - 'False'
 libabseil:
@@ -75,6 +75,7 @@ zip_keys:
   - cxx_compiler_version
   - cuda_compiler
   - cuda_compiler_version
+  - github_actions_labels
   - docker_image
 - - channel_targets
   - is_rc

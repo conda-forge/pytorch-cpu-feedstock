@@ -75,6 +75,7 @@ zip_keys:
   - cxx_compiler_version
   - cuda_compiler
   - cuda_compiler_version
+  - github_actions_labels
   - docker_image
 - - channel_targets
   - is_rc
