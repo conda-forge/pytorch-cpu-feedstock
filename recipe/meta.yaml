@@ -323,6 +323,7 @@ outputs:
         - filelock
         - jinja2
         - networkx
+        - pybind11
         - nomkl                 # [blas_impl != "mkl"]
         - fsspec
         # avoid that people without GPUs needlessly download ~0.5-1GB
