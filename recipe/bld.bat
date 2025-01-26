@@ -7,6 +7,12 @@ if EXIST pyproject.toml (
   if %ERRORLEVEL% neq 0 exit 1
 )
 
+@REM The PyTorch test suite includes some symlinks, which aren't resolved on Windows, leading to packaging errors.
+@REM ATTN! These change and have to be updated manually, often with each release.
+@REM (no current symlinks being packaged. Leaving this information here as it took some months to find the issue. Look out
+@REM for a failure with error message: "conda_package_handling.exceptions.ArchiveCreationError: <somefile> Cannot stat
+@REM while writing file")
+
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM Always pass 0 to avoid appending ".post" to version string.
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
@@ -97,6 +103,10 @@ if not "%cuda_compiler_version%" == "None" (
 
 set DISTUTILS_USE_SDK=1
 
+@REM Use our Pybind11, Eigen
+set USE_SYSTEM_PYBIND11=1
+set USE_SYSTEM_EIGEN_INSTALL=1
+
 set CMAKE_INCLUDE_PATH=%LIBRARY_PREFIX%\include
 set LIB=%LIBRARY_PREFIX%\lib;%LIB%
 
@@ -182,13 +192,6 @@ if "%PKG_NAME%" == "libtorch" (
     @REM https://github.com/pypa/wheel/blob/0.45.1/src/wheel/cli/unpack.py#L11-L12
     pushd torch-%PKG_VERSION%
     if %ERRORLEVEL% neq 0 exit 1
-
-    @REM Do not package `fmt.lib` (and its metadata); delete it before the move into
-    @REM %LIBRARY_BIN% because it may exist in host before installation already
-    del torch\lib\fmt.lib torch\lib\pkgconfig\fmt.pc
-    if %ERRORLEVEL% neq 0 exit 1
-    @REM also delete rest of fmt metadata
-    rmdir /s /q torch\lib\cmake\fmt
 
     @REM Move the binaries into the packages site-package directory
     @REM the only content of torch\bin, {asmjit,fbgemm}.dll, also exists in torch\lib

@@ -11,6 +11,14 @@ Summary: PyTorch is an optimized tensor library for deep learning using GPUs and
 
 Development: https://github.com/pytorch/pytorch
 
+Documentation: https://pytorch.org/docs/
+
+PyTorch is a Python package that provides two high-level features:
+  - Tensor computation (like NumPy) with strong GPU acceleration
+  - Deep neural networks built on a tape-based autograd system
+You can reuse your favorite Python packages such as NumPy, SciPy, and Cython to extend PyTorch when needed.
+
+
 Current build status
 ====================
 
@@ -29,45 +37,87 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse</td>
+              <td>linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargeis_h2ab6b548</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargeis_h2ab6b548" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse</td>
+              <td>linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargeis_h6173e25b</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargeis_h6173e25b" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse</td>
+              <td>linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xla_hf94d7e11</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xla_hf94d7e11" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse</td>
+              <td>linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xla_h2b83127f</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xla_h2b83127f" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse</td>
+              <td>linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargeis_rcF_he048d8d8</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargeis_rcF_he048d8d8" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse</td>
+              <td>linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargeis_rcF_h3782e28d</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargeis_rcF_h3782e28d" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargei_h9d03fa1b</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargei_h9d03fa1b" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargei_h0e8a3be7</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargei_h0e8a3be7" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargeis_rcFalse_hb5deabbb</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargeis_rcFalse_hb5deabbb" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargeis_rcFalse_h95f6c8a0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargeis_rcFalse_h95f6c8a0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargeis_rcFal_h83318869</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-cpu-2xlargeis_rcFal_h83318869" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargeis_rcFal_haf4427a0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13github_actions_labelscirun-openstack-gpu-2xlargeis_rcFal_haf4427a0" alt="variant">
                 </a>
               </td>
             </tr><tr>
