@@ -123,16 +123,20 @@ else
     export MAX_JOBS=$((CPU_COUNT > 1 ? CPU_COUNT - 1 : 1))
 fi
 
-if [[ "$blas_impl" == "generic" ]]; then
-    # Fake openblas
-    export BLAS=OpenBLAS
-    export OpenBLAS_HOME=${PREFIX}
-elif [[ "$blas_impl" == "mkl" ]]; then
-    export BLAS=MKL
-else
-    echo "[ERROR] Unsupported BLAS implementation '${blas_impl}'" >&2
-    exit 1
-fi
+case "$blas_impl" in
+    "generic")
+        # Fake openblas
+        export BLAS=OpenBLAS
+        export OpenBLAS_HOME=${PREFIX}
+        ;;
+    "mkl")
+        export BLAS=MKL
+        ;;
+    *)
+        echo "[ERROR] Unsupported BLAS implementation '${blas_impl}'" >&2
+        exit 1
+        ;;
+esac
 
 if [[ "$PKG_NAME" == "pytorch" ]]; then
   # Trick Cmake into thinking python hasn't changed
