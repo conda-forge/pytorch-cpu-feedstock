@@ -24,9 +24,10 @@ export USE_NUMA=0
 export USE_ITT=0
 
 #################### ADJUST COMPILER AND LINKER FLAGS #####################
-# Pytorch's build system doesn't like us setting the c++ standard and will
-# issue a warning:
-# https://github.com/pytorch/pytorch/blob/3beb7006dd5a415dfa236081ad5d55ae38346324/CMakeLists.txt#L41
+# Pytorch's build system doesn't like us setting the c++ standard through CMAKE_CXX_FLAGS
+# and will issue a warning.  We need to use at least C++17 to match the abseil ABI, see
+# https://github.com/conda-forge/abseil-cpp-feedstock/issues/45, which pytorch 2.5 uses already:
+# https://github.com/pytorch/pytorch/blob/v2.5.1/CMakeLists.txt#L36-L48
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-std=c++[0-9][0-9]//g')"
 # The below three lines expose symbols that would otherwise be hidden or
 # optimised away. They were here before, so removing them would potentially
