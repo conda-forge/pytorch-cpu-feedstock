@@ -1,12 +1,10 @@
 #!/bin/bash
 
-echo "=== Building ${PKG_NAME} (py: ${PY_VER}) ==="
-
 set -ex
 
-echo "####################################################################"
-echo "Building PyTorch using BLAS implementation: $blas_impl              "
-echo "####################################################################"
+echo "#########################################################################"
+echo "Building ${PKG_NAME} (py: ${PY_VER}) using BLAS implementation $blas_impl"
+echo "#########################################################################"
 
 # This is used to detect if it's in the process of building pytorch
 export IN_PYTORCH_BUILD=1
