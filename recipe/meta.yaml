@@ -69,6 +69,7 @@ source:
     - patches/0016-point-include-paths-to-PREFIX-include.patch
     - patches/0017-Add-conda-prefix-to-inductor-include-paths.patch
     - patches/0018-remove-DESTINATION-lib-from-CMake-install-directives.patch               # [win]
+    - patches/0019-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
     - patches_submodules/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch    # [win]
 
 build:
