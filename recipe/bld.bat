@@ -196,10 +196,10 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Move the binaries into the packages site-package directory
     @REM the only content of torch\bin, {asmjit,fbgemm}.dll, also exists in torch\lib
-    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ torch*.dll c10.dll shm.dll asmjit.dll fbgemm.dll
+    robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ torch*.dll c10.dll shm.dll asmjit.dll fbgemm.dll
     robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ torch*.lib c10.lib shm.lib asmjit.lib fbgemm.lib
     if not "%cuda_compiler_version%" == "None" (
-        robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ c10_cuda.dll caffe2_nvrtc.dll
+        robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ c10_cuda.dll caffe2_nvrtc.dll
         robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ c10_cuda.lib caffe2_nvrtc.lib
     )
     robocopy /NP /NFL /NDL /NJH /E torch\share\ %LIBRARY_PREFIX%\share
@@ -220,7 +220,7 @@ if "%PKG_NAME%" == "libtorch" (
     if %ERRORLEVEL% neq 0 exit 1
 ) else if "%PKG_NAME%" == "pytorch" (
     @REM Move libtorch_python and remove the other directories afterwards.
-    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_BIN%\ torch_python.dll
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\bin\ %LIBRARY_BIN%\ torch_python.dll
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ torch_python.lib
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ _C.lib
     rmdir /s /q %SP_DIR%\torch\lib

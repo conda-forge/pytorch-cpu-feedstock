@@ -68,6 +68,8 @@ source:
     # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
     - patches/0016-point-include-paths-to-PREFIX-include.patch
     - patches/0017-Add-conda-prefix-to-inductor-include-paths.patch
+    - patches/0018-remove-DESTINATION-lib-from-CMake-install-directives.patch               # [win]
+    - patches_submodules/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch    # [win]
 
 build:
   number: {{ build }}
@@ -199,6 +201,15 @@ requirements:
 # a particularity of conda-build, that output is defined in
 # the global build stage, including tests
 test:
+  requires:
+    # cmake needs a compiler to run package detection, see
+    # https://discourse.cmake.org/t/questions-about-find-package-cli-msvc/6194
+    - {{ compiler('cxx') }}
+    - cmake
+    - ninja
+    - pkg-config
+  files:
+    - cmake_test/
   commands:
     # libraries; peculiar formatting to avoid linter false positives about selectors
     {% set torch_libs = [
@@ -223,6 +234,11 @@ test:
     # CMake files in share
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
     - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
+
+    # test integrity of CMake metadata
+    - cd cmake_test
+    - cmake -GNinja -DCMAKE_CXX_STANDARD=17 $CMAKE_ARGS .   # [unix]
+    - cmake -GNinja -DCMAKE_CXX_STANDARD=17 %CMAKE_ARGS% .  # [win]
 
 outputs:
   - name: libtorch
