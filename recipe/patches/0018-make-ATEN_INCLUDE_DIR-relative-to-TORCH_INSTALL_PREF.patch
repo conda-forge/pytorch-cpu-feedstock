@@ -1,0 +1,25 @@
+From b0cfa0f728e96a3a9d6f7434e2c02d74d6daa9a9 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Tue, 28 Jan 2025 14:15:34 +1100
+Subject: [PATCH 18/19] make ATEN_INCLUDE_DIR relative to TORCH_INSTALL_PREFIX
+
+we cannot set CMAKE_INSTALL_PREFIX without the pytorch build complaining, but we can
+use TORCH_INSTALL_PREFIX, which is set correctly relative to our CMake files already:
+https://github.com/pytorch/pytorch/blob/v2.5.1/cmake/TorchConfig.cmake.in#L47
+---
+ aten/src/ATen/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
+index 6d9152a4d07..aa4dd7b05cc 100644
+--- a/aten/src/ATen/CMakeLists.txt
++++ b/aten/src/ATen/CMakeLists.txt
+@@ -563,7 +563,7 @@ if(USE_ROCM)
+   # list(APPEND ATen_HIP_DEPENDENCY_LIBS ATEN_CUDA_FILES_GEN_LIB)
+ endif()
+ 
+-set(ATEN_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${AT_INSTALL_INCLUDE_DIR}")
++set(ATEN_INCLUDE_DIR "${TORCH_INSTALL_PREFIX}/${AT_INSTALL_INCLUDE_DIR}")
+ configure_file(ATenConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/cmake-exports/ATenConfig.cmake")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake-exports/ATenConfig.cmake"
+   DESTINATION "${AT_INSTALL_SHARE_DIR}/cmake/ATen")

@@ -1,7 +1,7 @@
-From da7b07f8e3165bf89b08b5a716e539ae9a7afb1a Mon Sep 17 00:00:00 2001
+From f03bf82d9da9cccb2cf4d4833c1a6349622dc37d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Wed, 27 Nov 2024 13:47:23 +0100
-Subject: [PATCH 08/16] Allow overriding CUDA-related paths
+Subject: [PATCH 08/19] Allow overriding CUDA-related paths
 
 ---
  cmake/Modules/FindCUDAToolkit.cmake | 2 +-
@@ -9,7 +9,7 @@ Subject: [PATCH 08/16] Allow overriding CUDA-related paths
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cmake/Modules/FindCUDAToolkit.cmake b/cmake/Modules/FindCUDAToolkit.cmake
-index ec9ae530a..b7c0bd9fc 100644
+index ec9ae530aa6..b7c0bd9fc51 100644
 --- a/cmake/Modules/FindCUDAToolkit.cmake
 +++ b/cmake/Modules/FindCUDAToolkit.cmake
 @@ -497,7 +497,7 @@ Result variables
@@ -22,7 +22,7 @@ index ec9ae530a..b7c0bd9fc 100644
    set(CUDAToolkit_LIBRARY_ROOT "${CMAKE_CUDA_COMPILER_LIBRARY_ROOT}")
    set(CUDAToolkit_VERSION "${CMAKE_CUDA_COMPILER_TOOLKIT_VERSION}")
 diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
-index bde41323c..b171837cd 100644
+index bde41323c76..b171837cd4a 100644
 --- a/tools/setup_helpers/cmake.py
 +++ b/tools/setup_helpers/cmake.py
 @@ -252,7 +252,7 @@ class CMake:
@@ -34,6 +34,3 @@ index bde41323c..b171837cd 100644
                  ("EXITCODE", "EXITCODE__TRYRUN_OUTPUT")
              ):
                  build_options[var] = val
--- 
-2.48.1
-

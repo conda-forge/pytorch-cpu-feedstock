@@ -1,7 +1,7 @@
-From 4465b713563855e7eb5475758226f3a90f675f55 Mon Sep 17 00:00:00 2001
+From 33790dfbf966e7d8ea4ff6798d2ff92474d84079 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:46:58 +1100
-Subject: [PATCH 15/16] simplify torch.utils.cpp_extension.include_paths; use
+Subject: [PATCH 15/19] simplify torch.utils.cpp_extension.include_paths; use
  it in cpp_builder
 
 The /TH headers have not existed since pytorch 1.11
@@ -11,7 +11,7 @@ The /TH headers have not existed since pytorch 1.11
  2 files changed, 3 insertions(+), 14 deletions(-)
 
 diff --git a/torch/_inductor/cpp_builder.py b/torch/_inductor/cpp_builder.py
-index 95a0bff86..860e7fb06 100644
+index 95a0bff86fd..860e7fb062f 100644
 --- a/torch/_inductor/cpp_builder.py
 +++ b/torch/_inductor/cpp_builder.py
 @@ -743,16 +743,9 @@ def _get_build_args_of_chosen_isa(vec_isa: VecISA) -> Tuple[List[str], List[str]
@@ -35,7 +35,7 @@ index 95a0bff86..860e7fb06 100644
      libraries = []
      if sys.platform != "darwin" and not config.is_fbcode():
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index aaa45ea4c..3f584ef55 100644
+index aaa45ea4c90..3f584ef5598 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
 @@ -1159,10 +1159,6 @@ def include_paths(cuda: bool = False) -> List[str]:
@@ -49,6 +49,3 @@ index aaa45ea4c..3f584ef55 100644
      ]
      if cuda and IS_HIP_EXTENSION:
          paths.append(os.path.join(lib_include, 'THH'))
--- 
-2.48.1
-

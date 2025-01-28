@@ -1,7 +1,7 @@
-From 3429795de33cac2e508397dd2d9f5f5c96f185c3 Mon Sep 17 00:00:00 2001
+From 4b1faf6ba142953ce2730766db44f8d98d161ef0 Mon Sep 17 00:00:00 2001
 From: Haifeng Jin <haifeng-jin@users.noreply.github.com>
 Date: Tue, 1 Oct 2024 07:53:24 +0000
-Subject: [PATCH 09/16] Fix test/test_linalg.py for NumPy 2 (#136800)
+Subject: [PATCH 09/19] Fix test/test_linalg.py for NumPy 2 (#136800)
 
 Related to  #107302.
 
@@ -36,7 +36,7 @@ Approved by: https://github.com/lezcano
  1 file changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/test/test_linalg.py b/test/test_linalg.py
-index e9ec874d6..060bccef2 100644
+index e9ec874d695..060bccef2e5 100644
 --- a/test/test_linalg.py
 +++ b/test/test_linalg.py
 @@ -2351,7 +2351,7 @@ class TestLinalg(TestCase):
@@ -75,6 +75,3 @@ index e9ec874d6..060bccef2 100644
                      reflectors_i[:] = reflectors_tmp.T
                  reflectors = reflectors.view(*A_cpu.shape)
                  tau = tau.view(tau_shape)
--- 
-2.48.1
-

@@ -1,14 +1,14 @@
-From 2c6db02c01ad080c8dc8ae0b78be2b93099c2ac8 Mon Sep 17 00:00:00 2001
+From e3219c5fe8834753b0cf9e92be4d1ef1e874f370 Mon Sep 17 00:00:00 2001
 From: Jeongseok Lee <jeongseok@meta.com>
 Date: Thu, 17 Oct 2024 15:04:05 -0700
-Subject: [PATCH 04/16] Update sympy version
+Subject: [PATCH 04/19] Update sympy version
 
 ---
  setup.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/setup.py b/setup.py
-index 7174777ed..65be34e39 100644
+index 7174777ed4e..65be34e39b1 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -1158,7 +1158,7 @@ def main():
@@ -20,6 +20,3 @@ index 7174777ed..65be34e39 100644
          "networkx",
          "jinja2",
          "fsspec",
--- 
-2.48.1
-
