@@ -194,9 +194,19 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     esac
 
     # Compatibility matrix for update: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
+    # Warning from pytorch v1.12.1: In the future we will require one to
+    # explicitly pass TORCH_CUDA_ARCH_LIST to cmake instead of implicitly
+    # setting it as an env variable.
+    # Doing this is nontrivial given that we're using setup.py as an entry point, but should
+    # be addressed to pre-empt upstream changing it, as it probably won't result in a failed
+    # configuration.
+    #
+    # See:
+    # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
+    # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     case ${cuda_compiler_version} in
         12.[0-6])
-            export CMAKE_ARGS="${CMAKE_ARGS} -DTORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
             ;;
         *)
             echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
