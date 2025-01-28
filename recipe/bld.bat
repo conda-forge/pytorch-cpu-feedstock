@@ -116,6 +116,7 @@ set "CMAKE_GENERATOR_TOOLSET="
 set "CMAKE_GENERATOR_PLATFORM="
 set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
 set "CMAKE_INCLUDE_PATH=%LIBRARY_INC%"
+set "CMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%"
 set "CMAKE_LIBRARY_PATH=%LIBRARY_LIB%"
 set "CMAKE_BUILD_TYPE=Release"
 @REM This is so that CMake finds the environment's Python, not another one
@@ -138,7 +139,7 @@ set "USE_LITE_PROTO=ON"
 set "USE_OPENMP=OFF"
 
 @REM The activation script for cuda-nvcc doesnt add the CUDA_CFLAGS on windows.
-@REM Therefor we do this manually here. See:
+@REM Therefore we do this manually here. See:
 @REM https://github.com/conda-forge/cuda-nvcc-feedstock/issues/47
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 set "CUDA_CFLAGS=-I%PREFIX%/Library/include -I%BUILD_PREFIX%/Library/include"
