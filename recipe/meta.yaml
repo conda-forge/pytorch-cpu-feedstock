@@ -70,6 +70,8 @@ source:
     - patches/0017-Add-conda-prefix-to-inductor-include-paths.patch
     - patches/0018-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
     - patches/0019-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch               # [win]
+    # backport https://github.com/pytorch/pytorch/pull/138579.patch
+    - patches/0020-inductor-Enable-cpp-wrapper-for-test_torchinductor-1.patch
     - patches_submodules/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch    # [win]
 
 build:
