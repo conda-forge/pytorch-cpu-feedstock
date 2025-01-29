@@ -1,7 +1,7 @@
 From f7db4cbfb0af59027ed8bdcd0387dba6fbcb1192 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Tue, 28 Jan 2025 10:58:29 +1100
-Subject: [PATCH 19/20] remove `DESTINATION lib` from CMake `install(TARGETS`
+Subject: [PATCH 19/19] remove `DESTINATION lib` from CMake `install(TARGETS`
  directives
 
 Suggested-By: Silvio Traversaro <silvio@traversaro.it>

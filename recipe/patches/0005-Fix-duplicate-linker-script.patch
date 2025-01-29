@@ -1,7 +1,7 @@
 From 08a1f44fbc81324aa98d720dfb7b87a261923ac2 Mon Sep 17 00:00:00 2001
 From: Jeongseok Lee <jeongseok@meta.com>
 Date: Sun, 3 Nov 2024 01:12:36 -0700
-Subject: [PATCH 05/20] Fix duplicate linker script
+Subject: [PATCH 05/19] Fix duplicate linker script
 
 ---
  setup.py | 4 +++-

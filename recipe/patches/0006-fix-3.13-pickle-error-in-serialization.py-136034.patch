@@ -1,7 +1,7 @@
 From 15df314a41c69a31c0443254d5552aa1b39d708d Mon Sep 17 00:00:00 2001
 From: William Wen <williamwen@meta.com>
 Date: Fri, 13 Sep 2024 13:02:33 -0700
-Subject: [PATCH 06/20] fix 3.13 pickle error in serialization.py (#136034)
+Subject: [PATCH 06/19] fix 3.13 pickle error in serialization.py (#136034)
 
 Error encountered when adding dynamo 3.13 support.
 Pull Request resolved: https://github.com/pytorch/pytorch/pull/136034
