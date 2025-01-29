@@ -363,6 +363,7 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ compiler('cuda') }}       # [cuda_compiler_version != "None"]
         - ninja
         - boto3
         - hypothesis
