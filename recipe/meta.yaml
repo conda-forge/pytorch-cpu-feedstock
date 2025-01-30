@@ -558,6 +558,7 @@ about:
   license_file:
     - LICENSE
     - NOTICE
+    - third_party/CMake/Copyright.txt
   summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
   description: |
     PyTorch is a Python package that provides two high-level features:
