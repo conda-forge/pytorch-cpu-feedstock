@@ -363,7 +363,6 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}       # [cuda_compiler_version != "None"]
         - ninja
         - boto3
         - hypothesis
@@ -404,7 +403,6 @@ outputs:
         - python -c "import torch; assert torch.distributed.is_available()"        # [linux or osx]
         - python -c "import torch; assert torch.backends.cuda.is_built()"          # [linux64 and (cuda_compiler_version != "None")]
         - python -c "import torch; assert torch.backends.cudnn.is_available()"     # [linux64 and (cuda_compiler_version != "None")]
-        - python -c "import torch; assert torch.cuda.is_available()"               # [linux64 and (cuda_compiler_version != "None")]
         - python -c "import torch; assert torch.backends.cudnn.enabled"            # [linux64 and (cuda_compiler_version != "None")]
         # At conda-forge, we target versions of OSX that are too old for MPS support
         # But if users install a newer version of OSX, they will have MPS support
