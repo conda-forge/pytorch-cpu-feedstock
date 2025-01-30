@@ -1,7 +1,7 @@
-From 3b32a078793f06e80d88c356871953f254d4d6c3 Mon Sep 17 00:00:00 2001
+From db896f927403f55a18f931b18a6469cb4e37d322 Mon Sep 17 00:00:00 2001
 From: atalman <atalman@fb.com>
 Date: Tue, 12 Nov 2024 12:28:10 +0000
-Subject: [PATCH 14/16] CD Enable Python 3.13 on windows (#138095)
+Subject: [PATCH 14/19] CD Enable Python 3.13 on windows (#138095)
 
 Adding CD windows. Part of: https://github.com/pytorch/pytorch/issues/130249
 Builder PR landed with smoke test: https://github.com/pytorch/builder/pull/2035
@@ -16,7 +16,7 @@ Cherry-pick-note: minus changes in `.github/*`
  2 files changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/functorch/csrc/dim/dim.cpp b/functorch/csrc/dim/dim.cpp
-index 722618efb..f98818bfd 100644
+index 722618efbb0..f98818bfdcc 100644
 --- a/functorch/csrc/dim/dim.cpp
 +++ b/functorch/csrc/dim/dim.cpp
 @@ -38,6 +38,7 @@ PyObject* Dim_init() {
@@ -28,7 +28,7 @@ index 722618efb..f98818bfd 100644
  #include "internal/pycore_opcode.h"
  #undef Py_BUILD_CORE
 diff --git a/functorch/csrc/dim/dim_opcode.c b/functorch/csrc/dim/dim_opcode.c
-index 81ba62a37..1b5d06773 100644
+index 81ba62a3781..1b5d0677344 100644
 --- a/functorch/csrc/dim/dim_opcode.c
 +++ b/functorch/csrc/dim/dim_opcode.c
 @@ -1,6 +1,17 @@
@@ -50,6 +50,3 @@ index 81ba62a37..1b5d06773 100644
 +#undef NEED_OPCODE_TABLES
 +#undef Py_BUILD_CORE
 +#endif
--- 
-2.48.1
-

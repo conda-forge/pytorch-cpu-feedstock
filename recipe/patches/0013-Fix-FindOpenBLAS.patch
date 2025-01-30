@@ -1,14 +1,14 @@
-From 4ca7ade3211380629ab56f3c965edd1b6387d1e0 Mon Sep 17 00:00:00 2001
+From 816a248a4425a97350959e412666e6db9012a52e Mon Sep 17 00:00:00 2001
 From: Bas Zalmstra <bas@prefix.dev>
 Date: Thu, 16 May 2024 10:46:49 +0200
-Subject: [PATCH 13/16] Fix FindOpenBLAS
+Subject: [PATCH 13/19] Fix FindOpenBLAS
 
 ---
  cmake/Modules/FindOpenBLAS.cmake | 15 +++++++++------
  1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/cmake/Modules/FindOpenBLAS.cmake b/cmake/Modules/FindOpenBLAS.cmake
-index 69d8227ae..0d12185c7 100644
+index 69d8227aea5..0d12185c799 100644
 --- a/cmake/Modules/FindOpenBLAS.cmake
 +++ b/cmake/Modules/FindOpenBLAS.cmake
 @@ -31,22 +31,25 @@ SET(Open_BLAS_LIB_SEARCH_PATHS
@@ -43,6 +43,3 @@ index 69d8227ae..0d12185c7 100644
  
  IF (OpenBLAS_FOUND)
    IF (NOT OpenBLAS_FIND_QUIETLY)
--- 
-2.48.1
-
