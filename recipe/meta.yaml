@@ -484,8 +484,12 @@ outputs:
         {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda " %}                # [unix and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [unix and cuda_compiler_version != "None"]
         # These tests require higher-resource or more recent GPUs than the CI provides
-        {% set skips = skips ~ " or (TritonCodeGenTests and test_sdpa_inference_mode_aot_compile)" %}   # [unix and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or (TestNN and test_grid_sample)" %}                                   # [unix and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_sdpa_inference_mode_aot_compile" %}            # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestNN and test_grid_sample)" %}                   # [linux and cuda_compiler_version != "None"]
+        # don't mess with tests that rely on GPU failure handling
+        {% set skips = skips ~ " or test_indirect_device_assert" %}                     # [linux and cuda_compiler_version != "None"]
+        # test that fails to find temporary resource
+        {% set skips = skips ~ " or (GPUTests and test_scatter_reduce2)" %}             # [linux and cuda_compiler_version != "None"]
         # MKL problems
         {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}  # [unix and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # these tests are failing with low -n values
