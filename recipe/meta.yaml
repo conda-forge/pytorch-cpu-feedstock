@@ -450,7 +450,9 @@ outputs:
             "test/test_nn.py",
             "test/test_torch.py",
             "test/test_xnnpack_integration.py",
-        ] + (cuda_compiler_version != "None") * ["test/inductor/test_torchinductor.py"]) %}
+        ]) %}
+        # test_torchinductor adds >4h in test runtime in emulation; not supported yet for 3.13
+        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py<313 and not aarch64]
 
         {% set skips = "(TestTorch and test_print)" %}
         # tolerance violation with openblas
