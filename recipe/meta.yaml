@@ -181,6 +181,7 @@ requirements:
     - typing_extensions
     - pybind11
     - eigen
+    - zlib
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
