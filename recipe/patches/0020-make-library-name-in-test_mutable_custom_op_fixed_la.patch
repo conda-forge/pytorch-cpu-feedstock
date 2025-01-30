@@ -1,0 +1,35 @@
+From 79ee5dcac30f2eba891af961f7649d15dfc6ce63 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Thu, 30 Jan 2025 13:23:14 +1100
+Subject: [PATCH 20/20] make library name in
+ `test_mutable_custom_op_fixed_layout{,2}` unique
+
+Suggested-By: Daniel Petry <dpetry@anaconda.com>
+---
+ test/inductor/test_torchinductor.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/test/inductor/test_torchinductor.py b/test/inductor/test_torchinductor.py
+index 610f5d27332..28f85e228d2 100644
+--- a/test/inductor/test_torchinductor.py
++++ b/test/inductor/test_torchinductor.py
+@@ -10628,7 +10628,8 @@ class CommonTemplate:
+     @requires_gpu()
+     @config.patch(implicit_fallbacks=True)
+     def test_mutable_custom_op_fixed_layout2(self):
+-        with torch.library._scoped_library("mylib", "DEF") as lib:
++        unique_lib_name = f"mylib_{id(self)}"  # Make unique name using test instance id
++        with torch.library._scoped_library(unique_lib_name, "DEF") as lib:
+             mod = nn.Conv2d(3, 128, 1, stride=1, bias=False).to(device=GPU_TYPE)
+             inp = torch.rand(2, 3, 128, 128, device=GPU_TYPE)
+             expected_stride = mod(inp).clone().stride()
+@@ -10681,7 +10682,8 @@ class CommonTemplate:
+ 
+     @config.patch(implicit_fallbacks=True)
+     def test_mutable_custom_op_fixed_layout(self):
+-        with torch.library._scoped_library("mylib", "DEF") as lib:
++        unique_lib_name = f"mylib_{id(self)}"  # Make unique name using test instance id
++        with torch.library._scoped_library(unique_lib_name, "DEF") as lib:
+             lib.define(
+                 "copy_(Tensor(a!) dst, Tensor src) -> ()",
+                 tags=torch.Tag.needs_fixed_stride_order,

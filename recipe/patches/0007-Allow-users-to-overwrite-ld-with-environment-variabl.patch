@@ -1,7 +1,7 @@
 From 655f694854c3eafdd631235b60bc6c1b279218ed Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Thu, 3 Oct 2024 22:49:56 -0400
-Subject: [PATCH 07/19] Allow users to overwrite ld with environment variables
+Subject: [PATCH 07/20] Allow users to overwrite ld with environment variables
 
 This should help in the case of cross compilation.
 
