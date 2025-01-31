@@ -1,5 +1,5 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.6.0.rc7" %}
+{% set version = "2.6.0" %}
 {% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
@@ -16,7 +16,7 @@
 # see .ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.1.0" %}
+{% set triton = "3.2.0" %}
 
 # TODO Temporary pin, remove me
 {% set mkl = "<2025" %}
@@ -32,7 +32,7 @@ source:
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-  sha256: 740eb5fff95e33cfe699bad43be83523f569c7cc7f9c285c2a255416443dd266
+  sha256: 3005690eb7b083c443a38c7657938af63902f524ad87a6c83f1aca38c77e3b57
 {% endif %}
   patches:
     - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
@@ -386,7 +386,7 @@ outputs:
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
-        #- .ci/pytorch/smoke_test/smoke_test.py
+        - .ci/pytorch/smoke_test/smoke_test.py
       commands:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
@@ -434,7 +434,7 @@ outputs:
         - export TARGET_OS="macos-arm64"                                                        # [(osx and arm64)]
         - export TARGET_OS="macos-x86_64"                                                       # [(osx and x86_64)]
         - export OMP_NUM_THREADS=4                                                              # [not win]
-        #- python ./smoke_test/smoke_test.py --package torchonly
+        - python ./smoke_test/smoke_test.py --package torchonly
 
         # a reasonably safe subset of tests that should run under 15 minutes
         {% set tests = " ".join([
