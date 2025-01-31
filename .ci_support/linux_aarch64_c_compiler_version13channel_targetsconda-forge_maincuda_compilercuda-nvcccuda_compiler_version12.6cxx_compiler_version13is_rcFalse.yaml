@@ -1,5 +1,5 @@
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - gcc
 c_compiler_version:
@@ -13,7 +13,7 @@ cdt_name:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge pytorch_rc
+- conda-forge main
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
@@ -29,7 +29,7 @@ docker_image:
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 is_rc:
-- 'True'
+- 'False'
 libabseil:
 - '20240722'
 libblas:
@@ -54,6 +54,8 @@ numpy:
 - '2.0'
 - '2'
 - '2.0'
+orc:
+- 2.0.3
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -67,7 +69,7 @@ python:
 pytorch:
 - '2.4'
 target_platform:
-- linux-64
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
@@ -78,3 +80,5 @@ zip_keys:
   - is_rc
 - - python
   - numpy
+zlib:
+- '1'

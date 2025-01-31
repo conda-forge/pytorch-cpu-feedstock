@@ -15,7 +15,7 @@ c_stdlib_version:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge pytorch_rc
+- conda-forge main
 cuda_compiler:
 - None
 cuda_compiler_version:
@@ -25,7 +25,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '18'
 is_rc:
-- 'True'
+- 'False'
 libabseil:
 - '20240722'
 libblas:
@@ -47,13 +47,15 @@ megabuild:
 mkl:
 - '2023'
 numpy:
-- '2.0'
+- '2'
+orc:
+- 2.0.3
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.13.* *_cp313
 pytorch:
 - '2.4'
 target_platform:
@@ -65,3 +67,5 @@ zip_keys:
   - is_rc
 - - python
   - numpy
+zlib:
+- '1'
