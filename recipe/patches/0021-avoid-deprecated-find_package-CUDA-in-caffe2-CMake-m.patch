@@ -1,4 +1,4 @@
-From 4b910a5445f063dddb88980c480a332d44d28b38 Mon Sep 17 00:00:00 2001
+From 34a6b30fbb914ca3f702b66b8fbf8ddd7934dbf4 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
 Subject: [PATCH 21/21] avoid deprecated `find_package(CUDA)` in caffe2 CMake
@@ -6,13 +6,13 @@ Subject: [PATCH 21/21] avoid deprecated `find_package(CUDA)` in caffe2 CMake
 
 vendor the not-available-anymore function torch_cuda_get_nvcc_gencode_flag from CMake
 ---
- caffe2/CMakeLists.txt      |  14 ++---
+ caffe2/CMakeLists.txt      |  14 ++--
  cmake/Summary.cmake        |  10 +--
  cmake/TorchConfig.cmake.in |   2 +-
  cmake/public/cuda.cmake    |  48 ++++----------
- cmake/public/utils.cmake   | 124 +++++++++++++++++++++++++++++++++++++
+ cmake/public/utils.cmake   | 127 +++++++++++++++++++++++++++++++++++++
  setup.py                   |   2 +-
- 6 files changed, 150 insertions(+), 50 deletions(-)
+ 6 files changed, 153 insertions(+), 50 deletions(-)
 
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
 index b51c7cc637b..6e107b5b02a 100644
@@ -215,15 +215,16 @@ index 152fbdbe6dd..0d1aeffc59f 100644
    execute_process(
      COMMAND Python::Interpreter -c
 diff --git a/cmake/public/utils.cmake b/cmake/public/utils.cmake
-index c6647eb457c..de066549f26 100644
+index c6647eb457c..accebfd3457 100644
 --- a/cmake/public/utils.cmake
 +++ b/cmake/public/utils.cmake
-@@ -306,6 +306,130 @@ macro(torch_hip_get_arch_list store_var)
+@@ -306,6 +306,133 @@ macro(torch_hip_get_arch_list store_var)
    string(REPLACE " " ";" ${store_var} "${_TMP}")
  endmacro()
  
 +# torch_cuda_get_nvcc_gencode_flag is part of find_package(CUDA), but not find_package(CUDAToolkit);
 +# vendor it from https://github.com/Kitware/CMake/blob/master/Modules/FindCUDA/select_compute_arch.cmake
++# but disable CUDA_DETECT_INSTALLED_GPUS
 +################################################################################################
 +# Function for selecting GPU arch flags for nvcc based on CUDA architectures from parameter list
 +# Usage:
@@ -243,8 +244,10 @@ index c6647eb457c..de066549f26 100644
 +  elseif("${CUDA_ARCH_LIST}" STREQUAL "Common")
 +    set(CUDA_ARCH_LIST ${CUDA_COMMON_GPU_ARCHITECTURES})
 +  elseif("${CUDA_ARCH_LIST}" STREQUAL "Auto")
-+    CUDA_DETECT_INSTALLED_GPUS(CUDA_ARCH_LIST)
-+    message(STATUS "Autodetected CUDA architecture(s): ${CUDA_ARCH_LIST}")
++    # disabled, replaced by common architectures
++    # CUDA_DETECT_INSTALLED_GPUS(CUDA_ARCH_LIST)
++    # message(STATUS "Autodetected CUDA architecture(s): ${CUDA_ARCH_LIST}")
++    set(CUDA_ARCH_LIST ${CUDA_COMMON_GPU_ARCHITECTURES})
 +  endif()
 +
 +  # Now process the list and look for names
