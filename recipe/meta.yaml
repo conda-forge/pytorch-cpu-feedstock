@@ -443,7 +443,6 @@ outputs:
         #- python ./smoke_test/smoke_test.py --package torchonly
 
         # a reasonably safe subset of tests that should run under 15 minutes
-        # The inductor tests test torch.compile
         {% set tests = " ".join([
             "test/test_autograd.py",
             "test/test_autograd_fallback.py",
@@ -455,8 +454,9 @@ outputs:
             "test/test_torch.py",
             "test/test_xnnpack_integration.py",
         ]) %}
-        # test_torchinductor adds >4h in test runtime in emulation; not supported yet for 3.13
-        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py<313 and not aarch64]
+        # tests torch.compile; avoid on aarch because it adds >4h in test runtime in emulation;
+        # they add a lot of runtime (15->60min on windows), so run them for only one python version
+        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not aarch64]
 
         {% set skips = "(TestTorch and test_print)" %}
         # tolerance violation with openblas
