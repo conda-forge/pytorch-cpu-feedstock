@@ -461,12 +461,6 @@ outputs:
         {% set skips = skips ~ " or (TestLinalgCPU and test_pca_lowrank_cpu)" %}        # [aarch64]
         {% set skips = skips ~ " or (TestLinalgCPU and test_svd_lowrank_cpu)" %}        # [aarch64]
         {% set skips = skips ~ " or (TestMkldnnCPU and test_lstm_cpu)" %}               # [aarch64]
-        # dynamo does not support python 3.13
-        {% set skips = skips ~ " or (TestCustomOp and test_data_dependent_compile)" %}  # [py==313]
-        {% set skips = skips ~ " or (TestCustomOp and test_functionalize_error)" %}     # [py==313]
-        {% set skips = skips ~ " or (TestCustomOpAPI and test_compile)" %}              # [py==313]
-        {% set skips = skips ~ " or (TestCustomOpAPI and test_fake)" %}                 # [py==313]
-        {% set skips = skips ~ " or test_compile_int4_mm or test_compile_int8_mm" %}    # [py==313]
         # doesn't crash, but gets different result on aarch + CUDA
         {% set skips = skips ~ " or illcondition_matrix_input_should_not_crash_cpu" %}  # [aarch64 and cuda_compiler_version != "None"]
         # may crash spuriously
