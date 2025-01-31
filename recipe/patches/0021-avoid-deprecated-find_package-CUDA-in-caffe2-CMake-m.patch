@@ -1,4 +1,4 @@
-From 3bbff0ff28062788f8d05c5c24323de317911375 Mon Sep 17 00:00:00 2001
+From 4b910a5445f063dddb88980c480a332d44d28b38 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
 Subject: [PATCH 21/21] avoid deprecated `find_package(CUDA)` in caffe2 CMake
@@ -11,7 +11,8 @@ vendor the not-available-anymore function torch_cuda_get_nvcc_gencode_flag from 
  cmake/TorchConfig.cmake.in |   2 +-
  cmake/public/cuda.cmake    |  48 ++++----------
  cmake/public/utils.cmake   | 124 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 149 insertions(+), 49 deletions(-)
+ setup.py                   |   2 +-
+ 6 files changed, 150 insertions(+), 50 deletions(-)
 
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
 index b51c7cc637b..6e107b5b02a 100644
@@ -348,3 +349,16 @@ index c6647eb457c..de066549f26 100644
  ##############################################################################
  # Get the NVCC arch flags specified by TORCH_CUDA_ARCH_LIST and CUDA_ARCH_NAME.
  # Usage:
+diff --git a/setup.py b/setup.py
+index b0e01e0d1ee..8d939b5ba63 100644
+--- a/setup.py
++++ b/setup.py
+@@ -627,7 +627,7 @@ class build_ext(setuptools.command.build_ext.build_ext):
+         else:
+             report("-- Not using cuDNN")
+         if cmake_cache_vars["USE_CUDA"]:
+-            report("-- Detected CUDA at " + cmake_cache_vars["CUDA_TOOLKIT_ROOT_DIR"])
++            report("-- Detected CUDA at " + cmake_cache_vars["CUDAToolkit_Root"])
+         else:
+             report("-- Not using CUDA")
+         if cmake_cache_vars["USE_XPU"]:
