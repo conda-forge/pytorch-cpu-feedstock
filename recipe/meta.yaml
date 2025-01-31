@@ -211,7 +211,9 @@ test:
     # cmake needs a compiler to run package detection, see
     # https://discourse.cmake.org/t/questions-about-find-package-cli-msvc/6194
     - {{ compiler('cxx') }}
+    # for CMake config to find cuda & nvrtc
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+    - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
     - cmake
     - ninja
     - pkg-config
