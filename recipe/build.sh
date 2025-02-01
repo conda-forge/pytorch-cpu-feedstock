@@ -176,10 +176,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # all of them.
     export CUDAToolkit_BIN_DIR=${BUILD_PREFIX}/bin
     export CUDAToolkit_ROOT_DIR=${PREFIX}
-    if [[ "${target_platform}" != "${build_platform}" ]]; then
-        export CUDAToolkit_ROOT=${PREFIX}
-    fi
     # for CUPTI
+    export CUDA_TOOLKIT_ROOT_DIR=${PREFIX}
     export CUDAToolkit_ROOT=${PREFIX}
     case ${target_platform} in
         linux-64)
