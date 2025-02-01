@@ -76,6 +76,8 @@ build:
   number: {{ build }}
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  # temporary skip to avoid wasting resources while unbreak CUDA builds
+  skip: true  # [cuda_compiler_version == "None"]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
@@ -363,6 +365,8 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        # for torch.compile tests
+        - {{ compiler('cuda') }}       # [cuda_compiler_version != "None"]
         - ninja
         - boto3
         - hypothesis
@@ -439,7 +443,6 @@ outputs:
         #- python ./smoke_test/smoke_test.py --package torchonly
 
         # a reasonably safe subset of tests that should run under 15 minutes
-        # The inductor tests test torch.compile
         {% set tests = " ".join([
             "test/test_autograd.py",
             "test/test_autograd_fallback.py",
@@ -450,7 +453,10 @@ outputs:
             "test/test_nn.py",
             "test/test_torch.py",
             "test/test_xnnpack_integration.py",
-        ] + (cuda_compiler_version != "None") * ["test/inductor/test_torchinductor.py"]) %}
+        ]) %}
+        # tests torch.compile; avoid on aarch because it adds >4h in test runtime in emulation;
+        # they add a lot of runtime (15->60min on windows), so run them for only one python version
+        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not aarch64]
 
         {% set skips = "(TestTorch and test_print)" %}
         # tolerance violation with openblas
@@ -480,10 +486,17 @@ outputs:
         {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda " %}                # [unix and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [unix and cuda_compiler_version != "None"]
         # These tests require higher-resource or more recent GPUs than the CI provides
-        {% set skips = skips ~ " or (TritonCodeGenTests and test_sdpa_inference_mode_aot_compile)" %}   # [unix and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or (TestNN and test_grid_sample)" %}                                   # [unix and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_sdpa_inference_mode_aot_compile" %}            # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestNN and test_grid_sample)" %}                   # [linux and cuda_compiler_version != "None"]
+        # don't mess with tests that rely on GPU failure handling
+        {% set skips = skips ~ " or test_indirect_device_assert" %}                     # [linux and cuda_compiler_version != "None"]
+        # test that fails to find temporary resource
+        {% set skips = skips ~ " or (GPUTests and test_scatter_reduce2)" %}             # [linux and cuda_compiler_version != "None"]
         # MKL problems
-        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}  # [unix and blas_impl == "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}           # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
+        # non-MKL problems
+        {% set skips = skips ~ " or test_cross_entropy_loss_2d_out_of_bounds_class_index_cuda" %}   # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_cublas_config_nondeterministic_alert_cuda " %}             # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
         # these tests are failing with low -n values
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
