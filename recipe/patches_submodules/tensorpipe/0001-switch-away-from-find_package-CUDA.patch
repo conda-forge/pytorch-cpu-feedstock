@@ -1,0 +1,22 @@
+From 9a1de62dd1b3d816d6fb87c2041f4005ab5c683d Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Sun, 2 Feb 2025 08:54:01 +1100
+Subject: [PATCH] switch away from find_package(CUDA)
+
+---
+ tensorpipe/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/third_party/tensorpipe/tensorpipe/CMakeLists.txt b/third_party/tensorpipe/tensorpipe/CMakeLists.txt
+index efcffc2..1c3b2ca 100644
+--- a/third_party/tensorpipe/tensorpipe/CMakeLists.txt
++++ b/third_party/tensorpipe/tensorpipe/CMakeLists.txt
+@@ -234,7 +234,7 @@ if(TP_USE_CUDA)
+   # TP_INCLUDE_DIRS is list of include path to be used
+   set(TP_CUDA_INCLUDE_DIRS)
+ 
+-  find_package(CUDA REQUIRED)
++  find_package(CUDAToolkit REQUIRED)
+   list(APPEND TP_CUDA_LINK_LIBRARIES ${CUDA_LIBRARIES})
+   list(APPEND TP_CUDA_INCLUDE_DIRS ${CUDA_INCLUDE_DIRS})
+ 

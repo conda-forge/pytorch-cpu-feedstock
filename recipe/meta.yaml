@@ -69,10 +69,11 @@ source:
     - patches/0016-point-include-paths-to-PREFIX-include.patch
     - patches/0017-Add-conda-prefix-to-inductor-include-paths.patch
     - patches/0018-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
-    - patches/0019-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch               # [win]
+    - patches/0019-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
     - patches/0020-make-library-name-in-test_mutable_custom_op_fixed_la.patch
     - patches/0021-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
-    - patches_submodules/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch    # [win]
+    - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
+    - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
   number: {{ build }}
