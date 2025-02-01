@@ -219,6 +219,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
     export USE_MAGMA=1
+    # turn off noisy nvcc warnings
+    export CUDAFLAGS="-w"
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
