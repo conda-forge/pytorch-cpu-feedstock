@@ -1,5 +1,5 @@
 {% set version = "2.4.1" %}
-{% set build = 5 %}
+{% set build = 6 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -353,7 +353,9 @@ outputs:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
-        - {{ pin_subpackage("pytorch", exact=True) }}
+        - pytorch {{ version }}=cuda*_{{ blas_impl }}*{{ PKG_BUILDNUM }}  # [megabuild and cuda_compiler_version != "None"]
+        - pytorch {{ version }}=cpu_{{ blas_impl }}*{{ PKG_BUILDNUM }}    # [megabuild and cuda_compiler_version == "None"]
+        - {{ pin_subpackage("pytorch", exact=True) }}                     # [not megabuild]
     test:
       imports:
         - torch
