@@ -451,7 +451,7 @@ outputs:
         ]) %}
         # tests torch.compile; avoid on aarch because it adds >4h in test runtime in emulation;
         # they add a lot of runtime (15->60min on windows), so run them for only one python version
-        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not aarch64]
+        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not (aarch64 or osx)]
 
         {% set skips = "(TestTorch and test_print)" %}
         # tolerance violation with openblas
