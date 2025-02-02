@@ -29,6 +29,7 @@ if "%blas_impl%" == "generic" (
 
 if "%PKG_NAME%" == "pytorch" (
   set "PIP_ACTION=install"
+  set "PIP_VERBOSITY=-v"
   @REM We build libtorch for a specific python version.
   @REM This ensures its only build once. However, when that version changes
   @REM we need to make sure to update that here.
@@ -58,6 +59,7 @@ if "%PKG_NAME%" == "pytorch" (
   @REM For the main script we just build a wheel for so that the C++/CUDA
   @REM parts are built. Then they are reused in each python version.
   set "PIP_ACTION=wheel"
+  set "PIP_VERBOSITY=-vvv"
 )
 
 set "BUILD_CUSTOM_PROTOBUF=OFF"
@@ -160,7 +162,7 @@ if EXIST build (
     if %ERRORLEVEL% neq 0 exit 1
 )
 
-%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps --no-clean
+%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean
 if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.
