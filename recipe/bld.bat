@@ -94,7 +94,7 @@ if not "%cuda_compiler_version%" == "None" (
     set "PATH=%CUDA_BIN_PATH%;%PATH%"
     set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
     @REM turn off very noisy nvcc warnings
-    set "CUDAFLAGS=-w"
+    set "CUDAFLAGS=-w --ptxas-options=-w"
 ) else (
     set USE_CUDA=0
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
