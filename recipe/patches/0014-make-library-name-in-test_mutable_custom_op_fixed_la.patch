@@ -1,7 +1,7 @@
 From 93c1af8129efcacb58db9a8f2ec16eb6ec17dfed Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 13:23:14 +1100
-Subject: [PATCH 14/15] make library name in
+Subject: [PATCH 14/16] make library name in
  `test_mutable_custom_op_fixed_layout{,2}` unique
 
 Suggested-By: Daniel Petry <dpetry@anaconda.com>

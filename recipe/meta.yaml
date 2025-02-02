@@ -59,6 +59,8 @@ source:
     - patches/0013-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
     - patches/0014-make-library-name-in-test_mutable_custom_op_fixed_la.patch
     - patches/0015-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+    # backport https://github.com/pytorch/pytorch/pull/140030
+    - patches/0016-export-AOTI_TORCH_EXPORT-on-Windows.-140030.patch
     - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
     - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
     # backport https://github.com/google/XNNPACK/commit/5f23827e66cca435fa400b6e221892ac95af0079

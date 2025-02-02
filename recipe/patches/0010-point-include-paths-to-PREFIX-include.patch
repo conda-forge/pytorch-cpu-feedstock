@@ -1,7 +1,7 @@
 From 0295752d2c44d86681d0381ef97d42ca0199ca56 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
-Subject: [PATCH 10/15] point include paths to $PREFIX/include
+Subject: [PATCH 10/16] point include paths to $PREFIX/include
 
 ---
  torch/utils/cpp_extension.py | 9 +++++++++

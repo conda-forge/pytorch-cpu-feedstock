@@ -1,7 +1,7 @@
 From 7e7547dab6c26e7fd324fde6cb6aad5d57bebcf9 Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <ifernando@quansight.com>
 Date: Wed, 18 Dec 2024 03:59:00 +0000
-Subject: [PATCH 06/15] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
+Subject: [PATCH 06/16] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
 
 There are two calling conventions for *dotu functions
 
