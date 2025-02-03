@@ -334,6 +334,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}
         - pybind11
         - eigen
+        - zlib
       run:
         - llvm-openmp    # [osx]
         - intel-openmp {{ mkl }}  # [win]
