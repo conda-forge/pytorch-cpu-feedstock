@@ -1,8 +1,10 @@
 #!/bin/bash
 
-echo "=== Building ${PKG_NAME} (py: ${PY_VER}) ==="
-
 set -ex
+
+echo "#########################################################################"
+echo "Building ${PKG_NAME} (py: ${PY_VER}) using BLAS implementation $blas_impl"
+echo "#########################################################################"
 
 # This is used to detect if it's in the process of building pytorch
 export IN_PYTORCH_BUILD=1
@@ -20,9 +22,22 @@ rm -rf pyproject.toml
 export USE_CUFILE=0
 export USE_NUMA=0
 export USE_ITT=0
+
+#################### ADJUST COMPILER AND LINKER FLAGS #####################
+# Pytorch's build system doesn't like us setting the c++ standard through CMAKE_CXX_FLAGS
+# and will issue a warning.  We need to use at least C++17 to match the abseil ABI, see
+# https://github.com/conda-forge/abseil-cpp-feedstock/issues/45, which pytorch 2.5 uses already:
+# https://github.com/pytorch/pytorch/blob/v2.5.1/CMakeLists.txt#L36-L48
+export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-std=c++[0-9][0-9]//g')"
+# The below three lines expose symbols that would otherwise be hidden or
+# optimised away. They were here before, so removing them would potentially
+# break users' programs
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
+# The default conda LDFLAGs include -Wl,-dead_strip_dylibs, which removes all the
+# MKL sequential, core, etc. libraries, resulting in a "Symbol not found: _mkl_blas_caxpy"
+# error on osx-64.
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
 if [[ "$c_compiler" == "clang" ]]; then
@@ -45,6 +60,7 @@ fi
 # can be imported on system without a GPU
 LDFLAGS="${LDFLAGS//-Wl,-z,now/-Wl,-z,lazy}"
 
+################ CONFIGURE CMAKE FOR CONDA ENVIRONMENT ###################
 export CMAKE_GENERATOR=Ninja
 export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
 export CMAKE_PREFIX_PATH=$PREFIX
@@ -61,7 +77,6 @@ for ARG in $CMAKE_ARGS; do
 done
 CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
-export TH_BINARY_BUILD=1
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 # Always pass 0 to avoid appending ".post" to version string.
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
@@ -74,6 +89,8 @@ export USE_SYSTEM_SLEEF=1
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
+export USE_SYSTEM_PYBIND11=1
+export USE_SYSTEM_EIGEN_INSTALL=1
 
 # prevent six from being downloaded
 > third_party/NNPACK/cmake/DownloadSix.cmake
@@ -99,17 +116,28 @@ if [[ "${CI}" == "github_actions" ]]; then
     # reduce parallelism to avoid getting OOM-killed on
     # cirun-openstack-gpu-2xlarge, which has 32GB RAM, 8 CPUs
     export MAX_JOBS=4
-else
+elif [[ "${CI}" == "azure" ]]; then
     export MAX_JOBS=${CPU_COUNT}
+else
+    # Leave a spare core for other tasks, per common practice.
+    # Reducing further can help with out-of-memory errors.
+    export MAX_JOBS=$((CPU_COUNT > 1 ? CPU_COUNT - 1 : 1))
 fi
 
-if [[ "$blas_impl" == "generic" ]]; then
-    # Fake openblas
-    export BLAS=OpenBLAS
-    export OpenBLAS_HOME=${PREFIX}
-else
-    export BLAS=MKL
-fi
+case "$blas_impl" in
+    "generic")
+        # Fake openblas
+        export BLAS=OpenBLAS
+        export OpenBLAS_HOME=${PREFIX}
+        ;;
+    "mkl")
+        export BLAS=MKL
+        ;;
+    *)
+        echo "[ERROR] Unsupported BLAS implementation '${blas_impl}'" >&2
+        exit 1
+        ;;
+esac
 
 if [[ "$PKG_NAME" == "pytorch" ]]; then
   # Trick Cmake into thinking python hasn't changed
@@ -148,11 +176,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # all of them.
     export CUDAToolkit_BIN_DIR=${BUILD_PREFIX}/bin
     export CUDAToolkit_ROOT_DIR=${PREFIX}
-    if [[ "${target_platform}" != "${build_platform}" ]]; then
-        export CUDA_TOOLKIT_ROOT=${PREFIX}
-    fi
     # for CUPTI
     export CUDA_TOOLKIT_ROOT_DIR=${PREFIX}
+    export CUDAToolkit_ROOT=${PREFIX}
     case ${target_platform} in
         linux-64)
             export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
@@ -164,12 +190,24 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
             echo "unknown CUDA arch, edit build.sh"
             exit 1
     esac
+
+    # Compatibility matrix for update: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
+    # Warning from pytorch v1.12.1: In the future we will require one to
+    # explicitly pass TORCH_CUDA_ARCH_LIST to cmake instead of implicitly
+    # setting it as an env variable.
+    # Doing this is nontrivial given that we're using setup.py as an entry point, but should
+    # be addressed to pre-empt upstream changing it, as it probably won't result in a failed
+    # configuration.
+    #
+    # See:
+    # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
+    # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     case ${cuda_compiler_version} in
-        12.6)
+        12.[0-6])
             export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
             ;;
         *)
-            echo "unsupported cuda version. edit build.sh"
+            echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
             exit 1
     esac
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
@@ -181,6 +219,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
     export USE_MAGMA=1
+    # turn off noisy nvcc warnings
+    export CMAKE_CUDA_FLAGS="-w --ptxas-options=-w"
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
@@ -204,7 +244,8 @@ case ${PKG_NAME} in
 
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/
-    mv build/lib.*/torch/share/* ${PREFIX}/share/
+    # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
+    rsync -a build/lib.*/torch/share/* ${PREFIX}/share/
     mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
     rm ${PREFIX}/lib/libtorch_python.*
 
@@ -212,7 +253,7 @@ case ${PKG_NAME} in
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
     ;;
   pytorch)
-    $PREFIX/bin/python -m pip install . --no-deps -vvv --no-clean \
+    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -v --no-clean \
         | sed "s,${CXX},\$\{CXX\},g" \
         | sed "s,${PREFIX},\$\{PREFIX\},g"
     # Keep this in ${PREFIX}/lib so that the library can be found by

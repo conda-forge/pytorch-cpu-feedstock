@@ -1,107 +1,112 @@
 @echo On
 setlocal enabledelayedexpansion
 
-REM remove pyproject.toml to avoid installing deps from pip
-if EXIST pyproject.toml DEL pyproject.toml
+@REM remove pyproject.toml to avoid installing deps from pip
+if EXIST pyproject.toml (
+  DEL pyproject.toml
+  if %ERRORLEVEL% neq 0 exit 1
+)
 
-set TH_BINARY_BUILD=1
+@REM The PyTorch test suite includes some symlinks, which aren't resolved on Windows, leading to packaging errors.
+@REM ATTN! These change and have to be updated manually, often with each release.
+@REM (no current symlinks being packaged. Leaving this information here as it took some months to find the issue. Look out
+@REM for a failure with error message: "conda_package_handling.exceptions.ArchiveCreationError: <somefile> Cannot stat
+@REM while writing file")
+
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
-:: Always pass 0 to avoid appending ".post" to version string.
-:: https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
+@REM Always pass 0 to avoid appending ".post" to version string.
+@REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
-
-REM I don't know where this folder comes from, but it's interfering with the build in osx-64
-if EXIST %PREFIX%\git RD /S /Q %PREFIX%\git
 
 @REM Setup BLAS
 if "%blas_impl%" == "generic" (
-    REM Fake openblas
+    @REM Fake openblas
     SET BLAS=OpenBLAS
     SET OpenBLAS_HOME=%LIBRARY_PREFIX%
 ) else (
     SET BLAS=MKL
 )
 
-@REM TODO(baszalmstra): Figure out if we need these flags
-SET "USE_NUMA=0"
-SET "USE_ITT=0"
-
-@REM KINETO seems to require CUPTI and will look quite hard for it.
-@REM CUPTI seems to cause trouble when users install a version of
-@REM cudatoolkit different than the one specified at compile time.
-@REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/135
-set "USE_KINETO=OFF"
-
 if "%PKG_NAME%" == "pytorch" (
   set "PIP_ACTION=install"
-  :: We build libtorch for a specific python version.
-  :: This ensures its only build once. However, when that version changes
-  :: we need to make sure to update that here.
-  :: Get the full python version string
+  set "PIP_VERBOSITY=-v"
+  @REM We build libtorch for a specific python version.
+  @REM This ensures its only build once. However, when that version changes
+  @REM we need to make sure to update that here.
+  @REM Get the full python version string
   for /f "tokens=2" %%a in ('python --version 2^>^&1') do set PY_VERSION_FULL=%%a
 
-  :: Replace Python312 or python312 with ie Python311 or python311
+  @REM Replace Python312 or python312 with ie Python311 or python311
   sed "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
-  :: Replace version string v3.12.8() with ie v3.11.11()
+  @REM Replace version string v3.12.8() with ie v3.11.11()
   sed -i.bak -E "s/v3\.12\.[0-9]+/v%PY_VERSION_FULL%/g" build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
-  :: Replace interpreter properties Python;3;12;8;64 with ie Python;3;11;11;64
+  @REM Replace interpreter properties Python;3;12;8;64 with ie Python;3;11;11;64
   sed -i.bak -E "s/Python;3;12;[0-9]+;64/Python;%PY_VERSION_FULL:.=;%;64/g" build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
-  :: Replace cp312-win_amd64 with ie cp311-win_amd64
+  @REM Replace cp312-win_amd64 with ie cp311-win_amd64
   sed -i.bak "s/cp312/cp%CONDA_PY%/g" build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
-  @REM We use a fan-out build to avoid the long rebuild of libtorch
-  @REM However, the location of the numpy headers changes between python 3.8
-  @REM and 3.9+ since numpy 2.0 only exists for 3.9+
-  if "%PY_VER%" == "3.8" (
-    sed -i.bak "s#numpy\\\\_core\\\\include#numpy\\\\core\\\\include#g" build/CMakeCache.txt
-  ) else (
-    sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
-  )
+  sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
+  if %ERRORLEVEL% neq 0 exit 1
 
 ) else (
   @REM For the main script we just build a wheel for so that the C++/CUDA
   @REM parts are built. Then they are reused in each python version.
   set "PIP_ACTION=wheel"
+  set "PIP_VERBOSITY=-vvv"
 )
+
+set "BUILD_CUSTOM_PROTOBUF=OFF"
+set "USE_LITE_PROTO=ON"
+
+@REM TODO(baszalmstra): Figure out if we need these flags
+SET "USE_ITT=0"
+SET "USE_NUMA=0"
+
+@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
+set "USE_OPENMP=OFF"
+
+@REM Use our Pybind11, Eigen, sleef
+set USE_SYSTEM_EIGEN_INSTALL=1
+set USE_SYSTEM_PYBIND11=1
+set USE_SYSTEM_SLEEF=1
 
 if not "%cuda_compiler_version%" == "None" (
     set USE_CUDA=1
-
-    REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
-    REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
-
-    set TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX
-
-    set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
-
     set USE_STATIC_CUDNN=0
-    set MAGMA_HOME=%PREFIX%
-
-    REM NCCL is not available on windows
+    @REM NCCL is not available on windows
     set USE_NCCL=0
     set USE_STATIC_NCCL=0
 
+    @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
+    @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
+
+    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+    set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
+
     set MAGMA_HOME=%LIBRARY_PREFIX%
-
     set "PATH=%CUDA_BIN_PATH%;%PATH%"
-
     set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
-
+    @REM turn off very noisy nvcc warnings
+    set "CUDAFLAGS=-w --ptxas-options=-w"
 ) else (
     set USE_CUDA=0
-    REM On windows, env vars are case-insensitive and setup.py
-    REM passes all env vars starting with CUDA_*, CMAKE_* to
-    REM to cmake
-    set "cuda_compiler_version="
-    set "cuda_compiler="
-    set "CUDA_VERSION="
-
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     @REM for CPU builds. Not to be confused with MKL.
     set "USE_MKLDNN=1"
+
+    @REM On windows, env vars are case-insensitive and setup.py
+    @REM passes all env vars starting with CUDA_*, CMAKE_* to
+    @REM to cmake
+    set "cuda_compiler_version="
+    set "cuda_compiler="
+    set "CUDA_VERSION="
 )
 
 set DISTUTILS_USE_SDK=1
@@ -117,7 +122,7 @@ set "CMAKE_PREFIX_PATH=%LIBRARY_PREFIX%"
 set "CMAKE_INCLUDE_PATH=%LIBRARY_INC%"
 set "CMAKE_LIBRARY_PATH=%LIBRARY_LIB%"
 set "CMAKE_BUILD_TYPE=Release"
-:: This is so that CMake finds the environment's Python, not another one
+@REM This is so that CMake finds the environment's Python, not another one
 set Python_EXECUTABLE=%PYTHON%
 set Python3_EXECUTABLE=%PYTHON%
 
@@ -125,19 +130,12 @@ set "INSTALL_TEST=0"
 set "BUILD_TEST=0"
 
 set "libuv_ROOT=%LIBRARY_PREFIX%"
-set "USE_SYSTEM_SLEEF=ON"
 
 @REM uncomment to debug cmake build
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
-set "BUILD_CUSTOM_PROTOBUF=OFF"
-set "USE_LITE_PROTO=ON"
-
-@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
-set "USE_OPENMP=OFF"
-
 @REM The activation script for cuda-nvcc doesnt add the CUDA_CFLAGS on windows.
-@REM Therefor we do this manually here. See:
+@REM Therefore we do this manually here. See:
 @REM https://github.com/conda-forge/cuda-nvcc-feedstock/issues/47
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 set "CUDA_CFLAGS=-I%PREFIX%/Library/include -I%BUILD_PREFIX%/Library/include"
@@ -154,13 +152,18 @@ set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
 
 sccache --stop-server
 sccache --start-server
+if %ERRORLEVEL% neq 0 exit 1
 sccache --zero-stats
+if %ERRORLEVEL% neq 0 exit 1
 
 @REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
-cmake --build build --target clean
+if EXIST build (
+    cmake --build build --target clean
+    if %ERRORLEVEL% neq 0 exit 1
+)
 
-%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps -vvv --no-clean
-if errorlevel 1 exit /b 1
+%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean
+if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.
 @REM
@@ -175,46 +178,58 @@ if errorlevel 1 exit /b 1
 
 if "%PKG_NAME%" == "libtorch" (
     @REM Extract the compiled wheel into a temporary directory
-    if not exist "%SRC_DIR%/dist" mkdir %SRC_DIR%/dist
-    pushd %SRC_DIR%/dist
-    for %%f in (../torch-*.whl) do (
+    if not exist "%SRC_DIR%\dist" mkdir %SRC_DIR%\dist
+    pushd %SRC_DIR%\dist
+    for /f %%f in ('dir /b /S ..\torch-*.whl') do (
         wheel unpack %%f
+        if %ERRORLEVEL% neq 0 exit 1
     )
 
-    @REM Navigate into the unpacked wheel
-    pushd torch-*
+    @REM Navigate into the unpacked wheel; naming pattern of the folder is documented:
+    @REM https://github.com/pypa/wheel/blob/0.45.1/src/wheel/cli/unpack.py#L11-L12
+    pushd torch-%PKG_VERSION%
+    if %ERRORLEVEL% neq 0 exit 1
 
     @REM Move the binaries into the packages site-package directory
-    robocopy /NP /NFL /NDL /NJH /E torch\bin %SP_DIR%\torch\bin\
-    robocopy /NP /NFL /NDL /NJH /E torch\lib %SP_DIR%\torch\lib\
-    robocopy /NP /NFL /NDL /NJH /E torch\share %SP_DIR%\torch\share\
+    @REM the only content of torch\bin, {asmjit,fbgemm}.dll, also exists in torch\lib
+    robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ torch*.dll c10.dll shm.dll asmjit.dll fbgemm.dll
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ torch*.lib c10.lib shm.lib asmjit.lib fbgemm.lib
+    if not "%cuda_compiler_version%" == "None" (
+        robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ c10_cuda.dll caffe2_nvrtc.dll
+        robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ c10_cuda.lib caffe2_nvrtc.lib
+    )
+    robocopy /NP /NFL /NDL /NJH /E torch\share\ %LIBRARY_PREFIX%\share
     for %%f in (ATen caffe2 torch c10) do (
-        robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %SP_DIR%\torch\include\%%f\
+        robocopy /NP /NFL /NDL /NJH /E torch\include\%%f %LIBRARY_INC%\%%f\
     )
 
     @REM Remove the python binary file, that is placed in the site-packages
     @REM directory by the specific python specific pytorch package.
-    del %SP_DIR%\torch\lib\torch_python.*
+    del %LIBRARY_BIN%\torch_python.* %LIBRARY_LIB%\torch_python.* %LIBRARY_LIB%\_C.lib
+    if %ERRORLEVEL% neq 0 exit 1
 
     popd
     popd
 
     @REM Keep the original backed up to sed later
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
+    if %ERRORLEVEL% neq 0 exit 1
 ) else if "%PKG_NAME%" == "pytorch" (
+    @REM Move libtorch_python and remove the other directories afterwards.
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\bin\ %LIBRARY_BIN%\ torch_python.dll
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ torch_python.lib
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ _C.lib
+    rmdir /s /q %SP_DIR%\torch\lib
     rmdir /s /q %SP_DIR%\torch\bin
     rmdir /s /q %SP_DIR%\torch\share
     for %%f in (ATen caffe2 torch c10) do (
         rmdir /s /q %SP_DIR%\torch\include\%%f
     )
 
-    @REM Delete all files from the lib directory that do not start with torch_python
-    for %%f in (%SP_DIR%\torch\lib\*) do (
-        set "FILENAME=%%~nf"
-        if "!FILENAME:~0,12!" neq "torch_python" (
-            del %%f
-        )
-    )
+    @REM Copy libtorch_python.lib back -- that's much easier than the for loop
+    @REM needed to remove everything else.
+    robocopy /NP /NFL /NDL /NJH /E %LIBRARY_LIB%\ torch\lib\ torch_python.lib
+    robocopy /NP /NFL /NDL /NJH /E %LIBRARY_LIB%\ torch\lib\ _C.lib
 )
 
 @REM Show the sccache stats.

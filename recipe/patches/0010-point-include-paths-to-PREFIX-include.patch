@@ -1,0 +1,33 @@
+From 0295752d2c44d86681d0381ef97d42ca0199ca56 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Thu, 23 Jan 2025 22:58:14 +1100
+Subject: [PATCH 10/15] point include paths to $PREFIX/include
+
+---
+ torch/utils/cpp_extension.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
+index 23e2499903c..f8acd57c62e 100644
+--- a/torch/utils/cpp_extension.py
++++ b/torch/utils/cpp_extension.py
+@@ -1208,10 +1208,19 @@ def include_paths(device_type: str = "cpu") -> List[str]:
+         A list of include path strings.
+     """
+     lib_include = os.path.join(_TORCH_PATH, 'include')
++    if os.environ.get("CONDA_BUILD", None) is not None:
++        pieces = [os.environ["PREFIX"]] + IS_WINDOWS * ["Library"] + ["include"]
++        lib_include = os.path.join(*pieces)
++    elif os.environ.get("CONDA_PREFIX", None) is not None:
++        pieces = [os.environ["CONDA_PREFIX"]] + IS_WINDOWS * ["Library"] + ["include"]
++        lib_include = os.path.join(*pieces)
+     paths = [
+         lib_include,
+         # Remove this once torch/torch.h is officially no longer supported for C++ extensions.
+         os.path.join(lib_include, 'torch', 'csrc', 'api', 'include'),
++        # add site-packages/torch/include again (`lib_include` may have been pointing to
++        # $PREFIX/include), as some torch-internal headers are still in this directory
++        os.path.join(_TORCH_PATH, 'include'),
+     ]
+     if device_type == "cuda" and IS_HIP_EXTENSION:
+         paths.append(os.path.join(lib_include, 'THH'))

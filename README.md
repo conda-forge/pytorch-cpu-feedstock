@@ -11,6 +11,14 @@ Summary: PyTorch is an optimized tensor library for deep learning using GPUs and
 
 Development: https://github.com/pytorch/pytorch
 
+Documentation: https://pytorch.org/docs/
+
+PyTorch is a Python package that provides two high-level features:
+  - Tensor computation (like NumPy) with strong GPU acceleration
+  - Deep neural networks built on a tape-based autograd system
+You can reuse your favorite Python packages such as NumPy, SciPy, and Cython to extend PyTorch when needed.
+
+
 Current build status
 ====================
 
@@ -328,5 +336,6 @@ Feedstock Maintainers
 * [@h-vetinari](https://github.com/h-vetinari/)
 * [@hmaarrfk](https://github.com/hmaarrfk/)
 * [@jeongseok-meta](https://github.com/jeongseok-meta/)
+* [@mgorny](https://github.com/mgorny/)
 * [@sodre](https://github.com/sodre/)
 

@@ -1,0 +1,57 @@
+From 93c1af8129efcacb58db9a8f2ec16eb6ec17dfed Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Thu, 30 Jan 2025 13:23:14 +1100
+Subject: [PATCH 14/15] make library name in
+ `test_mutable_custom_op_fixed_layout{,2}` unique
+
+Suggested-By: Daniel Petry <dpetry@anaconda.com>
+---
+ test/inductor/test_torchinductor.py | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/test/inductor/test_torchinductor.py b/test/inductor/test_torchinductor.py
+index 7637068b606..2861214b5fc 100644
+--- a/test/inductor/test_torchinductor.py
++++ b/test/inductor/test_torchinductor.py
+@@ -11040,7 +11040,8 @@ class CommonTemplate:
+     )
+     @tf32_on_and_off(0.005)
+     def test_mutable_custom_op_fixed_layout2(self):
+-        with torch.library._scoped_library("mylib", "DEF") as lib:
++        unique_lib_name = f"mylib_{id(self)}"  # Make unique name using test instance id
++        with torch.library._scoped_library(unique_lib_name, "DEF") as lib:
+             mod = nn.Conv2d(3, 128, 1, stride=1, bias=False).to(device=GPU_TYPE)
+             inp = torch.rand(2, 3, 128, 128, device=GPU_TYPE)
+             expected_stride = mod(inp).clone().stride()
+@@ -11077,8 +11078,9 @@ class CommonTemplate:
+             def fn(x):
+                 # Inductor changes the conv to be channels-last
+                 z = mod(x)
+-                output = torch.ops.mylib.bar(z, torch._dynamo.is_compiling())
+-                torch.ops.mylib.add_one(output)
++                mylib = importlib.import_module(f"torch.ops.{unique_lib_name}")
++                output = mylib.bar(z, torch._dynamo.is_compiling())
++                mylib.add_one(output)
+                 return output**2
+ 
+             with torch.no_grad():
+@@ -11098,7 +11100,8 @@ class CommonTemplate:
+         "defined in Python."
+     )
+     def test_mutable_custom_op_fixed_layout(self):
+-        with torch.library._scoped_library("mylib", "DEF") as lib:
++        unique_lib_name = f"mylib_{id(self)}"  # Make unique name using test instance id
++        with torch.library._scoped_library(unique_lib_name, "DEF") as lib:
+             lib.define(
+                 "copy_(Tensor(a!) dst, Tensor src) -> ()",
+                 tags=torch.Tag.needs_fixed_stride_order,
+@@ -11114,7 +11117,8 @@ class CommonTemplate:
+ 
+             def f(x):
+                 full_default_3 = torch.full([3], 7.0, device="cpu")
+-                chunk_cat_default_1 = torch.ops.mylib.copy_.default(full_default_3, x)
++                mylib = importlib.import_module(f"torch.ops.{unique_lib_name}")
++                chunk_cat_default_1 = mylib.copy_.default(full_default_3, x)
+                 mul_out = torch.mul(full_default_3, full_default_3)
+                 return mul_out
+ 
