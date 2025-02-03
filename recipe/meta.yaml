@@ -57,7 +57,6 @@ source:
     - patches/0011-Add-conda-prefix-to-inductor-include-paths.patch
     - patches/0012-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
     - patches/0013-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
-    - patches/0014-make-library-name-in-test_mutable_custom_op_fixed_la.patch
     - patches/0015-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
     # backport https://github.com/pytorch/pytorch/pull/140030
     - patches/0016-export-AOTI_TORCH_EXPORT-on-Windows.-140030.patch
