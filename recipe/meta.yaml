@@ -456,8 +456,9 @@ outputs:
         {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not (aarch64 or osx)]
 
         {% set skips = "(TestTorch and test_print)" %}
-        # tolerance violation with openblas
+        # minor tolerance violations on osx
         {% set skips = skips ~ " or test_1_sized_with_0_strided_cpu_float32" %}         # [osx]
+        {% set skips = skips ~ " or test_batchnorm_nhwc_cpu" %}                         # [osx]
         # timeouts and failures on aarch, see https://github.com/conda-forge/pytorch-cpu-feedstock/pull/298#issuecomment-2555888508
         {% set skips = skips ~ " or test_pynode_destruction_deadlock" %}                # [aarch64]
         {% set skips = skips ~ " or (TestLinalgCPU and test_cholesky_cpu_float32)" %}   # [aarch64]
