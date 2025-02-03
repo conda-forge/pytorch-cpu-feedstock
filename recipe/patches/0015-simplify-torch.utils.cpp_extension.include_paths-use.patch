@@ -1,7 +1,7 @@
 From 33790dfbf966e7d8ea4ff6798d2ff92474d84079 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:46:58 +1100
-Subject: [PATCH 15/19] simplify torch.utils.cpp_extension.include_paths; use
+Subject: [PATCH 15/21] simplify torch.utils.cpp_extension.include_paths; use
  it in cpp_builder
 
 The /TH headers have not existed since pytorch 1.11

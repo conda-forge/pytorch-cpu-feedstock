@@ -176,11 +176,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # all of them.
     export CUDAToolkit_BIN_DIR=${BUILD_PREFIX}/bin
     export CUDAToolkit_ROOT_DIR=${PREFIX}
-    if [[ "${target_platform}" != "${build_platform}" ]]; then
-        export CUDA_TOOLKIT_ROOT=${PREFIX}
-    fi
     # for CUPTI
     export CUDA_TOOLKIT_ROOT_DIR=${PREFIX}
+    export CUDAToolkit_ROOT=${PREFIX}
     case ${target_platform} in
         linux-64)
             export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
@@ -221,6 +219,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
     export USE_MAGMA=1
+    # turn off noisy nvcc warnings
+    export CMAKE_CUDA_FLAGS="-w --ptxas-options=-w"
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
@@ -253,7 +253,7 @@ case ${PKG_NAME} in
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
     ;;
   pytorch)
-    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -vvv --no-clean \
+    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -v --no-clean \
         | sed "s,${CXX},\$\{CXX\},g" \
         | sed "s,${PREFIX},\$\{PREFIX\},g"
     # Keep this in ${PREFIX}/lib so that the library can be found by

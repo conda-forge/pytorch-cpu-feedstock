@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.5.1" %}
-{% set build = 11 %}
+{% set build = 12 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -69,8 +69,11 @@ source:
     - patches/0016-point-include-paths-to-PREFIX-include.patch
     - patches/0017-Add-conda-prefix-to-inductor-include-paths.patch
     - patches/0018-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
-    - patches/0019-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch               # [win]
-    - patches_submodules/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch    # [win]
+    - patches/0019-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
+    - patches/0020-make-library-name-in-test_mutable_custom_op_fixed_la.patch
+    - patches/0021-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+    - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
+    - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
   number: {{ build }}
@@ -179,6 +182,7 @@ requirements:
     - typing_extensions
     - pybind11
     - eigen
+    - zlib
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
@@ -208,7 +212,9 @@ test:
     # cmake needs a compiler to run package detection, see
     # https://discourse.cmake.org/t/questions-about-find-package-cli-msvc/6194
     - {{ compiler('cxx') }}
+    # for CMake config to find cuda & nvrtc
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
+    - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
     - cmake
     - ninja
     - pkg-config
@@ -328,6 +334,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}
         - pybind11
         - eigen
+        - zlib
       run:
         - llvm-openmp    # [osx]
         - intel-openmp {{ mkl }}  # [win]
@@ -494,6 +501,7 @@ outputs:
         {% set skips = skips ~ " or (GPUTests and test_scatter_reduce2)" %}             # [linux and cuda_compiler_version != "None"]
         # MKL problems
         {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}           # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_reentrant_parent_error_on_cpu_cuda)" %}                    # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # non-MKL problems
         {% set skips = skips ~ " or test_cross_entropy_loss_2d_out_of_bounds_class_index_cuda" %}   # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_cublas_config_nondeterministic_alert_cuda " %}             # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
@@ -559,6 +567,7 @@ about:
   license_file:
     - LICENSE
     - NOTICE
+    - third_party/CMake/Copyright.txt
   summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
   description: |
     PyTorch is a Python package that provides two high-level features:

@@ -27,12 +27,9 @@ if "%blas_impl%" == "generic" (
     SET BLAS=MKL
 )
 
-@REM TODO(baszalmstra): Figure out if we need these flags
-SET "USE_NUMA=0"
-SET "USE_ITT=0"
-
 if "%PKG_NAME%" == "pytorch" (
   set "PIP_ACTION=install"
+  set "PIP_VERBOSITY=-v"
   @REM We build libtorch for a specific python version.
   @REM This ensures its only build once. However, when that version changes
   @REM we need to make sure to update that here.
@@ -62,50 +59,57 @@ if "%PKG_NAME%" == "pytorch" (
   @REM For the main script we just build a wheel for so that the C++/CUDA
   @REM parts are built. Then they are reused in each python version.
   set "PIP_ACTION=wheel"
+  set "PIP_VERBOSITY=-vvv"
 )
+
+set "BUILD_CUSTOM_PROTOBUF=OFF"
+set "USE_LITE_PROTO=ON"
+
+@REM TODO(baszalmstra): Figure out if we need these flags
+SET "USE_ITT=0"
+SET "USE_NUMA=0"
+
+@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
+set "USE_OPENMP=OFF"
+
+@REM Use our Pybind11, Eigen, sleef
+set USE_SYSTEM_EIGEN_INSTALL=1
+set USE_SYSTEM_PYBIND11=1
+set USE_SYSTEM_SLEEF=1
 
 if not "%cuda_compiler_version%" == "None" (
     set USE_CUDA=1
-
-    @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
-    @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
-
-    set TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX
-
-    set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
-
     set USE_STATIC_CUDNN=0
-    set MAGMA_HOME=%PREFIX%
-
     @REM NCCL is not available on windows
     set USE_NCCL=0
     set USE_STATIC_NCCL=0
 
+    @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
+    @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
+
+    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+    set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
+
     set MAGMA_HOME=%LIBRARY_PREFIX%
-
     set "PATH=%CUDA_BIN_PATH%;%PATH%"
-
     set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
-
+    @REM turn off very noisy nvcc warnings
+    set "CUDAFLAGS=-w --ptxas-options=-w"
 ) else (
     set USE_CUDA=0
+    @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
+    @REM for CPU builds. Not to be confused with MKL.
+    set "USE_MKLDNN=1"
+
     @REM On windows, env vars are case-insensitive and setup.py
     @REM passes all env vars starting with CUDA_*, CMAKE_* to
     @REM to cmake
     set "cuda_compiler_version="
     set "cuda_compiler="
     set "CUDA_VERSION="
-
-    @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
-    @REM for CPU builds. Not to be confused with MKL.
-    set "USE_MKLDNN=1"
 )
 
 set DISTUTILS_USE_SDK=1
-
-@REM Use our Pybind11, Eigen
-set USE_SYSTEM_PYBIND11=1
-set USE_SYSTEM_EIGEN_INSTALL=1
 
 set CMAKE_INCLUDE_PATH=%LIBRARY_PREFIX%\include
 set LIB=%LIBRARY_PREFIX%\lib;%LIB%
@@ -126,16 +130,9 @@ set "INSTALL_TEST=0"
 set "BUILD_TEST=0"
 
 set "libuv_ROOT=%LIBRARY_PREFIX%"
-set "USE_SYSTEM_SLEEF=ON"
 
 @REM uncomment to debug cmake build
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
-
-set "BUILD_CUSTOM_PROTOBUF=OFF"
-set "USE_LITE_PROTO=ON"
-
-@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
-set "USE_OPENMP=OFF"
 
 @REM The activation script for cuda-nvcc doesnt add the CUDA_CFLAGS on windows.
 @REM Therefore we do this manually here. See:
@@ -165,7 +162,7 @@ if EXIST build (
     if %ERRORLEVEL% neq 0 exit 1
 )
 
-%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps -vvv --no-clean
+%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean
 if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.
