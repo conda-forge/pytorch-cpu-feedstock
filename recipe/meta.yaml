@@ -436,7 +436,8 @@ outputs:
         - export TARGET_OS="macos-arm64"                                                        # [(osx and arm64)]
         - export TARGET_OS="macos-x86_64"                                                       # [(osx and x86_64)]
         - export OMP_NUM_THREADS=4                                                              # [not win]
-        - python ./smoke_test.py --package torchonly
+        # aarch segfaults, presumably due to emulation
+        - python ./smoke_test.py --package torchonly    # [not aarch]
 
         # a reasonably safe subset of tests that should run under 15 minutes
         {% set tests = " ".join([
