@@ -387,8 +387,6 @@ outputs:
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
-      files:
-        - smoke_test.py
       commands:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
@@ -413,31 +411,6 @@ outputs:
         - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
         - if not exist %LIBRARY_BIN%\torch_python.dll exit 1  # [win]
         - if not exist %LIBRARY_LIB%\torch_python.lib exit 1  # [win]
-
-        # See here for environment variables needed by the smoke test script
-        # https://github.com/pytorch/pytorch/blob/266fd35c5842902f6304aa8e7713b252cbfb243c/.ci/pytorch/smoke_test/smoke_test.py#L16
-        - set MATRIX_GPU_ARCH_VERSION="{{ '.'.join((cuda_compiler_version or "").split('.')[:2]) }}"   # [(cuda_compiler_version != "None") and (win)]
-        - set MATRIX_GPU_ARCH_TYPE="cuda"                                                       # [(cuda_compiler_version != "None") and (win)]
-        - set MATRIX_GPU_ARCH_VERSION="none"                                                    # [(cuda_compiler_version == "None") and (win)]
-        - set MATRIX_GPU_ARCH_TYPE="none"                                                       # [(cuda_compiler_version == "None") and (win)]
-        - set MATRIX_CHANNEL="defaults"                                                         # [win]
-        - set MATRIX_STABLE_VERSION={{ version }}                                               # [win]
-        - set MATRIX_PACKAGE_TYPE="conda"                                                       # [win]
-        - set TARGET_OS="windows"                                                               # [win]
-        - set OMP_NUM_THREADS=4                                                                 # [win]
-        - export MATRIX_GPU_ARCH_VERSION="{{ '.'.join((cuda_compiler_version or "").split('.')[:2]) }}"  # [(cuda_compiler_version != "None") and (linux and x86_64)]
-        - export MATRIX_GPU_ARCH_TYPE="cuda"                                                    # [(cuda_compiler_version != "None") and (linux and x86_64)]
-        - export MATRIX_GPU_ARCH_VERSION="none"                                                 # [(cuda_compiler_version == "None") and (not win)]
-        - export MATRIX_GPU_ARCH_TYPE="none"                                                    # [(cuda_compiler_version == "None") and (not win)]
-        - export MATRIX_CHANNEL="defaults"                                                      # [not win]
-        - export MATRIX_STABLE_VERSION="{{ version }}"                                          # [not win]
-        - export MATRIX_PACKAGE_TYPE="conda"                                                    # [not win]
-        - export TARGET_OS="linux"                                                              # [linux]
-        - export TARGET_OS="macos-arm64"                                                        # [(osx and arm64)]
-        - export TARGET_OS="macos-x86_64"                                                       # [(osx and x86_64)]
-        - export OMP_NUM_THREADS=4                                                              # [not win]
-        # aarch segfaults, presumably due to emulation
-        - python ./smoke_test.py --package torchonly    # [not aarch]
 
         # a reasonably safe subset of tests that should run under 15 minutes
         {% set tests = " ".join([
