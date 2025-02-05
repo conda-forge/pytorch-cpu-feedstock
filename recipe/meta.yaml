@@ -271,6 +271,7 @@ outputs:
         - make      # [linux]
         - sccache   # [win]
       host:
+        - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
         - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None" and linux]
@@ -317,7 +318,7 @@ outputs:
         - libuv
         - pkg-config  # [unix]
         - typing_extensions
-        - {{ pin_subpackage('libtorch', exact=True) }}
+        - zlib
       run:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
         # for non-megabuild, allow libtorch from any python version;
