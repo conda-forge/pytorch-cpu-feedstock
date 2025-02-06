@@ -132,7 +132,7 @@ requirements:
     - cuda-nvtx-dev
     - cuda-nvml-dev
     - cuda-profiler-api
-    - cusparselt
+    - cusparselt <0.7
     - libcublas-dev
     - libcudss-dev
     - libcufile-dev  # [linux]
@@ -266,7 +266,7 @@ outputs:
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
-        - cusparselt
+        - cusparselt <0.7
         - libcublas-dev
         - libcudss-dev
         - libcufile-dev  # [linux]
@@ -330,6 +330,8 @@ outputs:
         - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
         - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
         - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
+        - cusparselt <0.7
+        - gtk3 <0.0
 
     test:
       requires:
