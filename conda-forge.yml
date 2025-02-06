@@ -16,7 +16,7 @@ github:
   tooling_branch_name: main
 github_actions:
   self_hosted: true
-  timeout_minutes: 1080
+  timeout_minutes: 900
   triggers:
   - push
   - pull_request

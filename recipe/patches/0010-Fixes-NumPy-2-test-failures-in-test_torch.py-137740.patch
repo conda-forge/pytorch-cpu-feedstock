@@ -1,7 +1,7 @@
-From 032b9be9ca7f9ae174e75554cecc82600ea3ef54 Mon Sep 17 00:00:00 2001
+From a8ddbe6b682347fdc86c5052b244df4f95b926ac Mon Sep 17 00:00:00 2001
 From: Haifeng Jin <haifeng-jin@users.noreply.github.com>
 Date: Sat, 12 Oct 2024 02:40:17 +0000
-Subject: [PATCH 10/21] Fixes NumPy 2 test failures in test_torch.py (#137740)
+Subject: [PATCH 10/16] Fixes NumPy 2 test failures in test_torch.py (#137740)
 
 Related to #107302
 
@@ -24,7 +24,7 @@ Approved by: https://github.com/ezyang
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/test/test_torch.py b/test/test_torch.py
-index be4d6180819..c6fd6ac9f19 100644
+index be4d61808..c6fd6ac9f 100644
 --- a/test/test_torch.py
 +++ b/test/test_torch.py
 @@ -2891,7 +2891,7 @@ else:
@@ -58,3 +58,6 @@ index be4d6180819..c6fd6ac9f19 100644
          )
  
      @skipIfTorchDynamo("np.float64 restored as float32 after graph break.")
+-- 
+2.48.1
+

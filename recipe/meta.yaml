@@ -1,10 +1,7 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.5.1" %}
-{% set build = 12 %}
+{% set build = 10 %}
 
-# Use a higher build number for the CUDA variant, to ensure that it's
-# preferred by conda's solver, and it's preferentially
-# installed where the platform supports it.
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
 {% endif %}
@@ -67,13 +64,6 @@ source:
     - patches/0015-simplify-torch.utils.cpp_extension.include_paths-use.patch
     # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
     - patches/0016-point-include-paths-to-PREFIX-include.patch
-    - patches/0017-Add-conda-prefix-to-inductor-include-paths.patch
-    - patches/0018-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
-    - patches/0019-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
-    - patches/0020-make-library-name-in-test_mutable_custom_op_fixed_la.patch
-    - patches/0021-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
-    - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
-    - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
   number: {{ build }}
@@ -127,7 +117,6 @@ requirements:
     - protobuf
     - make      # [linux]
     - sccache   # [win]
-    - rsync     # [unix]
   host:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
@@ -178,9 +167,6 @@ requirements:
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
-    - pybind11
-    - eigen
-    - zlib
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
@@ -206,18 +192,6 @@ requirements:
 # a particularity of conda-build, that output is defined in
 # the global build stage, including tests
 test:
-  requires:
-    # cmake needs a compiler to run package detection, see
-    # https://discourse.cmake.org/t/questions-about-find-package-cli-msvc/6194
-    - {{ compiler('cxx') }}
-    # for CMake config to find cuda & nvrtc
-    - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
-    - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
-    - cmake
-    - ninja
-    - pkg-config
-  files:
-    - cmake_test/
   commands:
     # libraries; peculiar formatting to avoid linter false positives about selectors
     {% set torch_libs = [
@@ -242,11 +216,6 @@ test:
     # CMake files in share
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
     - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
-
-    # test integrity of CMake metadata
-    - cd cmake_test
-    - cmake -GNinja -DCMAKE_CXX_STANDARD=17 $CMAKE_ARGS .   # [unix]
-    - cmake -GNinja -DCMAKE_CXX_STANDARD=17 %CMAKE_ARGS% .  # [win]
 
 outputs:
   - name: libtorch
@@ -330,9 +299,6 @@ outputs:
         - pkg-config  # [unix]
         - typing_extensions
         - {{ pin_subpackage('libtorch', exact=True) }}
-        - pybind11
-        - eigen
-        - zlib
       run:
         - llvm-openmp    # [osx]
         - intel-openmp {{ mkl }}  # [win]
@@ -348,7 +314,6 @@ outputs:
         - filelock
         - jinja2
         - networkx
-        - pybind11
         - nomkl                 # [blas_impl != "mkl"]
         - fsspec
         # avoid that people without GPUs needlessly download ~0.5-1GB
@@ -370,8 +335,6 @@ outputs:
       requires:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        # for torch.compile tests
-        - {{ compiler('cuda') }}       # [cuda_compiler_version != "None"]
         - ninja
         - boto3
         - hypothesis
@@ -397,7 +360,6 @@ outputs:
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
-        #- .ci/pytorch/smoke_test/smoke_test.py
       commands:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
@@ -405,14 +367,6 @@ outputs:
         - python -c "import torch; print(torch.__version__)"
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
         - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
-        # We have had issues with openmp .dylibs being doubly loaded in certain cases. These two tests catch the (observed) issue
-        - python -c "import torch; import numpy"
-        - python -c "import numpy; import torch"
-        # distributed support is enabled by default on linux; for mac, we enable it manually in build.sh
-        - python -c "import torch; assert torch.distributed.is_available()"        # [linux or osx]
-        - python -c "import torch; assert torch.backends.cuda.is_built()"          # [linux64 and (cuda_compiler_version != "None")]
-        - python -c "import torch; assert torch.backends.cudnn.is_available()"     # [linux64 and (cuda_compiler_version != "None")]
-        - python -c "import torch; assert torch.backends.cudnn.enabled"            # [linux64 and (cuda_compiler_version != "None")]
         # At conda-forge, we target versions of OSX that are too old for MPS support
         # But if users install a newer version of OSX, they will have MPS support
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
@@ -423,31 +377,8 @@ outputs:
         - if not exist %LIBRARY_BIN%\torch_python.dll exit 1  # [win]
         - if not exist %LIBRARY_LIB%\torch_python.lib exit 1  # [win]
 
-        # See here for environment variables needed by the smoke test script
-        # https://github.com/pytorch/pytorch/blob/266fd35c5842902f6304aa8e7713b252cbfb243c/.ci/pytorch/smoke_test/smoke_test.py#L16
-        - set MATRIX_GPU_ARCH_VERSION="{{ '.'.join((cuda_compiler_version or "").split('.')[:2]) }}"   # [(cuda_compiler_version != "None") and (win)]
-        - set MATRIX_GPU_ARCH_TYPE="cuda"                                                       # [(cuda_compiler_version != "None") and (win)]
-        - set MATRIX_GPU_ARCH_VERSION="none"                                                    # [(cuda_compiler_version == "None") and (win)]
-        - set MATRIX_GPU_ARCH_TYPE="none"                                                       # [(cuda_compiler_version == "None") and (win)]
-        - set MATRIX_CHANNEL="defaults"                                                         # [win]
-        - set MATRIX_STABLE_VERSION={{ version }}                                               # [win]
-        - set MATRIX_PACKAGE_TYPE="conda"                                                       # [win]
-        - set TARGET_OS="windows"                                                               # [win]
-        - set OMP_NUM_THREADS=4                                                                 # [win]
-        - export MATRIX_GPU_ARCH_VERSION="{{ '.'.join((cuda_compiler_version or "").split('.')[:2]) }}"  # [(cuda_compiler_version != "None") and (linux and x86_64)]
-        - export MATRIX_GPU_ARCH_TYPE="cuda"                                                    # [(cuda_compiler_version != "None") and (linux and x86_64)]
-        - export MATRIX_GPU_ARCH_VERSION="none"                                                 # [(cuda_compiler_version == "None") and (not win)]
-        - export MATRIX_GPU_ARCH_TYPE="none"                                                    # [(cuda_compiler_version == "None") and (not win)]
-        - export MATRIX_CHANNEL="defaults"                                                      # [not win]
-        - export MATRIX_STABLE_VERSION="{{ version }}"                                          # [not win]
-        - export MATRIX_PACKAGE_TYPE="conda"                                                    # [not win]
-        - export TARGET_OS="linux"                                                              # [linux]
-        - export TARGET_OS="macos-arm64"                                                        # [(osx and arm64)]
-        - export TARGET_OS="macos-x86_64"                                                       # [(osx and x86_64)]
-        - export OMP_NUM_THREADS=4                                                              # [not win]
-        #- python ./smoke_test/smoke_test.py --package torchonly
-
         # a reasonably safe subset of tests that should run under 15 minutes
+        # disable hypothesis because it randomly yields health check errors
         {% set tests = " ".join([
             "test/test_autograd.py",
             "test/test_autograd_fallback.py",
@@ -458,10 +389,8 @@ outputs:
             "test/test_nn.py",
             "test/test_torch.py",
             "test/test_xnnpack_integration.py",
+            "-m \"not hypothesis\"",
         ]) %}
-        # tests torch.compile; avoid on aarch because it adds >4h in test runtime in emulation;
-        # they add a lot of runtime (15->60min on windows), so run them for only one python version
-        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not aarch64]
 
         {% set skips = "(TestTorch and test_print)" %}
         # tolerance violation with openblas
@@ -483,26 +412,12 @@ outputs:
         # may crash spuriously
         {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}
         {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
-        # tests that fail due to resource clean-up issues (non-unique temporary libraries), see
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/318#issuecomment-2620080859
-        {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}             # [cuda_compiler_version != "None"]
         # trivial accuracy problems
         {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [unix and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda " %}                # [unix and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [unix and cuda_compiler_version != "None"]
-        # These tests require higher-resource or more recent GPUs than the CI provides
-        {% set skips = skips ~ " or test_sdpa_inference_mode_aot_compile" %}            # [linux and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or (TestNN and test_grid_sample)" %}                   # [linux and cuda_compiler_version != "None"]
-        # don't mess with tests that rely on GPU failure handling
-        {% set skips = skips ~ " or test_indirect_device_assert" %}                     # [linux and cuda_compiler_version != "None"]
-        # test that fails to find temporary resource
-        {% set skips = skips ~ " or (GPUTests and test_scatter_reduce2)" %}             # [linux and cuda_compiler_version != "None"]
         # MKL problems
-        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}           # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or test_reentrant_parent_error_on_cpu_cuda)" %}                    # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
-        # non-MKL problems
-        {% set skips = skips ~ " or test_cross_entropy_loss_2d_out_of_bounds_class_index_cuda" %}   # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or test_cublas_config_nondeterministic_alert_cuda " %}             # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}  # [unix and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # these tests are failing with low -n values
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
@@ -523,9 +438,8 @@ outputs:
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
         # reduced paralellism to avoid OOM; test only one python version on aarch because emulation is super-slow
-        # disable hypothesis because it randomly yields health check errors
-        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50   # [unix and (not aarch64 or py==312)]
-        - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50  # [win]
+        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" --durations=50   # [unix and (not aarch64 or py==312)]
+        - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" --durations=50  # [win]
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
@@ -565,14 +479,8 @@ about:
   license_file:
     - LICENSE
     - NOTICE
-    - third_party/CMake/Copyright.txt
+    - third_party/pybind11/LICENSE
   summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
-  description: |
-    PyTorch is a Python package that provides two high-level features:
-      - Tensor computation (like NumPy) with strong GPU acceleration
-      - Deep neural networks built on a tape-based autograd system
-    You can reuse your favorite Python packages such as NumPy, SciPy, and Cython to extend PyTorch when needed.
-  doc_url: https://pytorch.org/docs/
 
 extra:
   recipe-maintainers:

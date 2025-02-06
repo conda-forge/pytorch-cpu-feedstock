@@ -7,12 +7,6 @@ if EXIST pyproject.toml (
   if %ERRORLEVEL% neq 0 exit 1
 )
 
-@REM The PyTorch test suite includes some symlinks, which aren't resolved on Windows, leading to packaging errors.
-@REM ATTN! These change and have to be updated manually, often with each release.
-@REM (no current symlinks being packaged. Leaving this information here as it took some months to find the issue. Look out
-@REM for a failure with error message: "conda_package_handling.exceptions.ArchiveCreationError: <somefile> Cannot stat
-@REM while writing file")
-
 set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM Always pass 0 to avoid appending ".post" to version string.
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
@@ -27,9 +21,12 @@ if "%blas_impl%" == "generic" (
     SET BLAS=MKL
 )
 
+@REM TODO(baszalmstra): Figure out if we need these flags
+SET "USE_NUMA=0"
+SET "USE_ITT=0"
+
 if "%PKG_NAME%" == "pytorch" (
   set "PIP_ACTION=install"
-  set "PIP_VERBOSITY=-v"
   @REM We build libtorch for a specific python version.
   @REM This ensures its only build once. However, when that version changes
   @REM we need to make sure to update that here.
@@ -59,54 +56,43 @@ if "%PKG_NAME%" == "pytorch" (
   @REM For the main script we just build a wheel for so that the C++/CUDA
   @REM parts are built. Then they are reused in each python version.
   set "PIP_ACTION=wheel"
-  set "PIP_VERBOSITY=-vvv"
 )
-
-set "BUILD_CUSTOM_PROTOBUF=OFF"
-set "USE_LITE_PROTO=ON"
-
-@REM TODO(baszalmstra): Figure out if we need these flags
-SET "USE_ITT=0"
-SET "USE_NUMA=0"
-
-@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
-set "USE_OPENMP=OFF"
-
-@REM Use our Pybind11, Eigen, sleef
-set USE_SYSTEM_EIGEN_INSTALL=1
-set USE_SYSTEM_PYBIND11=1
-set USE_SYSTEM_SLEEF=1
 
 if not "%cuda_compiler_version%" == "None" (
     set USE_CUDA=1
-    set USE_STATIC_CUDNN=0
-    @REM NCCL is not available on windows
-    set USE_NCCL=0
-    set USE_STATIC_NCCL=0
 
     @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
     @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
 
-    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
-    set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
+    set TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX
+
+    set TORCH_NVCC_FLAGS=-Xfatbin -compress-all
+
+    set USE_STATIC_CUDNN=0
+    set MAGMA_HOME=%PREFIX%
+
+    @REM NCCL is not available on windows
+    set USE_NCCL=0
+    set USE_STATIC_NCCL=0
 
     set MAGMA_HOME=%LIBRARY_PREFIX%
+
     set "PATH=%CUDA_BIN_PATH%;%PATH%"
+
     set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
-    @REM turn off very noisy nvcc warnings
-    set "CUDAFLAGS=-w --ptxas-options=-w"
+
 ) else (
     set USE_CUDA=0
-    @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
-    @REM for CPU builds. Not to be confused with MKL.
-    set "USE_MKLDNN=1"
-
     @REM On windows, env vars are case-insensitive and setup.py
     @REM passes all env vars starting with CUDA_*, CMAKE_* to
     @REM to cmake
     set "cuda_compiler_version="
     set "cuda_compiler="
     set "CUDA_VERSION="
+
+    @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
+    @REM for CPU builds. Not to be confused with MKL.
+    set "USE_MKLDNN=1"
 )
 
 set DISTUTILS_USE_SDK=1
@@ -130,12 +116,19 @@ set "INSTALL_TEST=0"
 set "BUILD_TEST=0"
 
 set "libuv_ROOT=%LIBRARY_PREFIX%"
+set "USE_SYSTEM_SLEEF=ON"
 
 @REM uncomment to debug cmake build
 @REM set "CMAKE_VERBOSE_MAKEFILE=1"
 
+set "BUILD_CUSTOM_PROTOBUF=OFF"
+set "USE_LITE_PROTO=ON"
+
+@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
+set "USE_OPENMP=OFF"
+
 @REM The activation script for cuda-nvcc doesnt add the CUDA_CFLAGS on windows.
-@REM Therefore we do this manually here. See:
+@REM Therefor we do this manually here. See:
 @REM https://github.com/conda-forge/cuda-nvcc-feedstock/issues/47
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 set "CUDA_CFLAGS=-I%PREFIX%/Library/include -I%BUILD_PREFIX%/Library/include"
@@ -162,7 +155,7 @@ if EXIST build (
     if %ERRORLEVEL% neq 0 exit 1
 )
 
-%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean
+%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps -vvv --no-clean
 if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.
@@ -190,12 +183,19 @@ if "%PKG_NAME%" == "libtorch" (
     pushd torch-%PKG_VERSION%
     if %ERRORLEVEL% neq 0 exit 1
 
+    @REM Do not package `fmt.lib` (and its metadata); delete it before the move into
+    @REM %LIBRARY_BIN% because it may exist in host before installation already
+    del torch\lib\fmt.lib torch\lib\pkgconfig\fmt.pc
+    if %ERRORLEVEL% neq 0 exit 1
+    @REM also delete rest of fmt metadata
+    rmdir /s /q torch\lib\cmake\fmt
+
     @REM Move the binaries into the packages site-package directory
     @REM the only content of torch\bin, {asmjit,fbgemm}.dll, also exists in torch\lib
-    robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ torch*.dll c10.dll shm.dll asmjit.dll fbgemm.dll
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ torch*.dll c10.dll shm.dll asmjit.dll fbgemm.dll
     robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ torch*.lib c10.lib shm.lib asmjit.lib fbgemm.lib
     if not "%cuda_compiler_version%" == "None" (
-        robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ c10_cuda.dll caffe2_nvrtc.dll
+        robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_BIN%\ c10_cuda.dll caffe2_nvrtc.dll
         robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ c10_cuda.lib caffe2_nvrtc.lib
     )
     robocopy /NP /NFL /NDL /NJH /E torch\share\ %LIBRARY_PREFIX%\share
@@ -216,7 +216,7 @@ if "%PKG_NAME%" == "libtorch" (
     if %ERRORLEVEL% neq 0 exit 1
 ) else if "%PKG_NAME%" == "pytorch" (
     @REM Move libtorch_python and remove the other directories afterwards.
-    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\bin\ %LIBRARY_BIN%\ torch_python.dll
+    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_BIN%\ torch_python.dll
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ torch_python.lib
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ _C.lib
     rmdir /s /q %SP_DIR%\torch\lib

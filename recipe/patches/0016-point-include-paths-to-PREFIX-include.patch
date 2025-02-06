@@ -1,14 +1,14 @@
-From 799f6fa59dac93dabbbcf72d46f4e1334e3d65d9 Mon Sep 17 00:00:00 2001
+From 4d485fc0a5e3226e528e9dab17b184ff9835a045 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
-Subject: [PATCH 16/21] point include paths to $PREFIX/include
+Subject: [PATCH 16/16] point include paths to $PREFIX/include
 
 ---
  torch/utils/cpp_extension.py | 9 +++++++++
  1 file changed, 9 insertions(+)
 
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index 3f584ef5598..4210f62b6db 100644
+index 3f584ef55..4210f62b6 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
 @@ -1155,10 +1155,19 @@ def include_paths(cuda: bool = False) -> List[str]:
@@ -31,3 +31,6 @@ index 3f584ef5598..4210f62b6db 100644
      ]
      if cuda and IS_HIP_EXTENSION:
          paths.append(os.path.join(lib_include, 'THH'))
+-- 
+2.48.1
+
