@@ -78,6 +78,8 @@ build:
   number: {{ build }}
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  # skip known-passing builds while bringing up GPU builds
+  skip: true  # [cuda_compiler_version == "None" or win or aarch64]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
