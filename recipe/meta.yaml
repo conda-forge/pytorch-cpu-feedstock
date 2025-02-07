@@ -461,7 +461,7 @@ outputs:
         {% set skips = skips ~ " or (GPUTests and test_scatter_reduce2)" %}             # [linux and cuda_compiler_version != "None"]
         # MKL problems
         {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}           # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or test_reentrant_parent_error_on_cpu_cuda)" %}                    # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_reentrant_parent_error_on_cpu_cuda" %}                     # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # non-MKL problems
         {% set skips = skips ~ " or test_cross_entropy_loss_2d_out_of_bounds_class_index_cuda" %}   # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_cublas_config_nondeterministic_alert_cuda " %}             # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
