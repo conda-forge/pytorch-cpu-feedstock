@@ -383,7 +383,7 @@ outputs:
         # Required by run_test.py
         - pytest-flakefinder
         - pytest-rerunfailures
-        - pytest-xdist
+        - pytest-xdist  # [not (linux64 and blas_impl == "mkl" and cuda_compiler_version != "None")]
         # danpetry/TF: Pytorch includes their own edited version of pytest-shard and adding
         # it into the test deps as well results in the --shard-id option being added twice.
         # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
@@ -498,7 +498,10 @@ outputs:
         - export OMP_NUM_THREADS=4  # [unix]
         # reduced paralellism to avoid OOM; test only one python version on aarch because emulation is super-slow
         # disable hypothesis because it randomly yields health check errors
-        - python -m pytest -n 2 {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50   # [unix and (not aarch64 or py==312)]
+        # MKL+CUDA somehow crashes pytest, see https://github.com/conda-forge/pytorch-cpu-feedstock/issues/348
+        - export jobs=""           # [linux64 and blas_impl == "mkl" and cuda_compiler_version != "None"]
+        - export jobs="-n 2"  # [not (linux64 and blas_impl == "mkl" and cuda_compiler_version != "None") and unix]
+        - python -m pytest $jobs {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50  # [unix and (not aarch64 or py==312)]
         - python -m pytest -v -s {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50  # [win]
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
