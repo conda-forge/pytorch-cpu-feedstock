@@ -1,7 +1,7 @@
 From b1493b8712c1fc4ad02b2640c191f3c7f1fc6c9d Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Sun, 1 Sep 2024 17:35:40 -0400
-Subject: [PATCH 01/16] Force usage of python 3 and error without numpy
+Subject: [PATCH 01/15] Force usage of python 3 and error without numpy
 
 ---
  cmake/Dependencies.cmake | 6 +++---

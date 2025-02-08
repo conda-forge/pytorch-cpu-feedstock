@@ -1,24 +1,33 @@
-From 0295752d2c44d86681d0381ef97d42ca0199ca56 Mon Sep 17 00:00:00 2001
+From 8965e3dbd5a2ec0134a0e603e705896ac59b1882 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
-Subject: [PATCH 10/16] point include paths to $PREFIX/include
+Subject: [PATCH 10/15] point include paths to $PREFIX/include
 
 ---
- torch/utils/cpp_extension.py | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ torch/utils/cpp_extension.py | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index 23e2499903c..f8acd57c62e 100644
+index 23e2499903c..ea5516ba6f6 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
-@@ -1208,10 +1208,19 @@ def include_paths(device_type: str = "cpu") -> List[str]:
+@@ -1208,10 +1208,28 @@ def include_paths(device_type: str = "cpu") -> List[str]:
          A list of include path strings.
      """
      lib_include = os.path.join(_TORCH_PATH, 'include')
-+    if os.environ.get("CONDA_BUILD", None) is not None:
++    if (os.environ.get("CONDA_BUILD", None) is not None
++            and os.environ.get("CONDA_BUILD_CROSS_COMPILATION", None) is not None):
++        # to avoid problems in cross-compilation, we need to point to the same environment
++        # where the currently running pytorch is -- i.e. the BUILD_PREFIX. See
++        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/349
++        pieces = [os.environ["BUILD_PREFIX"]] + IS_WINDOWS * ["Library"] + ["include"]
++        lib_include = os.path.join(*pieces)
++    elif os.environ.get("CONDA_BUILD", None) is not None:
++        # regular build (& testing) phase --> PREFIX is set
 +        pieces = [os.environ["PREFIX"]] + IS_WINDOWS * ["Library"] + ["include"]
 +        lib_include = os.path.join(*pieces)
 +    elif os.environ.get("CONDA_PREFIX", None) is not None:
++        # final environment
 +        pieces = [os.environ["CONDA_PREFIX"]] + IS_WINDOWS * ["Library"] + ["include"]
 +        lib_include = os.path.join(*pieces)
      paths = [
