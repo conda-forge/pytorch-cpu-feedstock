@@ -1,4 +1,4 @@
-From 28bcd1ee9543309281c784fff64d35db3abd414b Mon Sep 17 00:00:00 2001
+From fe088e2690abd96fcbc7b8f1190b343b16c6e9ee Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
 Subject: [PATCH 20/20] avoid deprecated `find_package(CUDA)` in caffe2 CMake

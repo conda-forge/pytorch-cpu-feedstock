@@ -1,4 +1,4 @@
-From aece69c6b3c19c9bfbe2a7b0a536832a1349130f Mon Sep 17 00:00:00 2001
+From 5266d900595715b58ab394a8102e722e17a6dd54 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
 Subject: [PATCH 16/20] point include paths to $PREFIX/include
@@ -8,7 +8,7 @@ Subject: [PATCH 16/20] point include paths to $PREFIX/include
  1 file changed, 18 insertions(+)
 
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index 3f584ef5598..effee5ad420 100644
+index 3f584ef5598..22da37092aa 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
 @@ -1155,10 +1155,28 @@ def include_paths(cuda: bool = False) -> List[str]:
@@ -16,7 +16,7 @@ index 3f584ef5598..effee5ad420 100644
      """
      lib_include = os.path.join(_TORCH_PATH, 'include')
 +    if (os.environ.get("CONDA_BUILD", None) is not None
-+            and os.environ.get("CONDA_BUILD_CROSS_COMPILATION", None) is not None):
++            and os.environ.get("CONDA_BUILD_CROSS_COMPILATION", None) not in (None, "", "0")):
 +        # to avoid problems in cross-compilation, we need to point to the same environment
 +        # where the currently running pytorch is -- i.e. the BUILD_PREFIX. See
 +        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/349
