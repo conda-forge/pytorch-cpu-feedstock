@@ -66,11 +66,11 @@ source:
     # backport https://github.com/pytorch/pytorch/pull/145480
     - patches/0015-simplify-torch.utils.cpp_extension.include_paths-use.patch
     # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
-    - patches/0016-point-include-paths-to-PREFIX-include.patch                                      # [win]
+    - patches/0016-point-include-paths-to-PREFIX-include.patch
     - patches/0017-Add-conda-prefix-to-inductor-include-paths.patch
     - patches/0018-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
     - patches/0019-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
-    - patches/0021-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+    - patches/0020-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
     - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
     - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
