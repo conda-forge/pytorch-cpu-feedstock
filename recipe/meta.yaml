@@ -118,6 +118,7 @@ requirements:
     - protobuf
     - make      # [linux]
     - sccache   # [win]
+    - rsync     # [unix]
   host:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
@@ -166,8 +167,8 @@ requirements:
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
-    - pybind11    # [win]
-    - eigen       # [win]
+    - pybind11
+    - eigen
     - zlib
   run:
     # GPU requirements without run_exports
@@ -312,8 +313,8 @@ outputs:
         - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
-        - eigen       # [win]
-        - pybind11    # [win]
+        - pybind11
+        - eigen
         - sleef
         - libuv
         - pkg-config  # [unix]
@@ -340,7 +341,7 @@ outputs:
         - jinja2
         - networkx
         - optree >=0.13.0
-        - pybind11      # [win]
+        - pybind11
         - setuptools
         # sympy 1.13.2 was reported to result in test failures on Windows and mac
         # https://github.com/pytorch/pytorch/pull/133235
@@ -526,7 +527,6 @@ about:
     - LICENSE
     - NOTICE
     - third_party/CMake/Copyright.txt
-    - third_party/pybind11/LICENSE      # [unix]
   summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
   description: |
     PyTorch is a Python package that provides two high-level features:

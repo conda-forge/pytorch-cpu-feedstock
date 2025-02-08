@@ -89,6 +89,8 @@ export USE_SYSTEM_SLEEF=1
 # use our protobuf
 export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
+export USE_SYSTEM_PYBIND11=1
+export USE_SYSTEM_EIGEN_INSTALL=1
 
 # prevent six from being downloaded
 > third_party/NNPACK/cmake/DownloadSix.cmake
@@ -242,7 +244,8 @@ case ${PKG_NAME} in
 
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/
-    mv build/lib.*/torch/share/* ${PREFIX}/share/
+    # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
+    rsync -a build/lib.*/torch/share/* ${PREFIX}/share/
     mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
     rm ${PREFIX}/lib/libtorch_python.*
 
