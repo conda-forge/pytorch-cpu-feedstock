@@ -481,6 +481,10 @@ outputs:
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
         {% set skips = skips ~ " or test_composite_registered_to_cpu_mode_nothing" %}
+        # torchinductor failures on osx
+        {% set skips = skips ~ " or test_AllenaiLongformerBase_repro_cpu" %}             # [osx]
+        {% set skips = skips ~ " or (test_torchinductor and test_full_dtype)" %}         # [osx]
+        {% set skips = skips ~ " or (test_torchinductor and test_neg_index_cpu)" %}      # [osx]
         # these tests are failing on windows
         {% set skips = skips ~ " or (TestNN and test_Conv1d_dilated)" %}                 # [win]
         {% set skips = skips ~ " or (TestNN and test_Conv1d_pad_same_dilated)" %}        # [win]
