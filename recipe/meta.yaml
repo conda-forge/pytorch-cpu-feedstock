@@ -446,7 +446,7 @@ outputs:
         {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
         # tests that fail due to resource clean-up issues (non-unique temporary libraries), see
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/318#issuecomment-2620080859
-        {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}             # [cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}
         # trivial accuracy problems
         {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [unix and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda " %}                # [unix and cuda_compiler_version != "None"]
