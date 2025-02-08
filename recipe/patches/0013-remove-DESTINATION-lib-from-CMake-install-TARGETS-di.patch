@@ -1,4 +1,4 @@
-From cdfb398e25f4082878db4413a298abd90e5ce6fe Mon Sep 17 00:00:00 2001
+From c4cc82934faf2e32ab283a2ec2d9266049db9872 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Tue, 28 Jan 2025 10:58:29 +1100
 Subject: [PATCH 13/15] remove `DESTINATION lib` from CMake `install(TARGETS`
