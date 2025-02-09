@@ -219,6 +219,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
     export USE_MAGMA=1
+    export CUDA_VERSION=$cuda_compiler_version
     # turn off noisy nvcc warnings
     export CMAKE_CUDA_FLAGS="-w -Xptxas -w"
 else
