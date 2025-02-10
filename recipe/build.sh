@@ -40,6 +40,9 @@ export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 # error on osx-64.
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,-dead_strip_dylibs//g')"
 export LDFLAGS_LD="$(echo $LDFLAGS_LD | sed 's/-dead_strip_dylibs//g')"
+# Explicitly force non-executable stack to fix compatibility with glibc 2.41, due to:
+# ittptmark64.S.o: missing .note.GNU-stack section implies executable stack
+LDFLAGS+=" -Wl,-z,noexecstack"
 if [[ "$c_compiler" == "clang" ]]; then
     export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument -Wno-error=vla-cxx-extension"
     export CFLAGS="$CFLAGS -Wno-deprecated-declarations -Wno-unknown-warning-option -Wno-error=unused-command-line-argument -Wno-error=vla-cxx-extension"
