@@ -49,7 +49,7 @@ mkl:
 numpy:
 - '2.0'
 orc:
-- 2.0.3
+- 2.1.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -67,3 +67,5 @@ zip_keys:
   - is_rc
 - - python
   - numpy
+zlib:
+- '1'
