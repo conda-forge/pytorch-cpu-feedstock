@@ -5,6 +5,9 @@ azure:
   settings_win:
     variables:
       CONDA_BLD_PATH: C:\\bld\\
+bot:
+  abi_migration_branches:
+  - v2.5.x
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
