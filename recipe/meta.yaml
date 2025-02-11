@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.5.1" %}
-{% set build = 13 %}
+{% set build = 14 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -78,6 +78,8 @@ build:
   number: {{ build }}
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  # temporary
+  skip: true  # [not win]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
@@ -390,6 +392,7 @@ outputs:
         # - pytest-shard
       imports:
         - torch
+        - torch._C
       source_files:
         # Only include the source_files if we are actually going to run the tests.
         - test
@@ -418,9 +421,10 @@ outputs:
         # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
 
         # python-version-specific library (default location in SP_DIR symlinks back to this)
-        - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}     # [unix]
-        - if not exist %LIBRARY_BIN%\torch_python.dll exit 1  # [win]
-        - if not exist %LIBRARY_LIB%\torch_python.lib exit 1  # [win]
+        - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}           # [unix]
+        - if not exist %LIBRARY_BIN%\torch_python.dll exit 1        # [win]
+        - if not exist %SP_DIR%\torch\lib\torch_python.lib exit 1   # [win]
+        - if not exist %SP_DIR%\torch\lib\_C.lib exit 1             # [win]
 
         # a reasonably safe subset of tests that should run under 15 minutes
         {% set tests = " ".join([
