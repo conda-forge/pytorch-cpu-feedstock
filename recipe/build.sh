@@ -54,6 +54,10 @@ export _GLIBCXX_USE_CXX11_ABI=1
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
+elif [[ "$target_platform" == linux-* ]]; then
+    # Explicitly force non-executable stack to fix compatibility with glibc 2.41, due to:
+    # ittptmark64.S.o: missing .note.GNU-stack section implies executable stack
+    LDFLAGS="${LDFLAGS} -Wl,-z,noexecstack"
 fi
 
 # Dynamic libraries need to be lazily loaded so that torch
@@ -219,6 +223,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
     export USE_MAGMA=1
+    export CUDA_VERSION=$cuda_compiler_version
     # turn off noisy nvcc warnings
     export CMAKE_CUDA_FLAGS="-w --ptxas-options=-w"
 else
