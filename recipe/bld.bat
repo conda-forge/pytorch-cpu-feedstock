@@ -206,7 +206,7 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Remove the python binary file, that is placed in the site-packages
     @REM directory by the specific python specific pytorch package.
-    del %LIBRARY_BIN%\torch_python.* %LIBRARY_LIB%\torch_python.* %LIBRARY_LIB%\_C.lib
+    del %LIBRARY_BIN%\torch_python.* %LIBRARY_LIB%\torch_python.*
     if %ERRORLEVEL% neq 0 exit 1
 
     popd
@@ -229,8 +229,8 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Copy libtorch_python.lib back -- that's much easier than the for loop
     @REM needed to remove everything else.
-    robocopy /NP /NFL /NDL /NJH /E %LIBRARY_LIB%\ torch\lib\ torch_python.lib
-    robocopy /NP /NFL /NDL /NJH /E %LIBRARY_LIB%\ torch\lib\ _C.lib
+    mkdir %SP_DIR%\torch\lib
+    robocopy /NP /NFL /NDL /NJH /E /MOV %LIBRARY_LIB%\ %SP_DIR%\torch\lib\ torch_python.lib _C.lib
 )
 
 @REM Show the sccache stats.
