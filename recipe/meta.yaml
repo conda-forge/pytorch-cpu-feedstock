@@ -462,6 +462,8 @@ outputs:
         {% set skips = skips ~ " or test_sdpa_inference_mode_aot_compile" %}            # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or (TestNN and test_grid_sample)" %}                   # [linux and cuda_compiler_version != "None"]
         # don't mess with tests that rely on GPU failure handling
+        {% set skips = skips ~ " or test_cublas_config_nondeterministic_alert_cuda" %}  # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_cross_entropy_loss_2d_out_of_bounds_class" %}  # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_indirect_device_assert" %}                     # [linux and cuda_compiler_version != "None"]
         # test that fails to find temporary resource
         {% set skips = skips ~ " or (GPUTests and test_scatter_reduce2)" %}             # [linux and cuda_compiler_version != "None"]
@@ -475,8 +477,6 @@ outputs:
         {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}           # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_reentrant_parent_error_on_cpu_cuda" %}                     # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # non-MKL problems
-        {% set skips = skips ~ " or test_cross_entropy_loss_2d_out_of_bounds_class_index_cuda" %}   # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or test_cublas_config_nondeterministic_alert_cuda " %}             # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_gather_scatter_cpu or test_index_put2_cpu " %}             # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
         # these tests are failing with low -n values
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
