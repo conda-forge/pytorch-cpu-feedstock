@@ -59,3 +59,5 @@ zip_keys:
   - cuda_compiler_version
 - - python
   - numpy
+zlib:
+- '1'

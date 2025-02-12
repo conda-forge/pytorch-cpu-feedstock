@@ -80,3 +80,5 @@ zip_keys:
   - is_rc
 - - python
   - numpy
+zlib:
+- '1'

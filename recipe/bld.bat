@@ -93,8 +93,7 @@ if not "%cuda_compiler_version%" == "None" (
     set MAGMA_HOME=%LIBRARY_PREFIX%
     set "PATH=%CUDA_BIN_PATH%;%PATH%"
     set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
-    @REM turn off very noisy nvcc warnings
-    set "CUDAFLAGS=-w --ptxas-options=-w"
+    set "CUDA_VERSION=%cuda_compiler_version%"
 ) else (
     set USE_CUDA=0
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
@@ -162,7 +161,7 @@ if EXIST build (
     if %ERRORLEVEL% neq 0 exit 1
 )
 
-%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean
+%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean --config-settings=--global-option=-q
 if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.
@@ -205,7 +204,7 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Remove the python binary file, that is placed in the site-packages
     @REM directory by the specific python specific pytorch package.
-    del %LIBRARY_BIN%\torch_python.* %LIBRARY_LIB%\torch_python.* %LIBRARY_LIB%\_C.lib
+    del %LIBRARY_BIN%\torch_python.* %LIBRARY_LIB%\torch_python.*
     if %ERRORLEVEL% neq 0 exit 1
 
     popd
@@ -228,8 +227,8 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Copy libtorch_python.lib back -- that's much easier than the for loop
     @REM needed to remove everything else.
-    robocopy /NP /NFL /NDL /NJH /E %LIBRARY_LIB%\ torch\lib\ torch_python.lib
-    robocopy /NP /NFL /NDL /NJH /E %LIBRARY_LIB%\ torch\lib\ _C.lib
+    mkdir %SP_DIR%\torch\lib
+    robocopy /NP /NFL /NDL /NJH /E /MOV %LIBRARY_LIB%\ %SP_DIR%\torch\lib\ torch_python.lib _C.lib
 )
 
 @REM Show the sccache stats.
