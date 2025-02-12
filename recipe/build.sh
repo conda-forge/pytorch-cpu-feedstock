@@ -224,7 +224,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export MAGMA_HOME="${PREFIX}"
     export USE_MAGMA=1
     export CUDA_VERSION=$cuda_compiler_version
-    # turn off noisy nvcc warnings
+    # ptxas advisories do not get ignored correctly, see
+    # https://github.com/conda-forge/cuda-nvcc-feedstock/issues/60
     export CMAKE_CUDA_FLAGS="-w -Xptxas -w"
 else
     if [[ "$target_platform" != *-64 ]]; then
@@ -245,7 +246,7 @@ case ${PKG_NAME} in
   libtorch)
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.
-    $PREFIX/bin/python setup.py -q build
+    $PREFIX/bin/python setup.py -q build | stdbuf -oL grep -vE "Advisory: Modifier '\.sp::ordered_metadata'"
 
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/

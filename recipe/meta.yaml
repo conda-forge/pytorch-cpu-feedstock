@@ -126,6 +126,7 @@ requirements:
     - protobuf
     - make      # [linux]
     - sccache   # [win]
+    - grep      # [unix]
     - rsync     # [unix]
   host:
     # GPU requirements
