@@ -249,7 +249,12 @@ case ${PKG_NAME} in
   libtorch)
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.
-    $PREFIX/bin/python setup.py -q build | stdbuf -oL grep -vE "Advisory: Modifier '\.sp::ordered_metadata'"
+    if [[ "$target_platform" == linux-* ]]; then
+        # filter out extremely noisy ptxas advisories
+        $PREFIX/bin/python setup.py -q build | stdbuf -oL grep -vE "Advisory: Modifier '\.sp::ordered_metadata'"
+    else
+        $PREFIX/bin/python setup.py -q build
+    fi
 
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/
