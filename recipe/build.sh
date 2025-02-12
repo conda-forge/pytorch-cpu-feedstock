@@ -34,6 +34,9 @@ export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-std=c++[0-9][0-9]//g')"
 # break users' programs
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
+# ignore warnings; blows up the logs for no benefit; they need to be fixed upstream
+export CXXFLAGS="$CXXFLAGS -w"
+
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 # The default conda LDFLAGs include -Wl,-dead_strip_dylibs, which removes all the
 # MKL sequential, core, etc. libraries, resulting in a "Symbol not found: _mkl_blas_caxpy"
