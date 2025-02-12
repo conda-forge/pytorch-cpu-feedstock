@@ -245,7 +245,7 @@ case ${PKG_NAME} in
   libtorch)
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.
-    $PREFIX/bin/python setup.py build
+    $PREFIX/bin/python setup.py -q build
 
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/
@@ -258,7 +258,7 @@ case ${PKG_NAME} in
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
     ;;
   pytorch)
-    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -v --no-clean \
+    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -v --no-clean --config-settings=--global-option=-q \
         | sed "s,${CXX},\$\{CXX\},g" \
         | sed "s,${PREFIX},\$\{PREFIX\},g"
     # Keep this in ${PREFIX}/lib so that the library can be found by
