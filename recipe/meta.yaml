@@ -473,6 +473,9 @@ outputs:
         {% set skips = skips ~ " or test_matmul_offline_tunableop_cuda_float16" %}      # [linux and cuda_compiler_version != "None"]
         # catastropic accuracy failure in convolution
         {% set skips = skips ~ " or test_Conv3d_1x1x1_no_bias_cuda" %}                  # [linux and cuda_compiler_version != "None"]
+        # skip some very long-running groups of tests (~30 minutes total)
+        {% set skips = skips ~ " or (test_gradgrad_nn_Transformer and _cuda_)" %}       # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_avg_pool3d_backward2" %}                       # [linux and cuda_compiler_version != "None"]
         # MKL problems
         {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}           # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_reentrant_parent_error_on_cpu_cuda" %}                     # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
