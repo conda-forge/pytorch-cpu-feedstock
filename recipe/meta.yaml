@@ -505,7 +505,7 @@ outputs:
         - export OMP_NUM_THREADS=4  # [unix]
         # reduced paralellism to avoid OOM; test only one python version on aarch because emulation is super-slow
         # disable hypothesis because it randomly yields health check errors
-        - python -m pytest -n 2 -v {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50    # [not aarch64 or py==312]
+        - pytest -n 2 -v {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --disable-warnings    # [not aarch64 or py==312]
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
