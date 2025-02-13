@@ -376,8 +376,7 @@ outputs:
         # Required by run_test.py
         - pytest-flakefinder
         - pytest-rerunfailures
-        # disabled because GPU tests might run OOM
-        # - pytest-xdist
+        - pytest-xdist
         # danpetry/TF: Pytorch includes their own edited version of pytest-shard and adding
         # it into the test deps as well results in the --shard-id option being added twice.
         # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
@@ -498,9 +497,12 @@ outputs:
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
-        # reduced paralellism to avoid OOM; test only one python version on aarch because emulation is super-slow
+        # reduced paralellism to avoid OOM for CUDA builds
+        {% set jobs = "-n 2" %}
+        {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
+        # test only one python version on aarch because emulation is super-slow;
         # disable hypothesis because it randomly yields health check errors
-        - pytest -v {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --disable-warnings    # [not aarch64 or py==312]
+        - pytest -v {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --disable-warnings    # [not aarch64 or py==312]
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
