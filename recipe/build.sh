@@ -34,6 +34,9 @@ export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-std=c++[0-9][0-9]//g')"
 # break users' programs
 export CFLAGS="$(echo $CFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
 export CXXFLAGS="$(echo $CXXFLAGS | sed 's/-fvisibility-inlines-hidden//g')"
+# ignore warnings; blows up the logs for no benefit; they need to be fixed upstream
+export CXXFLAGS="$CXXFLAGS -w"
+
 export LDFLAGS="$(echo $LDFLAGS | sed 's/-Wl,--as-needed//g')"
 # The default conda LDFLAGs include -Wl,-dead_strip_dylibs, which removes all the
 # MKL sequential, core, etc. libraries, resulting in a "Symbol not found: _mkl_blas_caxpy"
@@ -54,6 +57,10 @@ export _GLIBCXX_USE_CXX11_ABI=1
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
+elif [[ "$target_platform" == linux-* ]]; then
+    # Explicitly force non-executable stack to fix compatibility with glibc 2.41, due to:
+    # ittptmark64.S.o: missing .note.GNU-stack section implies executable stack
+    LDFLAGS="${LDFLAGS} -Wl,-z,noexecstack"
 fi
 
 # Dynamic libraries need to be lazily loaded so that torch
@@ -219,8 +226,10 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export USE_STATIC_CUDNN=0
     export MAGMA_HOME="${PREFIX}"
     export USE_MAGMA=1
-    # turn off noisy nvcc warnings
-    export CMAKE_CUDA_FLAGS="-w --ptxas-options=-w"
+    export CUDA_VERSION=$cuda_compiler_version
+    # ptxas advisories do not get ignored correctly, see
+    # https://github.com/conda-forge/cuda-nvcc-feedstock/issues/60
+    export CMAKE_CUDA_FLAGS="-w -Xptxas -w"
 else
     if [[ "$target_platform" != *-64 ]]; then
       # Breakpad seems to not work on aarch64 or ppc64le
@@ -240,7 +249,12 @@ case ${PKG_NAME} in
   libtorch)
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.
-    $PREFIX/bin/python setup.py build
+    if [[ "$target_platform" == linux-* ]]; then
+        # filter out extremely noisy ptxas advisories
+        $PREFIX/bin/python setup.py -q build | stdbuf -oL grep -vE "Advisory: Modifier '\.sp::ordered_metadata'"
+    else
+        $PREFIX/bin/python setup.py -q build
+    fi
 
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/
@@ -253,7 +267,7 @@ case ${PKG_NAME} in
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
     ;;
   pytorch)
-    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -v --no-clean \
+    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -v --no-clean --config-settings=--global-option=-q \
         | sed "s,${CXX},\$\{CXX\},g" \
         | sed "s,${PREFIX},\$\{PREFIX\},g"
     # Keep this in ${PREFIX}/lib so that the library can be found by
