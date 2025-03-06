@@ -41,7 +41,7 @@ liblapack:
 libprotobuf:
 - 5.28.3
 libtorch:
-- '2.4'
+- '2.5'
 megabuild:
 - 'true'
 mkl:
@@ -55,7 +55,7 @@ numpy:
 - '2'
 - '2.0'
 orc:
-- 2.0.3
+- 2.1.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -67,7 +67,7 @@ python:
 - 3.13.* *_cp313
 - 3.9.* *_cpython
 pytorch:
-- '2.4'
+- '2.5'
 target_platform:
 - linux-aarch64
 zip_keys:
