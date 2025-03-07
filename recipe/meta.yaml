@@ -107,8 +107,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - libgomp        # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp             # [not win]
     - intel-openmp {{ mkl }}  # [win]
     - libuv          # [win]
     - cmake
@@ -160,8 +159,7 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp             # [not win]
     - intel-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
@@ -262,8 +260,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - cmake
         - ninja
@@ -310,8 +307,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
@@ -327,7 +323,7 @@ outputs:
         # for non-megabuild, allow libtorch from any python version;
         # pinning build number would be nice but breaks conda
         - libtorch {{ version }}.*                      # [not megabuild]
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
         - nomkl                       # [blas_impl != "mkl"]
