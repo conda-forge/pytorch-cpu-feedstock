@@ -49,7 +49,7 @@ mkl:
 numpy:
 - '2.0'
 orc:
-- 2.1.0
+- 2.1.1
 pin_run_as_build:
   python:
     min_pin: x.x
