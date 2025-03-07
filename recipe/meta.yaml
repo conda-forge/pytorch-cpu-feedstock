@@ -101,8 +101,7 @@ requirements:
     - m2-patch  # [win]
     - git       # [not win]
     - m2-git    # [win]
-    - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp    # [not win]
     - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
@@ -144,8 +143,7 @@ requirements:
     - libcblas * *_mkl      # [blas_impl == "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp           # [not win]
     - libabseil
     - libprotobuf
     - sleef
@@ -224,8 +222,7 @@ outputs:
         - m2-patch  # [win]
         - git       # [not win]
         - m2-git    # [win]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp    # [not win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -265,8 +262,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp           # [not win]
         - libabseil
         - libprotobuf
         - sleef
@@ -276,7 +272,7 @@ outputs:
         - typing_extensions
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
-        - llvm-openmp    # [osx]
+        - llvm-openmp    # [not win]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
