@@ -115,8 +115,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - libgomp        # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp             # [not win]
     - intel-openmp {{ mkl }}  # [win]
     - libuv          # [win]
     - cmake
@@ -169,8 +168,7 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp             # [not win]
     - intel-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
@@ -271,8 +269,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - cmake
         - ninja
@@ -320,8 +317,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
@@ -334,7 +330,7 @@ outputs:
         - eigen
         - zlib
       run:
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
         # GPU requirements without run_exports
