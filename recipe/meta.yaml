@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.6.0" %}
-{% set build = 0 %}
+{% set build = 1 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -60,6 +60,7 @@ source:
     - patches/0014-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
     # backport https://github.com/pytorch/pytorch/pull/140030
     - patches/0015-export-AOTI_TORCH_EXPORT-on-Windows.-140030.patch
+    - patches/0016-Fix-CUPTI-lookup-to-include-target-directory.patch
     - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
     - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
     # backport https://github.com/google/XNNPACK/commit/5f23827e66cca435fa400b6e221892ac95af0079
@@ -106,8 +107,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - libgomp        # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp             # [not win]
     - intel-openmp {{ mkl }}  # [win]
     - libuv          # [win]
     - cmake
@@ -159,8 +159,7 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp             # [not win]
     - intel-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
@@ -261,8 +260,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - cmake
         - ninja
@@ -309,8 +307,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
@@ -326,7 +323,7 @@ outputs:
         # for non-megabuild, allow libtorch from any python version;
         # pinning build number would be nice but breaks conda
         - libtorch {{ version }}.*                      # [not megabuild]
-        - llvm-openmp    # [osx]
+        - llvm-openmp             # [not win]
         - intel-openmp {{ mkl }}  # [win]
         - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
         - nomkl                       # [blas_impl != "mkl"]
