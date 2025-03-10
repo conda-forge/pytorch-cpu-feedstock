@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.5.1" %}
-{% set build = 14 %}
+{% set build = 15 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -71,6 +71,7 @@ source:
     - patches/0018-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
     - patches/0019-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
     - patches/0020-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+    - patches/0021-Fix-CUPTI-lookup-to-include-target-directory.patch
     - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
     - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
