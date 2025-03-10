@@ -37,7 +37,7 @@ liblapack:
 libprotobuf:
 - 5.28.3
 libtorch:
-- '2.4'
+- '2.5'
 llvm_openmp:
 - '18'
 macos_machine:
@@ -49,7 +49,7 @@ mkl:
 numpy:
 - '2.0'
 orc:
-- 2.0.3
+- 2.1.1
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -57,7 +57,7 @@ pin_run_as_build:
 python:
 - 3.9.* *_cpython
 pytorch:
-- '2.4'
+- '2.5'
 target_platform:
 - osx-arm64
 zip_keys:
@@ -67,3 +67,5 @@ zip_keys:
   - is_rc
 - - python
   - numpy
+zlib:
+- '1'
