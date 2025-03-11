@@ -38,6 +38,8 @@ libcblas:
 - 3.9.* *netlib
 liblapack:
 - 3.9.* *netlib
+magma:
+- 2.9.0
 libprotobuf:
 - 5.28.3
 libtorch:

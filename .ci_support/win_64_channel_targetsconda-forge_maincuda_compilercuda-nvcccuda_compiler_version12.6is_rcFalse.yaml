@@ -22,6 +22,8 @@ is_rc:
 - 'False'
 libabseil:
 - '20240722'
+magma:
+- 2.9.0
 libprotobuf:
 - 5.28.3
 libtorch:
