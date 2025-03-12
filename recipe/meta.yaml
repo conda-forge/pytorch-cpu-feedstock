@@ -86,6 +86,7 @@ requirements:
     {% if cuda_major >= 12 %}
     - cuda-driver-dev                        # [build_platform != target_platform]
     - cuda-cudart-dev                        # [build_platform != target_platform]
+    - cuda-cupti-dev                         # [build_platform != target_platform]
     - cuda-nvrtc-dev                         # [build_platform != target_platform]
     - cuda-nvtx-dev                          # [build_platform != target_platform]
     - cuda-nvml-dev                          # [build_platform != target_platform]
@@ -208,6 +209,7 @@ outputs:
         {% if cuda_major >= 12 %}
         - cuda-driver-dev                        # [build_platform != target_platform]
         - cuda-cudart-dev                        # [build_platform != target_platform]
+        - cuda-cupti-dev                         # [build_platform != target_platform]
         - cuda-nvrtc-dev                         # [build_platform != target_platform]
         - cuda-nvtx-dev                          # [build_platform != target_platform]
         - cuda-nvml-dev                          # [build_platform != target_platform]
