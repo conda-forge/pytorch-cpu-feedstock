@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.5.1" %}
-{% set build = 15 %}
+{% set build = 16 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -115,9 +115,9 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - llvm-openmp             # [not win]
-    - intel-openmp {{ mkl }}  # [win]
-    - libuv          # [win]
+    - llvm-openmp               # [unix]
+    - intel-openmp {{ mkl }}    # [win]
+    - libuv                     # [win]
     - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
@@ -168,7 +168,7 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - llvm-openmp             # [not win]
+    - llvm-openmp             # [unix]
     - intel-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
@@ -181,9 +181,9 @@ requirements:
     - zlib
   run:
     # GPU requirements without run_exports
-    - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
-    - intel-openmp {{ mkl }}  # [win]
-    - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
+    - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
+    - intel-openmp {{ mkl }}            # [win]
+    - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
     # These constraints ensure conflict between pytorch and
     # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
@@ -269,7 +269,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - llvm-openmp             # [not win]
+        - llvm-openmp             # [unix]
         - intel-openmp {{ mkl }}  # [win]
         - cmake
         - ninja
@@ -317,7 +317,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - llvm-openmp             # [not win]
+        - llvm-openmp             # [unix]
         - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
@@ -330,9 +330,10 @@ outputs:
         - eigen
         - zlib
       run:
-        - llvm-openmp             # [not win]
-        - intel-openmp {{ mkl }}  # [win]
-        - libblas * *{{ blas_impl }}  # [blas_impl == "mkl"]
+        - llvm-openmp                   # [unix]
+        - intel-openmp {{ mkl }}        # [win]
+        - libblas * *{{ blas_impl }}    # [blas_impl == "mkl"]
+        - nomkl                         # [blas_impl != "mkl"]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
@@ -345,7 +346,6 @@ outputs:
         - jinja2
         - networkx
         - pybind11
-        - nomkl                 # [blas_impl != "mkl"]
         - fsspec
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
