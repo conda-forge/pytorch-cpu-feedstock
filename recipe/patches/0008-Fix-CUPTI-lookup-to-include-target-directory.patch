@@ -19,7 +19,7 @@ index c4661e39e..355a5c40f 100644
 +        )
  
      find_path(CUPTI_INCLUDE_DIR cupti.h PATHS
-+        ${CUDAToolkit_TARGET_DIR}/include:
++        ${CUDAToolkit_TARGET_DIR}/include
          ${CUDA_SOURCE_DIR}/extras/CUPTI/include
          ${CUDA_INCLUDE_DIRS}
          ${CUDA_SOURCE_DIR}
