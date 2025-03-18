@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.6.0" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -61,6 +61,7 @@ source:
     # backport https://github.com/pytorch/pytorch/pull/140030
     - patches/0015-export-AOTI_TORCH_EXPORT-on-Windows.-140030.patch
     - patches/0016-Fix-CUPTI-lookup-to-include-target-directory.patch
+    - patches/0017-Hide-torch_python-symbols-142214.patch
     - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
     - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
     # backport https://github.com/google/XNNPACK/commit/5f23827e66cca435fa400b6e221892ac95af0079
@@ -71,6 +72,8 @@ build:
   number: {{ build }}
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
+  skip: true  # [linux and blas_impl == "mkl"]
+  skip: true  # [linux and aarch64]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
@@ -202,9 +205,11 @@ test:
     # for CMake config to find cuda & nvrtc
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
     - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
+    - cuda-nvtx-dev             # [cuda_compiler_version != "None"]
     - cmake
     - ninja
     - pkg-config
+    - pybind11
   files:
     - cmake_test/
   commands:
@@ -378,9 +383,14 @@ outputs:
         # it into the test deps as well results in the --shard-id option being added twice.
         # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
         # - pytest-shard
+        - cmake
+        - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
+        - pybind11
       imports:
         - torch
         - torch._C
+      files:
+        - cmake_test/
       source_files:
         # Only include the source_files if we are actually going to run the tests.
         - test
@@ -506,6 +516,13 @@ outputs:
         # obviously this test can only be done for other python versions.
         - test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-313.pyc          # [py!=313 and unix]
         - if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-313.pyc exit 1   # [py!=313 and win]
+
+        # test integrity of CMake metadata
+        - cd cmake_test
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 $CMAKE_ARGS .   # [unix]
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 %CMAKE_ARGS% .  # [win]
+        - cmake --build .                   # [unix]
+        - cmake --build . --config Release  # [win]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
