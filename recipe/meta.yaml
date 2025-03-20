@@ -1,5 +1,5 @@
 {% set version = "2.4.1" %}
-{% set build = 5 %}
+{% set build = 6 %}
 
 {% if cuda_compiler_version != "None" %}
 {% set build = build + 200 %}
@@ -47,11 +47,12 @@ source:
     - patches/0006-Allow-users-to-overwrite-ld-with-environment-variabl.patch
 
     - patches/0007-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
+    - patches/0008-Fix-CUPTI-lookup-to-include-target-directory.patch
 
 build:
   number: {{ build }}
-  string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+  string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -85,6 +86,7 @@ requirements:
     {% if cuda_major >= 12 %}
     - cuda-driver-dev                        # [build_platform != target_platform]
     - cuda-cudart-dev                        # [build_platform != target_platform]
+    - cuda-cupti-dev                         # [build_platform != target_platform]
     - cuda-nvrtc-dev                         # [build_platform != target_platform]
     - cuda-nvtx-dev                          # [build_platform != target_platform]
     - cuda-nvml-dev                          # [build_platform != target_platform]
@@ -100,8 +102,7 @@ requirements:
     - m2-patch  # [win]
     - git       # [not win]
     - m2-git    # [win]
-    - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp    # [not win]
     - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
@@ -118,6 +119,7 @@ requirements:
     {% if cuda_major >= 12 %}
     - cuda-driver-dev
     - cuda-cudart-dev
+    - cuda-cupti-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
     - cuda-nvml-dev
@@ -143,8 +145,7 @@ requirements:
     - libcblas * *_mkl      # [blas_impl == "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - libgomp   # [linux]
-    - llvm-openmp    # [osx]
+    - llvm-openmp           # [not win]
     - libabseil
     - libprotobuf
     - sleef
@@ -185,8 +186,8 @@ outputs:
   - name: libtorch
   - name: pytorch
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                 # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
@@ -208,6 +209,7 @@ outputs:
         {% if cuda_major >= 12 %}
         - cuda-driver-dev                        # [build_platform != target_platform]
         - cuda-cudart-dev                        # [build_platform != target_platform]
+        - cuda-cupti-dev                         # [build_platform != target_platform]
         - cuda-nvrtc-dev                         # [build_platform != target_platform]
         - cuda-nvtx-dev                          # [build_platform != target_platform]
         - cuda-nvml-dev                          # [build_platform != target_platform]
@@ -223,8 +225,7 @@ outputs:
         - m2-patch  # [win]
         - git       # [not win]
         - m2-git    # [win]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp    # [not win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -241,6 +242,7 @@ outputs:
         {% if cuda_major >= 12 %}
         - cuda-driver-dev
         - cuda-cudart-dev
+        - cuda-cupti-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
         - cuda-nvml-dev
@@ -264,8 +266,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - libgomp   # [linux]
-        - llvm-openmp    # [osx]
+        - llvm-openmp           # [not win]
         - libabseil
         - libprotobuf
         - sleef
@@ -275,7 +276,7 @@ outputs:
         - typing_extensions
         - {{ pin_subpackage('libtorch', exact=True) }}
       run:
-        - llvm-openmp    # [osx]
+        - llvm-openmp    # [not win]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}                       # [cuda_compiler_version != "None"]
         # other requirements
@@ -344,8 +345,10 @@ outputs:
   {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                      # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                  # [megabuild and cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                                 # [megabuild and cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [not megabuild and cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}                                                # [not megabuild and cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       skip: true  # [cuda_compiler_version != "None" and linux64 and blas_impl != "mkl"]
       # weigh down cpu implementation and give cuda preference
@@ -353,7 +356,9 @@ outputs:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
-        - {{ pin_subpackage("pytorch", exact=True) }}
+        - pytorch {{ version }}=cuda*_{{ blas_impl }}*{{ PKG_BUILDNUM }}  # [megabuild and cuda_compiler_version != "None"]
+        - pytorch {{ version }}=cpu_{{ blas_impl }}*{{ PKG_BUILDNUM }}    # [megabuild and cuda_compiler_version == "None"]
+        - {{ pin_subpackage("pytorch", exact=True) }}                     # [not megabuild]
     test:
       imports:
         - torch

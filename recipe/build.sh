@@ -30,15 +30,13 @@ fi
 # This is not correctly found for linux-aarch64 since pytorch 2.0.0 for some reason
 export _GLIBCXX_USE_CXX11_ABI=1
 
-# KINETO seems to require CUPTI and will look quite hard for it.
-# CUPTI seems to cause trouble when users install a version of
-# cudatoolkit different than the one specified at compile time.
-# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/135
-export USE_KINETO=OFF
-
 if [[ "$target_platform" == "osx-64" ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
   export CFLAGS="$CFLAGS -DTARGET_OS_OSX=1"
+elif [[ "$target_platform" == linux-* ]]; then
+    # Explicitly force non-executable stack to fix compatibility with glibc 2.41, due to:
+    # ittptmark64.S.o: missing .note.GNU-stack section implies executable stack
+    LDFLAGS="${LDFLAGS} -Wl,-z,noexecstack"
 fi
 
 # Dynamic libraries need to be lazily loaded so that torch
