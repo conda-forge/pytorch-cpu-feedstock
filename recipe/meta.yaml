@@ -383,6 +383,7 @@ outputs:
         # it into the test deps as well results in the --shard-id option being added twice.
         # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
         # - pytest-shard
+        # for cmake_test
         - cmake
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - pybind11
