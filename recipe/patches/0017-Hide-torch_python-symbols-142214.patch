@@ -21,19 +21,6 @@ Approved by: https://github.com/ezyang
  torch/csrc/utils/device_lazy_init.h          | 3 ++-
  12 files changed, 27 insertions(+), 19 deletions(-)
 
-diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
-index 650319cb1ee..aebd0d1f442 100644
---- a/torch/CMakeLists.txt
-+++ b/torch/CMakeLists.txt
-@@ -310,7 +310,7 @@ endif()
- 
- add_library(torch_python SHARED ${TORCH_PYTHON_SRCS})
- torch_compile_options(torch_python)  # see cmake/public/utils.cmake
--if(NOT WIN32)
-+if(APPLE)
-   target_compile_options(torch_python PRIVATE
-       $<$<COMPILE_LANGUAGE:CXX>: -fvisibility=default>)
- endif()
 diff --git a/torch/csrc/Layout.h b/torch/csrc/Layout.h
 index 3b6844c9bad..a6864094df9 100644
 --- a/torch/csrc/Layout.h
