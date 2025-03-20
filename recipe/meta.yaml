@@ -325,9 +325,8 @@ outputs:
         - zlib
       run:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
-        # for non-megabuild, allow libtorch from any python version;
-        # pinning build number would be nice but breaks conda
-        - libtorch {{ version }}.*                      # [not megabuild]
+        # for non-megabuild, allow libtorch from any python version
+        - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
         - llvm-openmp                       # [unix]
         - intel-openmp {{ mkl }}            # [win]
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
