@@ -207,7 +207,6 @@ test:
     - cmake
     - ninja
     - pkg-config
-    - pybind11
   files:
     - cmake_test/
   commands:
@@ -518,8 +517,8 @@ outputs:
 
         # test integrity of CMake metadata and ensure that THPLayoutType is visible as a symbol from libtorch_python
         - cd cmake_test
-        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 $CMAKE_ARGS .   # [unix]
-        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 %CMAKE_ARGS% .  # [win]
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS .   # [unix]
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% .  # [win]
         - cmake --build .                   # [unix]
         - cmake --build . --config Release  # [win]
 
