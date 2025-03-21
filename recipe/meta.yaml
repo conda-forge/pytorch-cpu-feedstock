@@ -207,7 +207,6 @@ test:
     - cmake
     - ninja
     - pkg-config
-    - pybind11
   files:
     - cmake_test/
   commands:
