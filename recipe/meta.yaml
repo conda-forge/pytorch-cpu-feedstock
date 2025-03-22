@@ -383,7 +383,7 @@ outputs:
         # for cmake_test
         - cmake
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
-        - cuda-nvtx-dev             # [cuda_compiler_version != "None" and not win]
+        - cuda-nvtx-dev             # [cuda_compiler_version != "None"]
         - pybind11
       imports:
         - torch
