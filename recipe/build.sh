@@ -195,6 +195,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
         linux-aarch64)
             export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
             ;;
+        linux-ppc64le)
+            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
+            ;;
         *)
             echo "unknown CUDA arch, edit build.sh"
             exit 1
