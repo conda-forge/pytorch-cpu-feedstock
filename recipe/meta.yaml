@@ -206,7 +206,7 @@ test:
     - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
     - cmake
     - ninja
-    - nvtx-c
+    - nvtx-c                    # [cuda_compiler_version != "None"]
     - pkg-config
   files:
     - cmake_test/
