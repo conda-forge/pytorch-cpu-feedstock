@@ -206,6 +206,7 @@ test:
     - cuda-nvtx-dev             # [cuda_compiler_version != "None" and not win]
     - cmake
     - ninja
+    - nvtx-c                    # [cuda_compiler_version != "None" and win]
     - pkg-config
   files:
     - cmake_test/
@@ -384,6 +385,7 @@ outputs:
         - cmake
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - cuda-nvtx-dev             # [cuda_compiler_version != "None"]
+        - nvtx-c                    # [cuda_compiler_version != "None" and win]
         - pybind11
       imports:
         - torch
