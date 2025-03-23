@@ -383,6 +383,7 @@ outputs:
         # - pytest-shard
         # for cmake_test
         - cmake
+        - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         - pybind11
       imports:
