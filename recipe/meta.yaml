@@ -152,7 +152,8 @@ requirements:
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
-    - setuptools
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
+    - setuptools <76
     - pyyaml
     - requests
     - six
@@ -302,7 +303,8 @@ outputs:
         - python
         - numpy
         - pip
-        - setuptools
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
+        - setuptools <76
         - pyyaml
         - requests
         - six
@@ -343,7 +345,9 @@ outputs:
         - networkx
         - optree >=0.13.0
         - pybind11
-        - setuptools
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380; also used at runtime, see
+        # https://github.com/pytorch/pytorch/blob/v2.6.0/torch/utils/cpp_extension.py#L2166-2172
+        - setuptools <76
         # sympy 1.13.2 was reported to result in test failures on Windows and mac
         # https://github.com/pytorch/pytorch/pull/133235
         - sympy >=1.13.1,!=1.13.2
