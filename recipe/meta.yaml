@@ -160,7 +160,8 @@ requirements:
     - pip
     # see https://github.com/pytorch/pytorch/issues/136541
     - setuptools <=72.1.0  # [win]
-    - setuptools  # [not win]
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
+    - setuptools <76       # [unix]
     - pyyaml
     - requests
     - six
@@ -310,7 +311,8 @@ outputs:
         - pip
         # see https://github.com/pytorch/pytorch/issues/136541
         - setuptools <=72.1.0  # [win]
-        - setuptools  # [not win]
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
+        - setuptools <76       # [unix]
         - pyyaml
         - requests
         - six
@@ -343,6 +345,9 @@ outputs:
         # other requirements
         - python
         - typing_extensions
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380; also used at runtime, see
+        # https://github.com/pytorch/pytorch/blob/v2.6.0/torch/utils/cpp_extension.py#L2166-2172
+        - setuptools <76
         # sympy 1.13.2 was reported to result in test failures on Windows and mac
         # https://github.com/pytorch/pytorch/pull/133235
         - sympy >=1.13.1,!=1.13.2
@@ -353,7 +358,6 @@ outputs:
         - fsspec
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda  # [cuda_compiler_version != "None"]
-        - setuptools
         - triton {{ triton }}   # [cuda_compiler_version != "None" and not win]
       run_constrained:
         # These constraints ensure conflict between pytorch and
