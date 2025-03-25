@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.6.0" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -61,6 +61,8 @@ source:
     # backport https://github.com/pytorch/pytorch/pull/140030
     - patches/0015-export-AOTI_TORCH_EXPORT-on-Windows.-140030.patch
     - patches/0016-Fix-CUPTI-lookup-to-include-target-directory.patch
+    - patches/0017-Hide-torch_python-symbols-142214.patch
+    - patches/0018-Always-use-system-nvtx.patch
     - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
     - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
     # backport https://github.com/google/XNNPACK/commit/5f23827e66cca435fa400b6e221892ac95af0079
@@ -150,7 +152,8 @@ requirements:
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
-    - setuptools
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
+    - setuptools <76
     - pyyaml
     - requests
     - six
@@ -202,6 +205,7 @@ test:
     # for CMake config to find cuda & nvrtc
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
     - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
+    - nvtx-c                    # [cuda_compiler_version != "None"]
     - cmake
     - ninja
     - pkg-config
@@ -299,7 +303,8 @@ outputs:
         - python
         - numpy
         - pip
-        - setuptools
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
+        - setuptools <76
         - pyyaml
         - requests
         - six
@@ -340,7 +345,9 @@ outputs:
         - networkx
         - optree >=0.13.0
         - pybind11
-        - setuptools
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380; also used at runtime, see
+        # https://github.com/pytorch/pytorch/blob/v2.6.0/torch/utils/cpp_extension.py#L2166-2172
+        - setuptools <76
         # sympy 1.13.2 was reported to result in test failures on Windows and mac
         # https://github.com/pytorch/pytorch/pull/133235
         - sympy >=1.13.1,!=1.13.2
@@ -378,9 +385,16 @@ outputs:
         # it into the test deps as well results in the --shard-id option being added twice.
         # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
         # - pytest-shard
+        # for cmake_test
+        - cmake
+        - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
+        - nvtx-c                    # [cuda_compiler_version != "None"]
+        - pybind11
       imports:
         - torch
         - torch._C
+      files:
+        - cmake_test/
       source_files:
         # Only include the source_files if we are actually going to run the tests.
         - test
@@ -506,6 +520,13 @@ outputs:
         # obviously this test can only be done for other python versions.
         - test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-313.pyc          # [py!=313 and unix]
         - if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-313.pyc exit 1   # [py!=313 and win]
+
+        # test integrity of CMake metadata and ensure that THPLayoutType is visible as a symbol from libtorch_python
+        - cd cmake_test
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS .   # [unix]
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% .  # [win]
+        - cmake --build .                   # [unix]
+        - cmake --build . --config Release  # [win]
 
   # 2021/08/01, hmaarrfk
   # While this seems like a roundabout way of defining the package name
