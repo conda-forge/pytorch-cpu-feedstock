@@ -124,7 +124,7 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    - cudnn                           # [cuda_compiler_version != "None"]
+    - cudnn                           # [cuda_compiler_version != "None" and not ppc64le]
     - nccl                            # [cuda_compiler_version != "None" and linux]
     - magma                           # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
@@ -137,10 +137,10 @@ requirements:
     - cuda-nvtx-dev
     - cuda-nvml-dev
     - cuda-profiler-api
-    - cusparselt
+    - cusparselt     # [not ppc64le]
     - libcublas-dev
-    - libcudss-dev
-    - libcufile-dev  # [linux]
+    - libcudss-dev   # [not ppc64le]
+    - libcufile-dev  # [linux and not ppc64le]
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
@@ -277,7 +277,7 @@ outputs:
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
+        - cudnn                           # [cuda_compiler_version != "None" and not ppc64le]
         - nccl                            # [cuda_compiler_version != "None" and linux]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
@@ -290,10 +290,10 @@ outputs:
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
-        - cusparselt
+        - cusparselt     # [not ppc64le]
         - libcublas-dev
-        - libcudss-dev
-        - libcufile-dev  # [linux]
+        - libcudss-dev   # [not ppc64le]
+        - libcufile-dev  # [linux and not ppc64le]
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev

@@ -178,7 +178,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # with no NVIDIA GPUs.
     export USE_MKLDNN=1
     export USE_CUDA=1
-    export USE_CUFILE=1
+    if [[ "$target_platform" != "linux-ppc64le" ]]; then
+      export USE_CUFILE=1
+    fi
     # PyTorch has multiple different bits of logic finding CUDA, override
     # all of them.
     export CUDAToolkit_BIN_DIR=${BUILD_PREFIX}/bin
@@ -191,6 +193,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
             export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
             ;;
         linux-aarch64)
+            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
+            ;;
+        linux-ppc64le)
             export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
             ;;
         *)
