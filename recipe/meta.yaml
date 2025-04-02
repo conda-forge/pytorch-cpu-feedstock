@@ -118,7 +118,7 @@ requirements:
     - llvm-openmp               # [unix]
     - intel-openmp {{ mkl }}    # [win]
     - libuv                     # [win]
-    - cmake
+    - cmake <4
     - ninja
     # Keep libprotobuf here so that a compatibile version
     # of protobuf is installed between build and host
@@ -213,7 +213,7 @@ test:
     # for CMake config to find cuda & nvrtc
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
     - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
-    - cmake
+    - cmake <4
     - ninja
     - pkg-config
   files:
@@ -273,7 +273,7 @@ outputs:
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         - llvm-openmp             # [unix]
         - intel-openmp {{ mkl }}  # [win]
-        - cmake
+        - cmake <4
         - ninja
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
