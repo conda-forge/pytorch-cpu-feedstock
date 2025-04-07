@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.6.0" %}
-{% set build = 3 %}
+{% set version = "2.7.0-rc6" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -13,7 +13,7 @@
 {% set build = build + 100 %}
 {% endif %}
 
-# see .ci/docker/ci_commit_pins/triton.txt
+# see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
 {% set triton = "3.2.0" %}
@@ -23,12 +23,18 @@
 
 package:
   name: libtorch
-  version: {{ version }}
+  version: {{ version.replace("-", ".") }}
 
 source:
 {% if "rc" in version %}
-  - git_url: https://github.com/pytorch/pytorch.git
-    git_rev: v{{ version.replace(".rc", "-rc") }}
+  # - git_url: https://github.com/pytorch/pytorch.git
+  #   git_rev: v{{ version.replace(".rc", "-rc") }}
+  # we cannot apply patches to submodules when checking out with git_url, because
+  # then conda switches the patch-application to use git, which cannot construct
+  # a usable ancestor from outside the submodule; the only option then is to
+  # pull in the submodules separately.
+  - url: https://github.com/pytorch/pytorch/archive/refs/tags/v{{ version }}.tar.gz
+    sha256: bd62578535f29f932e43c23e42bb8b3a9087d12daf001dffa054534da0704ebc
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
@@ -63,11 +69,112 @@ source:
       - patches/0016-Fix-CUPTI-lookup-to-include-target-directory.patch
       - patches/0017-Hide-torch_python-symbols-142214.patch
       - patches/0018-Always-use-system-nvtx.patch
+
+  # submodules; not included in default tarball due to https://github.com/dear-github/dear-github/issues/214
+  # and pytorch doesn't provide them for rc's yet: https://github.com/pytorch/pytorch/issues/150649
+  # see https://github.com/pytorch/pytorch/tree/{{ version }}/third_party
+  - folder: third_party/FP16
+    git_url: https://github.com/Maratyszcza/FP16.git
+    git_rev: 4dfe081cf6bcd15db339cf2680b9281b8451eeb3
+  - folder: third_party/FXdiv
+    git_url: https://github.com/Maratyszcza/FXdiv.git
+    git_rev: b408327ac2a15ec3e43352421954f5b1967701d1
+  - folder: third_party/NNPACK
+    git_url: https://github.com/Maratyszcza/NNPACK.git
+    git_rev: c07e3a0400713d546e0dea2d5466dd22ea389c73
+  # - folder: third_party/NVTX  # skipped due to USE_SYSTEM_NVTX
+  - folder: third_party/VulkanMemoryAllocator
+    git_url: https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+    git_rev: a6bfc237255a6bac1513f7c1ebde6d8aed6b5191
+  - folder: third_party/XNNPACK
+    git_url: https://github.com/google/XNNPACK.git
+    git_rev: 51a0103656eff6fc9bfd39a4597923c4b542c883
+  - folder: third_party/benchmark
+    git_url: https://github.com/google/benchmark.git
+    git_rev: 0d98dba29d66e93259db7daa53a9327df767a415
+  - folder: third_party/composable_kernel
+    git_url: https://github.com/ROCm/composable_kernel.git
+    git_rev: 8086bbe3a78d931eb96fe12fdc014082e18d18d3
+  - folder: third_party/cpp-httplib
+    git_url: https://github.com/yhirose/cpp-httplib.git
+    git_rev: 3b6597bba913d51161383657829b7e644e59c006
+  - folder: third_party/cpuinfo
+    git_url: https://github.com/pytorch/cpuinfo.git
+    git_rev: 1e83a2fdd3102f65c6f1fb602c1b320486218a99
+  - folder: third_party/cudnn_frontend
+    git_url: https://github.com/NVIDIA/cudnn-frontend.git
+    git_rev: 91b7532f3386768bba4f444ee7672b497f34da8a
+  - folder: third_party/cutlass
+    git_url: https://github.com/NVIDIA/cutlass.git
+    git_rev: afa1772203677c5118fcd82537a9c8fefbcc7008
+  # - folder: third_party/eigen  # skipped due to USE_SYSTEM_EIGEN_INSTALL
+  - folder: third_party/fbgemm
+    git_url: https://github.com/pytorch/fbgemm.git
+    git_rev: dbc3157bf256f1339b3fa1fef2be89ac4078be0e
+    patches:
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
+  - folder: third_party/flash-attention
+    git_url: https://github.com/Dao-AILab/flash-attention.git
+    git_rev: 979702c87a8713a8e0a5e9fee122b90d2ef13be5
+  - folder: third_party/flatbuffers
+    git_url: https://github.com/google/flatbuffers.git
+    git_rev: 01834de25e4bf3975a9a00e816292b1ad0fe184b
+  - folder: third_party/fmt
+    git_url: https://github.com/fmtlib/fmt.git
+    git_rev: 123913715afeb8a437e6388b4473fcc4753e1c9a
+  - folder: third_party/gemmlowp/gemmlowp
+    git_url: https://github.com/google/gemmlowp.git
+    git_rev: 3fb5c176c17c765a3492cd2f0321b0dab712f350
+  - folder: third_party/gloo
+    git_url: https://github.com/facebookincubator/gloo.git
+    git_rev: 5354032ea08eadd7fc4456477f7f7c6308818509
+  - folder: third_party/googletest
+    git_url: https://github.com/google/googletest.git
+    git_rev: b514bdc898e2951020cbdca1304b75f5950d1f59
+  - folder: third_party/ideep
+    git_url: https://github.com/intel/ideep.git
+    git_rev: 719d8e6cd7f7a0e01b155657526d693acf97c2b3
+  - folder: third_party/ittapi
+    git_url: https://github.com/intel/ittapi.git
+    git_rev: 5b8a7d7422611c3a0d799fb5fc5dd4abfae35b42
+  - folder: third_party/kineto
+    git_url: https://github.com/pytorch/kineto.git
+    git_rev: a054a4be0db117c579a21747debf19c863631f26
+  - folder: third_party/kleidiai
+    git_url: https://github.com/ARM-software/kleidiai.git
+    git_rev: ef685a13cfbe8d418aa2ed34350e21e4938358b6
+  - folder: third_party/mimalloc
+    git_url: https://github.com/microsoft/mimalloc.git
+    git_rev: b66e3214d8a104669c2ec05ae91ebc26a8f5ab78
+  - folder: third_party/nlohmann
+    git_url: https://github.com/nlohmann/json.git
+    git_rev: 87cda1d6646592ac5866dc703c8e1839046a6806
+  - folder: third_party/onnx
+    git_url: https://github.com/onnx/onnx.git
+    git_rev: b8baa8446686496da4cc8fda09f2b6fe65c2a02c
+  - folder: third_party/opentelemetry-cpp
+    git_url: https://github.com/open-telemetry/opentelemetry-cpp.git
+    git_rev: a799f4aed9c94b765dcdaabaeab7d5e7e2310878
+  - folder: third_party/pocketfft
+    git_url: https://github.com/mreineck/pocketfft.git
+    git_rev: 9d3ab05a7fffbc71a492bc6a17be034e83e8f0fe
+  # - folder: third_party/protobuf  # skipped due to BUILD_CUSTOM_PROTOBUF=OFF
+  - folder: third_party/psimd
+    git_url: https://github.com/Maratyszcza/psimd.git
+    git_rev: 072586a71b55b7f8c584153d223e95687148a900
+  - folder: third_party/pthreadpool
+    git_url: https://github.com/Maratyszcza/pthreadpool.git
+    git_rev: 4fe0e1e183925bf8cfa6aae24237e724a96479b8
+  # - folder: third_party/pybind11  # skipped due to USE_SYSTEM_PYBIND11
+  - folder: third_party/python-peachpy
+    git_url: https://github.com/malfet/PeachPy.git
+    git_rev: f45429b087dd7d5bc78bb40dc7cf06425c252d67
+  # - folder: third_party/sleef  # skipped due to USE_SYSTEM_SLEEF
+  - folder: third_party/tensorpipe
+    git_url: https://github.com/pytorch/tensorpipe.git
+    git_rev: 52791a2fd214b2a9dc5759d36725909c1daa7f2e
+    patches:
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
-      # backport https://github.com/google/XNNPACK/commit/5f23827e66cca435fa400b6e221892ac95af0079
-      # for https://github.com/pytorch/pytorch/issues/141083
-      - patches_submodules/XNNPACK/0001-Fix-bazel-linux-aarch64-gcc13-workflow-and-resolve-a.patch
 
 build:
   number: {{ build }}
