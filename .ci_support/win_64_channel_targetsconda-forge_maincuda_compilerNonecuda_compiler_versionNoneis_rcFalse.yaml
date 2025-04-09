@@ -22,10 +22,12 @@ is_rc:
 - 'False'
 libabseil:
 - '20250127'
+libmagma_sparse:
+- '2.9'
 libprotobuf:
 - 5.29.3
 libtorch:
-- '2.5'
+- '2.6'
 magma:
 - 2.9.0
 megabuild:
@@ -51,7 +53,7 @@ python:
 - 3.13.* *_cp313
 - 3.9.* *_cpython
 pytorch:
-- '2.5'
+- '2.6'
 target_platform:
 - win-64
 zip_keys:
