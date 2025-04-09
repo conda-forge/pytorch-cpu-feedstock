@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.6.0" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -112,7 +112,7 @@ requirements:
     - llvm-openmp               # [unix]
     - intel-openmp {{ mkl }}    # [win]
     - libuv                     # [win]
-    - cmake
+    - cmake <4
     - ninja
     # Keep libprotobuf here so that a compatibile version
     # of protobuf is installed between build and host
@@ -183,10 +183,10 @@ requirements:
     # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
     # built into place.
     # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
-    - pytorch-cpu =={{ version }}  # [cuda_compiler_version == "None"]
-    - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
-    - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
-    - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
+    - pytorch-cpu {{ version }}    # [cuda_compiler_version == "None"]
+    - pytorch-gpu <0.0a0           # [cuda_compiler_version == "None"]
+    - pytorch-gpu {{ version }}    # [cuda_compiler_version != "None"]
+    - pytorch-cpu <0.0a0           # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ build }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ build }}                                                 # [cuda_compiler_version == "None"]
     # if using OpenBLAS, ensure that a version compatible with OpenMP is used
@@ -206,7 +206,7 @@ test:
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
     - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
     - nvtx-c                    # [cuda_compiler_version != "None"]
-    - cmake
+    - cmake <4
     - ninja
     - pkg-config
   files:
@@ -266,7 +266,7 @@ outputs:
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         - llvm-openmp             # [unix]
         - intel-openmp {{ mkl }}  # [win]
-        - cmake
+        - cmake <4
         - ninja
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
@@ -325,9 +325,8 @@ outputs:
         - zlib
       run:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
-        # for non-megabuild, allow libtorch from any python version;
-        # pinning build number would be nice but breaks conda
-        - libtorch {{ version }}.*                      # [not megabuild]
+        # for non-megabuild, allow libtorch from any python version
+        - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
         - llvm-openmp                       # [unix]
         - intel-openmp {{ mkl }}            # [win]
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
@@ -357,10 +356,10 @@ outputs:
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
         # built into place.
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
-        - pytorch-cpu =={{ version }}  # [cuda_compiler_version == "None"]
-        - pytorch-gpu ==99999999       # [cuda_compiler_version == "None"]
-        - pytorch-gpu =={{ version }}  # [cuda_compiler_version != "None"]
-        - pytorch-cpu ==99999999       # [cuda_compiler_version != "None"]
+        - pytorch-cpu {{ version }}    # [cuda_compiler_version == "None"]
+        - pytorch-gpu <0.0a0           # [cuda_compiler_version == "None"]
+        - pytorch-gpu {{ version }}    # [cuda_compiler_version != "None"]
+        - pytorch-cpu <0.0a0           # [cuda_compiler_version != "None"]
 
     test:
       requires:
@@ -386,7 +385,7 @@ outputs:
         # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
         # - pytest-shard
         # for cmake_test
-        - cmake
+        - cmake <4
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         - pybind11
@@ -535,18 +534,17 @@ outputs:
   {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                  # [megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                                 # [megabuild and cuda_compiler_version == "None"]
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [not megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                # [not megabuild and cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [megabuild and cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [megabuild and cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                  # [not megabuild]
       detect_binary_files_with_prefix: false
       # weigh down cpu implementation and give cuda preference
       track_features:
         - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
-        - pytorch {{ version }}=cuda*_{{ blas_impl }}*{{ build }}   # [megabuild and cuda_compiler_version != "None"]
-        - pytorch {{ version }}=cpu_{{ blas_impl }}*{{ build }}     # [megabuild and cuda_compiler_version == "None"]
+        - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [megabuild and cuda_compiler_version != "None"]
+        - pytorch {{ version }} cpu_{{ blas_impl }}*{{ build }}     # [megabuild and cuda_compiler_version == "None"]
         - {{ pin_subpackage("pytorch", exact=True) }}               # [not megabuild]
     test:
       imports:
