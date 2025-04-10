@@ -94,8 +94,6 @@ if not "%cuda_compiler_version%" == "None" (
     set "PATH=%CUDA_BIN_PATH%;%PATH%"
     set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
     set "CUDA_VERSION=%cuda_compiler_version%"
-    @REM turn off very noisy nvcc warnings
-    set "CUDAFLAGS=-w --ptxas-options=-w"
 ) else (
     set USE_CUDA=0
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
@@ -163,7 +161,7 @@ if EXIST build (
     if %ERRORLEVEL% neq 0 exit 1
 )
 
-%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean
+%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean --config-settings=--global-option=-q
 if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.

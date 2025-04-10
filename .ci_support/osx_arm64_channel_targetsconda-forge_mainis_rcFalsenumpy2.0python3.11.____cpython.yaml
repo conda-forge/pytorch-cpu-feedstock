@@ -34,10 +34,12 @@ libcblas:
 - 3.9.* *netlib
 liblapack:
 - 3.9.* *netlib
+libmagma_sparse:
+- '2.9'
 libprotobuf:
 - 5.29.3
 libtorch:
-- '2.5'
+- '2.6'
 llvm_openmp:
 - '18'
 macos_machine:
@@ -57,7 +59,7 @@ pin_run_as_build:
 python:
 - 3.11.* *_cpython
 pytorch:
-- '2.5'
+- '2.6'
 target_platform:
 - osx-arm64
 zip_keys:
