@@ -22,6 +22,8 @@ is_rc:
 - 'True'
 libabseil:
 - '20250127'
+libmagma_sparse:
+- '2.9'
 libprotobuf:
 - 5.29.3
 libtorch:
