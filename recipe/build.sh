@@ -99,6 +99,10 @@ rm -rf $PREFIX/bin/protoc
 export USE_SYSTEM_PYBIND11=1
 export USE_SYSTEM_EIGEN_INSTALL=1
 
+# workaround to stop setup.py from trying to check whether we checked out
+# all submodules (we don't use all of them)
+rm .gitmodules
+
 # prevent six from being downloaded
 > third_party/NNPACK/cmake/DownloadSix.cmake
 
