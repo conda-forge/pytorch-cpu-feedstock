@@ -29,7 +29,7 @@ libprotobuf:
 libtorch:
 - '2.6'
 magma:
-- 2.9.0
+- '2.9'
 megabuild:
 - 'true'
 mkl:
