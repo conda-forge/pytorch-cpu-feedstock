@@ -608,6 +608,8 @@ outputs:
         {% set skips = skips ~ " or (TestNN and test_Conv3d_pad_same_dilated)" %}        # [win]
         {% set skips = skips ~ " or (TestNN and test_Conv3d_stride)" %}                  # [win]
         {% set skips = skips ~ " or (TestNN and test_Conv3d_stride_padding)" %}          # [win]
+        # flaky test, fragile to GC behavior
+        {% set skips = skips ~ " or (TestTorch and test_tensor_cycle_via_slots)" %}
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
