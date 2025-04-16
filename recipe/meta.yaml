@@ -176,7 +176,7 @@ build:
   skip: true  # [cuda_compiler_version == "11.8"]
   # debug
   skip: true  # [osx and py!=312]
-  skip: true  # [not win]
+  skip: true  # [not win or cuda_compiler_version != "None"]
   # needs new triton
   skip: true  # [linux and cuda_compiler_version != "None"]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
