@@ -192,7 +192,7 @@ if "%PKG_NAME%" == "libtorch" (
     @REM https://github.com/pypa/wheel/blob/0.45.1/src/wheel/cli/unpack.py#L11-L12
     echo "== before pushd =="
     dir
-    pushd torch-%PKG_VERSION%
+    pushd torch-*
     if %ERRORLEVEL% neq 0 exit 1
     echo "== after pushd =="
     dir
