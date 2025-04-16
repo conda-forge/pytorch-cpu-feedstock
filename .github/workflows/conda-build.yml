@@ -25,10 +25,6 @@ jobs:
             UPLOAD_PACKAGES: True
             os: windows
             runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_p_h4ffee7b9ab', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_channel_targetsconda-forge_pytorch_rccuda_compilercuda-nvcccuda_compiler_version12.6is_rcTrue
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_p_hc6d99508db', 'windows', 'x64', 'self-hosted']
     steps:
 
     - name: Checkout code
