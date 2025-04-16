@@ -77,6 +77,10 @@ set USE_SYSTEM_EIGEN_INSTALL=1
 set USE_SYSTEM_PYBIND11=1
 set USE_SYSTEM_SLEEF=1
 
+@REM workaround to stop setup.py from trying to check whether we checked out
+@REM all submodules (we don't use all of them)
+del .gitmodules
+
 if not "%cuda_compiler_version%" == "None" (
     set USE_CUDA=1
     set USE_STATIC_CUDNN=0
