@@ -190,12 +190,8 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Navigate into the unpacked wheel; naming pattern of the folder is documented:
     @REM https://github.com/pypa/wheel/blob/0.45.1/src/wheel/cli/unpack.py#L11-L12
-    echo "== before pushd =="
-    dir
     pushd torch-*
     if %ERRORLEVEL% neq 0 exit 1
-    echo "== after pushd =="
-    dir
 
     @REM Move the binaries into the packages site-package directory
     @REM the only content of torch\bin, {asmjit,fbgemm}.dll, also exists in torch\lib
