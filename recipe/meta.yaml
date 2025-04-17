@@ -174,11 +174,6 @@ build:
   number: {{ build }}
   # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
   skip: true  # [cuda_compiler_version == "11.8"]
-  # debug
-  skip: true  # [osx and py!=312]
-  skip: true  # [not win or cuda_compiler_version != "None"]
-  # needs new triton
-  skip: true  # [linux and cuda_compiler_version != "None"]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
@@ -441,7 +436,8 @@ outputs:
         - nomkl                             # [blas_impl != "mkl"]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
-        - triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
+        # TODO: restore before merging
+        #- triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda                            # [cuda_compiler_version != "None"]
         - python
