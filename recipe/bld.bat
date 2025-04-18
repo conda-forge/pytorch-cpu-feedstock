@@ -18,6 +18,11 @@ set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
 
+@REM Reduce job count on cirun-azure-windows-2xlarge to avoid being OOM-killed.
+if "%CI%" == "github_actions" (
+    SET MAX_JOBS=4
+)
+
 @REM Setup BLAS
 if "%blas_impl%" == "generic" (
     @REM Fake openblas
