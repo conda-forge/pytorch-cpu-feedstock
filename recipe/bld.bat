@@ -20,7 +20,7 @@ set PYTORCH_BUILD_NUMBER=0
 
 @REM Reduce job count on cirun-azure-windows-2xlarge to avoid being OOM-killed.
 if "%CI%" == "github_actions" (
-    SET MAX_JOBS=4
+    SET MAX_JOBS=6
 )
 
 @REM Setup BLAS
