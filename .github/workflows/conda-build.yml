@@ -16,7 +16,7 @@ jobs:
   build:
     name: ${{ matrix.CONFIG }}
     runs-on: ${{ matrix.runs_on }}
-    timeout-minutes: 900
+    timeout-minutes: 1200
     strategy:
       fail-fast: false
       matrix:
