@@ -1,0 +1,35 @@
+From 5271c3db5c54eb774b6998ba5c1b705996842ddb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Wed, 30 Apr 2025 16:40:47 +0200
+Subject: [PATCH] Add conditions for checking out nccl in `build_pytorch()`
+
+Rather than checking out nccl unconditionally in `build_pytorch()`,
+do that only if 1) CUDA build was not disabled via `USE_CUDA=0`,
+and 2) system NCCL is not being used via `USE_SYSTEM_NCCL=1`.
+---
+ tools/build_pytorch_libs.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/build_pytorch_libs.py b/tools/build_pytorch_libs.py
+index 5dd5a2219..14e0263c7 100644
+--- a/tools/build_pytorch_libs.py
++++ b/tools/build_pytorch_libs.py
+@@ -7,7 +7,7 @@ from glob import glob
+ from pathlib import Path
+ 
+ from .setup_helpers.cmake import CMake, USE_NINJA
+-from .setup_helpers.env import check_negative_env_flag, IS_64BIT, IS_WINDOWS
++from .setup_helpers.env import check_env_flag, check_negative_env_flag, IS_64BIT, IS_WINDOWS
+ 
+ 
+ repo_root = Path(__file__).absolute().parent.parent
+@@ -119,7 +119,8 @@ def build_pytorch(
+     cmake: CMake,
+ ) -> None:
+     my_env = _create_build_env()
+-    checkout_nccl()
++    if not check_negative_env_flag("USE_CUDA") and not check_env_flag("USE_SYSTEM_NCCL"):
++        checkout_nccl()
+     build_test = not check_negative_env_flag("BUILD_TEST")
+     cmake.generate(
+         version, cmake_python_library, build_python, build_test, my_env, rerun_cmake
