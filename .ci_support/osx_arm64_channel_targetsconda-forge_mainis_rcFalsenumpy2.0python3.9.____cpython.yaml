@@ -1,9 +1,9 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.15'
+- '11.0'
 MACOSX_SDK_VERSION:
 - '13.3'
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - clang
 c_compiler_version:
@@ -11,11 +11,11 @@ c_compiler_version:
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
-- '10.15'
+- '11.0'
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge pytorch_rc
+- conda-forge main
 cuda_compiler:
 - None
 cuda_compiler_version:
@@ -25,7 +25,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '18'
 is_rc:
-- 'True'
+- 'False'
 libabseil:
 - '20250127'
 libblas:
@@ -43,7 +43,7 @@ libtorch:
 llvm_openmp:
 - '18'
 macos_machine:
-- x86_64-apple-darwin13.4.0
+- arm64-apple-darwin20.0.0
 megabuild:
 - 'false'
 mkl:
@@ -57,11 +57,11 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
+- 3.9.* *_cpython
 pytorch:
 - '2.6'
 target_platform:
-- osx-64
+- osx-arm64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version

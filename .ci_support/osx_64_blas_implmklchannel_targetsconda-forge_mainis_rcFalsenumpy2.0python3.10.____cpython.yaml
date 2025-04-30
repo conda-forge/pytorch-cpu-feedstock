@@ -15,7 +15,7 @@ c_stdlib_version:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge pytorch_rc
+- conda-forge main
 cuda_compiler:
 - None
 cuda_compiler_version:
@@ -25,7 +25,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '18'
 is_rc:
-- 'True'
+- 'False'
 libabseil:
 - '20250127'
 libblas:
@@ -57,7 +57,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.10.* *_cpython
 pytorch:
 - '2.6'
 target_platform:

@@ -1,5 +1,5 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - gcc
 c_compiler_version:
@@ -13,11 +13,11 @@ cdt_name:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge pytorch_rc
+- conda-forge main
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.6'
 cudnn:
 - '9'
 cxx_compiler:
@@ -29,7 +29,7 @@ docker_image:
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 is_rc:
-- 'True'
+- 'False'
 libabseil:
 - '20250127'
 libblas:
@@ -73,7 +73,7 @@ python:
 pytorch:
 - '2.6'
 target_platform:
-- linux-aarch64
+- linux-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
