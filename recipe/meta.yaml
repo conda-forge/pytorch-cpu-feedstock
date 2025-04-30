@@ -16,7 +16,7 @@
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.2.0" %}
+{% set triton = "3.3.0" %}
 
 # TODO Temporary pin, remove me
 {% set mkl = "<2025" %}
@@ -434,8 +434,7 @@ outputs:
         - nomkl                             # [blas_impl != "mkl"]
         # GPU requirements without run_exports
         - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
-        # TODO: restore before merging
-        #- triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
+        - triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda                            # [cuda_compiler_version != "None"]
         - python
