@@ -159,6 +159,8 @@ fi
 
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    export USE_CUDA=0
+
     # Produce macOS builds with torch.distributed support.
     # This is enabled by default on Linux, but disabled by default on macOS,
     # because it requires an non-bundled compile-time dependency (libuv
