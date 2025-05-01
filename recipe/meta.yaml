@@ -63,7 +63,8 @@ source:
       - patches/0013-Fix-CUPTI-lookup-to-include-target-directory.patch
       # backport (practically speaking) https://github.com/pytorch/pytorch/pull/149861
       - patches/0014-Always-use-system-nvtx.patch
-      - patches/0015-Add-conditions-for-checking-out-nccl-in-build_pytorc.patch
+      # https://github.com/pytorch/pytorch/pull/152533
+      - patches/0015-Do-not-check-out-nccl-when-not-building-it.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
