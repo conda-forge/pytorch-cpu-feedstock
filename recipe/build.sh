@@ -99,6 +99,10 @@ rm -rf $PREFIX/bin/protoc
 export USE_SYSTEM_PYBIND11=1
 export USE_SYSTEM_EIGEN_INSTALL=1
 
+# workaround to stop setup.py from trying to check whether we checked out
+# all submodules (we don't use all of them)
+rm -f .gitmodules
+
 # prevent six from being downloaded
 > third_party/NNPACK/cmake/DownloadSix.cmake
 
@@ -155,6 +159,8 @@ fi
 
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    export USE_CUDA=0
+
     # Produce macOS builds with torch.distributed support.
     # This is enabled by default on Linux, but disabled by default on macOS,
     # because it requires an non-bundled compile-time dependency (libuv
