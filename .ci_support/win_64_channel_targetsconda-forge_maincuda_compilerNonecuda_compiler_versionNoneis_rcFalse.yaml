@@ -31,7 +31,7 @@ libtorch:
 magma:
 - '2.9'
 megabuild:
-- 'true'
+- true
 mkl:
 - '2024'
 numpy:

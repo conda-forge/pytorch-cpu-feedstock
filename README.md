@@ -79,6 +79,20 @@ Current build status
                 </a>
               </td>
             </tr><tr>
+              <td>linux_ppc64le_c_compiler_version12channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.4cxx_compiler_version12is_rcFalse</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_c_compiler_version12channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.4cxx_compiler_version12is_rcFalse" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
               <td>osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsenumpy2.0python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
