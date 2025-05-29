@@ -7,11 +7,11 @@ c_stdlib:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.6'
 cudnn:
 - '9'
 cxx_compiler:
@@ -31,7 +31,7 @@ libtorch:
 magma:
 - '2.9'
 megabuild:
-- 'true'
+- true
 mkl:
 - '2024'
 numpy:
@@ -41,7 +41,7 @@ numpy:
 - '2'
 - '2.0'
 orc:
-- 2.1.1
+- 2.1.2
 pin_run_as_build:
   python:
     min_pin: x.x
