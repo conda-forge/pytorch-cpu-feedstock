@@ -45,13 +45,13 @@ llvm_openmp:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 megabuild:
-- 'false'
+- false
 mkl:
 - '2023'
 numpy:
 - '2'
 orc:
-- 2.1.1
+- 2.1.2
 pin_run_as_build:
   python:
     min_pin: x.x
