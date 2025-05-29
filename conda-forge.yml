@@ -19,6 +19,7 @@ github:
   tooling_branch_name: main
 github_actions:
   self_hosted: true
+  store_build_artifacts: true
   timeout_minutes: 1000
   triggers:
   - push
