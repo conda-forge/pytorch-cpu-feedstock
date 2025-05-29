@@ -5,7 +5,9 @@ MACOSX_SDK_VERSION:         # [osx]
   - 13.3                    # [osx]
 
 channel_targets:
-  - conda-forge main
+  - conda-forge main        # [not win]
+  # work-around for https://github.com/conda/infrastructure/issues/1159
+  - conda-forge pytorch_rc  # [win]
   - conda-forge pytorch_rc
 is_rc:
   - False
