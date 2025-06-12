@@ -216,8 +216,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
     # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     case ${cuda_compiler_version} in
-        12.[0-6])
-            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+        12.[89])
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0;10.0;12.0+PTX"
             ;;
         *)
             echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
