@@ -15,9 +15,9 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.9'
 cudnn:
 - '9'
 cxx_compiler:
@@ -47,19 +47,15 @@ libtorch:
 magma:
 - '2.9'
 megabuild:
-- 'true'
+- true
 mkl:
 - '2024'
 nccl:
 - '2'
 numpy:
-- '2.0'
-- '2.0'
-- '2.0'
 - '2'
-- '2.0'
 orc:
-- 2.1.1
+- 2.1.2
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -77,12 +73,8 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-  - cuda_compiler
   - cuda_compiler_version
-  - docker_image
 - - channel_targets
   - is_rc
-- - python
-  - numpy
 zlib:
 - '1'

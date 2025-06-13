@@ -65,13 +65,13 @@ source:
       - patches/0014-Always-use-system-nvtx.patch
       # https://github.com/pytorch/pytorch/pull/152533
       - patches/0015-Do-not-check-out-nccl-when-not-building-it.patch
+      # skip a test that fails with numpy 2.3; can be dropped for pytorch>2.7
+      - patches/0016-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
   number: {{ build }}
-  # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
-  skip: true  # [cuda_compiler_version == "11.8"]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
