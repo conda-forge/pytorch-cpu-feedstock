@@ -1,7 +1,7 @@
-From 26a74316fa544becd871a29017713946a2ebec5d Mon Sep 17 00:00:00 2001
+From b326cf46918bd84bf052a72e76989d123788375c Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
-Subject: [PATCH 12/14] avoid deprecated `find_package(CUDA)` in caffe2 CMake
+Subject: [PATCH 12/15] avoid deprecated `find_package(CUDA)` in caffe2 CMake
  metadata
 
 vendor the not-available-anymore function torch_cuda_get_nvcc_gencode_flag from CMake
@@ -215,7 +215,7 @@ index c66d32b115c..e538fb5662b 100644
    execute_process(
      COMMAND Python::Interpreter -c
 diff --git a/cmake/public/utils.cmake b/cmake/public/utils.cmake
-index 781a4e6819f..0c151f51c6c 100644
+index 781a4e6819f..0585942fe36 100644
 --- a/cmake/public/utils.cmake
 +++ b/cmake/public/utils.cmake
 @@ -306,6 +306,133 @@ macro(torch_hip_get_arch_list store_var)
@@ -262,7 +262,7 @@ index 781a4e6819f..0c151f51c6c 100644
 +      set(add_ptx TRUE)
 +      set(arch_name ${CMAKE_MATCH_1})
 +    endif()
-+    if(arch_name MATCHES "^([0-9]\\.[0-9](\\([0-9]\\.[0-9]\\))?)$")
++    if(arch_name MATCHES "^(1?[0-9]\\.[0-9](\\([0-9]\\.[0-9]\\))?)$")
 +      set(arch_bin ${CMAKE_MATCH_1})
 +      set(arch_ptx ${arch_bin})
 +    else()
