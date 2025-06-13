@@ -1,7 +1,7 @@
 From 33d05f2a0869d6207cd11d9460703d3ee298ef0e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Wed, 30 Apr 2025 17:11:56 +0200
-Subject: [PATCH 15/15] Do not check out nccl when not building it
+Subject: [PATCH 15/16] Do not check out nccl when not building it
 
 Add additional conditions to `build_pytorch_libs.py` to avoid fetching
 NCCL when `USE_CUDA` or `USE_NCCL` are disabled. While at it, adjust
