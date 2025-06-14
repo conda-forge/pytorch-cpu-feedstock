@@ -16,55 +16,63 @@ jobs:
   build:
     name: ${{ matrix.CONFIG }}
     runs-on: ${{ matrix.runs_on }}
-    timeout-minutes: 1200
+    timeout-minutes: 1000
     strategy:
       fail-fast: false
       matrix:
         include:
           - CONFIG: linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse
+            SHORT_CONFIG: linux_64_blas_implgenericc_compiler_hb59e174a3e
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_compiler_hb59e174a3e', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_64_blas_implgenericc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse
+            SHORT_CONFIG: linux_64_blas_implgenericc_compiler_h5e2cde8be1
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_compiler_h5e2cde8be1', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse
+            SHORT_CONFIG: linux_64_blas_implmklc_compiler_ver_h0b96eb68c6
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklc_compiler_ver_h0b96eb68c6', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_64_blas_implmklc_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse
+            SHORT_CONFIG: linux_64_blas_implmklc_compiler_ver_hc39dedf959
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklc_compiler_ver_hc39dedf959', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNonecxx_compiler_version13is_rcFalse
+            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_h352ed12235
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_c_compiler_version13c_h352ed12235', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6cxx_compiler_version13is_rcFalse
+            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_h94771c6c09
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_c_compiler_version13c_h94771c6c09', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compilerNonecuda_compiler_versionNoneis_rcFalse
+          - CONFIG: win_64_cuda_compilerNonecuda_compiler_versionNoneis_rcFalse
+            SHORT_CONFIG: win_64_cuda_compilerNonecuda_compil_hc030df55d6
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_m_h0b759d4e63', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compilercuda-nvcccuda_compiler_version12.6is_rcFalse
+            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_cuda_compilerNonecuda_compil_hc030df55d6', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_cuda_compilercuda-nvcccuda_compiler_version12.6is_rcFalse
+            SHORT_CONFIG: win_64_cuda_compilercuda-nvcccuda_c_hcabf3367bb
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_m_h790f30616b', 'windows', 'x64', 'self-hosted']
+            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_cuda_compilercuda-nvcccuda_c_hcabf3367bb', 'windows', 'x64', 'self-hosted']
     steps:
 
     - name: Checkout code
@@ -138,3 +146,55 @@ jobs:
         FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
       if: matrix.os == 'windows'
+    - name: Prepare conda build artifacts
+      id: prepare-artifacts
+      shell: bash
+      if: ${{ always() }}
+      env:
+        CONFIG: ${{ matrix.CONFIG }}
+        SHORT_CONFIG: ${{ matrix.SHORT_CONFIG }}
+        OS: ${{ matrix.os }}
+        MINIFORGE_HOME_WIN: D:\Miniforge
+      run: |
+        export CI=github_actions
+        export CI_RUN_ID=$GITHUB_RUN_ID
+        export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
+        export ARTIFACT_STAGING_DIR="$GITHUB_WORKSPACE"
+        if [ $OS == "macos" ]; then
+          export CONDA_BLD_DIR="${MINIFORGE_HOME:-${HOME}/miniforge3}/conda-bld"
+        elif [ $OS == "windows" ]; then
+          export CONDA_BLD_DIR="${MINIFORGE_HOME_WIN//\\//}/conda-bld"
+        else
+          export CONDA_BLD_DIR="build_artifacts"
+        fi
+        # Archive everything in CONDA_BLD_DIR except environments
+        # Archive the CONDA_BLD_DIR environments only when the job fails
+        # Use different prefix for successful and failed build artifacts
+        # so random failures don't prevent rebuilds from creating artifacts.
+        JOB_STATUS="${{ job.status }}"
+        if [ $JOB_STATUS == "failure" ]; then
+          export BLD_ARTIFACT_PREFIX="conda_artifacts"
+          export ENV_ARTIFACT_PREFIX="conda_envs"
+        else
+          export BLD_ARTIFACT_PREFIX="conda_pkgs"
+        fi
+        ./.scripts/create_conda_build_artifacts.sh
+      continue-on-error: true
+
+    - name: Store conda build artifacts
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      if: ${{ always() && steps.prepare-artifacts.outcome == 'success' }}
+      with:
+        name: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_NAME }}
+        path: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_PATH }}
+        retention-days: 14
+      continue-on-error: true
+
+    - name: Store conda build environment artifacts
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      if: ${{ failure() && steps.prepare-artifacts.outcome == 'success' }}
+      with:
+        name: ${{ steps.prepare-artifacts.outputs.ENV_ARTIFACT_NAME }}
+        path: ${{ steps.prepare-artifacts.outputs.ENV_ARTIFACT_PATH }}
+        retention-days: 14
+      continue-on-error: true
