@@ -153,8 +153,7 @@ requirements:
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
-    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
-    - setuptools <76
+    - setuptools
     - pyyaml
     - requests
     - six
@@ -304,8 +303,7 @@ outputs:
         - python
         - numpy
         - pip
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
-        - setuptools <76
+        - setuptools
         - pyyaml
         - requests
         - six
@@ -345,9 +343,7 @@ outputs:
         - networkx
         - optree >=0.13.0
         - pybind11
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380; also used at runtime, see
-        # https://github.com/pytorch/pytorch/blob/v2.6.0/torch/utils/cpp_extension.py#L2166-2172
-        - setuptools <76
+        - setuptools
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
       run_constrained:
