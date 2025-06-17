@@ -1,5 +1,5 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.7.0" %}
+{% set version = "2.7.1" %}
 {% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
@@ -38,7 +38,7 @@ source:
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-    sha256: ecca266fa2de4235a9fd5a18a33299a9de55ab3babb87f8c297c1c9ab8d436bd
+    sha256: 5befd2e540fd55ce4782d0ca7610ce5b572d756d7ea38090ef0f3c7c428fb20f
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
@@ -65,6 +65,8 @@ source:
       - patches/0014-Always-use-system-nvtx.patch
       # https://github.com/pytorch/pytorch/pull/152533
       - patches/0015-Do-not-check-out-nccl-when-not-building-it.patch
+      # skip a test that fails with numpy 2.3; can be dropped for pytorch>2.7
+      - patches/0016-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
@@ -151,8 +153,7 @@ requirements:
     - numpy *      # [megabuild]
     - numpy        # [not megabuild]
     - pip
-    # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
-    - setuptools <76
+    - setuptools
     - pyyaml
     - requests
     - six
@@ -302,8 +303,7 @@ outputs:
         - python
         - numpy
         - pip
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380
-        - setuptools <76
+        - setuptools
         - pyyaml
         - requests
         - six
@@ -343,9 +343,7 @@ outputs:
         - networkx
         - optree >=0.13.0
         - pybind11
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/380; also used at runtime, see
-        # https://github.com/pytorch/pytorch/blob/v2.6.0/torch/utils/cpp_extension.py#L2166-2172
-        - setuptools <76
+        - setuptools
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
       run_constrained:
@@ -478,6 +476,10 @@ outputs:
         {% set skips = skips ~ " or test_matmul_offline_tunableop_cuda_float16" %}      # [linux and cuda_compiler_version != "None"]
         # catastropic accuracy failure in convolution
         {% set skips = skips ~ " or test_Conv3d_1x1x1_no_bias_cuda" %}                  # [linux and cuda_compiler_version != "None"]
+        # some triton errors that appeared in #391
+        {% set skips = skips ~ " or test_isinf_cuda" %}                                 # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_donated_buffer_inplace_gpt" %}                 # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_linear_dynamic_maxautotune_cuda" %}            # [linux and cuda_compiler_version != "None"]
         # skip some very long-running groups of tests (~30 minutes total)
         {% set skips = skips ~ " or (test_gradgrad_nn_Transformer and _cuda_)" %}       # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_avg_pool3d_backward2" %}                       # [linux and cuda_compiler_version != "None"]

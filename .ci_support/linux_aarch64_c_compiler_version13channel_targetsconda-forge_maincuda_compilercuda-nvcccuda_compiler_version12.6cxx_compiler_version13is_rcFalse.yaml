@@ -47,7 +47,7 @@ libtorch:
 magma:
 - '2.9'
 megabuild:
-- 'true'
+- true
 mkl:
 - '2024'
 nccl:
@@ -59,7 +59,7 @@ numpy:
 - '2'
 - '2.0'
 orc:
-- 2.1.1
+- 2.1.2
 pin_run_as_build:
   python:
     min_pin: x.x
