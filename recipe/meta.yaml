@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.7.1" %}
-{% set build = 0 %}
+{% set build = 1 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -67,13 +67,15 @@ source:
       - patches/0015-Do-not-check-out-nccl-when-not-building-it.patch
       # skip a test that fails with numpy 2.3; can be dropped for pytorch>2.7
       - patches/0016-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      # backport https://github.com/pytorch/pytorch/pull/127702
+      - patches/0017-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
   number: {{ build }}
-  # cuda 11.8 was dropped due to maintenance effort, see discussion in #177
-  skip: true  # [cuda_compiler_version == "11.8"]
+  # debug
+  skip: true  # [cuda_compiler_version == "None"]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
@@ -539,9 +541,6 @@ outputs:
       string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [megabuild and cuda_compiler_version == "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                  # [not megabuild]
       detect_binary_files_with_prefix: false
-      # weigh down cpu implementation and give cuda preference
-      track_features:
-        - pytorch-cpu                                      # [cuda_compiler_version == "None"]
     requirements:
       run:
         - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [megabuild and cuda_compiler_version != "None"]
