@@ -20,7 +20,7 @@ github:
 github_actions:
   self_hosted: true
   store_build_artifacts: true
-  timeout_minutes: 1000
+  timeout_minutes: 1200
   triggers:
   - push
   - pull_request
