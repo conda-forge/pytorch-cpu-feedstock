@@ -446,6 +446,8 @@ outputs:
         {% set skips = skips ~ " or (TestLinalgCPU and test_pca_lowrank_cpu)" %}        # [aarch64]
         {% set skips = skips ~ " or (TestLinalgCPU and test_svd_lowrank_cpu)" %}        # [aarch64]
         {% set skips = skips ~ " or (TestMkldnnCPU and test_lstm_cpu)" %}               # [aarch64]
+        # errors (possibly QEMU-related) with openblas 0.3.30
+        {% set skips = skips ~ " or test_addbmm or test_baddbmm or test_bmm" %}         # [aarch64]
         # doesn't crash, but gets different result on aarch + CUDA
         {% set skips = skips ~ " or illcondition_matrix_input_should_not_crash_cpu" %}  # [aarch64 and cuda_compiler_version != "None"]
         # may crash spuriously
