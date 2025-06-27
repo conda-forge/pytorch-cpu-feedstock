@@ -53,6 +53,9 @@ echo Setting up configuration
 setup_conda_rc .\ ".\recipe" .\.ci_support\%CONFIG%.yaml
 if !errorlevel! neq 0 exit /b !errorlevel!
 echo Running build setup
+:: manual work-around because we can't pass SET_PAGEFILE for non-azure CI
+:: through configuration/generation in conda-smithy yet
+set "SET_PAGEFILE=True"
 CALL run_conda_forge_build_setup
 
 
