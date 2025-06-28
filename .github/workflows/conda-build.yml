@@ -67,12 +67,12 @@ jobs:
             SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hda40b8c4
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hda40b8c4', 'windows', 'x64', 'self-hosted']
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hda40b8c4', 'windows', 'x64', 'self-hosted']
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
             SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hc68ac914
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-2xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hc68ac914', 'windows', 'x64', 'self-hosted']
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hc68ac914', 'windows', 'x64', 'self-hosted']
     steps:
 
     - name: Checkout code
