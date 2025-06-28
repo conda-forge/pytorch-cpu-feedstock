@@ -1,7 +1,7 @@
 blas_impl:
 - mkl
 c_compiler:
-- vs2022
+- vs2019
 c_stdlib:
 - vs
 channel_sources:
@@ -15,7 +15,7 @@ cuda_compiler_version:
 cudnn:
 - '9'
 cxx_compiler:
-- vs2022
+- vs2019
 github_actions_labels:
 - cirun-azure-windows-2xlarge
 is_rc:
