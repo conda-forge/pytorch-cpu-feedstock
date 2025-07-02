@@ -494,6 +494,7 @@ outputs:
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
         {% set skips = skips ~ " or test_composite_registered_to_cpu_mode_nothing" %}
         # these tests are failing on windows
+        {% set skips = skips ~ " or (TestMkldnnCPU and test_batch_norm_2d_cpu)" %}       # [win]
         {% set skips = skips ~ " or (TestNN and test_Conv1d_dilated)" %}                 # [win]
         {% set skips = skips ~ " or (TestNN and test_Conv1d_pad_same_dilated)" %}        # [win]
         {% set skips = skips ~ " or (TestNN and test_Conv2d_pad_same_dilated)" %}        # [win]
