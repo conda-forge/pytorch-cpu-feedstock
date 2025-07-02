@@ -72,8 +72,6 @@ source:
 
 build:
   number: {{ build }}
-  # debug
-  skip: true  # [not win]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
