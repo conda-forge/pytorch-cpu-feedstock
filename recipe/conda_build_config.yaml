@@ -5,9 +5,7 @@ MACOSX_SDK_VERSION:         # [osx]
   - 13.3                    # [osx]
 
 channel_targets:
-  - conda-forge main        # [not win]
-  # work-around for https://github.com/conda/infrastructure/issues/1159
-  - conda-forge pytorch_rc  # [win]
+  - conda-forge main
   - conda-forge pytorch_rc
 is_rc:
   - False
@@ -25,7 +23,7 @@ blas_impl:
 # https://github.com/conda-forge/.cirun
 github_actions_labels:          # [linux or win]
 - cirun-openstack-gpu-2xlarge   # [linux]
-- cirun-azure-windows-2xlarge   # [win]
+- cirun-azure-windows-4xlarge   # [win]
 
 megabuild:
 - true      # [linux]

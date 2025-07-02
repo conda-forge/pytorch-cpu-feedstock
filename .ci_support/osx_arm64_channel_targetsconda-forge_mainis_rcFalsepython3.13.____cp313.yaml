@@ -17,7 +17,7 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
 - None
 cxx_compiler:
@@ -67,7 +67,5 @@ zip_keys:
   - cxx_compiler_version
 - - channel_targets
   - is_rc
-- - python
-  - numpy
 zlib:
 - '1'

@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 MACOSX_SDK_VERSION:
 - '13.3'
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - clang
 c_compiler_version:
@@ -17,7 +17,7 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
 - None
 cxx_compiler:
@@ -57,7 +57,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.13.* *_cp313
+- 3.10.* *_cpython
 pytorch:
 - '2.6'
 target_platform:
@@ -67,7 +67,5 @@ zip_keys:
   - cxx_compiler_version
 - - channel_targets
   - is_rc
-- - python
-  - numpy
 zlib:
 - '1'
