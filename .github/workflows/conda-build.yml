@@ -220,7 +220,7 @@ jobs:
 
     - name: Store conda build artifacts
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-      if: ${{ always() && steps.prepare-artifacts.outcome == 'success' }}
+      if: ${{ steps.prepare-artifacts.outcome == 'success' }}
       with:
         name: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_NAME }}
         path: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_PATH }}
@@ -229,7 +229,8 @@ jobs:
 
     - name: Store conda build environment artifacts
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-      if: ${{ failure() && steps.prepare-artifacts.outcome == 'success' }}
+      # only relevant if build failed, see above
+      if: ${{ steps.determine-status.outputs.status == 'failure' && steps.prepare-artifacts.outcome == 'success' }}
       with:
         name: ${{ steps.prepare-artifacts.outputs.ENV_ARTIFACT_NAME }}
         path: ${{ steps.prepare-artifacts.outputs.ENV_ARTIFACT_PATH }}
