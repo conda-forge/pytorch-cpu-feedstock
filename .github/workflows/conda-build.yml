@@ -213,7 +213,7 @@ jobs:
           export BLD_ARTIFACT_PREFIX="conda_pkgs"
         fi
         if [ $OS == "windows" ]; then
-          cmd.exe /c .scripts\\create_conda_build_artifacts.bat
+          pwsh -Command ". '.scripts/create_conda_build_artifacts.bat'"
         else
           ./.scripts/create_conda_build_artifacts.sh
         fi
