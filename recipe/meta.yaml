@@ -448,6 +448,12 @@ outputs:
         {% set skips = skips ~ " or (TestLinalgCPU and test_pca_lowrank_cpu)" %}        # [aarch64]
         {% set skips = skips ~ " or (TestLinalgCPU and test_svd_lowrank_cpu)" %}        # [aarch64]
         {% set skips = skips ~ " or (TestMkldnnCPU and test_lstm_cpu)" %}               # [aarch64]
+        # very long-running tests in emulation
+        {% set skips = skips ~ " or test_eigh_lwork_lapack" %}                          # [aarch64]
+        {% set skips = skips ~ " or test_gradgrad_nn_LSTM" %}                           # [aarch64]
+        {% set skips = skips ~ " or test_grad_nn_Transformer" %}                        # [aarch64]
+        {% set skips = skips ~ " or test_inverse_errors_large" %}                       # [aarch64]
+        {% set skips = skips ~ " or (TestXNNPACKConv1dTransformPass and test_conv1d_basic)" %}  # [aarch64]
         # errors (possibly QEMU-related) with openblas 0.3.30
         {% set skips = skips ~ " or test_addbmm or test_baddbmm or test_bmm" %}         # [aarch64]
         # doesn't crash, but gets different result on aarch + CUDA
