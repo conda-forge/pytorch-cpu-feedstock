@@ -140,6 +140,10 @@ jobs:
         set "sha=%GITHUB_SHA%"
         call ".scripts\run_win_build.bat"
       env:
+        # default value; make explicit for now (pending smithy-improvements),
+        # as it needs to be synchronized with artefact generation below; see
+        # https://github.com/conda-forge/conda-smithy/issues/2345
+        CONDA_BLD_DIR: C:\bld
         MINIFORGE_HOME: D:\Miniforge
         PYTHONUNBUFFERED: 1
         CONFIG: ${{ matrix.CONFIG }}
@@ -158,7 +162,6 @@ jobs:
         CONFIG: ${{ matrix.CONFIG }}
         SHORT_CONFIG: ${{ matrix.SHORT_CONFIG }}
         OS: ${{ matrix.os }}
-        MINIFORGE_HOME_WIN: D:\Miniforge
       run: |
         export CI=github_actions
         export CI_RUN_ID=$GITHUB_RUN_ID
@@ -167,7 +170,8 @@ jobs:
         if [ $OS == "macos" ]; then
           export CONDA_BLD_DIR="${MINIFORGE_HOME:-${HOME}/miniforge3}/conda-bld"
         elif [ $OS == "windows" ]; then
-          export CONDA_BLD_DIR="${MINIFORGE_HOME_WIN//\\//}/conda-bld"
+          # this should be populated consistently by smithy, see above
+          export CONDA_BLD_DIR="C:\\bld"
         else
           export CONDA_BLD_DIR="build_artifacts"
         fi
@@ -185,7 +189,11 @@ jobs:
         # we do not want to trigger artefact creation if the job is cancelled;
         # gate this on either explicit success or failure
         if [ $JOB_STATUS == "failure" || $JOB_STATUS == "success" ]; then
-          ./.scripts/create_conda_build_artifacts.sh
+          if [ $OS == "windows" ]; then
+            cmd.exe /c .scripts\\create_conda_build_artifacts.bat
+          else
+            ./.scripts/create_conda_build_artifacts.sh
+          fi
         else
           # skips upload steps below, which are gated on preparation success
           exit 1
