@@ -209,7 +209,7 @@ jobs:
         fi
         # we do not want to trigger artefact creation if the job is cancelled;
         # gate this on either explicit success or failure
-        if [ $JOB_STATUS == "failure" || $JOB_STATUS == "success" ]; then
+        if [ $JOB_STATUS != "cancelled" ]; then
           if [ $OS == "windows" ]; then
             cmd.exe /c .scripts\\create_conda_build_artifacts.bat
           else
