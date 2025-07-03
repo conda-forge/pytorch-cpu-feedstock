@@ -79,6 +79,7 @@ jobs:
       uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
     - name: Build on Linux
+      id: build-linux
       if: matrix.os == 'ubuntu'
       env:
         CONFIG: ${{ matrix.CONFIG }}
@@ -109,6 +110,7 @@ jobs:
         ./.scripts/run_docker_build.sh
 
     - name: Build on macOS
+      id: build-macos
       if: matrix.os == 'macos'
       env:
         CONFIG: ${{ matrix.CONFIG }}
@@ -132,6 +134,7 @@ jobs:
         ./.scripts/run_osx_build.sh
 
     - name: Build on windows
+      id: build-win
       if: matrix.os == 'windows'
       shell: cmd
       run: |
@@ -153,6 +156,24 @@ jobs:
         FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
 
+    - name: Determine build outcome
+      # this is to merge the status of the linux/osx/win builds into
+      # something we can easily reuse during artefact generation
+      id: determine-status
+      if: ${{ always() }}
+      shell: bash
+      env:
+        OS: ${{ matrix.os }}
+      run: |
+        if [[ "$OS" == "ubuntu" ]]; then
+          STATUS="${{ steps.build-linux.outcome }}"
+        elif [[ "$OS" == "macos" ]]; then
+          STATUS="${{ steps.build-macos.outcome }}"
+        elif [[ "$OS" == "windows" ]]; then
+          STATUS="${{ steps.build-windows.outcome }}"
+        fi
+        echo "status=$STATUS" >> $GITHUB_OUTPUT
+
     - name: Prepare conda build artifacts
       continue-on-error: true
       id: prepare-artifacts
@@ -161,6 +182,7 @@ jobs:
       env:
         CONFIG: ${{ matrix.CONFIG }}
         SHORT_CONFIG: ${{ matrix.SHORT_CONFIG }}
+        JOB_STATUS: ${{ steps.determine-status.outputs.status }}
         OS: ${{ matrix.os }}
       run: |
         export CI=github_actions
@@ -179,7 +201,6 @@ jobs:
         # Archive the CONDA_BLD_DIR environments only when the job fails
         # Use different prefix for successful and failed build artifacts
         # so random failures don't prevent rebuilds from creating artifacts.
-        JOB_STATUS="${{ job.status }}"
         if [ $JOB_STATUS == "failure" ]; then
           export BLD_ARTIFACT_PREFIX="conda_artifacts"
           export ENV_ARTIFACT_PREFIX="conda_envs"
