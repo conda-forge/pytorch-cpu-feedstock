@@ -182,7 +182,8 @@ jobs:
       continue-on-error: true
       id: prepare-artifacts
       shell: bash
-      if: ${{ always() }}
+      # we do not want to trigger artefact creation if the build was cancelled
+      if: ${{ steps.determine-status.outputs.status != 'cancelled' }}
       env:
         CONFIG: ${{ matrix.CONFIG }}
         SHORT_CONFIG: ${{ matrix.SHORT_CONFIG }}
@@ -211,17 +212,10 @@ jobs:
         else
           export BLD_ARTIFACT_PREFIX="conda_pkgs"
         fi
-        # we do not want to trigger artefact creation if the job is cancelled;
-        # gate this on either explicit success or failure
-        if [ $JOB_STATUS != "cancelled" ]; then
-          if [ $OS == "windows" ]; then
-            cmd.exe /c .scripts\\create_conda_build_artifacts.bat
-          else
-            ./.scripts/create_conda_build_artifacts.sh
-          fi
+        if [ $OS == "windows" ]; then
+          cmd.exe /c .scripts\\create_conda_build_artifacts.bat
         else
-          # skips upload steps below, which are gated on preparation success
-          exit 1
+          ./.scripts/create_conda_build_artifacts.sh
         fi
 
     - name: Store conda build artifacts
