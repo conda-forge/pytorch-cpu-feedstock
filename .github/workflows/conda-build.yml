@@ -172,6 +172,10 @@ jobs:
         elif [[ "$OS" == "windows" ]]; then
           STATUS="${{ steps.build-windows.outcome }}"
         fi
+        if [ -z "$STATUS" ]; then
+          # cancelled jobs will have empty status
+          STATUS="cancelled"
+        fi
         echo "status=$STATUS" >> $GITHUB_OUTPUT
 
     - name: Prepare conda build artifacts
