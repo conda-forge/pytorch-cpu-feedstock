@@ -134,7 +134,7 @@ jobs:
         ./.scripts/run_osx_build.sh
 
     - name: Build on windows
-      id: build-win
+      id: build-windows
       if: matrix.os == 'windows'
       shell: cmd
       run: |
@@ -173,7 +173,7 @@ jobs:
           STATUS="${{ steps.build-windows.outcome }}"
         fi
         if [ -z "$STATUS" ]; then
-          # cancelled jobs will have empty status
+          # jobs that never ran will have empty status
           STATUS="cancelled"
         fi
         echo "status=$STATUS" >> $GITHUB_OUTPUT
