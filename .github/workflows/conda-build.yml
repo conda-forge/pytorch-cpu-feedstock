@@ -185,12 +185,12 @@ jobs:
       # we do not want to trigger artefact creation if the build was cancelled
       if: ${{ steps.determine-status.outputs.status != 'cancelled' }}
       env:
+        CI: github_actions
         CONFIG: ${{ matrix.CONFIG }}
         SHORT_CONFIG: ${{ matrix.SHORT_CONFIG }}
         JOB_STATUS: ${{ steps.determine-status.outputs.status }}
         OS: ${{ matrix.os }}
       run: |
-        export CI=github_actions
         export CI_RUN_ID=$GITHUB_RUN_ID
         export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
         export ARTIFACT_STAGING_DIR="$GITHUB_WORKSPACE"
