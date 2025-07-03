@@ -182,7 +182,14 @@ jobs:
         else
           export BLD_ARTIFACT_PREFIX="conda_pkgs"
         fi
-        ./.scripts/create_conda_build_artifacts.sh
+        # we do not want to trigger artefact creation if the job is cancelled;
+        # gate this on either explicit success or failure
+        if [ $JOB_STATUS == "failure" || $JOB_STATUS == "success" ]; then
+          ./.scripts/create_conda_build_artifacts.sh
+        else
+          # skips upload steps below, which are gated on preparation success
+          exit 1
+        fi
 
     - name: Store conda build artifacts
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
