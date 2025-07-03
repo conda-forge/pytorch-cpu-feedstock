@@ -132,6 +132,7 @@ jobs:
         ./.scripts/run_osx_build.sh
 
     - name: Build on windows
+      if: matrix.os == 'windows'
       shell: cmd
       run: |
         set "flow_run_id=github_%GITHUB_RUN_ID%"
@@ -147,8 +148,9 @@ jobs:
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
         FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
-      if: matrix.os == 'windows'
+
     - name: Prepare conda build artifacts
+      continue-on-error: true
       id: prepare-artifacts
       shell: bash
       if: ${{ always() }}
@@ -181,7 +183,6 @@ jobs:
           export BLD_ARTIFACT_PREFIX="conda_pkgs"
         fi
         ./.scripts/create_conda_build_artifacts.sh
-      continue-on-error: true
 
     - name: Store conda build artifacts
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
