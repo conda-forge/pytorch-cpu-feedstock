@@ -1,5 +1,5 @@
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - gcc
 c_compiler_version:
@@ -31,7 +31,7 @@ github_actions_labels:
 is_rc:
 - 'False'
 libabseil:
-- '20250127'
+- '20250512'
 libblas:
 - 3.9.* *netlib
 libcblas:
@@ -41,25 +41,21 @@ liblapack:
 libmagma_sparse:
 - '2.9'
 libprotobuf:
-- 5.29.3
+- 6.31.1
 libtorch:
 - '2.6'
 magma:
 - '2.9'
 megabuild:
-- 'true'
+- true
 mkl:
 - '2024'
 nccl:
 - '2'
 numpy:
-- '2.0'
-- '2.0'
-- '2.0'
 - '2'
-- '2.0'
 orc:
-- 2.1.1
+- 2.1.2
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -73,16 +69,12 @@ python:
 pytorch:
 - '2.6'
 target_platform:
-- linux-64
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-  - cuda_compiler
   - cuda_compiler_version
-  - docker_image
 - - channel_targets
   - is_rc
-- - python
-  - numpy
 zlib:
 - '1'
