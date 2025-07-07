@@ -1,7 +1,7 @@
-From 1572b5d176f17e2a4ebe7c859e8c2aa19607190a Mon Sep 17 00:00:00 2001
+From c36fe22f0b7a8d95ba04b6c3c8358a70a552ff71 Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <ifernando@quansight.com>
 Date: Wed, 18 Dec 2024 03:59:00 +0000
-Subject: [PATCH 05/16] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
+Subject: [PATCH] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
 
 There are two calling conventions for *dotu functions
 
@@ -27,11 +27,11 @@ assists with the BLAS switching mechanism as we are not relying on
 a particular `cdotu` implementation with the cost of two additional
 functional calls.
 ---
- cmake/Dependencies.cmake | 1 +
- 1 file changed, 1 insertion(+)
+ cmake/Dependencies.cmake | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 4bc52c05d87..c356c7cdfe2 100644
+index 5227204b041..d800e950540 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -182,6 +182,7 @@ elseif(BLAS STREQUAL "OpenBLAS")
@@ -42,3 +42,14 @@ index 4bc52c05d87..c356c7cdfe2 100644
  elseif(BLAS STREQUAL "BLIS")
    find_package(BLIS REQUIRED)
    include_directories(SYSTEM ${BLIS_INCLUDE_DIR})
+@@ -204,6 +205,7 @@ elseif(BLAS STREQUAL "MKL")
+     set(BLAS_INFO "mkl")
+     set(BLAS_FOUND 1)
+     set(BLAS_LIBRARIES ${MKL_LIBRARIES})
++    set(BLAS_USE_CBLAS_DOT TRUE)
+   else()
+     message(WARNING "MKL could not be found. Defaulting to Eigen")
+     set(CAFFE2_USE_EIGEN_FOR_BLAS ON)
+-- 
+2.47.1
+

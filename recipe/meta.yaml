@@ -403,6 +403,7 @@ outputs:
         # We have had issues with openmp .dylibs being doubly loaded in certain cases. These two tests catch the (observed) issue
         - python -c "import torch; import numpy"
         - python -c "import numpy; import torch"
+        - python -c "import numpy as np;import torch;x = torch.tensor([2], dtype=torch.complex128);assert torch.dot(x, x).real == 4.0"
         # distributed support is enabled by default on linux; for mac, we enable it manually in build.sh
         - python -c "import torch; assert torch.distributed.is_available()"         # [linux or osx]
         - python -c "import torch; assert torch.backends.cuda.is_built()"           # [cuda_compiler_version != "None"]
