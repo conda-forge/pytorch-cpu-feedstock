@@ -1,7 +1,7 @@
-From c36fe22f0b7a8d95ba04b6c3c8358a70a552ff71 Mon Sep 17 00:00:00 2001
+From 9e6e570d3cd3b068ce06885b78ce54e26bd6928f Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <ifernando@quansight.com>
 Date: Wed, 18 Dec 2024 03:59:00 +0000
-Subject: [PATCH] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
+Subject: [PATCH 05/17] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
 
 There are two calling conventions for *dotu functions
 
@@ -31,7 +31,7 @@ functional calls.
  1 file changed, 2 insertions(+)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 5227204b041..d800e950540 100644
+index 47917899943..9886a284d4e 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -182,6 +182,7 @@ elseif(BLAS STREQUAL "OpenBLAS")
@@ -50,6 +50,3 @@ index 5227204b041..d800e950540 100644
    else()
      message(WARNING "MKL could not be found. Defaulting to Eigen")
      set(CAFFE2_USE_EIGEN_FOR_BLAS ON)
--- 
-2.47.1
-
