@@ -1,7 +1,7 @@
-From 250de80e0cb01749b089758c9cae92e46a6ca1f5 Mon Sep 17 00:00:00 2001
+From 2e509a92b1d1a5f40de6d9a7e84f384f82b9bfdb Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Sat, 14 Jun 2025 07:34:48 +1100
-Subject: [PATCH 16/16] skip test_norm_matrix_degenerate_shapes on numpy >=2.3
+Subject: [PATCH 16/17] skip test_norm_matrix_degenerate_shapes on numpy >=2.3
 
 ---
  test/test_linalg.py | 1 +

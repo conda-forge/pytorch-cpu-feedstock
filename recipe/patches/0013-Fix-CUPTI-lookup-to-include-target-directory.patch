@@ -1,17 +1,17 @@
-From fc1c651d68ac35693d9a22aeac26065637444af5 Mon Sep 17 00:00:00 2001
+From 77d7e436f012413bb61c000c750f461b03f6696b Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Thu, 6 Mar 2025 13:57:25 +0100
-Subject: [PATCH 13/16] Fix CUPTI lookup to include target directory
+Subject: [PATCH 13/17] Fix CUPTI lookup to include target directory
 
 ---
  cmake/Dependencies.cmake | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index c356c7cdfe2..24976a49efe 100644
+index 9886a284d4e..8c60f9d1204 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -1662,6 +1662,7 @@ if(USE_KINETO)
+@@ -1666,6 +1666,7 @@ if(USE_KINETO)
      endif()
  
      find_library(CUPTI_LIBRARY_PATH ${CUPTI_LIB_NAME} PATHS
@@ -19,7 +19,7 @@ index c356c7cdfe2..24976a49efe 100644
          ${CUDA_SOURCE_DIR}
          ${CUDA_SOURCE_DIR}/extras/CUPTI/lib64
          ${CUDA_SOURCE_DIR}/lib
-@@ -1669,6 +1670,7 @@ if(USE_KINETO)
+@@ -1673,6 +1674,7 @@ if(USE_KINETO)
          NO_DEFAULT_PATH)
  
      find_path(CUPTI_INCLUDE_DIR cupti.h PATHS

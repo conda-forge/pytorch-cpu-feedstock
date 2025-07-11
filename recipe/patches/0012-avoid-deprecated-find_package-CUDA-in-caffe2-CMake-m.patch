@@ -1,7 +1,7 @@
-From b326cf46918bd84bf052a72e76989d123788375c Mon Sep 17 00:00:00 2001
+From 4d94092be5f26d1df1257c9629172fe6c62e19fc Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
-Subject: [PATCH 12/16] avoid deprecated `find_package(CUDA)` in caffe2 CMake
+Subject: [PATCH 12/17] avoid deprecated `find_package(CUDA)` in caffe2 CMake
  metadata
 
 vendor the not-available-anymore function torch_cuda_get_nvcc_gencode_flag from CMake
