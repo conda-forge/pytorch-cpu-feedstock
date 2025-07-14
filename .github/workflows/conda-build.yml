@@ -143,9 +143,8 @@ jobs:
         set "sha=%GITHUB_SHA%"
         call ".scripts\run_win_build.bat"
       env:
-        # default value; make explicit for now (pending smithy-improvements),
-        # as it needs to be synchronized with artefact generation below; see
-        # https://github.com/conda-forge/conda-smithy/issues/2345
+        # default value; make it explicit, as it needs to match with artefact
+        # generation below. Not configurable for now, can be revisited later
         CONDA_BLD_DIR: C:\bld
         MINIFORGE_HOME: D:\Miniforge
         PYTHONUNBUFFERED: 1
@@ -166,14 +165,14 @@ jobs:
         OS: ${{ matrix.os }}
       run: |
         if [[ "$OS" == "ubuntu" ]]; then
-          STATUS="${{ steps.build-linux.outcome }}"
+          STATUS=${{ steps.build-linux.outcome }}
         elif [[ "$OS" == "macos" ]]; then
-          STATUS="${{ steps.build-macos.outcome }}"
+          STATUS=${{ steps.build-macos.outcome }}
         elif [[ "$OS" == "windows" ]]; then
-          STATUS="${{ steps.build-windows.outcome }}"
+          STATUS=${{ steps.build-windows.outcome }}
         fi
         if [ -z "$STATUS" ]; then
-          # jobs that never ran will have empty status
+          # steps that never ran will have empty status
           STATUS="cancelled"
         fi
         echo "status=$STATUS" >> $GITHUB_OUTPUT
@@ -197,7 +196,7 @@ jobs:
         if [ $OS == "macos" ]; then
           export CONDA_BLD_DIR="${MINIFORGE_HOME:-${HOME}/miniforge3}/conda-bld"
         elif [ $OS == "windows" ]; then
-          # this should be populated consistently by smithy, see above
+          # this needs to be consistent with build step, see above
           export CONDA_BLD_DIR="C:\\bld"
         else
           export CONDA_BLD_DIR="build_artifacts"
