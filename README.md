@@ -65,17 +65,17 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse</td>
+              <td>linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse</td>
+              <td>linux_aarch64_c_compiler_version14channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version14channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -184,10 +184,10 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse</td>
+              <td>win_64_channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=win&configuration=win%20win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=win&configuration=win%20win_64_channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse" alt="variant">
                 </a>
               </td>
             </tr><tr>
