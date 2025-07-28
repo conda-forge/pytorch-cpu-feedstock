@@ -74,8 +74,7 @@ set "USE_LITE_PROTO=ON"
 SET "USE_ITT=0"
 SET "USE_NUMA=0"
 
-@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
-set "USE_OPENMP=OFF"
+set "USE_OPENMP=ON"
 
 @REM Use our Pybind11, Eigen, sleef
 set USE_SYSTEM_EIGEN_INSTALL=1
