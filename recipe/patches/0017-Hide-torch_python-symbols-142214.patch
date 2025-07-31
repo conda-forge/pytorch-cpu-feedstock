@@ -1,7 +1,7 @@
 From accc42d402a59b520ca890c4e6ebb1b10a9c6e7c Mon Sep 17 00:00:00 2001
 From: cyy <cyyever@outlook.com>
 Date: Mon, 16 Dec 2024 00:59:26 +0000
-Subject: [PATCH 17/19] Hide torch_python symbols (#142214)
+Subject: [PATCH 17/20] Hide torch_python symbols (#142214)
 
 Change symbols in torch_python to invisible by default on platforms other than Apple.
 Pull Request resolved: https://github.com/pytorch/pytorch/pull/142214
