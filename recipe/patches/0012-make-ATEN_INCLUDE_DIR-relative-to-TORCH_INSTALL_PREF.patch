@@ -1,7 +1,7 @@
 From 7c955a22b748da66317f69f49f2e99d826083a0d Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Tue, 28 Jan 2025 14:15:34 +1100
-Subject: [PATCH 12/19] make ATEN_INCLUDE_DIR relative to TORCH_INSTALL_PREFIX
+Subject: [PATCH 12/20] make ATEN_INCLUDE_DIR relative to TORCH_INSTALL_PREFIX
 
 we cannot set CMAKE_INSTALL_PREFIX without the pytorch build complaining, but we can
 use TORCH_INSTALL_PREFIX, which is set correctly relative to our CMake files already:

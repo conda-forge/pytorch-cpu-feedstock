@@ -1,7 +1,7 @@
 From 384a49f151e20649e9690b8fdc7127d49a021dc9 Mon Sep 17 00:00:00 2001
 From: pytorchbot <soumith+bot@pytorch.org>
 Date: Wed, 7 May 2025 17:07:42 -0400
-Subject: [PATCH 19/19] Fix tensorpipe compilation with clang-17 (#153091)
+Subject: [PATCH 19/20] Fix tensorpipe compilation with clang-17 (#153091)
 
 Fix tensorpipe compilation with clang-17 (#151344)
 
