@@ -17,15 +17,15 @@ cudnn:
 cxx_compiler:
 - vs2022
 github_actions_labels:
-- cirun-azure-windows-4xlarge
+- cirun-azure-windows-2xlarge
 is_rc:
 - 'False'
 libabseil:
-- '20250512'
+- '20250127'
 libmagma_sparse:
 - '2.9'
 libprotobuf:
-- 6.31.1
+- 5.29.3
 libtorch:
 - '2.6'
 magma:

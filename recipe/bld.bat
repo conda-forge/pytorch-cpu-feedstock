@@ -18,11 +18,6 @@ set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
 
-@REM Reduce job count on cirun-azure-windows-2xlarge to avoid being OOM-killed.
-if "%CI%" == "github_actions" (
-    SET MAX_JOBS=4
-)
-
 @REM Setup BLAS
 if "%blas_impl%" == "generic" (
     @REM Fake openblas
@@ -74,16 +69,13 @@ set "USE_LITE_PROTO=ON"
 SET "USE_ITT=0"
 SET "USE_NUMA=0"
 
-set "USE_OPENMP=ON"
+@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
+set "USE_OPENMP=OFF"
 
 @REM Use our Pybind11, Eigen, sleef
 set USE_SYSTEM_EIGEN_INSTALL=1
 set USE_SYSTEM_PYBIND11=1
 set USE_SYSTEM_SLEEF=1
-
-@REM workaround to stop setup.py from trying to check whether we checked out
-@REM all submodules (we don't use all of them)
-del .gitmodules
 
 if not "%cuda_compiler_version%" == "None" (
     set USE_CUDA=1
@@ -95,7 +87,7 @@ if not "%cuda_compiler_version%" == "None" (
     @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
     @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
 
-    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
+    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
     set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
 
     set MAGMA_HOME=%LIBRARY_PREFIX%
@@ -194,7 +186,7 @@ if "%PKG_NAME%" == "libtorch" (
 
     @REM Navigate into the unpacked wheel; naming pattern of the folder is documented:
     @REM https://github.com/pypa/wheel/blob/0.45.1/src/wheel/cli/unpack.py#L11-L12
-    pushd torch-*
+    pushd torch-%PKG_VERSION%
     if %ERRORLEVEL% neq 0 exit 1
 
     @REM Move the binaries into the packages site-package directory

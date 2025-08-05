@@ -1,0 +1,51 @@
+From 12a4473ae7a47da2a30121f329a2c3c8f3f456c5 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Thu, 23 Jan 2025 22:46:58 +1100
+Subject: [PATCH 09/15] simplify torch.utils.cpp_extension.include_paths; use
+ it in cpp_builder
+
+The /TH headers have not existed since pytorch 1.11
+---
+ torch/_inductor/cpp_builder.py | 13 +++----------
+ torch/utils/cpp_extension.py   |  4 ----
+ 2 files changed, 3 insertions(+), 14 deletions(-)
+
+diff --git a/torch/_inductor/cpp_builder.py b/torch/_inductor/cpp_builder.py
+index 92cf88df8eb..9328e3f96e2 100644
+--- a/torch/_inductor/cpp_builder.py
++++ b/torch/_inductor/cpp_builder.py
+@@ -764,16 +764,9 @@ def _get_build_args_of_chosen_isa(vec_isa: VecISA) -> Tuple[List[str], List[str]
+ def _get_torch_related_args(
+     include_pytorch: bool, aot_mode: bool
+ ) -> Tuple[List[str], List[str], List[str]]:
+-    from torch.utils.cpp_extension import _TORCH_PATH, TORCH_LIB_PATH
+-
+-    include_dirs = [
+-        os.path.join(_TORCH_PATH, "include"),
+-        os.path.join(_TORCH_PATH, "include", "torch", "csrc", "api", "include"),
+-        # Some internal (old) Torch headers don't properly prefix their includes,
+-        # so we need to pass -Itorch/lib/include/TH as well.
+-        os.path.join(_TORCH_PATH, "include", "TH"),
+-        os.path.join(_TORCH_PATH, "include", "THC"),
+-    ]
++    from torch.utils.cpp_extension import include_paths, TORCH_LIB_PATH
++
++    include_dirs = include_paths()
+     libraries_dirs = [TORCH_LIB_PATH]
+     libraries = []
+     if sys.platform != "darwin" and not config.is_fbcode():
+diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
+index b4a70dcc06e..23e2499903c 100644
+--- a/torch/utils/cpp_extension.py
++++ b/torch/utils/cpp_extension.py
+@@ -1212,10 +1212,6 @@ def include_paths(device_type: str = "cpu") -> List[str]:
+         lib_include,
+         # Remove this once torch/torch.h is officially no longer supported for C++ extensions.
+         os.path.join(lib_include, 'torch', 'csrc', 'api', 'include'),
+-        # Some internal (old) Torch headers don't properly prefix their includes,
+-        # so we need to pass -Itorch/lib/include/TH as well.
+-        os.path.join(lib_include, 'TH'),
+-        os.path.join(lib_include, 'THC')
+     ]
+     if device_type == "cuda" and IS_HIP_EXTENSION:
+         paths.append(os.path.join(lib_include, 'THH'))

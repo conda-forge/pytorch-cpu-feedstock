@@ -1,0 +1,29 @@
+From 2a153ae8053942b719bc614202e301564947bac2 Mon Sep 17 00:00:00 2001
+From: Alfredo Luque <alfredo.luque@airbnb.com>
+Date: Tue, 5 Aug 2025 23:51:47 +0000
+Subject: [PATCH] Fix tensorpipe compilation with clang-17
+
+Originally committed to PyTorch in
+https://github.com/pytorch/pytorch/pull/153091 for 2.7+
+---
+ cmake/Dependencies.cmake | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index e78305e0a8e..bfdd714971d 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1162,6 +1162,10 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+     # Tensorpipe uses cuda_add_library
+     torch_update_find_cuda_flags()
+     add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/tensorpipe)
++    # Suppress warning to unblock libnop comiplation by clang-17
++    # See https://github.com/pytorch/pytorch/issues/151316
++    # This was merged upstream in https://github.com/pytorch/pytorch/pull/153091 and can probably be removed with PyTorch 2.7.x
++    target_compile_options_if_supported(tensorpipe -Wno-missing-template-arg-list-after-template-kw)
+ 
+     list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)
+     list(APPEND Caffe2_DEPENDENCY_LIBS nlohmann)
+-- 
+2.50.1
+

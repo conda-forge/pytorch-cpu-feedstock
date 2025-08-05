@@ -27,7 +27,7 @@ cxx_compiler_version:
 is_rc:
 - 'False'
 libabseil:
-- '20250512'
+- '20250127'
 libblas:
 - 3.9.* *netlib
 libcblas:
@@ -37,7 +37,7 @@ liblapack:
 libmagma_sparse:
 - '2.9'
 libprotobuf:
-- 6.31.1
+- 5.29.3
 libtorch:
 - '2.6'
 llvm_openmp:
