@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.6.0" %}
-{% set build = 4 %}
+{% set build = 5 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -68,6 +68,8 @@ source:
     # backport https://github.com/google/XNNPACK/commit/5f23827e66cca435fa400b6e221892ac95af0079
     # for https://github.com/pytorch/pytorch/issues/141083
     - patches_submodules/XNNPACK/0001-Fix-bazel-linux-aarch64-gcc13-workflow-and-resolve-a.patch
+    # backport https://github.com/pytorch/pytorch/pull/153091
+    - patches/0019-Fix-tensorpipe-compilation-with-clang-17.patch
 
 build:
   number: {{ build }}

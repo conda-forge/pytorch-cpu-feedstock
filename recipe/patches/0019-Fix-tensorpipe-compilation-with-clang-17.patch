@@ -1,0 +1,28 @@
+From 20b82724b00cbe2e38bd6dbc5dc0908ac2378dd4 Mon Sep 17 00:00:00 2001
+From: Alfredo Luque <alfredo.luque@airbnb.com>
+Date: Wed, 6 Aug 2025 00:15:41 +0000
+Subject: [PATCH] Backport Clang17 compilation fix for tensorpipe
+
+---
+ cmake/Dependencies.cmake | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 1813f4418a2..1e6d9b9da28 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1150,8 +1150,10 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+ 
+     # Tensorpipe uses cuda_add_library
+     torch_update_find_cuda_flags()
++    # backport https://github.com/pytorch/pytorch/pull/151344 from PyTorch 2.7.x
++    # see https://github.com/pytorch/pytorch/issues/151316
+     add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/tensorpipe)
+-
++    target_compile_options_if_supported(tensorpipe -Wno-missing-template-arg-list-after-template-kw)
+     list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)
+     list(APPEND Caffe2_DEPENDENCY_LIBS nlohmann)
+     if(USE_CUDA)
+-- 
+2.50.1
+
