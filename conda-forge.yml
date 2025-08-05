@@ -2,12 +2,9 @@ azure:
   free_disk_space: true
   settings_linux:
     timeoutInMinutes: 1
-  settings_win:
-    variables:
-      CONDA_BLD_PATH: C:\\bld\\
 bot:
   abi_migration_branches:
-  - v2.5.x
+  - v2.6.x
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
@@ -19,7 +16,8 @@ github:
   tooling_branch_name: main
 github_actions:
   self_hosted: true
-  timeout_minutes: 900
+  store_build_artifacts: true
+  timeout_minutes: 1200
   triggers:
   - push
   - pull_request
