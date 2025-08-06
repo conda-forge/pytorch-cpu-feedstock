@@ -1,0 +1,25 @@
+From 4760a58f156522e8f02ec83befcc53bd6323ec2f Mon Sep 17 00:00:00 2001
+From: Jeongseok Lee <jeongseok@meta.com>
+Date: Sat, 22 Mar 2025 22:50:49 -0700
+Subject: [PATCH] Always use system nvtx
+
+---
+ cmake/public/cuda.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
+index 792e2ac78d3..cb1ece22cf3 100644
+--- a/cmake/public/cuda.cmake
++++ b/cmake/public/cuda.cmake
+@@ -146,7 +146,7 @@ else()
+ endif()
+ 
+ # nvToolsExt
+-if(USE_SYSTEM_NVTX)
++if(TRUE)
+   find_path(nvtx3_dir NAMES nvtx3)
+ else()
+   find_path(nvtx3_dir NAMES nvtx3 PATHS "${PROJECT_SOURCE_DIR}/third_party/NVTX/c/include" NO_DEFAULT_PATH)
+-- 
+2.20.1.windows.1
+

@@ -1,10 +1,5 @@
-# problem with GCC 14 in vendored xnnpack
-c_compiler_version:     # [aarch64]
-  - 13                  # [aarch64]
-  - 13                  # [aarch64]
-cxx_compiler_version:   # [aarch64]
-  - 13                  # [aarch64]
-  - 13                  # [aarch64]
+c_stdlib_version:  # [unix]
+  - 10.15          # [osx and x86_64]
 
 MACOSX_SDK_VERSION:         # [osx]
   - 13.3                    # [osx]
@@ -28,7 +23,7 @@ blas_impl:
 # https://github.com/conda-forge/.cirun
 github_actions_labels:          # [linux or win]
 - cirun-openstack-gpu-2xlarge   # [linux]
-- cirun-azure-windows-4xlarge   # [win]
+- cirun-azure-windows-2xlarge   # [win]
 
 megabuild:
 - true      # [linux]
