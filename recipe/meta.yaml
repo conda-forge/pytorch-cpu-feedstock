@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.7.1" %}
-{% set build = 4 %}
+{% set version = "2.8.0" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -16,7 +16,7 @@
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.3.1" %}
+{% set triton = "3.4.0" %}
 
 # TODO Temporary pin, remove me
 {% set mkl = "<2025" %}
@@ -38,7 +38,7 @@ source:
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-    sha256: 5befd2e540fd55ce4782d0ca7610ce5b572d756d7ea38090ef0f3c7c428fb20f
+    sha256: c70a2c9488f6f6e8af5982a10d1cc2c37b7df5e6506d839daa5d5e250953d7b5
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
@@ -61,10 +61,6 @@ source:
       - patches/0012-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
       # backport https://github.com/pytorch/pytorch/pull/148668
       - patches/0013-Fix-CUPTI-lookup-to-include-target-directory.patch
-      # backport (practically speaking) https://github.com/pytorch/pytorch/pull/149861
-      - patches/0014-Always-use-system-nvtx.patch
-      # https://github.com/pytorch/pytorch/pull/152533
-      - patches/0015-Do-not-check-out-nccl-when-not-building-it.patch
       # skip a test that fails with numpy 2.3; can be dropped for pytorch>2.7
       - patches/0016-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
