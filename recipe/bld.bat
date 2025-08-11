@@ -46,11 +46,11 @@ if "%PKG_NAME%" == "pytorch" (
   if %ERRORLEVEL% neq 0 exit 1
 
   @REM Replace version string v3.12.8() with ie v3.11.11()
-  sed -i.bak -E "s/v3\.12\.[0-9]+/v%PY_VERSION_FULL%/g" build/CMakeCache.txt
+  sed -i.bak -E "s/v3\.12\.[0-9]+/v!PY_VERSION_FULL!/g" build/CMakeCache.txt
   if %ERRORLEVEL% neq 0 exit 1
 
   @REM Replace interpreter properties Python;3;12;8;64 with ie Python;3;11;11;64
-  sed -i.bak -E "s/Python;3;12;[0-9]+;64/Python;%PY_VERSION_FULL:.=;%;64/g" build/CMakeCache.txt
+  sed -i.bak -E "s/Python;3;12;[0-9]+;64/Python;!PY_VERSION_FULL:.=;!;64/g" build/CMakeCache.txt
   if %ERRORLEVEL% neq 0 exit 1
 
   @REM Replace cp312-win_amd64 with ie cp311-win_amd64
