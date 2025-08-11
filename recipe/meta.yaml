@@ -110,8 +110,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - llvm-openmp               # [unix]
-    - intel-openmp {{ mkl }}    # [win]
+    - llvm-openmp
     - libuv                     # [win]
     - cmake <4
     - ninja
@@ -163,8 +162,7 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - llvm-openmp             # [unix]
-    - intel-openmp {{ mkl }}  # [win]
+    - llvm-openmp
     - libabseil
     - libprotobuf
     - sleef
@@ -177,7 +175,6 @@ requirements:
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
-    - intel-openmp {{ mkl }}            # [win]
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
     # These constraints ensure conflict between pytorch and
@@ -265,8 +262,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - llvm-openmp             # [unix]
-        - intel-openmp {{ mkl }}  # [win]
+        - llvm-openmp
         - cmake <4
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -313,8 +309,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - llvm-openmp             # [unix]
-        - intel-openmp {{ mkl }}  # [win]
+        - llvm-openmp
         - libabseil
         - libprotobuf
         - pybind11
@@ -328,8 +323,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
         # for non-megabuild, allow libtorch from any python version
         - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
-        - llvm-openmp                       # [unix]
-        - intel-openmp {{ mkl }}            # [win]
+        - llvm-openmp
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
         # GPU requirements without run_exports
