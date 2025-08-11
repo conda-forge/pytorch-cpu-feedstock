@@ -367,6 +367,7 @@ outputs:
         - pip
         - expecttest
         - xmlrunner
+        - pyyaml
         # Required by run_test.py
         - pytest-flakefinder
         - pytest-rerunfailures
