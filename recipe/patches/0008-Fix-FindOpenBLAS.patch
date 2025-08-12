@@ -1,7 +1,7 @@
 From 6e00778c46305f6a36670fa99a326c2426203a42 Mon Sep 17 00:00:00 2001
 From: Bas Zalmstra <bas@prefix.dev>
 Date: Thu, 16 May 2024 10:46:49 +0200
-Subject: [PATCH 08/15] Fix FindOpenBLAS
+Subject: [PATCH 08/19] Fix FindOpenBLAS
 
 ---
  cmake/Modules/FindOpenBLAS.cmake | 15 +++++++++------

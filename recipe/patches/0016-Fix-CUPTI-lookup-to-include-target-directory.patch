@@ -1,14 +1,14 @@
-From 559073f84ee8ca6041534850815a77bc39260aa6 Mon Sep 17 00:00:00 2001
+From d9bf21be98566c8c5ec1a1ead50049dcdc6f16f4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Thu, 6 Mar 2025 13:57:25 +0100
-Subject: [PATCH 16/16] Fix CUPTI lookup to include target directory
+Subject: [PATCH 16/19] Fix CUPTI lookup to include target directory
 
 ---
  cmake/Dependencies.cmake | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index b94993c34..aa4d8baf6 100644
+index b94993c34ba..aa4d8baf6de 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -1602,6 +1602,7 @@ if(USE_KINETO)
