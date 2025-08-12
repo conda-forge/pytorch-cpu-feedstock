@@ -63,13 +63,13 @@ source:
     - patches/0016-Fix-CUPTI-lookup-to-include-target-directory.patch
     - patches/0017-Hide-torch_python-symbols-142214.patch
     - patches/0018-Always-use-system-nvtx.patch
+    # backport https://github.com/pytorch/pytorch/pull/153091
+    - patches/0019-Fix-tensorpipe-compilation-with-clang-17-153091.patch
     - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
     - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
     # backport https://github.com/google/XNNPACK/commit/5f23827e66cca435fa400b6e221892ac95af0079
     # for https://github.com/pytorch/pytorch/issues/141083
     - patches_submodules/XNNPACK/0001-Fix-bazel-linux-aarch64-gcc13-workflow-and-resolve-a.patch
-    # backport https://github.com/pytorch/pytorch/pull/153091
-    - patches/0019-Fix-tensorpipe-compilation-with-clang-17.patch
 
 build:
   number: {{ build }}

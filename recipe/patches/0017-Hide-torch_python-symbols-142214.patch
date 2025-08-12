@@ -1,13 +1,12 @@
-From 17865a4af5ca2e97a168b61f881a11cb16780230 Mon Sep 17 00:00:00 2001
+From accc42d402a59b520ca890c4e6ebb1b10a9c6e7c Mon Sep 17 00:00:00 2001
 From: cyy <cyyever@outlook.com>
 Date: Mon, 16 Dec 2024 00:59:26 +0000
-Subject: [PATCH] Hide torch_python symbols (#142214)
+Subject: [PATCH 17/19] Hide torch_python symbols (#142214)
 
 Change symbols in torch_python to invisible by default on platforms other than Apple.
 Pull Request resolved: https://github.com/pytorch/pytorch/pull/142214
 Approved by: https://github.com/ezyang
 ---
- torch/CMakeLists.txt                         | 2 +-
  torch/csrc/Layout.h                          | 4 ++--
  torch/csrc/MemoryFormat.h                    | 3 ++-
  torch/csrc/Module.cpp                        | 3 ++-
@@ -19,7 +18,7 @@ Approved by: https://github.com/ezyang
  torch/csrc/lazy/ts_backend/ts_backend_impl.h | 2 +-
  torch/csrc/tensor/python_tensor.h            | 7 ++++---
  torch/csrc/utils/device_lazy_init.h          | 3 ++-
- 12 files changed, 27 insertions(+), 19 deletions(-)
+ 11 files changed, 26 insertions(+), 18 deletions(-)
 
 diff --git a/torch/csrc/Layout.h b/torch/csrc/Layout.h
 index 3b6844c9bad..a6864094df9 100644
@@ -250,6 +249,3 @@ index bc5f4912e2a..16fbe41bb83 100644
  void set_requires_device_init(at::DeviceType device_type, bool value);
  
  inline void maybe_initialize_device(at::Device& device) {
--- 
-2.20.1.windows.1
-
