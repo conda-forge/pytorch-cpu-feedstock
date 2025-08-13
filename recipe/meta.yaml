@@ -188,6 +188,7 @@ requirements:
     # if using OpenBLAS, ensure that a version compatible with OpenMP is used
     # otherwise, we get the following warnings:
     # OpenBLAS Warning : Detect OpenMP Loop and this application may hang. Please rebuild the library with USE_OPENMP=1 option.
+    - libopenblas * openmp_*          # [unix and blas_impl != "mkl"]
     - openblas * openmp_*          # [unix and blas_impl != "mkl"]
 
 # these tests are for the libtorch output below, but due to
