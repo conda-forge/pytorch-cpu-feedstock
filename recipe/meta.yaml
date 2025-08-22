@@ -382,6 +382,7 @@ outputs:
         - pybind11
       files:
         - cmake_test/
+        - debug.bat
       source_files:
         # Only include the source_files if we are actually going to run the tests.
         - test
@@ -392,7 +393,7 @@ outputs:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
-        - call %RECIPE_DIR%\debug.bat
+        - call debug.bat
         - python -c "import torch; print(torch.__version__)"
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
         - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
