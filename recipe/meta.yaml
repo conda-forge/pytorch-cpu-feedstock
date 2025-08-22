@@ -392,8 +392,7 @@ outputs:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
-        - "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\gflags.exe" -i python.exe +sls
-        - "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe" -logo log.txt -g -G -o -xn av python -c "import torch"
+        - call %RECIPE_DIR%\debug.bat
         - python -c "import torch; print(torch.__version__)"
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
         - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
