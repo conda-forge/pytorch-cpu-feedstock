@@ -73,9 +73,6 @@ source:
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
-  - url: https://github.com/isuruf/create-forwarder-dll/archive/refs/tags/v0.2.tar.gz
-    sha256: 6a6df09d7c78486c0e771f6bffbaeb8ca0c3ac9e23fd31b9b9e6cd985f95b921
-
 build:
   number: {{ build }}
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
@@ -383,23 +380,21 @@ outputs:
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         - pybind11
+      imports:
+        - torch
+        - torch._C
       files:
         - cmake_test/
-        - debug.bat
       source_files:
         # Only include the source_files if we are actually going to run the tests.
         - test
         # tools/ is needed to optimise test run
         # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
-        - create_forwarder_dll.py
       commands:
         # Run pip check so as to ensure that all pytorch packages are installed
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
         - pip check
-        - del /Q "%PREFIX%\\Library\\bin\\libiomp5md.dll"
-        - python create_forwarder_dll.py "%PREFIX%\\Library\\bin\\libomp.dll" "%PREFIX%\\Library\\bin\\libiomp5md.dll" --arch AMD64 --no-temp-dir
-        - call debug.bat
         - python -c "import torch; print(torch.__version__)"
         - python -c "import torch; assert torch.backends.mkldnn.m.is_available()"  # [x86 and cuda_compiler_version == "None"]
         - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
