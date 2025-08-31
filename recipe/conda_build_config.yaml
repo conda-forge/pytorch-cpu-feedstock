@@ -1,6 +1,14 @@
 c_stdlib_version:  # [unix]
   - 10.15          # [osx and x86_64]
 
+# problem with GCC 14 in vendored xnnpack
+c_compiler_version:     # [aarch64]
+  - 13                  # [aarch64]
+  - 13                  # [aarch64]
+cxx_compiler_version:   # [aarch64]
+  - 13                  # [aarch64]
+  - 13                  # [aarch64]
+
 MACOSX_SDK_VERSION:         # [osx]
   - 13.3                    # [osx]
 

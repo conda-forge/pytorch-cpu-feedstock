@@ -69,8 +69,7 @@ set "USE_LITE_PROTO=ON"
 SET "USE_ITT=0"
 SET "USE_NUMA=0"
 
-@REM TODO(baszalmstra): There are linker errors because of mixing Intel OpenMP (iomp) and Microsoft OpenMP (vcomp)
-set "USE_OPENMP=OFF"
+set "USE_OPENMP=ON"
 
 @REM Use our Pybind11, Eigen, sleef
 set USE_SYSTEM_EIGEN_INSTALL=1
@@ -87,7 +86,7 @@ if not "%cuda_compiler_version%" == "None" (
     @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
     @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
 
-    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
     set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
 
     set MAGMA_HOME=%LIBRARY_PREFIX%

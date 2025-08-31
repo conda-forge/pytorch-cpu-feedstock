@@ -99,6 +99,10 @@ rm -rf $PREFIX/bin/protoc
 export USE_SYSTEM_PYBIND11=1
 export USE_SYSTEM_EIGEN_INSTALL=1
 
+# workaround to stop setup.py from trying to check whether we checked out
+# all submodules (we don't use all of them)
+rm -f .gitmodules
+
 # prevent six from being downloaded
 > third_party/NNPACK/cmake/DownloadSix.cmake
 
@@ -155,6 +159,8 @@ fi
 
 # MacOS build is simple, and will not be for CUDA
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    export USE_CUDA=0
+
     # Produce macOS builds with torch.distributed support.
     # This is enabled by default on Linux, but disabled by default on macOS,
     # because it requires an non-bundled compile-time dependency (libuv
@@ -210,8 +216,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
     # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     case ${cuda_compiler_version} in
-        12.[0-6])
-            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+        12.[89])
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
             ;;
         *)
             echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."

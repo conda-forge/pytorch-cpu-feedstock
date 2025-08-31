@@ -15,9 +15,9 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- None
+- cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.9'
 cudnn:
 - '9'
 cxx_compiler:
@@ -31,7 +31,7 @@ github_actions_labels:
 is_rc:
 - 'False'
 libabseil:
-- '20250127'
+- '20250512'
 libblas:
 - 3.9.* *netlib
 libcblas:
@@ -41,25 +41,21 @@ liblapack:
 libmagma_sparse:
 - '2.9'
 libprotobuf:
-- 5.29.3
+- 6.31.1
 libtorch:
 - '2.6'
 magma:
 - '2.9'
 megabuild:
-- 'true'
+- true
 mkl:
 - '2024'
 nccl:
 - '2'
 numpy:
-- '2.0'
-- '2.0'
-- '2.0'
 - '2'
-- '2.0'
 orc:
-- 2.1.1
+- 2.2.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -69,7 +65,6 @@ python:
 - 3.11.* *_cpython
 - 3.12.* *_cpython
 - 3.13.* *_cp313
-- 3.9.* *_cpython
 pytorch:
 - '2.6'
 target_platform:
@@ -77,12 +72,9 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-  - cuda_compiler
+  - c_stdlib_version
   - cuda_compiler_version
-  - docker_image
 - - channel_targets
   - is_rc
-- - python
-  - numpy
 zlib:
 - '1'
