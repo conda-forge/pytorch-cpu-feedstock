@@ -152,6 +152,9 @@ set "CXXFLAGS=%CXXFLAGS% %CUDA_CFLAGS%"
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 echo "CXXFLAGS=%CXXFLAGS%"
 
+set "CMAKE_C_COMPILER=clang-cl"
+set "CMAKE_CXX_COMPILER=clang-cl"
+
 @REM Configure sccache
 set "CMAKE_C_COMPILER_LAUNCHER=sccache"
 set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"

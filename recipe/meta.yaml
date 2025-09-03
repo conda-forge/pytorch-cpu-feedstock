@@ -112,6 +112,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+    - clang                     # [win]
     - llvm-openmp
     - libuv                     # [win]
     - cmake <4
