@@ -152,6 +152,9 @@ set "CXXFLAGS=%CXXFLAGS% %CUDA_CFLAGS%"
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 echo "CXXFLAGS=%CXXFLAGS%"
 
+set "CMAKE_C_COMPILER=clang-cl"
+set "CMAKE_CXX_COMPILER=clang-cl"
+
 @REM Force using llvm-openmp.
 set "OpenMP_CXX_FLAG=/openmp:llvm"
 

@@ -103,6 +103,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+    - clang                     # [win]
     - libuv                     # [win]
     - llvm-openmp
     - cmake
@@ -254,6 +255,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+        - clang                                  # [win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
