@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.7.1" %}
-{% set build = 4 %}
+{% set build = 5 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -69,6 +69,7 @@ source:
       - patches/0016-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
       - patches/0017-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0018-Use-Intel-LLVM-openmp.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
@@ -82,6 +83,7 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  skip: true  # [not win or cuda_compiler_version != "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -110,8 +112,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - llvm-openmp               # [unix]
-    - intel-openmp {{ mkl }}    # [win]
+    - clang                     # [win]
+    - llvm-openmp
     - libuv                     # [win]
     - cmake <4
     - ninja
@@ -162,8 +164,7 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - llvm-openmp             # [unix]
-    - intel-openmp {{ mkl }}  # [win]
+    - llvm-openmp
     - libabseil
     - libprotobuf
     - sleef
@@ -176,7 +177,6 @@ requirements:
   run:
     # GPU requirements without run_exports
     - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
-    - intel-openmp {{ mkl }}            # [win]
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
     # These constraints ensure conflict between pytorch and
@@ -264,8 +264,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - llvm-openmp             # [unix]
-        - intel-openmp {{ mkl }}  # [win]
+        - llvm-openmp
         - cmake <4
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -311,8 +310,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - llvm-openmp             # [unix]
-        - intel-openmp {{ mkl }}  # [win]
+        - llvm-openmp
         - libabseil
         - libprotobuf
         - pybind11
@@ -326,8 +324,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
         # for non-megabuild, allow libtorch from any python version
         - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
-        - llvm-openmp                       # [unix]
-        - intel-openmp {{ mkl }}            # [win]
+        - llvm-openmp
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
         # GPU requirements without run_exports
