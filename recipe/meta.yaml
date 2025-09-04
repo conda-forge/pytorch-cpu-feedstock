@@ -126,11 +126,12 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    - cudnn                           # [cuda_compiler_version != "None"]
+    - cudnn =9.10.1.4                           # [cuda_compiler_version != "None"]
     - nccl                            # [cuda_compiler_version != "None" and linux]
     - magma                           # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-    - nvtx-c                          # [cuda_compiler_version != "None"]
+    - nvtx-c =3.2.1                          # [cuda_compiler_version != "None"]
+    - rdma-core =58.0
     {% if cuda_compiler_version != "None" %}
     - cuda-driver-dev                 # [linux]
     - cuda-cudart-dev
@@ -139,7 +140,7 @@ requirements:
     - cuda-nvtx-dev
     - cuda-nvml-dev
     - cuda-profiler-api
-    - cusparselt
+    - cusparselt =0.7.1.0
     - libcublas-dev
     - libcudss-dev
     - libcufile-dev  # [linux]
@@ -207,7 +208,8 @@ test:
     # for CMake config to find cuda & nvrtc
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
     - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
-    - nvtx-c                    # [cuda_compiler_version != "None"]
+    - nvtx-c =3.2.1                    # [cuda_compiler_version != "None"]
+    - rdma-core =58.0
     - cmake <4
     - ninja
     - pkg-config
@@ -279,10 +281,11 @@ outputs:
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
+        - cudnn =9.10.1.4                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None" and linux]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-        - nvtx-c                          # [cuda_compiler_version != "None"]
+        - nvtx-c =3.2.1                          # [cuda_compiler_version != "None"]
+        - rdma-core =58.0
         - magma                           # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev                 # [linux]
@@ -292,7 +295,7 @@ outputs:
         - cuda-nvtx-dev
         - cuda-nvml-dev
         - cuda-profiler-api
-        - cusparselt
+        - cusparselt =0.7.1.0
         - libcublas-dev
         - libcudss-dev
         - libcufile-dev  # [linux]
@@ -384,7 +387,8 @@ outputs:
         # for cmake_test
         - cmake <4
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
-        - nvtx-c                    # [cuda_compiler_version != "None"]
+        - nvtx-c =3.2.1                    # [cuda_compiler_version != "None"]
+        - rdma-core =58.0
         - pybind11
       imports:
         - torch
