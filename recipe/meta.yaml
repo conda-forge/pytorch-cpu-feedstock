@@ -111,7 +111,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - llvm-openmp               # [unix]
+    - llvm-openmp <21               # [unix]
     - intel-openmp {{ mkl }}    # [win]
     - libuv                     # [win]
     - cmake <4
@@ -164,11 +164,11 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - llvm-openmp             # [unix]
+    - llvm-openmp <21             # [unix]
     - intel-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
-    - sleef
+    - sleef =3.8
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
@@ -268,7 +268,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - llvm-openmp             # [unix]
+        - llvm-openmp <21             # [unix]
         - intel-openmp {{ mkl }}  # [win]
         - cmake <4
         - ninja
@@ -316,13 +316,13 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - llvm-openmp             # [unix]
+        - llvm-openmp <21             # [unix]
         - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
         - pybind11
         - eigen
-        - sleef
+        - sleef =3.8
         - libuv
         - pkg-config  # [unix]
         - typing_extensions
@@ -331,7 +331,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
         # for non-megabuild, allow libtorch from any python version
         - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
-        - llvm-openmp                       # [unix]
+        - llvm-openmp <21                       # [unix]
         - intel-openmp {{ mkl }}            # [win]
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
