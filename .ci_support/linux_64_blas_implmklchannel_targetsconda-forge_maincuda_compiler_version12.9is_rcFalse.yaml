@@ -32,12 +32,6 @@ is_rc:
 - 'False'
 libabseil:
 - '20250512'
-libblas:
-- 3.9.* *netlib
-libcblas:
-- 3.9.* *netlib
-liblapack:
-- 3.9.* *netlib
 libmagma_sparse:
 - '2.9'
 libprotobuf:
@@ -61,9 +55,6 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
 - 3.13.* *_cp313
 pytorch:
 - '2.6'

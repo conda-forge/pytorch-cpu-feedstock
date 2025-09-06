@@ -21,13 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
-            SHORT_CONFIG: linux_64_blas_implgenericchannel_targets_h71a96c7d
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_h71a96c7d', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
             SHORT_CONFIG: linux_64_blas_implmklchannel_targetscond_h5b18f8bc
             UPLOAD_PACKAGES: True
