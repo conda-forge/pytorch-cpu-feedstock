@@ -6,9 +6,6 @@ echo "#########################################################################"
 echo "Building ${PKG_NAME} (py: ${PY_VER}) using BLAS implementation $blas_impl"
 echo "#########################################################################"
 
-nvidia-smi
-exit 1
-
 # This is used to detect if it's in the process of building pytorch
 export IN_PYTORCH_BUILD=1
 
