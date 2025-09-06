@@ -6,6 +6,9 @@ echo "#########################################################################"
 echo "Building ${PKG_NAME} (py: ${PY_VER}) using BLAS implementation $blas_impl"
 echo "#########################################################################"
 
+nvidia-smi
+exit 1
+
 # This is used to detect if it's in the process of building pytorch
 export IN_PYTORCH_BUILD=1
 
@@ -217,7 +220,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     case ${cuda_compiler_version} in
         12.[89])
-            export TORCH_CUDA_ARCH_LIST="7.5+PTX"
+            export TORCH_CUDA_ARCH_LIST="7.0+PTX"
             ;;
         *)
             echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
