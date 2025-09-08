@@ -558,7 +558,7 @@ outputs:
         - libstdcxx 15.1.0 h8f9b012_3
         - libstdcxx-ng 15.1.0 h4852527_3
         - libsystemd0 257.7 h4e0b6ca_0
-        - libtorch 2.7.1 cuda129_mkl_h9562ed8_304
+        - {{ pin_subpackage('libtorch', exact=True) }}
         - libudev1 257.7 hbe16f8c_0
         - libuuid 2.38.1 h0b41bf4_0
         - libuv 1.51.0 hb9d3cd8_0
@@ -628,7 +628,7 @@ outputs:
         - libmagma >=2.9.0,<2.9.1.0a0
         - libprotobuf >=6.31.1,<6.31.2.0a0
         - libstdcxx >=14
-        - libtorch 2.7.1 cuda129_mkl_h9562ed8_304
+        - {{ pin_subpackage('libtorch', exact=True) }}
         - libuv >=1.51.0,<2.0a0
         - libzlib >=1.3.1,<2.0a0
         - llvm-openmp >=20.1.8
