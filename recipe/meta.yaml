@@ -740,7 +740,7 @@ outputs:
         - triton 3.3.1 cuda129py313h246eb7c_2 
         - typing-extensions 4.14.1 h4440ef1_0 
         - typing_extensions 4.14.1 pyhe01879c_0 
-        - tzdata 2025b-h78e105d_0 
+        - tzdata 2025b h78e105d_0 
         - zstd 1.5.7 hb8e6e7a_2 
       imports:
         - torch
