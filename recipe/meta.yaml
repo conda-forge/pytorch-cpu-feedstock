@@ -575,7 +575,7 @@ outputs:
 
     test:
       requires:
-        - _openmp_mutex                 4.5-3                         kmp_llvm
+        - _openmp_mutex                 4.5                           3_kmp_llvm
         - adwaita-icon-theme            48.1                          unix_0
         - at-spi2-atk                   2.38.0                        h0630a04_3
         - at-spi2-core                  2.40.3                        h0630a04_0
@@ -758,7 +758,7 @@ outputs:
         - pytest-xdist                  3.8.0                         pyhd8ed1ab_0
         - python                        3.13.5                        hec9711d_102_cp313
         - python-dateutil               2.9.0.post0                   pyhe01879c_2
-        - python_abi                    3.13-8                        cp313
+        - python_abi                    3.13                          8_cp313
         - rdma-core                     58.0                          h5888daf_0
         - readline                      8.2                           h8c095d6_2
         - rhash                         1.4.6                         hb9d3cd8_1
