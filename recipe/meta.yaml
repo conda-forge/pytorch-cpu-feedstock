@@ -109,7 +109,7 @@ requirements:
     - llvm-openmp               # [unix]
     - intel-openmp {{ mkl }}    # [win]
     - libuv                     # [win]
-    - cmake <4
+    - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
     # of protobuf is installed between build and host
@@ -205,7 +205,7 @@ test:
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
     - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
     - nvtx-c                    # [cuda_compiler_version != "None"]
-    - cmake <4
+    - cmake
     - ninja
     - pkg-config
   files:
@@ -265,7 +265,7 @@ outputs:
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         - llvm-openmp             # [unix]
         - intel-openmp {{ mkl }}  # [win]
-        - cmake <4
+        - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
         # of protobuf is installed between build and host
@@ -380,7 +380,7 @@ outputs:
         # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
         # - pytest-shard
         # for cmake_test
-        - cmake <4
+        - cmake
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         - pybind11
