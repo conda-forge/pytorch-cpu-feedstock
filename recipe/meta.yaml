@@ -121,7 +121,9 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    - cudnn                           # [cuda_compiler_version != "None"]
+    # cudnn pinned over segfaults
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/411
+    - cudnn <9.11                     # [cuda_compiler_version != "None"]
     - nccl                            # [cuda_compiler_version != "None" and linux]
     - magma                           # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
@@ -171,7 +173,7 @@ requirements:
     - zlib
   run:
     # GPU requirements without run_exports
-    - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
+    - cudnn <9.11                       # [cuda_compiler_version != "None"]
     - intel-openmp {{ mkl }}            # [win]
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
@@ -274,7 +276,7 @@ outputs:
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
+        - cudnn <9.11                     # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None" and linux]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
@@ -328,7 +330,7 @@ outputs:
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
         # GPU requirements without run_exports
-        - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
+        - cudnn <9.11                       # [cuda_compiler_version != "None"]
         - triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda                            # [cuda_compiler_version != "None"]
