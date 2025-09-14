@@ -218,6 +218,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     case ${cuda_compiler_version} in
         12.[89])
             export TORCH_CUDA_ARCH_LIST="7.0+PTX"
+            export CUDAARCHS="70-real;70-virtual"
             ;;
         *)
             echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
