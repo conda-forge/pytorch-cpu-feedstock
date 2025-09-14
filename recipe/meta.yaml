@@ -82,6 +82,7 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  skip: true  # [not linux64 or cuda_compiler_version == "None" or blas_impl != "mkl"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
