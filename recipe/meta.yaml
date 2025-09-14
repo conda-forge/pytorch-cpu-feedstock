@@ -82,7 +82,6 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
-  skip: true  # [not linux64 or cuda_compiler_version == "None" or blas_impl != "mkl"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -98,205 +97,87 @@ build:
     - libmagma_sparse
 
 requirements:
+  # Keep this list synchronized (except for python*, numpy*) in outputs
+  # We use python to build libtorch as well because it is easier
   build:
-    - _libgcc_mutex 0.1 conda_forge
-    - _openmp_mutex 4.5 2_gnu
-    - binutils_impl_linux-64 2.44 h4bf12b8_1
-    - binutils_linux-64 2.44 h4852527_1
-    - bzip2 1.0.8 h4bc722e_7
-    - c-ares 1.34.5 hb9d3cd8_0
-    - ca-certificates 2025.7.14 hbd8a1cb_0
-    - cmake 3.31.6 h74e3db0_0
-    - cuda-cccl_linux-64 12.9.27 ha770c72_0
-    - cuda-crt-dev_linux-64 12.9.86 ha770c72_1
-    - cuda-crt-tools 12.9.86 ha770c72_1
-    - cuda-cudart 12.9.79 h5888daf_0
-    - cuda-cudart-dev 12.9.79 h5888daf_0
-    - cuda-cudart-dev_linux-64 12.9.79 h3f2d84a_0
-    - cuda-cudart-static 12.9.79 h5888daf_0
-    - cuda-cudart-static_linux-64 12.9.79 h3f2d84a_0
-    - cuda-cudart_linux-64 12.9.79 h3f2d84a_0
-    - cuda-driver-dev_linux-64 12.9.79 h3f2d84a_0
-    - cuda-nvcc-dev_linux-64 12.9.86 he91c749_1
-    - cuda-nvcc-impl 12.9.86 h85509e4_1
-    - cuda-nvcc-tools 12.9.86 he02047a_1
-    - cuda-nvcc_linux-64 12.9.86 he0b4e1d_1
-    - cuda-nvvm-dev_linux-64 12.9.86 ha770c72_1
-    - cuda-nvvm-impl 12.9.86 he02047a_1
-    - cuda-nvvm-tools 12.9.86 he02047a_1
-    - cuda-version 12.9 h4f385c5_3
-    - gcc_impl_linux-64 14.3.0 hd9e9e21_3
-    - gcc_linux-64 14.3.0 h1382650_11
-    - grep 3.11 h7af0fdc_3
-    - gxx_impl_linux-64 14.3.0 he663afc_3
-    - gxx_linux-64 14.3.0 ha7acb78_11
-    - icu 75.1 he02047a_0
-    - kernel-headers_linux-64 3.10.0 he073ed8_18
-    - keyutils 1.6.1 h166bdaf_0
-    - krb5 1.21.3 h659f571_0
-    - ld_impl_linux-64 2.44 h1423503_1
-    - libabseil 20250512.1 cxx17_hba17884_0
-    - libcurl 8.14.1 h332b0f4_0
-    - libedit 3.1.20250104 pl5321h7949ede_0
-    - libev 4.33 hd590300_2
-    - libexpat 2.7.1 hecca717_0
-    - libffi 3.4.6 h2dba641_1
-    - libgcc 15.1.0 h767d61c_3
-    - libgcc-devel_linux-64 14.3.0 h85bb3a7_103
-    - libgcc-ng 15.1.0 h69a702a_3
-    - libgomp 15.1.0 h767d61c_3
-    - libiconv 1.18 h4ce23a2_1
-    - liblzma 5.8.1 hb9d3cd8_2
-    - libmpdec 4.0.0 hb9d3cd8_0
-    - libnghttp2 1.64.0 h161d5f1_0
-    - libprotobuf 6.31.1 h9ef548d_1
-    - libsanitizer 14.3.0 hd08acf3_3
-    - libsqlite 3.50.3 hee844dc_1
-    - libssh2 1.11.1 hcf80075_0
-    - libstdcxx 15.1.0 h8f9b012_3
-    - libstdcxx-devel_linux-64 14.3.0 h85bb3a7_103
-    - libstdcxx-ng 15.1.0 h4852527_3
-    - libuuid 2.38.1 h0b41bf4_0
-    - libuv 1.51.0 hb9d3cd8_0
-    - libzlib 1.3.1 hb9d3cd8_2
-    - llvm-openmp 20.1.8 h4922eb0_0
-    - lz4-c 1.10.0 h5888daf_1
-    - make 4.4.1 hb9d3cd8_2
-    - ncurses 6.5 h2d0b736_3
-    - ninja 1.13.1 h171cf75_0
-    - openssl 3.5.1 h7b32b05_0
-    - pcre2 10.44 hc749103_2
-    - popt 1.16 h0b475e3_2002
-    - protobuf 6.31.1 py313hc6d18d0_0
-    - python 3.13.5 hec9711d_102_cp313
-    - python_abi 3.13 8_cp313
-    - readline 8.2 h8c095d6_2
-    - rhash 1.4.6 hb9d3cd8_1
-    - rsync 3.4.1 h81c0278_2
-    - sysroot_linux-64 2.17 h0157908_18
-    - tk 8.6.13 noxft_hd72426e_102
-    - tzdata 2025b h78e105d_0
-    - xxhash 0.8.3 hb47aa4a_0
-    - zstd 1.5.7 hb8e6e7a_2
+    # When you change 3.12 here, change it in build.sh/bld.bat as well
+    - python 3.12                            # [megabuild and build_platform != target_platform]
+    - python                                 # [not megabuild and build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - numpy  *                               # [megabuild and build_platform != target_platform]
+    - numpy                                  # [not megabuild and build_platform != target_platform]
+    - {{ stdlib('c') }}
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+    - llvm-openmp               # [unix]
+    - intel-openmp {{ mkl }}    # [win]
+    - libuv                     # [win]
+    - cmake <4
+    - ninja
+    # Keep libprotobuf here so that a compatibile version
+    # of protobuf is installed between build and host
+    - libprotobuf
+    - protobuf
+    - make      # [linux]
+    - sccache   # [win]
+    - grep      # [unix]
+    - rsync     # [unix]
   host:
-    - _openmp_mutex 4.5 3_kmp_llvm
-    - attr 2.5.1 h166bdaf_1
-    - brotli-python 1.1.0 py312h2ec8cdc_3
-    - bzip2 1.0.8 h4bc722e_7
-    - ca-certificates 2025.7.14 hbd8a1cb_0
-    - certifi 2025.7.14 pyhd8ed1ab_0
-    - cffi 1.17.1 py312h06ac9bb_0
-    - charset-normalizer 3.4.2 pyhd8ed1ab_0
-    - cuda-cccl_linux-64 12.9.27 ha770c72_0
-    - cuda-crt-dev_linux-64 12.9.86 ha770c72_1
-    - cuda-cudart 12.9.79 h5888daf_0
-    - cuda-cudart-dev 12.9.79 h5888daf_0
-    - cuda-cudart-dev_linux-64 12.9.79 h3f2d84a_0
-    - cuda-cudart-static 12.9.79 h5888daf_0
-    - cuda-cudart-static_linux-64 12.9.79 h3f2d84a_0
-    - cuda-cudart_linux-64 12.9.79 h3f2d84a_0
-    - cuda-cupti 12.9.79 h9ab20c4_0
-    - cuda-cupti-dev 12.9.79 h9ab20c4_0
-    - cuda-driver-dev 12.9.79 h5888daf_0
-    - cuda-driver-dev_linux-64 12.9.79 h3f2d84a_0
-    - cuda-nvml-dev 12.9.79 hbd13f7d_0
-    - cuda-nvrtc 12.9.86 h5888daf_0
-    - cuda-nvrtc-dev 12.9.86 h5888daf_0
-    - cuda-nvtx 12.9.79 h5888daf_0
-    - cuda-nvtx-dev 12.9.79 ha770c72_0
-    - cuda-profiler-api 12.9.79 h7938cbb_0
-    - cuda-version 12.9 h4f385c5_3
-    - cudnn 9.10.1.4 hbcb9cd8_1
-    - cusparselt 0.7.1.0 h58dd1b1_2
-    - eigen 3.4.0 h00ab1b0_0
-    - h2 4.2.0 pyhd8ed1ab_0
-    - hpack 4.1.0 pyhd8ed1ab_0
-    - hyperframe 6.1.0 pyhd8ed1ab_0
-    - icu 75.1 he02047a_0
-    - idna 3.10 pyhd8ed1ab_1
-    - ld_impl_linux-64 2.44 h1423503_1
-    - libabseil 20250512.1 cxx17_hba17884_0
-    - libblas 3.9.0 32_hfdb39a5_mkl
-    - libcap 2.75 h39aace5_0
-    - libcblas 3.9.0 32_h372d94f_mkl
-    - libcublas 12.9.1.4 h9ab20c4_0
-    - libcublas-dev 12.9.1.4 h9ab20c4_0
-    - libcudnn 9.10.1.4 hf7e9902_1
-    - libcudnn-dev 9.10.1.4 h58dd1b1_1
-    - libcudss 0.6.0.5 h58dd1b1_0
-    - libcudss-dev 0.6.0.5 hee47b17_0
-    - libcufft 11.4.1.4 h5888daf_0
-    - libcufft-dev 11.4.1.4 h5888daf_0
-    - libcufile 1.14.1.1 ha8da6e3_0
-    - libcufile-dev 1.14.1.1 h5888daf_0
-    - libcurand 10.3.10.19 h9ab20c4_0
-    - libcurand-dev 10.3.10.19 h9ab20c4_0
-    - libcusolver 11.7.5.82 h9ab20c4_1
-    - libcusolver-dev 11.7.5.82 h9ab20c4_1
-    - libcusparse 12.5.10.65 h5888daf_1
-    - libcusparse-dev 12.5.10.65 h5888daf_1
-    - libexpat 2.7.1 hecca717_0
-    - libffi 3.4.6 h2dba641_1
-    - libgcc 15.1.0 h767d61c_3
-    - libgcc-ng 15.1.0 h69a702a_3
-    - libgcrypt-lib 1.11.1 hb9d3cd8_0
-    - libgpg-error 1.55 h3f2d84a_0
-    - libhwloc 2.11.2 default_h3d81e11_1002
-    - libiconv 1.18 h4ce23a2_1
-    - liblapack 3.9.0 32_hc41d3b0_mkl
-    - liblzma 5.8.1 hb9d3cd8_2
-    - libmagma 2.9.0 h9918c94_2
-    - libmagma_sparse 2.9.0 h4951f4c_1
-    - libnl 3.11.0 hb9d3cd8_0
-    - libnsl 2.0.1 hb9d3cd8_1
-    - libnvjitlink 12.9.86 h5888daf_1
-    - libprotobuf 6.31.1 h9ef548d_1
-    - libsqlite 3.50.3 hee844dc_1
-    - libstdcxx 15.1.0 h8f9b012_3
-    - libstdcxx-ng 15.1.0 h4852527_3
-    - libsystemd0 257.7 h4e0b6ca_0
-    - libudev1 257.7 hbe16f8c_0
-    - libuuid 2.38.1 h0b41bf4_0
-    - libuv 1.51.0 hb9d3cd8_0
-    - libxcrypt 4.4.36 hd590300_1
-    - libxml2 2.13.8 h4bc477f_0
-    - libzlib 1.3.1 hb9d3cd8_2
-    - llvm-openmp 20.1.8 h4922eb0_0
-    - lz4-c 1.10.0 h5888daf_1
-    - magma 2.9.0 h622db9b_1
-    - mkl 2024.2.2 ha957f24_16
-    - mkl-devel 2024.2.2 ha770c72_16
-    - mkl-include 2024.2.2 ha957f24_16
-    - nccl 2.27.7.1 h49b9d9a_0
-    - ncurses 6.5 h2d0b736_3
-    - numpy 2.3.2 py312h33ff503_0
-    - nvtx-c 3.2.1 h3e4d06c_0
-    - openssl 3.5.1 h7b32b05_0
-    - pip 25.1.1 pyh8b19718_0
-    - pkg-config 0.29.2 h4bc722e_1009
-    - pybind11 3.0.0 pyh9380348_1
-    - pybind11-global 3.0.0 pyhf748d72_1
-    - pycparser 2.22 pyh29332c3_1
-    - pysocks 1.7.1 pyha55dd90_7
-    - python 3.12.11 h9e4cc4f_0_cpython
-    - python_abi 3.12 8_cp312
-    - pyyaml 6.0.2 py312h178313f_2
-    - rdma-core 58.0 h5888daf_0
-    - readline 8.2 h8c095d6_2
-    - requests 2.32.4 pyhd8ed1ab_0
-    - setuptools 80.9.0 pyhff2d567_0
-    - six 1.17.0 pyhe01879c_1
-    - sleef 3.8 h1b44611_0
-    - tbb 2021.13.0 hceb3a55_1
-    - tk 8.6.13 noxft_hd72426e_102
-    - typing_extensions 4.14.1 pyhe01879c_0
-    - tzdata 2025b h78e105d_0
-    - urllib3 2.5.0 pyhd8ed1ab_0
-    - wheel 0.45.1 pyhd8ed1ab_1
-    - yaml 0.2.5 h280c20c_3
-    - zlib 1.3.1 hb9d3cd8_2
-    - zstandard 0.23.0 py312h66e93f0_2
-    - zstd 1.5.7 hb8e6e7a_2
+    # GPU requirements
+    - cudnn                           # [cuda_compiler_version != "None"]
+    - nccl                            # [cuda_compiler_version != "None" and linux]
+    - magma                           # [cuda_compiler_version != "None"]
+    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+    - nvtx-c                          # [cuda_compiler_version != "None"]
+    {% if cuda_compiler_version != "None" %}
+    - cuda-driver-dev                 # [linux]
+    - cuda-cudart-dev
+    - cuda-cupti-dev
+    - cuda-nvrtc-dev
+    - cuda-nvtx-dev
+    - cuda-nvml-dev
+    - cuda-profiler-api
+    - cusparselt
+    - libcublas-dev
+    - libcudss-dev
+    - libcufile-dev  # [linux]
+    - libcufft-dev
+    - libcurand-dev
+    - libcusolver-dev
+    - libcusparse-dev
+    {% endif %}
+    # other requirements
+    - python 3.12  # [megabuild]
+    - python       # [not megabuild]
+    - numpy *      # [megabuild]
+    - numpy        # [not megabuild]
+    - pip
+    - setuptools
+    - pyyaml
+    - requests
+    - six
+    - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+    - libcblas * *_mkl      # [blas_impl == "mkl"]
+    - libblas               # [blas_impl != "mkl"]
+    - libcblas              # [blas_impl != "mkl"]
+    - liblapack             # [blas_impl != "mkl"]
+    - llvm-openmp             # [unix]
+    - intel-openmp {{ mkl }}  # [win]
+    - libabseil
+    - libprotobuf
+    - sleef
+    - libuv
+    - pkg-config  # [unix]
+    - typing_extensions
+    - pybind11
+    - eigen
+    - zlib
+  run:
+    # GPU requirements without run_exports
+    - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
+    - intel-openmp {{ mkl }}            # [win]
+    - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
     # These constraints ensure conflict between pytorch and
     # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
@@ -325,8 +206,7 @@ test:
     # for CMake config to find cuda & nvrtc
     - {{ compiler('cuda') }}    # [cuda_compiler_version != "None"]
     - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
-    - nvtx-c =3.2.1                    # [cuda_compiler_version != "None"]
-    - rdma-core =58.0
+    - nvtx-c                    # [cuda_compiler_version != "None"]
     - cmake <4
     - ninja
     - pkg-config
@@ -357,6 +237,11 @@ test:
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
     - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
 
+    # test integrity of CMake metadata
+    - cd cmake_test
+    - cmake -GNinja -DCMAKE_CXX_STANDARD=17 $CMAKE_ARGS .   # [unix]
+    - cmake -GNinja -DCMAKE_CXX_STANDARD=17 %CMAKE_ARGS% .  # [win]
+
 outputs:
   - name: libtorch
   - name: pytorch
@@ -373,198 +258,95 @@ outputs:
         - libmagma_sparse
     requirements:
       build:
-        - _libgcc_mutex 0.1 conda_forge
-        - _openmp_mutex 4.5 2_gnu
-        - binutils_impl_linux-64 2.44 h4bf12b8_1
-        - binutils_linux-64 2.44 h4852527_1
-        - bzip2 1.0.8 h4bc722e_7
-        - c-ares 1.34.5 hb9d3cd8_0
-        - ca-certificates 2025.7.14 hbd8a1cb_0
-        - cmake 3.31.6 h74e3db0_0
-        - cuda-cccl_linux-64 12.9.27 ha770c72_0
-        - cuda-crt-dev_linux-64 12.9.86 ha770c72_1
-        - cuda-crt-tools 12.9.86 ha770c72_1
-        - cuda-cudart 12.9.79 h5888daf_0
-        - cuda-cudart-dev 12.9.79 h5888daf_0
-        - cuda-cudart-dev_linux-64 12.9.79 h3f2d84a_0
-        - cuda-cudart-static 12.9.79 h5888daf_0
-        - cuda-cudart-static_linux-64 12.9.79 h3f2d84a_0
-        - cuda-cudart_linux-64 12.9.79 h3f2d84a_0
-        - cuda-driver-dev_linux-64 12.9.79 h3f2d84a_0
-        - cuda-nvcc-dev_linux-64 12.9.86 he91c749_1
-        - cuda-nvcc-impl 12.9.86 h85509e4_1
-        - cuda-nvcc-tools 12.9.86 he02047a_1
-        - cuda-nvcc_linux-64 12.9.86 he0b4e1d_1
-        - cuda-nvvm-dev_linux-64 12.9.86 ha770c72_1
-        - cuda-nvvm-impl 12.9.86 he02047a_1
-        - cuda-nvvm-tools 12.9.86 he02047a_1
-        - cuda-version 12.9 h4f385c5_3
-        - gcc_impl_linux-64 14.3.0 hd9e9e21_3
-        - gcc_linux-64 14.3.0 h1382650_11
-        - gxx_impl_linux-64 14.3.0 he663afc_3
-        - gxx_linux-64 14.3.0 ha7acb78_11
-        - icu 75.1 he02047a_0
-        - kernel-headers_linux-64 3.10.0 he073ed8_18
-        - keyutils 1.6.1 h166bdaf_0
-        - krb5 1.21.3 h659f571_0
-        - ld_impl_linux-64 2.44 h1423503_1
-        - libabseil 20250512.1 cxx17_hba17884_0
-        - libcurl 8.14.1 h332b0f4_0
-        - libedit 3.1.20250104 pl5321h7949ede_0
-        - libev 4.33 hd590300_2
-        - libexpat 2.7.1 hecca717_0
-        - libffi 3.4.6 h2dba641_1
-        - libgcc 15.1.0 h767d61c_3
-        - libgcc-devel_linux-64 14.3.0 h85bb3a7_103
-        - libgcc-ng 15.1.0 h69a702a_3
-        - libgomp 15.1.0 h767d61c_3
-        - liblzma 5.8.1 hb9d3cd8_2
-        - libmpdec 4.0.0 hb9d3cd8_0
-        - libnghttp2 1.64.0 h161d5f1_0
-        - libprotobuf 6.31.1 h9ef548d_1
-        - libsanitizer 14.3.0 hd08acf3_3
-        - libsqlite 3.50.3 hee844dc_1
-        - libssh2 1.11.1 hcf80075_0
-        - libstdcxx 15.1.0 h8f9b012_3
-        - libstdcxx-devel_linux-64 14.3.0 h85bb3a7_103
-        - libstdcxx-ng 15.1.0 h4852527_3
-        - libuuid 2.38.1 h0b41bf4_0
-        - libuv 1.51.0 hb9d3cd8_0
-        - libzlib 1.3.1 hb9d3cd8_2
-        - llvm-openmp 20.1.8 h4922eb0_0
-        - make 4.4.1 hb9d3cd8_2
-        - ncurses 6.5 h2d0b736_3
-        - ninja 1.13.1 h171cf75_0
-        - openssl 3.5.1 h7b32b05_0
-        - protobuf 6.31.1 py313hc6d18d0_0
-        - python 3.13.5 hec9711d_102_cp313
-        - python_abi 3.13 8_cp313
-        - readline 8.2 h8c095d6_2
-        - rhash 1.4.6 hb9d3cd8_1
-        - sysroot_linux-64 2.17 h0157908_18
-        - tk 8.6.13 noxft_hd72426e_102
-        - tzdata 2025b h78e105d_0
-        - zstd 1.5.7 hb8e6e7a_2
+        - python
+        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+        - numpy                                  # [build_platform != target_platform]
+        - {{ stdlib('c') }}
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+        - llvm-openmp             # [unix]
+        - intel-openmp {{ mkl }}  # [win]
+        - cmake <4
+        - ninja
+        # Keep libprotobuf here so that a compatibile version
+        # of protobuf is installed between build and host
+        - libprotobuf
+        - protobuf
+        - make      # [linux]
+        - sccache   # [win]
       host:
-        - _openmp_mutex 4.5 3_kmp_llvm
-        - attr 2.5.1 h166bdaf_1
-        - brotli-python 1.1.0 py313h46c70d0_3
-        - bzip2 1.0.8 h4bc722e_7
-        - ca-certificates 2025.7.14 hbd8a1cb_0
-        - certifi 2025.7.14 pyhd8ed1ab_0
-        - cffi 1.17.1 py313hfab6e84_0
-        - charset-normalizer 3.4.2 pyhd8ed1ab_0
-        - cuda-cccl_linux-64 12.9.27 ha770c72_0
-        - cuda-crt-dev_linux-64 12.9.86 ha770c72_1
-        - cuda-cudart 12.9.79 h5888daf_0
-        - cuda-cudart-dev 12.9.79 h5888daf_0
-        - cuda-cudart-dev_linux-64 12.9.79 h3f2d84a_0
-        - cuda-cudart-static 12.9.79 h5888daf_0
-        - cuda-cudart-static_linux-64 12.9.79 h3f2d84a_0
-        - cuda-cudart_linux-64 12.9.79 h3f2d84a_0
-        - cuda-cupti 12.9.79 h9ab20c4_0
-        - cuda-cupti-dev 12.9.79 h9ab20c4_0
-        - cuda-driver-dev 12.9.79 h5888daf_0
-        - cuda-driver-dev_linux-64 12.9.79 h3f2d84a_0
-        - cuda-nvml-dev 12.9.79 hbd13f7d_0
-        - cuda-nvrtc 12.9.86 h5888daf_0
-        - cuda-nvrtc-dev 12.9.86 h5888daf_0
-        - cuda-nvtx 12.9.79 h5888daf_0
-        - cuda-nvtx-dev 12.9.79 ha770c72_0
-        - cuda-profiler-api 12.9.79 h7938cbb_0
-        - cuda-version 12.9 h4f385c5_3
-        - cudnn 9.10.1.4 hbcb9cd8_1
-        - cusparselt 0.7.1.0 h58dd1b1_2
-        - eigen 3.4.0 h00ab1b0_0
-        - h2 4.2.0 pyhd8ed1ab_0
-        - hpack 4.1.0 pyhd8ed1ab_0
-        - hyperframe 6.1.0 pyhd8ed1ab_0
-        - icu 75.1 he02047a_0
-        - idna 3.10 pyhd8ed1ab_1
-        - ld_impl_linux-64 2.44 h1423503_1
-        - libabseil 20250512.1 cxx17_hba17884_0
-        - libblas 3.9.0 32_hfdb39a5_mkl
-        - libcap 2.75 h39aace5_0
-        - libcblas 3.9.0 32_h372d94f_mkl
-        - libcublas 12.9.1.4 h9ab20c4_0
-        - libcublas-dev 12.9.1.4 h9ab20c4_0
-        - libcudnn 9.10.1.4 hf7e9902_1
-        - libcudnn-dev 9.10.1.4 h58dd1b1_1
-        - libcudss 0.6.0.5 h58dd1b1_0
-        - libcudss-dev 0.6.0.5 hee47b17_0
-        - libcufft 11.4.1.4 h5888daf_0
-        - libcufft-dev 11.4.1.4 h5888daf_0
-        - libcufile 1.14.1.1 ha8da6e3_0
-        - libcufile-dev 1.14.1.1 h5888daf_0
-        - libcurand 10.3.10.19 h9ab20c4_0
-        - libcurand-dev 10.3.10.19 h9ab20c4_0
-        - libcusolver 11.7.5.82 h9ab20c4_1
-        - libcusolver-dev 11.7.5.82 h9ab20c4_1
-        - libcusparse 12.5.10.65 h5888daf_1
-        - libcusparse-dev 12.5.10.65 h5888daf_1
-        - libexpat 2.7.1 hecca717_0
-        - libffi 3.4.6 h2dba641_1
-        - libgcc 15.1.0 h767d61c_3
-        - libgcc-ng 15.1.0 h69a702a_3
-        - libgcrypt-lib 1.11.1 hb9d3cd8_0
-        - libgpg-error 1.55 h3f2d84a_0
-        - libhwloc 2.11.2 default_h3d81e11_1002
-        - libiconv 1.18 h4ce23a2_1
-        - liblapack 3.9.0 32_hc41d3b0_mkl
-        - liblzma 5.8.1 hb9d3cd8_2
-        - libmagma 2.9.0 h9918c94_2
-        - libmagma_sparse 2.9.0 h4951f4c_1
-        - libmpdec 4.0.0 hb9d3cd8_0
-        - libnl 3.11.0 hb9d3cd8_0
-        - libnvjitlink 12.9.86 h5888daf_1
-        - libprotobuf 6.31.1 h9ef548d_1
-        - libsqlite 3.50.3 hee844dc_1
-        - libstdcxx 15.1.0 h8f9b012_3
-        - libstdcxx-ng 15.1.0 h4852527_3
-        - libsystemd0 257.7 h4e0b6ca_0
         - {{ pin_subpackage('libtorch', exact=True) }}
-        - libudev1 257.7 hbe16f8c_0
-        - libuuid 2.38.1 h0b41bf4_0
-        - libuv 1.51.0 hb9d3cd8_0
-        - libxml2 2.13.8 h4bc477f_0
-        - libzlib 1.3.1 hb9d3cd8_2
-        - llvm-openmp 20.1.8 h4922eb0_0
-        - lz4-c 1.10.0 h5888daf_1
-        - magma 2.9.0 h622db9b_1
-        - mkl 2024.2.2 ha957f24_16
-        - mkl-devel 2024.2.2 ha770c72_16
-        - mkl-include 2024.2.2 ha957f24_16
-        - nccl 2.27.7.1 h49b9d9a_0
-        - ncurses 6.5 h2d0b736_3
-        - numpy 2.3.2 py313hf6604e3_0
-        - nvtx-c 3.2.1 h3e4d06c_0
-        - openssl 3.5.1 h7b32b05_0
-        - pip 25.1.1 pyh145f28c_0
-        - pkg-config 0.29.2 h4bc722e_1009
-        - pybind11 3.0.0 pyh9380348_1
-        - pybind11-global 3.0.0 pyhf748d72_1
-        - pycparser 2.22 pyh29332c3_1
-        - pysocks 1.7.1 pyha55dd90_7
-        - python 3.13.5 hec9711d_102_cp313
-        - python_abi 3.13 8_cp313
-        - pyyaml 6.0.2 py313h8060acc_2
-        - rdma-core 58.0 h5888daf_0
-        - readline 8.2 h8c095d6_2
-        - requests 2.32.4 pyhd8ed1ab_0
-        - setuptools 80.9.0 pyhff2d567_0
-        - six 1.17.0 pyhe01879c_1
-        - sleef 3.8 h1b44611_0
-        - tbb 2021.13.0 hceb3a55_1
-        - tk 8.6.13 noxft_hd72426e_102
-        - typing_extensions 4.14.1 pyhe01879c_0
-        - tzdata 2025b h78e105d_0
-        - urllib3 2.5.0 pyhd8ed1ab_0
-        - yaml 0.2.5 h280c20c_3
-        - zlib 1.3.1 hb9d3cd8_2
-        - zstandard 0.23.0 py313h536fd9c_2
-        - zstd 1.5.7 hb8e6e7a_2
+        # GPU requirements
+        - cudnn                           # [cuda_compiler_version != "None"]
+        - nccl                            # [cuda_compiler_version != "None" and linux]
+        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+        - nvtx-c                          # [cuda_compiler_version != "None"]
+        - magma                           # [cuda_compiler_version != "None"]
+        {% if cuda_compiler_version != "None" %}
+        - cuda-driver-dev                 # [linux]
+        - cuda-cudart-dev
+        - cuda-cupti-dev
+        - cuda-nvrtc-dev
+        - cuda-nvtx-dev
+        - cuda-nvml-dev
+        - cuda-profiler-api
+        - cusparselt
+        - libcublas-dev
+        - libcudss-dev
+        - libcufile-dev  # [linux]
+        - libcufft-dev
+        - libcurand-dev
+        - libcusolver-dev
+        - libcusparse-dev
+        {% endif %}
+        # other requirements
+        - python
+        - numpy
+        - pip
+        - setuptools
+        - pyyaml
+        - requests
+        - six
+        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+        - libcblas * *_mkl      # [blas_impl == "mkl"]
+        - libcblas              # [blas_impl != "mkl"]
+        - liblapack             # [blas_impl != "mkl"]
+        - llvm-openmp             # [unix]
+        - intel-openmp {{ mkl }}  # [win]
+        - libabseil
+        - libprotobuf
+        - pybind11
+        - eigen
+        - sleef
+        - libuv
+        - pkg-config  # [unix]
+        - typing_extensions
+        - zlib
       run:
-        - {{ pin_subpackage('libtorch', exact=True) }}
+        - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
+        # for non-megabuild, allow libtorch from any python version
+        - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
+        - llvm-openmp                       # [unix]
+        - intel-openmp {{ mkl }}            # [win]
+        - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
+        - nomkl                             # [blas_impl != "mkl"]
+        # GPU requirements without run_exports
+        - {{ pin_compatible('cudnn') }}     # [cuda_compiler_version != "None"]
+        - triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
+        # avoid that people without GPUs needlessly download ~0.5-1GB
+        - __cuda                            # [cuda_compiler_version != "None"]
+        - python
+        # other requirements, see https://github.com/pytorch/pytorch/blame/main/requirements.txt
+        - filelock
+        - fsspec
+        - jinja2
+        - networkx
+        - optree >=0.13.0
+        - pybind11
+        - setuptools
+        - sympy >=1.13.3
+        - typing_extensions >=4.10.0
       run_constrained:
         # These constraints ensure conflict between pytorch and
         # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
@@ -577,229 +359,32 @@ outputs:
 
     test:
       requires:
-        - _openmp_mutex
-        - adwaita-icon-theme
-        - at-spi2-atk                   2.38.0                        h0630a04_3
-        - at-spi2-core                  2.40.3                        h0630a04_0
-        - atk-1.0                       2.38.0                        h04ea711_2
-        - attr
-        - attrs                         25.3.0                        pyh71513ae_0
-        - binutils_impl_linux-64        2.44                          h4bf12b8_1
-        - binutils_linux-64             2.44                          h4852527_1
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        # for torch.compile tests
+        - {{ compiler('cuda') }}       # [cuda_compiler_version != "None"]
+        - ninja
         - boto3
-        - botocore
-        - brotli-python
-        - bzip2                         1.0.8                         h4bc722e_7
-        - c-ares                        1.34.5                        hb9d3cd8_0
-        - ca-certificates
-        - cairo                         1.18.4                        h3394656_0
-        - cffi
-        - click                         8.2.1                         pyh707e725_0
-        - cmake                         3.31.6                        h74e3db0_0
-        - colorama                      0.4.6                         pyhd8ed1ab_1
-        - cpython   3.13.7   py313hd8ed1ab_100
-        - cuda-cccl_linux-64            12.9.27                       ha770c72_0
-        - cuda-crt-dev_linux-64         12.9.86                       ha770c72_1
-        - cuda-crt-tools                12.9.86                       ha770c72_1
-        - cuda-cudart                   12.9.79                       h5888daf_0
-        - cuda-cudart-dev               12.9.79                       h5888daf_0
-        - cuda-cudart-dev_linux-64      12.9.79                       h3f2d84a_0
-        - cuda-cudart-static            12.9.79                       h5888daf_0
-        - cuda-cudart-static_linux-64   12.9.79                       h3f2d84a_0
-        - cuda-cudart_linux-64          12.9.79                       h3f2d84a_0
-        - cuda-cuobjdump                12.9.82                       hbd13f7d_0
-        - cuda-cupti                    12.9.79                       h9ab20c4_0
-        - cuda-driver-dev_linux-64      12.9.79                       h3f2d84a_0
-        - cuda-nvcc-dev_linux-64        12.9.86                       he91c749_1
-        - cuda-nvcc-impl                12.9.86                       h85509e4_1
-        - cuda-nvcc-tools               12.9.86                       he02047a_1
-        - cuda-nvcc_linux-64            12.9.86                       he0b4e1d_1
-        - cuda-nvdisasm                 12.9.88                       hbd13f7d_0
-        - cuda-nvrtc                    12.9.86                       h5888daf_0
-        - cuda-nvrtc-dev                12.9.86                       h5888daf_0
-        - cuda-nvtx                     12.9.79                       h5888daf_0
-        - cuda-nvvm-dev_linux-64        12.9.86                       ha770c72_1
-        - cuda-nvvm-impl                12.9.86                       he02047a_1
-        - cuda-nvvm-tools               12.9.86                       he02047a_1
-        - cuda-version                  12.9                          h4f385c5_3
-        - cudnn   
-        - dbus                          1.16.2                        h3c4dab8_0
-        - epoxy                         1.5.10                        h166bdaf_1
-        - exceptiongroup                1.3.0                         pyhd8ed1ab_0
-        - execnet                       2.1.1                         pyhd8ed1ab_1
-        - expecttest                    0.3.0                         pyhd8ed1ab_0
-        - filelock                      3.18.0                        pyhd8ed1ab_0
-        - font-ttf-dejavu-sans-mono     2.37                          hab24e00_0
-        - font-ttf-inconsolata          3.000                         h77eed37_0
-        - font-ttf-source-code-pro      2.038                         h77eed37_0
-        - font-ttf-ubuntu               0.83                          h77eed37_3
-        - fontconfig                    2.15.0                        h7e30c49_1
-        - fonts-conda-ecosystem         1                             0
-        - fonts-conda-forge             1                             0
-        - freetype                      2.13.3                        ha770c72_1
-        - fribidi                       1.0.10                        h36c2ea0_0
-        - fsspec
-        - gcc_impl_linux-64
-        - gcc_linux-64                  14.3.0                        h1382650_11
-        - gdk-pixbuf   
-        - glib-tools  
-        - gmp                           6.3.0                         hac33072_2
-        - gmpy2      
-        - graphite2  
-        - graphviz  
-        - gtk3                          3.24.43                       h0c6a113_5
-        - gts                           0.7.6                         h977cf35_4
-        - gxx_impl_linux-64 
-        - gxx_linux-64                  14.3.0                        ha7acb78_11
-        - h2            
-        - harfbuzz     
-        - hicolor-icon-theme            0.17                          ha770c72_2
-        - hpack                         4.1.0                         pyhd8ed1ab_0
-        - hyperframe                    6.1.0                         pyhd8ed1ab_0
-        - hypothesis  
-        - icu                           75.1                          he02047a_0
-        - iniconfig                     2.0.0                         pyhd8ed1ab_1
-        - jinja2                        3.1.6                         pyhd8ed1ab_0
-        - jmespath                      1.0.1                         pyhd8ed1ab_1
-        - kernel-headers_linux-64       5.14.0                        he073ed8_2
-        - keyutils   
-        - krb5                          1.21.3                        h659f571_0
-        - ld_impl_linux-64              2.44                          h1423503_1
-        - lerc                          4.0.0                         h0aef613_1
-        - libabseil                     20250512.1                    cxx17_hba17884_0
-        - libblas                       3.9.0                         32_hfdb39a5_mkl
-        - libcap                        2.75                          h39aace5_0
-        - libcblas                      3.9.0                         32_h372d94f_mkl
-        - libcublas                     12.9.1.4                      h9ab20c4_0
-        - libcudnn
-        - libcudnn-dev
-        - libcudss                      0.6.0.5                       h58dd1b1_0
-        - libcufft                      11.4.1.4                      h5888daf_0
-        - libcufile                     1.14.1.1                      ha8da6e3_0
-        - libcups                       2.3.3                         hb8b1518_5
-        - libcurand                     10.3.10.19                    h9ab20c4_0
-        - libcurl                       8.14.1                        h332b0f4_0
-        - libcusolver                   11.7.5.82                     h9ab20c4_1
-        - libcusparse                   12.5.10.65                    h5888daf_1
-        - libdeflate                    1.24                          h86f0d12_0
-        - libedit                       3.1.20250104                  pl5321h7949ede_0
-        - libev                         4.33                          hd590300_2
-        - libexpat                      2.7.1                         hecca717_0
-        - libffi                        3.4.6                         h2dba641_1
-        - libfreetype                   2.13.3                        ha770c72_1
-        - libfreetype6                  2.13.3                        h48d6fc4_1
-        - libgcc               
-        - libgcc-devel_linux-64
-        - libgcc-ng          
-        - libgcrypt-lib                 1.11.1                        hb9d3cd8_0
-        - libgd                         2.3.3                         h6f5c62b_11
-        - libglib           
-        - libgomp          
-        - libgpg-error                  1.55                          h3f2d84a_0
-        - libhwloc                      2.11.2                        default_h3d81e11_1002
-        - libiconv        
-        - libjpeg-turbo                 3.1.0                         hb9d3cd8_0
-        - liblapack                     3.9.0                         32_hc41d3b0_mkl
-        - liblzma                       5.8.1                         hb9d3cd8_2
-        - libmagma                      2.9.0                         h9918c94_2
-        - libmpdec                      4.0.0                         hb9d3cd8_0
-        - libnghttp2     
-        - libnl                         3.11.0                        hb9d3cd8_0
-        - libnvjitlink                  12.9.86                       h5888daf_1
-        - libpng                        1.6.50                        h421ea60_1
-        - libprotobuf                   6.31.1                        h9ef548d_1
-        - librsvg                       2.58.4                        he92a37e_3
-        - libsanitizer   
-        - libsqlite     
-        - libssh2                       1.11.1                        hcf80075_0
-        - libstdcxx               
-        - libstdcxx-devel_linux-64
-        - libstdcxx-ng           
-        - libsystemd0                   257.7                         h4e0b6ca_0
-        - libtiff               
-        - libudev1                      257.7                         hbe16f8c_0
-        - libuuid              
-        - libuv               
-        - libwebp-base                  1.6.0                         hd42ef1d_0
-        - libxcb                        1.17.0                        h8a09558_0
-        - libxkbcommon                  1.10.0                        h65c71a3_0
-        - libxml2                       2.13.8                        h4bc477f_0
-        - libzlib                       1.3.1                         hb9d3cd8_2
-        - llvm-openmp                   20.1.8                        h4922eb0_0
-        - lz4-c                         1.10.0                        h5888daf_1
-        - markupsafe                    3.0.2                         py313h8060acc_1
-        - mkl                           2024.2.2                      ha770c72_16
-        - mpc                           1.3.1                         h24ddda3_1
-        - mpfr                          4.2.1                         h90cbb55_3
-        - mpmath                        1.3.0                         pyhd8ed1ab_1
-        - nccl              
-        - ncurses                       6.5                           h2d0b736_3
-        - networkx                      3.5                           pyhe01879c_0
-        - ninja                         1.13.1                        h171cf75_0
-        - numpy                         2.3.2                         py313hf6604e3_0
-        - nvtx-c                        3.2.1                         h3e4d06c_0
-        - openssl  
-        - optree  
-        - packaging                     25.0                          pyh29332c3_1
-        - pango                         1.56.4                        hadf4263_0
-        - pcre2      
-        - pip       
-        - pixman   
-        - pluggy                        1.6.0                         pyhd8ed1ab_0
-        - pthread-stubs                 0.4                           hb9d3cd8_1002
-        - pybind11           
-        - pybind11-global   
-        - pycparser                     2.22                          pyh29332c3_1
-        - pydot            
-        - pygments                      2.19.2                        pyhd8ed1ab_0
-        - pyparsing                     3.2.3                         pyhe01879c_2
-        - pysocks                       1.7.1                         pyha55dd90_7
-        - pytest             
-        - pytest-flakefinder            1.1.0                         pyh29332c3_2
-        - pytest-rerunfailures 
-        - pytest-xdist                  3.8.0                         pyhd8ed1ab_0
-        - python              3.13.7 h2b335a9_100_cp313
-        - python-dateutil               2.9.0.post0                   pyhe01879c_2
-        - python_abi                    3.13                          8_cp313
-        - rdma-core                     58.0                          h5888daf_0
-        - readline                      8.2                           h8c095d6_2
-        - rhash                         1.4.6                         hb9d3cd8_1
-        - s3transfer                    0.13.1                        pyhd8ed1ab_0
-        - setuptools                    80.9.0                        pyhff2d567_0
-        - six                           1.17.0                        pyhe01879c_1
-        - sleef                         3.8                           h1b44611_0
-        - sortedcontainers              2.4.0                         pyhd8ed1ab_1
-        - sympy                         1.14.0                        pyh2585a3b_105
-        - sysroot_linux-64              2.34                          h087de78_2
-        - tabulate                      0.9.0                         pyhd8ed1ab_2
-        - tbb                           2021.13.0                     hceb3a55_1
-        - tk                            8.6.13                        noxft_hd72426e_102
-        - tomli                         2.2.1                         pyhe01879c_2
-        - triton                        3.3.1                         cuda129py313h246eb7c_2
-        - typing-extensions  
-        - typing_extensions 
-        - tzdata                        2025b                         h78e105d_0
-        - urllib3                       2.5.0                         pyhd8ed1ab_0
-        - wayland                       1.24.0                        h3e06ad9_0
-        - xkeyboard-config              2.45                          hb9d3cd8_0
-        - xmlrunner                     1.7.7                         py_0
-        - xorg-libice                   1.1.2                         hb9d3cd8_0
-        - xorg-libsm                    1.2.6                         he73a12e_0
-        - xorg-libx11                   1.8.12                        h4f16b4b_0
-        - xorg-libxau                   1.0.12                        hb9d3cd8_0
-        - xorg-libxcomposite            0.4.6                         hb9d3cd8_2
-        - xorg-libxcursor               1.2.3                         hb9d3cd8_0
-        - xorg-libxdamage               1.1.6                         hb9d3cd8_0
-        - xorg-libxdmcp                 1.1.5                         hb9d3cd8_0
-        - xorg-libxext                  1.3.6                         hb9d3cd8_0
-        - xorg-libxfixes                6.0.1                         hb9d3cd8_0
-        - xorg-libxi                    1.8.2                         hb9d3cd8_0
-        - xorg-libxinerama              1.1.5                         h5888daf_1
-        - xorg-libxrandr                1.5.4                         hb9d3cd8_0
-        - xorg-libxrender               0.9.12                        hb9d3cd8_0
-        - xorg-libxtst                  1.2.5                         hb9d3cd8_3
-        - zstandard   
-        - zstd                          1.5.7                         hb8e6e7a_2
+        - hypothesis
+        - pytest
+        - tabulate
+        - pydot
+        - pip
+        - expecttest
+        - xmlrunner
+        # Required by run_test.py
+        - pytest-flakefinder
+        - pytest-rerunfailures
+        - pytest-xdist
+        # danpetry/TF: Pytorch includes their own edited version of pytest-shard and adding
+        # it into the test deps as well results in the --shard-id option being added twice.
+        # https://github.com/pytorch/pytorch/blob/main/test/pytest_shard_custom.py
+        # - pytest-shard
+        # for cmake_test
+        - cmake <4
+        - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
+        - nvtx-c                    # [cuda_compiler_version != "None"]
+        - pybind11
       imports:
         - torch
         - torch._C
