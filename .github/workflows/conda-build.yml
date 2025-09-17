@@ -63,11 +63,11 @@ jobs:
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h56c2c839', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hca575dce
+          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
+            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hda40b8c4
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hca575dce', 'windows', 'x64', 'self-hosted']
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hda40b8c4', 'windows', 'x64', 'self-hosted']
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
             SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hc68ac914
             UPLOAD_PACKAGES: True
@@ -76,7 +76,7 @@ jobs:
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
     - name: Build on Linux
       id: build-linux
