@@ -16,7 +16,7 @@
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.3.1" %}
+{% set triton = "3.3.1.*" %}
 
 # TODO Temporary pin, remove me
 {% set mkl = "<2025" %}
