@@ -169,6 +169,7 @@ requirements:
     - pkg-config  # [unix]
     - typing_extensions
     - pybind11
+    - pybind11-abi
     - eigen
     - zlib
   run:
@@ -315,6 +316,7 @@ outputs:
         - libabseil
         - libprotobuf
         - pybind11
+        - pybind11-abi
         - eigen
         - sleef
         - libuv
