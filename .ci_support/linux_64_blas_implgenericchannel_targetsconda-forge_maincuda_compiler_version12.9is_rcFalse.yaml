@@ -60,6 +60,8 @@ pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
+pybind11_abi:
+- '4'
 python:
 - 3.10.* *_cpython
 - 3.11.* *_cpython
