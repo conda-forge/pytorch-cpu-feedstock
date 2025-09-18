@@ -170,7 +170,7 @@ requirements:
     - libuv
     - pkg-config  # [unix]
     - typing_extensions
-    - pybind11
+    - pybind11 {{ '2.*' if version.split('.') | map('int') | list < [2, 9, 0] else '3.*' }}
     - pybind11-abi
     - eigen
     - zlib
@@ -316,7 +316,7 @@ outputs:
         - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
-        - pybind11
+        - pybind11 {{ '2.*' if version.split('.') | map('int') | list < [2, 9, 0] else '3.*' }}
         - pybind11-abi
         - eigen
         - sleef
@@ -344,7 +344,7 @@ outputs:
         - jinja2
         - networkx
         - optree >=0.13.0
-        - pybind11
+        - pybind11 {{ '2.*' if version.split('.') | map('int') | list < [2, 9, 0] else '3.*' }}
         - setuptools
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
