@@ -333,7 +333,7 @@ outputs:
         - nomkl                             # [blas_impl != "mkl"]
         # GPU requirements without run_exports
         - cudnn <9.11                       # [cuda_compiler_version != "None"]
-        - triton {{ triton }}               # [cuda_compiler_version != "None" and not win]
+        - triton =={{ triton }}             # [cuda_compiler_version != "None" and not win]
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda                            # [cuda_compiler_version != "None"]
         - python
