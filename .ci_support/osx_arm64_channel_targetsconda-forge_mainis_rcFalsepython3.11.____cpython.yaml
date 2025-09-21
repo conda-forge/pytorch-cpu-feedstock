@@ -57,7 +57,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 pybind11_abi:
-- '4'
+- '11'
 python:
 - 3.11.* *_cpython
 pytorch:
