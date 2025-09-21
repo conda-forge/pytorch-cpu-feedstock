@@ -18,8 +18,6 @@ cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
 - '12.9'
-cudnn:
-- '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -55,17 +53,18 @@ nccl:
 numpy:
 - '2'
 orc:
-- 2.1.3
+- 2.2.0
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
+pybind11_abi:
+- '4'
 python:
 - 3.10.* *_cpython
 - 3.11.* *_cpython
 - 3.12.* *_cpython
 - 3.13.* *_cp313
-- 3.9.* *_cpython
 pytorch:
 - '2.6'
 target_platform:
@@ -73,6 +72,7 @@ target_platform:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+  - c_stdlib_version
   - cuda_compiler_version
 - - channel_targets
   - is_rc

@@ -107,13 +107,6 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.9.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.9.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
               <td>osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
@@ -142,13 +135,6 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.9.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.9.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
               <td>osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
@@ -174,13 +160,6 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.9.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
