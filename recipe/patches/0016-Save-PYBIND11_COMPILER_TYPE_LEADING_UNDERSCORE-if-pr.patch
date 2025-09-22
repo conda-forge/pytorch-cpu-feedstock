@@ -1,4 +1,4 @@
-From e8097cac6ac090e85864fbef466b93aa4db9428a Mon Sep 17 00:00:00 2001
+From d806af73bbb9e58551a2277dfc4c2b23153eecc4 Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <isuruf@gmail.com>
 Date: Mon, 22 Sep 2025 09:50:38 -0500
 Subject: [PATCH 16/16] Save PYBIND11_COMPILER_TYPE_LEADING_UNDERSCORE if
@@ -9,7 +9,7 @@ Subject: [PATCH 16/16] Save PYBIND11_COMPILER_TYPE_LEADING_UNDERSCORE if
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/torch/csrc/Module.cpp b/torch/csrc/Module.cpp
-index 577505fd5a4..2c4a665921d 100644
+index 577505fd5a4..7e645b3975b 100644
 --- a/torch/csrc/Module.cpp
 +++ b/torch/csrc/Module.cpp
 @@ -2416,7 +2416,11 @@ Call this whenever a new thread is created in order to propagate values from
@@ -18,9 +18,9 @@ index 577505fd5a4..2c4a665921d 100644
  #ifdef PYBIND11_COMPILER_TYPE
 -  SET_STR_DEFINE(PYBIND11_COMPILER_TYPE);
 +  #ifdef PYBIND11_COMPILER_TYPE_LEADING_UNDERSCORE
-+    ASSERT_TRUE(set_module_attr("_PYBIND11_COMPILER_TYPE", THPUtils_packString(PYBIND11_COMPILER_TYPE_LEADING_UNDERSCORE PYBIND11_COMPILER_TYPE)))
++    ASSERT_TRUE(set_module_attr("_PYBIND11_COMPILER_TYPE", THPUtils_packString(PYBIND11_COMPILER_TYPE_LEADING_UNDERSCORE PYBIND11_COMPILER_TYPE)));
 +  #else
-+    ASSERT_TRUE(set_module_attr("_PYBIND11_COMPILER_TYPE", THPUtils_packString(PYBIND11_COMPILER_TYPE)))
++    ASSERT_TRUE(set_module_attr("_PYBIND11_COMPILER_TYPE", THPUtils_packString(PYBIND11_COMPILER_TYPE)));
 +  #endif
  #else
    ASSERT_TRUE(
