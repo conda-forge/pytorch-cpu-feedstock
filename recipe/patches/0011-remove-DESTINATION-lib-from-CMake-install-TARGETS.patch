@@ -1,0 +1,27 @@
+From c2837ae768bdeece91fa274aaed996682ed08470 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Mon, 22 Sep 2025 09:48:20 -0500
+Subject: [PATCH 11/16] remove `DESTINATION lib` from CMake `install(TARGETS` 
+ directives
+
+Suggested-By: Silvio Traversaro <silvio@traversaro.it>
+---
+ torch/lib/libshm_windows/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/torch/lib/libshm_windows/CMakeLists.txt b/torch/lib/libshm_windows/CMakeLists.txt
+index df2a1064938..5fa15e6be31 100644
+--- a/torch/lib/libshm_windows/CMakeLists.txt
++++ b/torch/lib/libshm_windows/CMakeLists.txt
+@@ -19,7 +19,7 @@ target_include_directories(shm PRIVATE
+ target_link_libraries(shm torch c10)
+ 
+ 
+-install(TARGETS shm DESTINATION "${LIBSHM_INSTALL_LIB_SUBDIR}")
++install(TARGETS shm)
+ install(FILES libshm.h DESTINATION "include")
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)
+-- 
+2.45.2
+

@@ -1,7 +1,7 @@
-From 45c8ecafa220144796b462cab59e9457e893bf05 Mon Sep 17 00:00:00 2001
+From bf1ae2655e65ea27d7c6bcd2265f63da51515634 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Wed, 27 Nov 2024 13:47:23 +0100
-Subject: [PATCH 04/17] Allow overriding CUDA-related paths
+Subject: [PATCH 04/16] Allow overriding CUDA-related paths
 
 ---
  cmake/Modules/FindCUDAToolkit.cmake | 2 +-
@@ -22,10 +22,10 @@ index ec9ae530aa6..b7c0bd9fc51 100644
    set(CUDAToolkit_LIBRARY_ROOT "${CMAKE_CUDA_COMPILER_LIBRARY_ROOT}")
    set(CUDAToolkit_VERSION "${CMAKE_CUDA_COMPILER_TOOLKIT_VERSION}")
 diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
-index 73495989fa0..e9cb1f9ae35 100644
+index 92052f9bc5c..bd2a8db5b3b 100644
 --- a/tools/setup_helpers/cmake.py
 +++ b/tools/setup_helpers/cmake.py
-@@ -252,7 +252,7 @@ class CMake:
+@@ -254,7 +254,7 @@ class CMake:
              true_var = additional_options.get(var)
              if true_var is not None:
                  build_options[true_var] = val
@@ -34,3 +34,6 @@ index 73495989fa0..e9cb1f9ae35 100644
                  ("EXITCODE", "EXITCODE__TRYRUN_OUTPUT")
              ):
                  build_options[var] = val
+-- 
+2.45.2
+
