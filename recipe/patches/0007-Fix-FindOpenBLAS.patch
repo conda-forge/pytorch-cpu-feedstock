@@ -43,6 +43,3 @@ index 9ba86ba1ee0..19e1d508aa5 100644
  
  IF (OpenBLAS_FOUND)
    IF (NOT OpenBLAS_FIND_QUIETLY)
--- 
-2.45.2
-

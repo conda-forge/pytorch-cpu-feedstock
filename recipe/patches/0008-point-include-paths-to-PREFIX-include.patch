@@ -40,6 +40,3 @@ index 7fa5237994e..8a1bd5da3de 100644
      ]
      if device_type == "cuda" and IS_HIP_EXTENSION:
          paths.append(os.path.join(lib_include, 'THH'))
--- 
-2.45.2
-

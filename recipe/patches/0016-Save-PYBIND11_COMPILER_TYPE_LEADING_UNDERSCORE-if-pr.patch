@@ -25,6 +25,3 @@ index 577505fd5a4..2c4a665921d 100644
  #else
    ASSERT_TRUE(
        set_module_attr("_" C10_STRINGIZE(PYBIND11_COMPILER_TYPE), Py_None));
--- 
-2.45.2
-

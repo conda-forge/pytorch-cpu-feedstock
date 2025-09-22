@@ -31,6 +31,3 @@ index 636e94e20f6..6e52871e8e0 100644
    auto descriptor = _plan_mkl_fft(
        input.strides(), out.strides(), signal_size, input.is_complex(),
        out.is_complex(), normalization, forward, value_type);
--- 
-2.45.2
-

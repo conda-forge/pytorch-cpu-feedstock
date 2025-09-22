@@ -50,6 +50,3 @@ index 96988e89d09..1dee5889d34 100644
    else()
      message(WARNING "MKL could not be found. Defaulting to Eigen")
      set(CAFFE2_USE_EIGEN_FOR_BLAS ON)
--- 
-2.45.2
-

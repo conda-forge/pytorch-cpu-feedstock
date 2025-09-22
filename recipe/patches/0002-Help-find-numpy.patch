@@ -27,6 +27,3 @@ index 678ba7ab207..92052f9bc5c 100644
              TORCH_BUILD_VERSION=version,
              **build_options,
          )
--- 
-2.45.2
-

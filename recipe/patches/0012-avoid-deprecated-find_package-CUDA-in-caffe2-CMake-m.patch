@@ -438,6 +438,3 @@ index 3985cf50c14..bcb90bfc672 100644
  
  # Generate torch/version.py from the appropriate CMake cache variables.
  if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
--- 
-2.45.2
-

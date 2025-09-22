@@ -22,6 +22,3 @@ index b4ebc92f592..7f88ade34bf 100644
          os.environ["CFLAGS"] = (
              os.getenv("CFLAGS", "") + " -ffunction-sections -fdata-sections"
          )
--- 
-2.45.2
-

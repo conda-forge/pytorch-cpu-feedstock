@@ -20,6 +20,3 @@ index 0130e41ccb4..268aa85ed52 100644
  #include <Python.h>
  #include <frameobject.h>
  #include <structseq.h>
--- 
-2.45.2
-

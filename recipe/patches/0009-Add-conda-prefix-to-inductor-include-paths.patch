@@ -25,6 +25,3 @@ index d0a646c1de8..7468f2787d9 100644
      )
      cflags = sys_libs_cflags + omp_cflags
      ldflags = omp_ldflags
--- 
-2.45.2
-

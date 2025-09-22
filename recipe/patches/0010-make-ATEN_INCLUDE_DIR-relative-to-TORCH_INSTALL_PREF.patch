@@ -23,6 +23,3 @@ index c9cfd74b501..0ccb7b1d2e5 100644
  configure_file(ATenConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/cmake-exports/ATenConfig.cmake")
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake-exports/ATenConfig.cmake"
    DESTINATION "${AT_INSTALL_SHARE_DIR}/cmake/ATen")
--- 
-2.45.2
-

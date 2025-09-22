@@ -19,6 +19,3 @@ index 108a5f59007..5381635b395 100644
      @dtypes(torch.float, torch.double, torch.cfloat, torch.cdouble)
      def test_norm_matrix_degenerate_shapes(self, device, dtype):
          def run_test_case(input, ord, dim, keepdim, should_error):
--- 
-2.45.2
-

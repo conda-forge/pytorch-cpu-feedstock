@@ -32,6 +32,3 @@ index a93386c27f8..96988e89d09 100644
          caffe2_update_option(USE_NUMPY OFF)
        else()
          caffe2_update_option(USE_NUMPY ON)
--- 
-2.45.2
-
