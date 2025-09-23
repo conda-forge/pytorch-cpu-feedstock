@@ -1,4 +1,4 @@
-From e0e5a5bf75e7033268ece4627d2f30556c31bc4d Mon Sep 17 00:00:00 2001
+From 026235cf0b87533ac6611e4fd1c2143586c92b79 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Thu, 6 Mar 2025 13:57:25 +0100
 Subject: [PATCH 13/16] Fix CUPTI lookup to include target directory

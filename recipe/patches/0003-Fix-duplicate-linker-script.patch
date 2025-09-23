@@ -1,4 +1,4 @@
-From ef2ba4a066dd68555ac787887270b2d2522ff44e Mon Sep 17 00:00:00 2001
+From 2235da4dcb8b8eb6c194022acb00fb4e498b5fc4 Mon Sep 17 00:00:00 2001
 From: Jeongseok Lee <jeongseok@meta.com>
 Date: Sun, 3 Nov 2024 01:12:36 -0700
 Subject: [PATCH 03/16] Fix duplicate linker script

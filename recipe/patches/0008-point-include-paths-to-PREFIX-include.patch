@@ -1,4 +1,4 @@
-From 76e638d204e7713b76e7f463ba3c3516ec54eff2 Mon Sep 17 00:00:00 2001
+From dc6088e13b52af5f98fd8a039e598ac44c3a79b6 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
 Subject: [PATCH 08/16] point include paths to $PREFIX/include

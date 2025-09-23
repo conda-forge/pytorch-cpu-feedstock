@@ -1,4 +1,4 @@
-From 0396e1e3efac3e1fa55f5f1e250e5c8399251e4a Mon Sep 17 00:00:00 2001
+From cef87d60aa35c9a577d5e7568c61167442b51dac Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <ifernando@quansight.com>
 Date: Wed, 18 Dec 2024 03:59:00 +0000
 Subject: [PATCH 05/16] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds

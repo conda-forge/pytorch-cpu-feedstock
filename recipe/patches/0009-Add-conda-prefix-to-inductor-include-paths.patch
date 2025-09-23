@@ -1,4 +1,4 @@
-From 78d1b66ad3ba0f2ee7296be37cf0c1dd9a360b34 Mon Sep 17 00:00:00 2001
+From 25eaafa608bdd76cb77ef75533f151b9c07bec6e Mon Sep 17 00:00:00 2001
 From: Daniel Petry <dpetry@anaconda.com>
 Date: Tue, 21 Jan 2025 17:45:23 -0600
 Subject: [PATCH 09/16] Add conda prefix to inductor include paths
