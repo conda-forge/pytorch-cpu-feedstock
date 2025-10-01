@@ -39,7 +39,7 @@ libmagma_sparse:
 libprotobuf:
 - 6.31.1
 libtorch:
-- '2.6'
+- '2.7'
 llvm_openmp:
 - '19'
 macos_machine:
@@ -61,7 +61,7 @@ pybind11_abi:
 python:
 - 3.11.* *_cpython
 pytorch:
-- '2.6'
+- '2.7'
 target_platform:
 - osx-64
 zip_keys:
@@ -69,5 +69,7 @@ zip_keys:
   - cxx_compiler_version
 - - channel_targets
   - is_rc
+- - python
+  - channel_sources
 zlib:
 - '1'
