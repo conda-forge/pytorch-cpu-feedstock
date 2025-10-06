@@ -1,17 +1,17 @@
-From c0da591c99f601fc2c5cc2b1c50b6d51052c8e5e Mon Sep 17 00:00:00 2001
+From c9810cb1782fa4ad103182da896eaa2b21b95120 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
-Subject: [PATCH 08/17] point include paths to $PREFIX/include
+Subject: [PATCH 08/15] point include paths to $PREFIX/include
 
 ---
  torch/utils/cpp_extension.py | 18 ++++++++++++++++++
  1 file changed, 18 insertions(+)
 
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index 82c23c2c9fe..baec1969ac0 100644
+index 7fa5237994e..8a1bd5da3de 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
-@@ -1437,10 +1437,28 @@ def include_paths(device_type: str = "cpu") -> list[str]:
+@@ -1495,10 +1495,28 @@ def include_paths(device_type: str = "cpu") -> list[str]:
          A list of include path strings.
      """
      lib_include = os.path.join(_TORCH_PATH, 'include')

@@ -1,17 +1,17 @@
-From c244e05d6bbef0b34777ec15ff98ae69bcc5db86 Mon Sep 17 00:00:00 2001
+From 2e913176f2b8ff4a5fd0cb8e8f24ed4850ac9474 Mon Sep 17 00:00:00 2001
 From: Jeongseok Lee <jeongseok@meta.com>
 Date: Sun, 3 Nov 2024 01:12:36 -0700
-Subject: [PATCH 03/17] Fix duplicate linker script
+Subject: [PATCH 03/15] Fix duplicate linker script
 
 ---
  setup.py | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/setup.py b/setup.py
-index 61ee9363fc2..4fa1c3ed5c5 100644
+index b4ebc92f592..7f88ade34bf 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1146,7 +1146,9 @@ def main():
+@@ -1198,7 +1198,9 @@ def main():
              filein="cmake/prioritized_text.txt", fout="cmake/linker_script.ld"
          )
          linker_script_path = os.path.abspath("cmake/linker_script.ld")
