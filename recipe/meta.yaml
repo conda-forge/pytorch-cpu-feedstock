@@ -62,9 +62,9 @@ source:
       # backport https://github.com/pytorch/pytorch/pull/148668
       - patches/0013-Fix-CUPTI-lookup-to-include-target-directory.patch
       # skip a test that fails with numpy 2.3; can be dropped for pytorch>2.7
-      - patches/0016-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      - patches/0014-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
-      - patches/0017-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0015-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
