@@ -1,0 +1,27 @@
+From 67fcb9333c5bccf13cabb3462cd56dd4c7ef7e18 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Thu, 23 Jan 2025 22:58:14 +1100
+Subject: [PATCH 08/15] point include paths to Conda prefix include dir
+
+Updated to use `sys.prefix` per
+https://github.com/conda-forge/pytorch-cpu-feedstock/issues/424.
+---
+ torch/utils/cpp_extension.py | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
+index 7fa5237994e..7d271c101f8 100644
+--- a/torch/utils/cpp_extension.py
++++ b/torch/utils/cpp_extension.py
+@@ -1495,7 +1495,11 @@ def include_paths(device_type: str = "cpu") -> list[str]:
+         A list of include path strings.
+     """
+     lib_include = os.path.join(_TORCH_PATH, 'include')
++    # Account for conda prefix.
++    conda_pieces = [sys.prefix] + IS_WINDOWS * ["Library"] + ["include"]
++    conda_include = os.path.join(*pieces)
+     paths = [
++        conda_include,
+         lib_include,
+         # Remove this once torch/torch.h is officially no longer supported for C++ extensions.
+         os.path.join(lib_include, 'torch', 'csrc', 'api', 'include'),

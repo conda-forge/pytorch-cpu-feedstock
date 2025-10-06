@@ -1,4 +1,4 @@
-From c59e643d36afd44a9ef9a594c717bbbbbe32797e Mon Sep 17 00:00:00 2001
+From f69f6c1f9f1bd001571f22689086ca15c23819f6 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Sat, 14 Jun 2025 07:34:48 +1100
 Subject: [PATCH 14/15] skip test_norm_matrix_degenerate_shapes on numpy >=2.3

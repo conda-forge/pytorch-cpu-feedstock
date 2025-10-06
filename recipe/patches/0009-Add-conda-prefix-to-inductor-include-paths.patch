@@ -1,4 +1,4 @@
-From a5d901dba8a1a2ff89a4e2c83075c8a713dc2a6f Mon Sep 17 00:00:00 2001
+From 31542c7ab379cb4bed47a021f013e018aa9603c9 Mon Sep 17 00:00:00 2001
 From: Daniel Petry <dpetry@anaconda.com>
 Date: Tue, 21 Jan 2025 17:45:23 -0600
 Subject: [PATCH 09/15] Add conda prefix to inductor include paths
@@ -9,19 +9,22 @@ dependencies (e.g., sleef).
 
 Note that this is for inductor's JIT mode, not its AOT mode, for which the
 end user provides a <filename>_compile_flags.json file.
+
+Updated to use `sys.prefix` per
+https://github.com/conda-forge/pytorch-cpu-feedstock/issues/424.
 ---
  torch/_inductor/cpp_builder.py | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/torch/_inductor/cpp_builder.py b/torch/_inductor/cpp_builder.py
-index d0a646c1de8..7468f2787d9 100644
+index d0a646c1de8..99c22d0ae40 100644
 --- a/torch/_inductor/cpp_builder.py
 +++ b/torch/_inductor/cpp_builder.py
 @@ -1136,6 +1136,7 @@ def get_cpp_torch_options(
          + python_include_dirs
          + torch_include_dirs
          + omp_include_dir_paths
-+        + [os.getenv('CONDA_PREFIX') + '/include']
++        + [sys.prefix + '/include']
      )
      cflags = sys_libs_cflags + omp_cflags
      ldflags = omp_ldflags
