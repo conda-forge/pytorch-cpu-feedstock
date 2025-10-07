@@ -121,7 +121,8 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    - cudnn                           # [cuda_compiler_version != "None"]
+    # building against the older version to satisfy test constraints
+    - cudnn <9.11                     # [cuda_compiler_version != "None"]
     - nccl                            # [cuda_compiler_version != "None" and linux]
     - libmagma-devel                  # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
@@ -273,7 +274,7 @@ outputs:
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
+        - cudnn <9.11                     # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None" and linux]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
