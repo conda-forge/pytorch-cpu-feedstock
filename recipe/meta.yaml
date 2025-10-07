@@ -171,8 +171,6 @@ requirements:
     - eigen
     - zlib
   run:
-    # GPU requirements without run_exports
-    - cudnn                             # [cuda_compiler_version != "None"]
     - intel-openmp {{ mkl }}            # [win]
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
@@ -329,8 +327,6 @@ outputs:
         - intel-openmp {{ mkl }}            # [win]
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
-        # GPU requirements without run_exports
-        - cudnn                             # [cuda_compiler_version != "None"]
         - triton =={{ triton }}             # [cuda_compiler_version != "None" and not win]
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda                            # [cuda_compiler_version != "None"]
