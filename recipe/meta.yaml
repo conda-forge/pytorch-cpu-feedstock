@@ -352,8 +352,16 @@ outputs:
         - pytorch-gpu {{ version }}    # [cuda_compiler_version != "None"]
         - pytorch-cpu <0.0a0           # [cuda_compiler_version != "None"]
 
+  - name: pytorch-tests
+    build:
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
+      detect_binary_files_with_prefix: false
     test:
       requires:
+        - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [megabuild and cuda_compiler_version != "None"]
+        - pytorch {{ version }} cpu_{{ blas_impl }}*{{ build }}     # [megabuild and cuda_compiler_version == "None"]
+        - {{ pin_subpackage("pytorch", exact=True) }}               # [not megabuild]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         # for torch.compile tests
