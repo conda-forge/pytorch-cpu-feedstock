@@ -123,7 +123,7 @@ requirements:
     # GPU requirements
     - cudnn                           # [cuda_compiler_version != "None"]
     - nccl                            # [cuda_compiler_version != "None" and linux]
-    - magma                           # [cuda_compiler_version != "None"]
+    - libmagma-devel                  # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
     - nvtx-c                          # [cuda_compiler_version != "None"]
     {% if cuda_compiler_version != "None" %}
@@ -279,7 +279,7 @@ outputs:
         - nccl                            # [cuda_compiler_version != "None" and linux]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
-        - magma                           # [cuda_compiler_version != "None"]
+        - libmagma-devel                  # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
