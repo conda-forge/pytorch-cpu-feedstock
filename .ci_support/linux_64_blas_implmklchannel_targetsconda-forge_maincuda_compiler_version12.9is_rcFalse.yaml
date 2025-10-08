@@ -34,14 +34,14 @@ libcblas:
 - 3.9.* *netlib
 liblapack:
 - 3.9.* *netlib
-libmagma_devel:
-- '2.9'
 libmagma_sparse:
 - '2.9'
 libprotobuf:
 - 6.31.1
 libtorch:
 - '2.7'
+magma:
+- '2.9'
 megabuild:
 - true
 mkl:

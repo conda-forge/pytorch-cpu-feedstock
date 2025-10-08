@@ -20,14 +20,14 @@ is_rc:
 - 'False'
 libabseil:
 - '20250512'
-libmagma_devel:
-- '2.9'
 libmagma_sparse:
 - '2.9'
 libprotobuf:
 - 6.31.1
 libtorch:
 - '2.7'
+magma:
+- '2.9'
 megabuild:
 - true
 mkl:
