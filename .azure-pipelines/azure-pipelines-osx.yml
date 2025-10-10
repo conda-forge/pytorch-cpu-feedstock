@@ -44,7 +44,7 @@ jobs:
       osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313:
         CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313
         UPLOAD_PACKAGES: 'True'
-  timeoutInMinutes: 360
+  timeoutInMinutes: 480
   variables: {}
 
   steps:
