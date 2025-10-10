@@ -2,6 +2,8 @@ azure:
   free_disk_space: true
   settings_linux:
     timeoutInMinutes: 1
+  settings_osx:
+    timeoutInMinutes: 480
 bot:
   abi_migration_branches:
   - v2.6.x
