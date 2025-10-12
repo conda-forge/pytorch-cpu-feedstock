@@ -1,17 +1,17 @@
-From c7b809486c9401ea5a9abaaf598803c88a9d7da5 Mon Sep 17 00:00:00 2001
+From 8afc8dc7eaf960071d95cb62a5c5138b17af20b4 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Sun, 1 Sep 2024 17:35:40 -0400
-Subject: [PATCH 01/17] Force usage of python 3 and error without numpy
+Subject: [PATCH 01/15] Force usage of python 3 and error without numpy
 
 ---
  cmake/Dependencies.cmake | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 5227204b041..47917899943 100644
+index a93386c27f8..96988e89d09 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -871,9 +871,9 @@ if(BUILD_PYTHON)
+@@ -819,9 +819,9 @@ if(BUILD_PYTHON)
    if(USE_NUMPY)
      list(APPEND PYTHON_COMPONENTS NumPy)
    endif()
@@ -23,7 +23,7 @@ index 5227204b041..47917899943 100644
  endif()
  
  if(NOT Python_Interpreter_FOUND)
-@@ -890,7 +890,7 @@ if(BUILD_PYTHON)
+@@ -838,7 +838,7 @@ if(BUILD_PYTHON)
    if(Python_Development.Module_FOUND)
      if(USE_NUMPY)
        if(NOT Python_NumPy_FOUND)

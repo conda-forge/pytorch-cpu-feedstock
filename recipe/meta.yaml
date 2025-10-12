@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.8.0" %}
-{% set build = 0 %}
+{% set build = 1 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -54,7 +54,7 @@ source:
       - patches/0006-fix-issue-142484.patch
       - patches/0007-Fix-FindOpenBLAS.patch
       # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
-      - patches/0008-point-include-paths-to-PREFIX-include.patch
+      - patches/0008-point-include-paths-to-Conda-prefix-include-dir.patch
       - patches/0009-Add-conda-prefix-to-inductor-include-paths.patch
       - patches/0010-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
       - patches/0011-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
@@ -62,9 +62,9 @@ source:
       # backport https://github.com/pytorch/pytorch/pull/148668
       - patches/0013-Fix-CUPTI-lookup-to-include-target-directory.patch
       # skip a test that fails with numpy 2.3; can be dropped for pytorch>2.7
-      - patches/0016-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      - patches/0014-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
-      - patches/0017-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0015-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
@@ -121,8 +121,7 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    # cudnn pinned over segfaults
-    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/411
+    # building against the older version to satisfy test constraints
     - cudnn <9.11                     # [cuda_compiler_version != "None"]
     - nccl                            # [cuda_compiler_version != "None" and linux]
     - magma                           # [cuda_compiler_version != "None"]
@@ -173,8 +172,6 @@ requirements:
     - eigen
     - zlib
   run:
-    # GPU requirements without run_exports
-    - cudnn <9.11                       # [cuda_compiler_version != "None"]
     - intel-openmp {{ mkl }}            # [win]
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
@@ -331,8 +328,6 @@ outputs:
         - intel-openmp {{ mkl }}            # [win]
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
-        # GPU requirements without run_exports
-        - cudnn <9.11                       # [cuda_compiler_version != "None"]
         - triton =={{ triton }}             # [cuda_compiler_version != "None" and not win]
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda                            # [cuda_compiler_version != "None"]
@@ -357,8 +352,15 @@ outputs:
         - pytorch-gpu {{ version }}    # [cuda_compiler_version != "None"]
         - pytorch-cpu <0.0a0           # [cuda_compiler_version != "None"]
 
+  - name: pytorch-tests
+    build:
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
+      detect_binary_files_with_prefix: false
     test:
       requires:
+        - pytorch {{ version }} cuda*_{{ blas_impl }}_py{{ CONDA_PY }}*{{ build }}   # [cuda_compiler_version != "None"]
+        - pytorch {{ version }} cpu_{{ blas_impl }}_py{{ CONDA_PY }}*{{ build }}     # [cuda_compiler_version == "None"]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         # for torch.compile tests
@@ -386,6 +388,10 @@ outputs:
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         - pybind11
+        # cudnn >=9.11 removed support older GPUs that are still supported by CUDA 12
+        # pin tests since the CI uses sm70 that is no longer supported at the moment
+        # pending https://github.com/conda-forge/admin-requests/pull/1687
+        - cudnn <9.11               # [cuda_compiler_version != "None"]
       imports:
         - torch
         - torch._C

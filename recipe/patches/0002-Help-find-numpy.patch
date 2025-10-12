@@ -1,17 +1,17 @@
-From dbafa6c2e900de35d5d4b2633bf80669dde3c9d6 Mon Sep 17 00:00:00 2001
+From 078d8b4be2adbf8a8d20ec1ab69922d534afe6e7 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Tue, 1 Oct 2024 00:28:40 -0400
-Subject: [PATCH 02/17] Help find numpy
+Subject: [PATCH 02/15] Help find numpy
 
 ---
  tools/setup_helpers/cmake.py | 6 ++++++
  1 file changed, 6 insertions(+)
 
 diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
-index ad0d0fb014b..73495989fa0 100644
+index 678ba7ab207..92052f9bc5c 100644
 --- a/tools/setup_helpers/cmake.py
 +++ b/tools/setup_helpers/cmake.py
-@@ -305,9 +305,15 @@ class CMake:
+@@ -313,9 +313,15 @@ class CMake:
              sys.exit(1)
          build_options.update(cmake__options)
  

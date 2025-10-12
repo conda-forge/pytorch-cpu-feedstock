@@ -1,7 +1,7 @@
-From 4d94092be5f26d1df1257c9629172fe6c62e19fc Mon Sep 17 00:00:00 2001
+From 6785dd8f59dc951fb1194a287f24ea205d72b456 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
-Subject: [PATCH 12/17] avoid deprecated `find_package(CUDA)` in caffe2 CMake
+Subject: [PATCH 12/15] avoid deprecated `find_package(CUDA)` in caffe2 CMake
  metadata
 
 vendor the not-available-anymore function torch_cuda_get_nvcc_gencode_flag from CMake
@@ -15,10 +15,10 @@ vendor the not-available-anymore function torch_cuda_get_nvcc_gencode_flag from 
  6 files changed, 153 insertions(+), 50 deletions(-)
 
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 512e4ba3a81..7def8ba0311 100644
+index 1f929e7b8b3..8116b5fb5ec 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -937,25 +937,25 @@ if(USE_ROCM)
+@@ -948,25 +948,25 @@ if(USE_ROCM)
          "$<$<COMPILE_LANGUAGE:CXX>:ATen/core/ATen_pch.h>")
    endif()
  elseif(USE_CUDA)
@@ -49,7 +49,7 @@ index 512e4ba3a81..7def8ba0311 100644
    torch_compile_options(torch_cuda)  # see cmake/public/utils.cmake
    target_compile_definitions(torch_cuda PRIVATE USE_CUDA)
  
-@@ -1013,12 +1013,12 @@ elseif(USE_CUDA)
+@@ -1076,12 +1076,12 @@ elseif(USE_CUDA)
          torch_cuda
      )
      if($ENV{ATEN_STATIC_CUDA})
@@ -65,7 +65,7 @@ index 512e4ba3a81..7def8ba0311 100644
              CUDA::cusolver_static
              ${CUDAToolkit_LIBRARY_DIR}/libcusolver_lapack_static.a     # needed for libcusolver_static
 diff --git a/cmake/Summary.cmake b/cmake/Summary.cmake
-index b46560e123b..f815f43237d 100644
+index c33269c0a28..ac200e24ca0 100644
 --- a/cmake/Summary.cmake
 +++ b/cmake/Summary.cmake
 @@ -76,7 +76,7 @@ function(caffe2_print_configuration_summary)
@@ -103,7 +103,7 @@ index b46560e123b..f815f43237d 100644
      if(${USE_TENSORRT})
        message(STATUS "      TensorRT runtime library: ${TENSORRT_LIBRARY}")
 diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
-index 855edd35081..83bf98679cd 100644
+index 8a5587cad27..90c03147817 100644
 --- a/cmake/TorchConfig.cmake.in
 +++ b/cmake/TorchConfig.cmake.in
 @@ -130,7 +130,7 @@ if(@USE_CUDA@)
@@ -113,10 +113,10 @@ index 855edd35081..83bf98679cd 100644
 -    set(TORCH_CUDA_LIBRARIES ${CUDA_NVRTC_LIB})
 +    set(TORCH_CUDA_LIBRARIES CUDA::nvrtc)
    endif()
-   if(TARGET torch::nvtoolsext)
-     list(APPEND TORCH_CUDA_LIBRARIES torch::nvtoolsext)
+ 
+   if(@BUILD_SHARED_LIBS@)
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index c66d32b115c..e538fb5662b 100644
+index ca888bb9db2..ef4119d8a00 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
 @@ -26,8 +26,8 @@ if(NOT MSVC)
@@ -215,7 +215,7 @@ index c66d32b115c..e538fb5662b 100644
    execute_process(
      COMMAND Python::Interpreter -c
 diff --git a/cmake/public/utils.cmake b/cmake/public/utils.cmake
-index 781a4e6819f..0585942fe36 100644
+index d56dd74d6c0..9f59b40d612 100644
 --- a/cmake/public/utils.cmake
 +++ b/cmake/public/utils.cmake
 @@ -306,6 +306,133 @@ macro(torch_hip_get_arch_list store_var)
@@ -353,10 +353,10 @@ index 781a4e6819f..0585942fe36 100644
  # Get the XPU arch flags specified by TORCH_XPU_ARCH_LIST.
  # Usage:
 diff --git a/setup.py b/setup.py
-index 4fa1c3ed5c5..5757c800136 100644
+index 7f88ade34bf..3b3a3ab46fa 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -647,7 +647,7 @@ class build_ext(setuptools.command.build_ext.build_ext):
+@@ -695,7 +695,7 @@ class build_ext(setuptools.command.build_ext.build_ext):
          else:
              report("-- Not using cuDNN")
          if cmake_cache_vars["USE_CUDA"]:

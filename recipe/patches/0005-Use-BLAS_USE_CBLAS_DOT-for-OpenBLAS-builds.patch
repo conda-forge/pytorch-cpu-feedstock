@@ -1,7 +1,7 @@
-From 9e6e570d3cd3b068ce06885b78ce54e26bd6928f Mon Sep 17 00:00:00 2001
+From e1355fa88c355aa90c7179b4708a9de52cb7d5a2 Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <ifernando@quansight.com>
 Date: Wed, 18 Dec 2024 03:59:00 +0000
-Subject: [PATCH 05/17] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
+Subject: [PATCH 05/15] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
 
 There are two calling conventions for *dotu functions
 
@@ -31,7 +31,7 @@ functional calls.
  1 file changed, 2 insertions(+)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 47917899943..9886a284d4e 100644
+index 96988e89d09..1dee5889d34 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -182,6 +182,7 @@ elseif(BLAS STREQUAL "OpenBLAS")
