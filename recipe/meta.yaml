@@ -365,6 +365,7 @@ outputs:
         - {{ compiler('cxx') }}
         # for torch.compile tests
         - {{ compiler('cuda') }}       # [cuda_compiler_version != "None"]
+        - python
         - ninja
         - boto3
         - hypothesis
