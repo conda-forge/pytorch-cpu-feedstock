@@ -359,6 +359,8 @@ outputs:
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     requirements:
+      host:
+        - python
       run:
         - pytorch {{ version }} cuda*_{{ blas_impl }}_py{{ CONDA_PY }}*{{ build }}   # [cuda_compiler_version != "None"]
         - pytorch {{ version }} cpu_{{ blas_impl }}_py{{ CONDA_PY }}*{{ build }}     # [cuda_compiler_version == "None"]
@@ -368,7 +370,6 @@ outputs:
         - {{ compiler('cxx') }}
         # for torch.compile tests
         - {{ compiler('cuda') }}       # [cuda_compiler_version != "None"]
-        - python
         - ninja
         - boto3
         - hypothesis
