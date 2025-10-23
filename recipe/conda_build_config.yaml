@@ -31,3 +31,9 @@ github_actions_labels:
 - cirun-openstack-gpu-2xlarge   # [linux]
 - cirun-macos-m4-large          # [osx]
 - cirun-azure-windows-4xlarge   # [win]
+
+is_python_min:
+- true
+
+python:
+- 3.13.* *_cp313
