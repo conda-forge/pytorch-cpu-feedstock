@@ -94,6 +94,9 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  # [TESTING] reduced matrix: linux+mkl, plus one cross-compilation target
+  # (linux-aarch64 sbsa, cpu) to exercise CONDA_BUILD_CROSS_COMPILATION
+  skip: true  # [not (linux and (blas_impl == 'mkl' or (aarch64 and cuda_compiler_version == "None")))]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
