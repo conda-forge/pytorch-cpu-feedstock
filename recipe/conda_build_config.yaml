@@ -22,3 +22,9 @@ github_actions_labels:
 - namespace-profile-16cpu-on-linux-64       # [linux]
 - namespace-profile-12cpu-on-osx-arm64      # [osx]
 - namespace-profile-16cpu-4x-on-windows-64  # [win]
+
+is_python_min:
+- true
+
+python:
+- 3.14.* *_cp314
