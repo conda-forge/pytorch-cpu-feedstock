@@ -20,6 +20,9 @@ jobs:
       osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313:
         CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313
         UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314:
+        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314
+        UPLOAD_PACKAGES: 'True'
       osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython:
         CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -32,6 +35,9 @@ jobs:
       osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313:
         CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313
         UPLOAD_PACKAGES: 'True'
+      osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314:
+        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314
+        UPLOAD_PACKAGES: 'True'
       osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython:
         CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -43,6 +49,9 @@ jobs:
         UPLOAD_PACKAGES: 'True'
       osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313:
         CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314:
+        CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314
         UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
   variables: {}
