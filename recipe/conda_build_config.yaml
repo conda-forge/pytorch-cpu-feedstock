@@ -34,3 +34,9 @@ megabuild:
 - true      # [linux]
 - false     # [osx]
 - true      # [win]
+
+is_python_min:
+- true
+
+python:
+- 3.12.* *_cpython
