@@ -1,25 +1,39 @@
-From a9879bdd5ea793c5301a4b86f163a07e1f28f321 Mon Sep 17 00:00:00 2001
-From: "H. Vetinari" <h.vetinari@gmx.com>
-Date: Tue, 28 Jan 2025 13:32:28 +1100
+From 3eec43b3b75d6d0a17184cf5b80767ab42b491f0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@quansight.com>
+Date: Thu, 23 Oct 2025 16:47:01 +0200
 Subject: [PATCH] remove `DESTINATION lib` from CMake install directives
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Suggested-By: Silvio Traversaro <silvio@traversaro.it>
----
- CMakeLists.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/third_party/fbgemm/CMakeLists.txt b/third_party/fbgemm/CMakeLists.txt
-index 134523e7..86fb8fad 100644
---- a/third_party/fbgemm/CMakeLists.txt
-+++ b/third_party/fbgemm/CMakeLists.txt
-@@ -370,8 +370,8 @@ if(MSVC)
-       FILES $<TARGET_PDB_FILE:fbgemm> $<TARGET_PDB_FILE:asmjit>
-       DESTINATION ${CMAKE_INSTALL_LIBDIR} OPTIONAL)
-   endif()
--  install(TARGETS fbgemm DESTINATION ${CMAKE_INSTALL_LIBDIR})
--  install(TARGETS asmjit DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+  install(TARGETS fbgemm)
-+  install(TARGETS asmjit)
- endif()
+Original-author: H. Vetinari <h.vetinari@gmx.com>
+Signed-off-by: Michał Górny <mgorny@quansight.com>
+--- a/third_party/fbgemm/cmake/modules/CppLibrary.cmake
++++ b/third_party/fbgemm/cmake/modules/CppLibrary.cmake
+@@ -196,18 +196,19 @@ function(cpp_library)
+     ############################################################################
  
- #Make project importable from the build directory
+     if(args_DESTINATION)
+-        set(lib_install_destination ${args_DESTINATION})
++        set(destinations
++            ARCHIVE DESTINATION ${args_DESTINATION}
++            LIBRARY DESTINATION ${args_DESTINATION}
++            # For Windows
++            RUNTIME DESTINATION ${args_DESTINATION})
+     else()
+-        set(lib_install_destination ${CMAKE_INSTALL_LIBDIR})
++        set(destinations)
+     endif()
+ 
+     install(
+         TARGETS ${lib_name}
+         EXPORT fbgemmLibraryConfig
+-        ARCHIVE DESTINATION ${lib_install_destination}
+-        LIBRARY DESTINATION ${lib_install_destination}
+-        # For Windows
+-        RUNTIME DESTINATION ${lib_install_destination})
++        ${destinations})
+ 
+     ############################################################################
+     # Set the Output Variable(s)
