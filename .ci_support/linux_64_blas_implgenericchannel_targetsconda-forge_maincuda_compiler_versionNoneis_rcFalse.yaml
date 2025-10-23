@@ -16,6 +16,8 @@ cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
 - None
+cudnn:
+- '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
