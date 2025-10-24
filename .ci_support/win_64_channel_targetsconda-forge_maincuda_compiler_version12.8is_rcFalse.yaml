@@ -44,7 +44,6 @@ pybind11_abi:
 - '4'
 python:
 - 3.12.* *_cpython
-- 3.14.* *_cp314
 pytorch:
 - '2.7'
 target_platform:

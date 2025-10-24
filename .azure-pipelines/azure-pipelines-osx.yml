@@ -8,23 +8,14 @@ jobs:
     vmImage: macOS-15
   strategy:
     matrix:
-      osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython:
-        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython
+      osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse:
+        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314:
-        CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314
+      osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalse:
+        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalse
         UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython:
-        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython
-        UPLOAD_PACKAGES: 'True'
-      osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314:
-        CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314
-        UPLOAD_PACKAGES: 'True'
-      osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython:
-        CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython
-        UPLOAD_PACKAGES: 'True'
-      osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314:
-        CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.14.____cp314
+      osx_arm64_channel_targetsconda-forge_mainis_rcFalse:
+        CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
         UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
   variables: {}
