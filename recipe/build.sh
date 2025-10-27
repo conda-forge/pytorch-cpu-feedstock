@@ -100,6 +100,10 @@ export USE_SYSTEM_PYBIND11=1
 export USE_SYSTEM_EIGEN_INSTALL=1
 export Python_ROOT_DIR=$PREFIX
 
+# force using cblas_dot when cross-compiling
+# (this matches the behavior to our patches)
+export PYTORCH_BLAS_USE_CBLAS_DOT=ON
+
 # workaround to stop setup.py from trying to check whether we checked out
 # all submodules (we don't use all of them)
 rm -f .gitmodules
