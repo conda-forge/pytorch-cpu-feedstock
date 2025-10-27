@@ -1,0 +1,26 @@
+From b98ad708d01738f98d209de8dbe42e67aa161b2d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Mon, 27 Oct 2025 17:16:12 +0100
+Subject: [PATCH 15/15] Allow CMAKE_SYSTEM_PROCESSOR=AMD64 for FBGEMM
+
+Update the code disabling USE_FBGEMM for non-x86_64 processors to
+account for the value of "AMD64" as used by CMake on Windows.
+---
+ CMakeLists.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ce7890f002d..819d1996190 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -837,7 +837,9 @@ include(ExternalProject)
+ 
+ # ---[ Dependencies ---[ FBGEMM doesn't work on x86 32bit and
+ # CMAKE_SYSTEM_PROCESSOR thinks its 64bit
+-if(USE_FBGEMM AND NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
++if(USE_FBGEMM AND
++    (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64") AND
++    (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64"))
+   message(WARNING
+     "x64 operating system is required for FBGEMM. "
+     "Not compiling with FBGEMM. "
