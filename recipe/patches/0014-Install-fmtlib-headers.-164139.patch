@@ -1,0 +1,35 @@
+From c949bb1d87235bb6efd01be480e1ee9f5f853a36 Mon Sep 17 00:00:00 2001
+From: Yukio Siraichi <yukio.siraichi@gmail.com>
+Date: Tue, 30 Sep 2025 01:10:13 +0000
+Subject: [PATCH 14/14] Install `fmtlib` headers. (#164139)
+
+`fmtlib` version was updated to 12.0.0 in #163441.
+
+In this new version, due to https://github.com/fmtlib/fmt/pull/4536, PyTorch started not installing `fmtlib` headers anymore. Because of that, PyTorch/XLA build CI started to fail https://github.com/pytorch/xla/issues/9653. While we did fix it internally https://github.com/pytorch/xla/pull/9650, I believe that PyTorch should continue installing the `fmtlib` headers, since it is a dependency of its C API [`python_arg_parser.h`][1].
+
+PyTorch/XLA CI was moved to `unstable.yml` in #159272, and later removed in #163564. This PyTorch/XLA build failure went under the radar, since the `fmtlib` update only landed on September 22.
+
+[1]: https://github.com/pytorch/pytorch/blob/84d673ef577d42d6ec20c6c9f09863583c3111f5/torch/csrc/utils/python_arg_parser.h#L42
+Pull Request resolved: https://github.com/pytorch/pytorch/pull/164139
+Approved by: https://github.com/Skylion007, https://github.com/malfet
+---
+ cmake/Dependencies.cmake | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 4a9fe193830..7857beafc30 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1546,6 +1546,12 @@ endif()
+ #
+ # End ATen checks
+ #
++
++# Install `fmtlib` header.
++# This was the default behavior before version 12.0.0.
++# Since PyTorch C API depends on it, make it available for projects that
++# depend on PyTorch.
++set(FMT_INSTALL ON)
+ set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
