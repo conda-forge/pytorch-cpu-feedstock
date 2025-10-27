@@ -199,15 +199,17 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export CUDAToolkit_ROOT=${PREFIX}
     case ${target_platform} in
         linux-64)
-            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
+            CUDA_TARGET=x86_64-linux
             ;;
         linux-aarch64)
-            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
+            CUDA_TARGET=sbsa-linux
             ;;
         *)
             echo "unknown CUDA arch, edit build.sh"
             exit 1
     esac
+    export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/${CUDA_TARGET}
+    sed -i -e "s,@CUDA_TARGET@,${CUDA_TARGET}," torch/_inductor/cpp_builder.py
 
     # Compatibility matrix for update: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
     # Warning from pytorch v1.12.1: In the future we will require one to
