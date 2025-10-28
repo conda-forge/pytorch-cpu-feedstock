@@ -1,0 +1,22 @@
+From 4db89ab160fc8c827c540d6a605676225b5d6cea Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Tue, 28 Oct 2025 12:56:04 +0100
+Subject: [PATCH 14/14] Use system fmt
+
+---
+ cmake/Dependencies.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 4a9fe193830..6c5ae208072 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1548,7 +1548,7 @@ endif()
+ #
+ set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+-add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
++find_package(fmt)
+ 
+ # Disable compiler feature checks for `fmt`.
+ #

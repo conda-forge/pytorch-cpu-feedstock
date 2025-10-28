@@ -166,6 +166,7 @@ requirements:
     - pybind11-abi
     - eigen
     - zlib
+    - fmt
   run:
     - intel-openmp {{ mkl }}            # [win]
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
@@ -315,6 +316,7 @@ outputs:
         - pkg-config  # [unix]
         - typing_extensions
         - zlib
+        - fmt
       run:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
         # for non-megabuild, allow libtorch from any python version
