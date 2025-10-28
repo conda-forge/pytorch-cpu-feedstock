@@ -60,8 +60,6 @@ source:
       - patches/0012-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
       - patches/0013-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
-      # backport https://github.com/pytorch/pytorch/pull/164139
-      - patches/0014-Install-fmtlib-headers.-164139.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
