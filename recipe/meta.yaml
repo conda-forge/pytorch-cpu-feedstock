@@ -50,7 +50,7 @@ source:
       - patches/0005-Fix-FindOpenBLAS.patch
       # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
       - patches/0006-point-include-paths-to-Conda-prefix-include-dir.patch
-      - patches/0007-Add-conda-prefix-to-inductor-include-paths.patch
+      - patches/0007-Add-conda-prefix-to-inductor-include-lib-paths.patch
       - patches/0008-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
       - patches/0009-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
       - patches/0010-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
