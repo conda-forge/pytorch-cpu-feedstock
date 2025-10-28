@@ -78,8 +78,6 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
-  # debug: only CUDA
-  skip: true  # [cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -245,8 +243,6 @@ outputs:
     script: build.sh    # [unix]
     script: bld.bat     # [win]
     build:
-      # debug: only one python version
-      skip: true  # [py!=312]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
@@ -357,7 +353,6 @@ outputs:
 
   - name: pytorch-tests
     build:
-      skip: true  # [py!=312]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
