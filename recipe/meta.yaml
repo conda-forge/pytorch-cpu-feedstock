@@ -61,7 +61,6 @@ source:
       - patches/0014-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
       - patches/0015-Fix-building-kineto-against-system-fmt.patch
       - patches/0018-Use-Intel-LLVM-openmp.patch
-      - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -209,8 +208,6 @@ test:
         "torch_cuda_linalg"
     ] + (cuda_compiler_version != "None") * [
         "c10_cuda", "caffe2_nvrtc", "torch_cuda"
-    ] + target_platform.startswith("win") * [
-        "asmjit", "fbgemm"
     ]
     %}
     {% for each_lib in torch_libs %}
