@@ -80,6 +80,7 @@ set "USE_OPENMP=ON"
 set USE_SYSTEM_EIGEN_INSTALL=1
 set USE_SYSTEM_PYBIND11=1
 set USE_SYSTEM_SLEEF=1
+set USE_SYSTEM_FMT=1
 
 @REM workaround to stop setup.py from trying to check whether we checked out
 @REM all submodules (we don't use all of them)

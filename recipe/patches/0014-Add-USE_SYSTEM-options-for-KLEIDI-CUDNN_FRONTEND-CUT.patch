@@ -1,0 +1,203 @@
+From 80d19fab767e27bc950b8e229b11294495192a1e Mon Sep 17 00:00:00 2001
+From: Yukio Siraichi <yukio.siraichi@gmail.com>
+Date: Tue, 30 Sep 2025 01:10:13 +0000
+Subject: [PATCH 14/14] Add USE_SYSTEM options for KLEIDI, CUDNN_FRONTEND,
+ CUTLASS, and FMT
+
+This commit adds CMake options to allow users to use system-installed versions of four libraries instead of the bundled versions
+
+Fixes #153863
+PR: https://github.com/pytorch/pytorch/pull/166824
+---
+ CMakeLists.txt               |  8 +++++
+ aten/src/ATen/CMakeLists.txt | 17 +++++++--
+ cmake/Dependencies.cmake     | 69 +++++++++++++++++++++++++++---------
+ cmake/Summary.cmake          |  4 +++
+ 4 files changed, 80 insertions(+), 18 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ce7890f002d..6d55828e61e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -467,6 +467,10 @@ option(USE_SYSTEM_BENCHMARK "Use system-provided google benchmark." OFF)
+ option(USE_SYSTEM_ONNX "Use system-provided onnx." OFF)
+ option(USE_SYSTEM_XNNPACK "Use system-provided xnnpack." OFF)
+ option(USE_SYSTEM_NVTX "Use system-provided nvtx." OFF)
++option(USE_SYSTEM_KLEIDIAI "Use system-provided KleidiAI." OFF)
++option(USE_SYSTEM_CUDNN_FRONTEND "Use system-provided cuDNN frontend." OFF)
++option(USE_SYSTEM_CUTLASS "Use system-provided CUTLASS." OFF)
++option(USE_SYSTEM_FMT "Use system-provided fmt." OFF)
+ option(USE_GOLD_LINKER "Use ld.gold to link" OFF)
+ if(USE_SYSTEM_LIBS)
+   set(USE_SYSTEM_CPUINFO ON)
+@@ -486,6 +490,10 @@ if(USE_SYSTEM_LIBS)
+     set(USE_SYSTEM_NCCL ON)
+   endif()
+   set(USE_SYSTEM_NVTX ON)
++  set(USE_SYSTEM_KLEIDIAI ON)
++  set(USE_SYSTEM_CUDNN_FRONTEND ON)
++  set(USE_SYSTEM_CUTLASS ON)
++  set(USE_SYSTEM_FMT ON)
+ endif()
+ 
+ # /Z7 override option When generating debug symbols, CMake default to use the
+diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
+index d7c7a74a302..9f9c20926cd 100644
+--- a/aten/src/ATen/CMakeLists.txt
++++ b/aten/src/ATen/CMakeLists.txt
+@@ -666,8 +666,21 @@ if(USE_CUDA AND NOT USE_ROCM)
+   add_definitions(-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
+   add_definitions(-DCUTLASS_ENABLE_SM90_EXTENDED_MMA_SHAPES=1)
+   add_definitions(-DCUTE_SM90_EXTENDED_MMA_SHAPES_ENABLED)
+-  list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party/cutlass/include)
+-  list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party/cutlass/tools/util/include)
++  if(NOT USE_SYSTEM_CUTLASS)
++    list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party/cutlass/include)
++    list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party/cutlass/tools/util/include)
++  else()
++    find_path(CUTLASS_INCLUDE_DIR cutlass/cutlass.h)
++    if(NOT CUTLASS_INCLUDE_DIR)
++      message(FATAL_ERROR "Cannot find system CUTLASS headers. Please install cutlass-dev or set USE_SYSTEM_CUTLASS=OFF")
++    endif()
++    list(APPEND ATen_CUDA_INCLUDE ${CUTLASS_INCLUDE_DIR})
++    # Check if tools/util/include exists in system installation
++    find_path(CUTLASS_TOOLS_INCLUDE_DIR cutlass/util/command_line.h PATH_SUFFIXES cutlass)
++    if(CUTLASS_TOOLS_INCLUDE_DIR)
++      list(APPEND ATen_CUDA_INCLUDE ${CUTLASS_TOOLS_INCLUDE_DIR})
++    endif()
++  endif()
+ 
+   # Add FBGEMM_GENAI include directories for torch_ops.h
+   if(USE_FBGEMM_GENAI)
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 4a9fe193830..8b3a1b2629a 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -948,7 +948,14 @@ if(USE_CUDNN)
+   if(CUDNN_VERSION VERSION_LESS 8.5)
+     message(FATAL_ERROR "PyTorch needs CuDNN-8.5 or above, but found ${CUDNN_VERSION}. Builds are still possible with `USE_CUDNN=0`")
+   endif()
+-  set(CUDNN_FRONTEND_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../third_party/cudnn_frontend/include)
++  if(NOT USE_SYSTEM_CUDNN_FRONTEND)
++    set(CUDNN_FRONTEND_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../third_party/cudnn_frontend/include)
++  else()
++    find_path(CUDNN_FRONTEND_INCLUDE_DIR cudnn_frontend.h PATH_SUFFIXES cudnn_frontend)
++    if(NOT CUDNN_FRONTEND_INCLUDE_DIR)
++      message(FATAL_ERROR "Cannot find system cuDNN frontend headers. Please install cudnn-frontend-dev or set USE_SYSTEM_CUDNN_FRONTEND=OFF")
++    endif()
++  endif()
+   target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})
+ endif()
+ 
+@@ -1493,7 +1500,7 @@ if(NOT INTERN_BUILD_MOBILE)
+     message("disabling MKLDNN because USE_MKLDNN is not set")
+   endif()
+ 
+-  if(USE_KLEIDIAI)
++  if(USE_KLEIDIAI AND NOT USE_SYSTEM_KLEIDIAI)
+     set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+     set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+     set(AT_KLEIDIAI_ENABLED 1)
+@@ -1503,6 +1510,22 @@ if(NOT INTERN_BUILD_MOBILE)
+     list(APPEND Caffe2_DEPENDENCY_LIBS kleidiai)
+     # Recover build options.
+     set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
++  elseif(USE_KLEIDIAI AND USE_SYSTEM_KLEIDIAI)
++    add_library(kleidiai UNKNOWN IMPORTED)
++    find_library(KLEIDIAI_LIBRARY kleidiai)
++    if(NOT KLEIDIAI_LIBRARY)
++      message(FATAL_ERROR "Cannot find system KleidiAI library. Please install it or set USE_SYSTEM_KLEIDIAI=OFF")
++    endif()
++    find_path(KLEIDIAI_INCLUDE_DIR kai/kai_common.h)
++    if(NOT KLEIDIAI_INCLUDE_DIR)
++      message(FATAL_ERROR "Cannot find system KleidiAI headers. Please install kleidiai-dev or set USE_SYSTEM_KLEIDIAI=OFF")
++    endif()
++    set_target_properties(kleidiai PROPERTIES
++      IMPORTED_LOCATION "${KLEIDIAI_LIBRARY}"
++      INTERFACE_INCLUDE_DIRECTORIES "${KLEIDIAI_INCLUDE_DIR}"
++    )
++    set(AT_KLEIDIAI_ENABLED 1)
++    list(APPEND Caffe2_DEPENDENCY_LIBS kleidiai)
+   endif()
+ 
+   if(UNIX AND NOT APPLE)
+@@ -1546,21 +1569,35 @@ endif()
+ #
+ # End ATen checks
+ #
+-set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+-add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+ 
+-# Disable compiler feature checks for `fmt`.
+-#
+-# CMake compiles a little program to check compiler features. Some of our build
+-# configurations (notably the mobile build analyzer) will populate
+-# CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know
+-# `fmt` is compatible with a superset of the compilers that PyTorch is, it
+-# shouldn't be too bad to just disable the checks.
+-set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
+-
+-list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
+-set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
++# Install `fmtlib` header.
++# This was the default behavior before version 12.0.0.
++# Since PyTorch C API depends on it, make it available for projects that
++# depend on PyTorch.
++if(NOT USE_SYSTEM_FMT)
++  set(FMT_INSTALL ON)
++  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
++  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
++  add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
++
++  # Disable compiler feature checks for `fmt`.
++  #
++  # CMake compiles a little program to check compiler features. Some of our build
++  # configurations (notably the mobile build analyzer) will populate
++  # CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know
++  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
++  # shouldn't be too bad to just disable the checks.
++  set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
++
++  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
++  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
++else()
++  find_package(fmt REQUIRED)
++  if(NOT fmt_FOUND)
++    message(FATAL_ERROR "Cannot find system fmt library. Please install libfmt-dev or set USE_SYSTEM_FMT=OFF")
++  endif()
++  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt)
++endif()
+ 
+ # ---[ Kineto
+ # edge profiler depends on KinetoProfiler but it only does cpu
+diff --git a/cmake/Summary.cmake b/cmake/Summary.cmake
+index 993892c6d80..388e1d164ad 100644
+--- a/cmake/Summary.cmake
++++ b/cmake/Summary.cmake
+@@ -80,7 +80,9 @@ function(caffe2_print_configuration_summary)
+     message(STATUS "    USE_MEM_EFF_ATTENTION : ${USE_MEM_EFF_ATTENTION}")
+     if(${USE_CUDNN})
+       message(STATUS "    cuDNN version       : ${CUDNN_VERSION}")
++      message(STATUS "    USE_SYSTEM_CUDNN_FRONTEND : ${USE_SYSTEM_CUDNN_FRONTEND}")
+     endif()
++    message(STATUS "    USE_SYSTEM_CUTLASS  : ${USE_SYSTEM_CUTLASS}")
+     if(${USE_CUSPARSELT})
+       message(STATUS "    cuSPARSELt version  : ${CUSPARSELT_VERSION}")
+     endif()
+@@ -156,6 +158,7 @@ function(caffe2_print_configuration_summary)
+   endif()
+   if(${USE_KLEIDIAI})
+     message(STATUS "  USE_KLEIDIAI          : ${USE_KLEIDIAI}")
++    message(STATUS "    USE_SYSTEM_KLEIDIAI : ${USE_SYSTEM_KLEIDIAI}")
+   endif()
+   message(STATUS "  USE_UCC               : ${USE_UCC}")
+   if(${USE_UCC})
+@@ -187,6 +190,7 @@ function(caffe2_print_configuration_summary)
+     message(STATUS "    USE_VULKAN_FP16_INFERENCE    : ${USE_VULKAN_FP16_INFERENCE}")
+     message(STATUS "    USE_VULKAN_RELAXED_PRECISION : ${USE_VULKAN_RELAXED_PRECISION}")
+   endif()
++  message(STATUS "  USE_SYSTEM_FMT        : ${USE_SYSTEM_FMT}")
+   message(STATUS "  USE_PROF              : ${USE_PROF}")
+   message(STATUS "  USE_PYTORCH_QNNPACK   : ${USE_PYTORCH_QNNPACK}")
+   message(STATUS "  USE_XNNPACK           : ${USE_XNNPACK}")

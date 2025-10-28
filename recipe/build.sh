@@ -98,6 +98,7 @@ export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
 export USE_SYSTEM_PYBIND11=1
 export USE_SYSTEM_EIGEN_INSTALL=1
+export USE_SYSTEM_FMT=1
 export Python_ROOT_DIR=$PREFIX
 
 # force using cblas_dot when cross-compiling
