@@ -12,6 +12,8 @@ cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
 - '12.8'
+cudnn:
+- '9'
 cxx_compiler:
 - vs2022
 fmt:
@@ -33,7 +35,7 @@ magma:
 megabuild:
 - true
 mkl:
-- '2024'
+- '2025'
 numpy:
 - '2'
 orc:
@@ -53,5 +55,7 @@ target_platform:
 zip_keys:
 - - channel_targets
   - is_rc
+- - cuda_compiler_version
+  - cudnn
 zlib:
 - '1'
