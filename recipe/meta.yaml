@@ -18,9 +18,6 @@
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
 {% set triton = "3.4.0" %}
 
-# TODO Temporary pin, remove me
-{% set mkl = "<2025" %}
-
 package:
   name: libtorch
   version: {{ version.replace("-", ".") }}
@@ -152,7 +149,7 @@ requirements:
     - pyyaml
     - requests
     - six
-    - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+    - mkl-devel             # [blas_impl == "mkl"]
     - libcblas * *_mkl      # [blas_impl == "mkl"]
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
@@ -298,7 +295,7 @@ outputs:
         - pyyaml
         - requests
         - six
-        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+        - mkl-devel             # [blas_impl == "mkl"]
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
