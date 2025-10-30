@@ -13,7 +13,7 @@ cuda_compiler:
 cuda_compiler_version:
 - None
 cudnn:
-- '9'
+- None
 cxx_compiler:
 - vs2022
 github_actions_labels:
@@ -27,7 +27,7 @@ libmagma_sparse:
 libprotobuf:
 - 6.31.1
 libtorch:
-- '2.6'
+- '2.7'
 magma:
 - '2.9'
 megabuild:
@@ -37,7 +37,7 @@ mkl:
 numpy:
 - '2'
 orc:
-- 2.1.3
+- 2.2.1
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -47,13 +47,14 @@ python:
 - 3.11.* *_cpython
 - 3.12.* *_cpython
 - 3.13.* *_cp313
-- 3.9.* *_cpython
 pytorch:
-- '2.6'
+- '2.7'
 target_platform:
 - win-64
 zip_keys:
 - - channel_targets
   - is_rc
+- - cuda_compiler_version
+  - cudnn
 zlib:
 - '1'
