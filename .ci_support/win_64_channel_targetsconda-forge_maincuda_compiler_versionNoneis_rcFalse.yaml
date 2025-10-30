@@ -13,7 +13,7 @@ cuda_compiler:
 cuda_compiler_version:
 - None
 cudnn:
-- '9'
+- '9.10'
 cxx_compiler:
 - vs2022
 github_actions_labels:
@@ -33,7 +33,9 @@ magma:
 megabuild:
 - true
 mkl:
-- '2024'
+- '2025'
+mkl_devel:
+- '2025'
 numpy:
 - '2'
 orc:
@@ -56,5 +58,7 @@ target_platform:
 zip_keys:
 - - channel_targets
   - is_rc
+- - cuda_compiler_version
+  - cudnn
 zlib:
 - '1'

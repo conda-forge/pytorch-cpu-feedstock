@@ -48,6 +48,8 @@ megabuild:
 - false
 mkl:
 - '2023'
+mkl_devel:
+- '2023'
 numpy:
 - '2'
 orc:
