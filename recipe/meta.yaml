@@ -106,9 +106,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - llvm-openmp               # [unix]
-    - intel-openmp {{ mkl }}    # [win]
     - libuv                     # [win]
+    - llvm-openmp
     - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
@@ -158,10 +157,9 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - llvm-openmp             # [unix]
-    - intel-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
+    - llvm-openmp
     - sleef
     - libuv
     - pkg-config  # [unix]
@@ -171,7 +169,6 @@ requirements:
     - eigen
     - zlib
   run:
-    - intel-openmp {{ mkl }}            # [win]
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
     # These constraints ensure conflict between pytorch and
@@ -260,8 +257,6 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - llvm-openmp             # [unix]
-        - intel-openmp {{ mkl }}  # [win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -307,10 +302,9 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - llvm-openmp             # [unix]
-        - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
+        - llvm-openmp
         - pybind11
         - pybind11-abi
         - eigen
@@ -323,8 +317,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
         # for non-megabuild, allow libtorch from any python version
         - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
-        - llvm-openmp                       # [unix]
-        - intel-openmp {{ mkl }}            # [win]
+        - llvm-openmp
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
         - triton =={{ triton }}             # [cuda_compiler_version != "None" and not win]
