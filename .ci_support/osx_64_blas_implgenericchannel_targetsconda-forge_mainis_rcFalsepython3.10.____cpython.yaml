@@ -69,5 +69,7 @@ zip_keys:
   - cxx_compiler_version
 - - channel_targets
   - is_rc
+- - python
+  - channel_sources
 zlib:
 - '1'

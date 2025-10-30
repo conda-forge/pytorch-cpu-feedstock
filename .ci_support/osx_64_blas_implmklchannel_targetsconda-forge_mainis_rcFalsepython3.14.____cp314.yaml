@@ -13,7 +13,7 @@ c_stdlib:
 c_stdlib_version:
 - '11.0'
 channel_sources:
-- conda-forge
+- conda-forge,conda-forge/label/python_rc
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -51,7 +51,7 @@ mkl:
 numpy:
 - '2'
 orc:
-- 2.2.1
+- 2.2.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -59,7 +59,7 @@ pin_run_as_build:
 pybind11_abi:
 - '4'
 python:
-- 3.12.* *_cpython
+- 3.14.* *_cp314
 pytorch:
 - '2.7'
 target_platform:
