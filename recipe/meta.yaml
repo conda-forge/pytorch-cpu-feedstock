@@ -1,6 +1,11 @@
+{% set jobs = "-n 2" %}
+{% set jobs = "-n 1" %}  # [linux64 and cuda_compiler_version != "None"]
+{% set pytorch_cpu_gpu = "pytorch-gpu" %}  # [cuda_compiler_version != "None"]
+{% set pytorch_cpu_gpu = "pytorch-cpu" %}  # [cuda_compiler_version == "None"]
+{% set skips = "(TestTorch and test_print)" %}
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.8.0" %}
-{% set build = 1 %}
+{% set version = "2.9.0" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -34,11 +39,11 @@ source:
   # a usable ancestor from outside the submodule; the only option then is to
   # pull in the submodules separately.
   - url: https://github.com/pytorch/pytorch/archive/refs/tags/v{{ version }}.tar.gz
-    sha256: 04ae0a8babdc9cb9dfc4f8746b2b8aa0f8ed0f9e92835cc4af0bcb01e3969e51
+    sha256: be2ccef78661f771220a86756e0eab52c4e6d1e0c01076b502afac2c37b0a6c2
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-    sha256: c70a2c9488f6f6e8af5982a10d1cc2c37b7df5e6506d839daa5d5e250953d7b5
+    sha256: c6980af3c0ea311f49f90987982be715e4d702539fea41e52f55ad7f0b105dc3
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
@@ -79,7 +84,7 @@ build:
   skip: true  # [is_rc]
 {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
-  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -241,11 +246,11 @@ test:
 outputs:
   - name: libtorch
   - name: pytorch
-    script: build.sh    # [unix]
-    script: bld.bat     # [win]
+    script: build.sh  # [unix]
+    script: bld.bat  # [win]
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
@@ -355,7 +360,7 @@ outputs:
   - name: pytorch-tests
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     requirements:
       host:
@@ -558,9 +563,9 @@ outputs:
   {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [megabuild and cuda_compiler_version == "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                  # [not megabuild]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [megabuild and cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [megabuild and cuda_compiler_version == "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [not megabuild]
       detect_binary_files_with_prefix: false
     requirements:
       run:
