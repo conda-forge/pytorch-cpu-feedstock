@@ -31,7 +31,7 @@ magma:
 megabuild:
 - true
 mkl:
-- '2024'
+- '2025'
 numpy:
 - '2'
 orc:

@@ -45,7 +45,7 @@ magma:
 megabuild:
 - true
 mkl:
-- '2024'
+- '2025'
 nccl:
 - '2'
 numpy:

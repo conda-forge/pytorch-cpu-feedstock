@@ -47,7 +47,7 @@ macos_machine:
 megabuild:
 - false
 mkl:
-- '2023'
+- '2025'
 numpy:
 - '2'
 orc:
