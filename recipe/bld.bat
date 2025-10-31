@@ -152,6 +152,9 @@ set "CXXFLAGS=%CXXFLAGS% %CUDA_CFLAGS%"
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 echo "CXXFLAGS=%CXXFLAGS%"
 
+@REM Force using llvm-openmp.
+set "OpenMP_CXX_FLAG=/openmp:llvm"
+
 @REM Configure sccache
 set "CMAKE_C_COMPILER_LAUNCHER=sccache"
 set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
