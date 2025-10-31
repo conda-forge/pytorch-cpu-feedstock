@@ -102,8 +102,7 @@ requirements:
     - numpy                                  # [not megabuild and build_platform != target_platform]
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
-    - {{ compiler('cxx') }}                  # [not win]
-    - {{ compiler('clang') }}                # [win]
+    - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
     - libuv                     # [win]
     - llvm-openmp
@@ -254,8 +253,7 @@ outputs:
         - numpy                                  # [build_platform != target_platform]
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
-        - {{ compiler('cxx') }}                  # [not win]
-        - {{ compiler('clang') }}                # [win]
+        - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
         - cmake
         - ninja
