@@ -102,9 +102,9 @@ requirements:
     - numpy                                  # [not megabuild and build_platform != target_platform]
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
+    - {{ compiler('cxx') }}                  # [not win]
+    - {{ compiler('clang') }}                # [win]
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - clang                     # [win]
     - libuv                     # [win]
     - llvm-openmp
     - cmake
@@ -254,9 +254,9 @@ outputs:
         - numpy                                  # [build_platform != target_platform]
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
+        - {{ compiler('cxx') }}                  # [not win]
+        - {{ compiler('clang') }}                # [win]
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - clang                                  # [win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
