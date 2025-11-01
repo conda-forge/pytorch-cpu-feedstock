@@ -13,7 +13,7 @@ cuda_compiler:
 cuda_compiler_version:
 - None
 cudnn:
-- '9.10'
+- '9'
 cxx_compiler:
 - vs2022
 github_actions_labels:
