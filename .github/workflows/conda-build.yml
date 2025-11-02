@@ -111,6 +111,22 @@ jobs:
             }
         }
 
+    - name: "Install network tools"
+      id: network-tools
+      if: matrix.os == 'windows'
+      run: |
+        choco install npcap windump curl -fdv -y --debug
+
+    - name: "Get active network interface index"
+      id: network-idx
+      if: matrix.os == 'windows'
+      shell: pwsh
+      run: |
+        Get-NetAdapter | Where-Object Status -eq 'Up'
+        # assuming there's only one
+        $net_if_idx = (Get-NetAdapter | Where-Object Status -eq 'Up').ifIndex
+        echo "net_if_idx=$net_if_idx" >> $GITHUB_OUTPUT
+
     - name: Build on windows
       id: build-windows
       if: matrix.os == 'windows'
@@ -132,6 +148,16 @@ jobs:
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
         FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
+        NET_IF_IDX: ${{ steps.network-idx.outputs.net_if_idx }}
+
+    - name: Store network logs
+      continue-on-error: true
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      if: ${{ always() }}
+      with:
+        name: network_logs
+        path: ${{ steps.build-windows.outputs.WINDUMP_PATH }}
+        retention-days: 14
 
     - name: Determine build outcome
       # this is to merge the status of the linux/osx/win builds into
