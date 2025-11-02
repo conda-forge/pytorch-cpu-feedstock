@@ -24,164 +24,6 @@ Current build status
 
 
 <table>
-    
-  <tr>
-    <td>Azure</td>
-    <td>
-      <details>
-        <summary>
-          <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-            <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main">
-          </a>
-        </summary>
-        <table>
-          <thead><tr><th>Variant</th><th>Status</th></tr></thead>
-          <tbody><tr>
-              <td>linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.11.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.11.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.11.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.11.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.10.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.11.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.11.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.12.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_channel_targetsconda-forge_mainis_rcFalsepython3.13.____cp313" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=win&configuration=win%20win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=win&configuration=win%20win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse" alt="variant">
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </details>
-    </td>
-  </tr>
 </table>
 
 Current release info
@@ -191,55 +33,54 @@ Current release info
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libtorch-green.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch-green.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--cpu-green.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--gpu-green.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--tests-green.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) |
 
 Installing pytorch-cpu
 ======================
 
-Installing `pytorch-cpu` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+Installing `pytorch-cpu` from the `conda-forge/label/pytorch_test` channel can be achieved by adding `conda-forge/label/pytorch_test` to your channels with:
 
 ```
-conda config --add channels conda-forge
+conda config --add channels conda-forge/label/pytorch_test
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `libtorch, pytorch, pytorch-cpu, pytorch-gpu, pytorch-tests` can be installed with `conda`:
+Once the `conda-forge/label/pytorch_test` channel has been enabled, `libtorch, pytorch, pytorch-gpu, pytorch-tests` can be installed with `conda`:
 
 ```
-conda install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
+conda install libtorch pytorch pytorch-gpu pytorch-tests
 ```
 
 or with `mamba`:
 
 ```
-mamba install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
+mamba install libtorch pytorch pytorch-gpu pytorch-tests
 ```
 
 It is possible to list all of the versions of `libtorch` available on your platform with `conda`:
 
 ```
-conda search libtorch --channel conda-forge
+conda search libtorch --channel conda-forge/label/pytorch_test
 ```
 
 or with `mamba`:
 
 ```
-mamba search libtorch --channel conda-forge
+mamba search libtorch --channel conda-forge/label/pytorch_test
 ```
 
 Alternatively, `mamba repoquery` may provide more information:
 
 ```
 # Search all versions available on your platform:
-mamba repoquery search libtorch --channel conda-forge
+mamba repoquery search libtorch --channel conda-forge/label/pytorch_test
 
 # List packages depending on `libtorch`:
-mamba repoquery whoneeds libtorch --channel conda-forge
+mamba repoquery whoneeds libtorch --channel conda-forge/label/pytorch_test
 
 # List dependencies of `libtorch`:
-mamba repoquery depends libtorch --channel conda-forge
+mamba repoquery depends libtorch --channel conda-forge/label/pytorch_test
 ```
 
 
