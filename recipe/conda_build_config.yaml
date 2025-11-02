@@ -10,7 +10,7 @@ MACOSX_SDK_VERSION:         # [osx]
   - 13.3                    # [osx]
 
 channel_targets:
-  - conda-forge main
+  - conda-forge pytorch_test
   - conda-forge pytorch_rc
 is_rc:
   - False
