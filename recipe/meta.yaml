@@ -278,6 +278,7 @@ outputs:
         - nccl                            # [cuda_compiler_version != "None" and linux]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
+        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
         - magma                           # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
         - cuda-driver-dev                 # [linux]
