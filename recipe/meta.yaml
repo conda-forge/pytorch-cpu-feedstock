@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.8.0" %}
-{% set build = 1 %}
+{% set build = 2 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -17,9 +17,6 @@
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
 {% set triton = "3.4.0" %}
-
-# TODO Temporary pin, remove me
-{% set mkl = "<2025" %}
 
 package:
   name: libtorch
@@ -65,6 +62,7 @@ source:
       - patches/0014-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
       - patches/0015-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0018-Use-Intel-LLVM-openmp.patch
       - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
@@ -106,9 +104,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - llvm-openmp               # [unix]
-    - intel-openmp {{ mkl }}    # [win]
     - libuv                     # [win]
+    - llvm-openmp
     - cmake
     - ninja
     # Keep libprotobuf here so that a compatibile version
@@ -121,8 +118,7 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    # building against the older version to satisfy test constraints
-    - cudnn <9.11                     # [cuda_compiler_version != "None"]
+    - cudnn                           # [cuda_compiler_version != "None"]
     - nccl                            # [cuda_compiler_version != "None" and linux]
     - magma                           # [cuda_compiler_version != "None"]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
@@ -154,15 +150,14 @@ requirements:
     - pyyaml
     - requests
     - six
-    - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+    - mkl-devel             # [blas_impl == "mkl"]
     - libcblas * *_mkl      # [blas_impl == "mkl"]
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
-    - llvm-openmp             # [unix]
-    - intel-openmp {{ mkl }}  # [win]
     - libabseil
     - libprotobuf
+    - llvm-openmp
     - sleef
     - libuv
     - pkg-config  # [unix]
@@ -172,7 +167,6 @@ requirements:
     - eigen
     - zlib
   run:
-    - intel-openmp {{ mkl }}            # [win]
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
     # These constraints ensure conflict between pytorch and
@@ -261,8 +255,6 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - llvm-openmp             # [unix]
-        - intel-openmp {{ mkl }}  # [win]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -274,7 +266,7 @@ outputs:
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
-        - cudnn <9.11                     # [cuda_compiler_version != "None"]
+        - cudnn                           # [cuda_compiler_version != "None"]
         - nccl                            # [cuda_compiler_version != "None" and linux]
         - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
         - nvtx-c                          # [cuda_compiler_version != "None"]
@@ -305,14 +297,13 @@ outputs:
         - pyyaml
         - requests
         - six
-        - mkl-devel {{ mkl }}   # [blas_impl == "mkl"]
+        - mkl-devel             # [blas_impl == "mkl"]
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
-        - llvm-openmp             # [unix]
-        - intel-openmp {{ mkl }}  # [win]
         - libabseil
         - libprotobuf
+        - llvm-openmp
         - pybind11
         - pybind11-abi
         - eigen
@@ -325,8 +316,7 @@ outputs:
         - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
         # for non-megabuild, allow libtorch from any python version
         - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
-        - llvm-openmp                       # [unix]
-        - intel-openmp {{ mkl }}            # [win]
+        - llvm-openmp
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
         - triton =={{ triton }}             # [cuda_compiler_version != "None" and not win]
@@ -395,7 +385,8 @@ outputs:
         - pybind11
         # cudnn >=9.11 removed support older GPUs that are still supported by CUDA 12
         # pin tests since the CI uses sm70 that is no longer supported at the moment
-        # pending https://github.com/conda-forge/admin-requests/pull/1687
+        # waiting to rebuild everything for cudnn 9.10, until we can redo
+        # https://github.com/conda-forge/admin-requests/pull/1687
         - cudnn <9.11               # [cuda_compiler_version != "None"]
       imports:
         - torch
