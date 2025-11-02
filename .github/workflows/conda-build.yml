@@ -116,9 +116,8 @@ jobs:
       if: matrix.os == 'windows'
       shell: pwsh
       run: |
-        Invoke-WebRequest -Uri https://www.wireshark.org/download/win64/WiresharkPortable64_latest.paf.exe -OutFile wireshark-portable.exe
-        7z x wireshark-portable.exe -oC:\wireshark-portable -y
-        echo "C:\wireshark-portable\App\Wireshark" >> $env:GITHUB_PATH
+        Invoke-WebRequest -Uri https://www.wireshark.org/download/win64/Wireshark-4.6.0-x64.exe -OutFile wireshark.exe
+        Start-Process wireshark.exe -ArgumentList "/desktopicon=no /quicklaunchicon=no /InstallTShark=yes /AddToPath=yes" -Wait
         where tshark
         tshark -v
 
