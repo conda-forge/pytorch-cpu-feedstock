@@ -123,10 +123,13 @@ jobs:
       if: matrix.os == 'windows'
       shell: pwsh
       run: |
-        Get-NetAdapter | Where-Object Status -eq 'Up'
-        # assuming there's only one
-        $net_if_idx = (Get-NetAdapter | Where-Object Status -eq 'Up').ifIndex
-        echo "net_if_idx=$net_if_idx" >> $GITHUB_OUTPUT
+        $adapter = Get-NetAdapter |
+          Where-Object Status -eq 'Up' |
+          Where-Object { $_.Name -notmatch '^vEthernet' } |
+          Sort-Object LinkSpeed -Descending |
+          Select-Object -First 1
+
+        echo "net_if_idx=$($adapter.ifIndex)" >> $env:GITHUB_OUTPUT
 
     - name: Build on windows
       id: build-windows
