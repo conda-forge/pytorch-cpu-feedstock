@@ -114,9 +114,12 @@ jobs:
     - name: "Install network tools"
       id: network-tools
       if: matrix.os == 'windows'
-      shell: cmd
+      shell: pwsh
       run: |
-        choco install wireshark -fdv -y --debug --params '"/NoDesktopIcons /InstallTShark /AddToPath"'
+        Invoke-WebRequest -Uri https://www.wireshark.org/download/win64/WiresharkPortable64_latest.paf.exe -OutFile wireshark-portable.exe
+        7z x wireshark-portable.exe -oC:\wireshark-portable
+        set PATH=C:\wireshark-portable\App\Wireshark;%PATH%
+        where tshark
         tshark -h
 
     - name: "Get active network interface index"
