@@ -114,8 +114,10 @@ jobs:
     - name: "Install network tools"
       id: network-tools
       if: matrix.os == 'windows'
+      shell: cmd
       run: |
-        choco install npcap windump -fdv -y --debug
+        choco install windump --version=3.9.5 -fdv -y --debug
+        choco install npcap --version=1.8.1 -fdv -y --debug
 
     - name: "Get active network interface index"
       id: network-idx
