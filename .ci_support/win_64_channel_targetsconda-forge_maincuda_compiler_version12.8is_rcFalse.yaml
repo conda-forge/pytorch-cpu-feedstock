@@ -6,6 +6,10 @@ c_stdlib:
 - vs
 channel_sources:
 - conda-forge
+- conda-forge
+- conda-forge
+- conda-forge
+- conda-forge,conda-forge/label/python_rc
 channel_targets:
 - conda-forge main
 cuda_compiler:
@@ -47,6 +51,7 @@ python:
 - 3.11.* *_cpython
 - 3.12.* *_cpython
 - 3.13.* *_cp313
+- 3.14.* *_cp314
 pytorch:
 - '2.7'
 target_platform:
@@ -54,5 +59,7 @@ target_platform:
 zip_keys:
 - - channel_targets
   - is_rc
+- - python
+  - channel_sources
 zlib:
 - '1'
