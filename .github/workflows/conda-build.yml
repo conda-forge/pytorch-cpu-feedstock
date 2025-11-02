@@ -117,10 +117,10 @@ jobs:
       shell: pwsh
       run: |
         Invoke-WebRequest -Uri https://www.wireshark.org/download/win64/WiresharkPortable64_latest.paf.exe -OutFile wireshark-portable.exe
-        7z x wireshark-portable.exe -oC:\wireshark-portable
-        set PATH=C:\wireshark-portable\App\Wireshark;%PATH%
+        7z x wireshark-portable.exe -oC:\wireshark-portable -y
+        echo "C:\wireshark-portable\App\Wireshark" >> $env:GITHUB_PATH
         where tshark
-        tshark -h
+        tshark -v
 
     - name: "Get active network interface index"
       id: network-idx
