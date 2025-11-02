@@ -116,9 +116,8 @@ jobs:
       if: matrix.os == 'windows'
       shell: cmd
       run: |
-        choco install wireshark -fdv -y --debug
+        choco install wireshark -fdv -y --debug --params '"/NoDesktopIcons /InstallTShark /AddToPath"'
         tshark -h
-        wireshark -h
 
     - name: "Get active network interface index"
       id: network-idx
