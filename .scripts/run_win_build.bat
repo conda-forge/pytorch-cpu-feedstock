@@ -111,9 +111,9 @@ validate_recipe_outputs "%FEEDSTOCK_NAME%"
 if !errorlevel! neq 0 exit /b !errorlevel!
 call :end_group
 
-:: start windump in background via PowerShell and get PID; roughly equivalent to:
+:: start wireshark in background via PowerShell and get PID; roughly equivalent to:
 :: `sudo tcpdump -i any -w upload_fail.pcap host api.anaconda.org and port 443 -W 1 &`
-for /f %%i in ('powershell -Command "Start-Process windump -ArgumentList \"-i %NET_IF_IDX% -w upload_fail.pcap host api.anaconda.org and port 443\" -PassThru | Select-Object -ExpandProperty Id"') do set WINDUMP_PID=%%i
+for /f %%i in ('powershell -Command "Start-Process tshark -ArgumentList \"-i %NET_IF_IDX% -w upload_fail.pcap -f 'host api.anaconda.org and port 443'\" -PassThru | Select-Object -ExpandProperty Id"') do set TSHARK_PID=%%i
 
 if /i "%UPLOAD_PACKAGES%" == "true" (
     if /i "%IS_PR_BUILD%" == "false" (
@@ -126,8 +126,8 @@ if /i "%UPLOAD_PACKAGES%" == "true" (
     )
 )
 
-:: stop windump
-taskkill /PID %WINDUMP_PID% /F
+:: stop wireshark
+taskkill /PID %TSHARK_PID% /F
 
 :: make path reusable from upload action
 echo WINDUMP_PATH=!cd!\upload_fail.pcap>>!GITHUB_OUTPUT!

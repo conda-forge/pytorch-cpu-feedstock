@@ -116,8 +116,7 @@ jobs:
       if: matrix.os == 'windows'
       shell: cmd
       run: |
-        choco install windump --version=3.9.5 -fdv -y --debug
-        choco install npcap --version=1.8.1 -fdv -y --debug
+        choco install wireshark -fdv -y --debug
 
     - name: "Get active network interface index"
       id: network-idx
