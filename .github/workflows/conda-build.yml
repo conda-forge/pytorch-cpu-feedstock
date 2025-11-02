@@ -117,6 +117,8 @@ jobs:
       shell: cmd
       run: |
         choco install wireshark -fdv -y --debug
+        tshark -h
+        wireshark -h
 
     - name: "Get active network interface index"
       id: network-idx
