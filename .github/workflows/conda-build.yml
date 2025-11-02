@@ -117,7 +117,7 @@ jobs:
       shell: pwsh
       run: |
         Invoke-WebRequest -Uri https://www.wireshark.org/download/win64/Wireshark-4.6.0-x64.exe -OutFile wireshark.exe
-        Start-Process wireshark.exe -ArgumentList "/desktopicon=no /quicklaunchicon=no /InstallTShark=yes /AddToPath=yes" -Wait
+        wireshark.exe /desktopicon=no /quicklaunchicon=no /InstallTShark=yes /AddToPath=yes
         where tshark
         tshark -v
 
