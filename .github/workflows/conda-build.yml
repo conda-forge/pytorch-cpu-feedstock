@@ -116,6 +116,7 @@ jobs:
       if: matrix.os == 'windows'
       shell: pwsh
       run: |
+        Set-PSDebug -Trace 1
         Invoke-WebRequest -Uri https://www.wireshark.org/download/win64/Wireshark-4.6.0-x64.exe -OutFile wireshark.exe
         Start-Process -FilePath ".\wireshark.exe" -ArgumentList "/desktopicon=no /quicklaunchicon=no /InstallTShark=yes /AddToPath=yes" -Wait
         where tshark
