@@ -118,14 +118,9 @@ jobs:
       run: |
         Set-PSDebug -Trace 1
         Invoke-WebRequest -Uri https://www.wireshark.org/download/win64/Wireshark-4.6.0-x64.exe -OutFile wireshark.exe
-        Start-Process -FilePath ".\wireshark.exe" -ArgumentList "/desktopicon=no /quicklaunchicon=no /InstallTShark=yes /AddToPath=yes"
-        $timeout = [DateTime]::Now.AddMinutes(5)
-        $pathFound = $false
-        while (-not $pathFound) {
-            if ([DateTime]::Now -gt $timeout) { throw "Wireshark install timed out" }
-            $pathFound = Get-Command tshark -ErrorAction SilentlyContinue
-            Start-Sleep -Seconds 2
-        }
+        .\wireshark.exe /desktopicon=no /D=C:\Program Files\Wireshark
+        ls C:\Program Files\Wireshark
+        echo "C:\Program Files\Wireshark" >> $env:GITHUB_PATH
         where tshark
         tshark -v
 
