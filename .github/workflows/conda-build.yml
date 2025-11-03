@@ -120,7 +120,7 @@ jobs:
         Invoke-WebRequest -Uri https://www.wireshark.org/download/win64/Wireshark-4.6.0-x64.exe -OutFile wireshark.exe
         mkdir "C:\Program Files\Wireshark"
         .\wireshark.exe /desktopicon=no /D=C:\Program Files\Wireshark
-        dir C:\Program Files\Wireshark
+        dir "C:\Program Files\Wireshark"
         echo "C:\Program Files\Wireshark" >> $env:GITHUB_PATH
         where tshark
         tshark -v
