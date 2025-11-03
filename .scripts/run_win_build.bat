@@ -74,10 +74,9 @@ if NOT [%flow_run_id%] == [] (
 
 call :end_group
 
-:: Build the recipe
-echo Building recipe
-conda-build.exe "recipe" -m .ci_support\%CONFIG%.yaml --suppress-variables %EXTRA_CB_OPTIONS%
-if !errorlevel! neq 0 exit /b !errorlevel!
+:: Download existing libtorch that had failed upload previously; try again
+mkdir %CONDA_BLD_DIR%\win-64
+curl -L https://anaconda.org/conda-forge/libtorch/2.8.0/download/win-64/libtorch-2.8.0-cuda128_mkl_h0cdabd9_301.conda > %CONDA_BLD_DIR%\win-64\libtorch-2.8.0-test_habcdefg_301.conda
 
 call :start_group "Inspecting artifacts"
 :: inspect_artifacts was only added in conda-forge-ci-setup 4.9.4
@@ -112,6 +111,10 @@ validate_recipe_outputs "%FEEDSTOCK_NAME%"
 if !errorlevel! neq 0 exit /b !errorlevel!
 call :end_group
 
+:: start wireshark in background via PowerShell and get PID; roughly equivalent to:
+:: `sudo tcpdump -i any -w upload_fail.pcap host api.anaconda.org and port 443 -W 1 &`
+for /f %%i in ('powershell -Command "Start-Process tshark -ArgumentList \"-i %NET_IF_IDX% -w upload_fail.pcap -f 'host api.anaconda.org and port 443'\" -PassThru | Select-Object -ExpandProperty Id"') do set TSHARK_PID=%%i
+
 if /i "%UPLOAD_PACKAGES%" == "true" (
     if /i "%IS_PR_BUILD%" == "false" (
         call :start_group "Uploading packages"
@@ -122,6 +125,12 @@ if /i "%UPLOAD_PACKAGES%" == "true" (
         call :end_group
     )
 )
+
+:: stop wireshark
+taskkill /PID %TSHARK_PID% /F
+
+:: make path reusable from upload action
+echo WINDUMP_PATH=!cd!\upload_fail.pcap>>!GITHUB_OUTPUT!
 
 exit
 
