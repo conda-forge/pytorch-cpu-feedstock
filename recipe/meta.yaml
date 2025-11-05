@@ -60,6 +60,8 @@ source:
       # backport https://github.com/pytorch/pytorch/pull/166824
       - patches/0014-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
       - patches/0015-Fix-building-kineto-against-system-fmt.patch
+      # backport https://github.com/pytorch/pytorch/pull/159828
+      - patches/0016-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
       - patches/0018-Use-Intel-LLVM-openmp.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
