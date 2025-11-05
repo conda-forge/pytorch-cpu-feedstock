@@ -1,5 +1,5 @@
 blas_impl:
-- mkl
+- generic
 c_compiler:
 - gcc
 c_compiler_version:
@@ -15,15 +15,17 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.9'
 cudnn:
-- '9'
+- '9.10'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
 - '14'
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
+fmt:
+- '12.0'
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 is_rc:
@@ -61,12 +63,9 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 pybind11_abi:
-- '4'
+- '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
 - 3.12.* *_cpython
-- 3.13.* *_cp313
 pytorch:
 - '2.7'
 target_platform:
