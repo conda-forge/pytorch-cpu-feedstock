@@ -363,7 +363,9 @@ outputs:
         - ninja
         - boto3
         - hypothesis
-        - pytest
+        # pytest-9 causes failure due to PytestRemovedIn9Warning
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/448#issuecomment-3529016115
+        - pytest <9
         - tabulate
         - pydot
         - pip
