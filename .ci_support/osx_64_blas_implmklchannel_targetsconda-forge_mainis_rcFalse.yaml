@@ -1,9 +1,17 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '11.0'
+MACOSX_SDK_VERSION:
+- '13.3'
 blas_impl:
 - mkl
 c_compiler:
-- vs2022
+- clang
+c_compiler_version:
+- '19'
 c_stdlib:
-- vs
+- macosx_deployment_target
+c_stdlib_version:
+- '11.0'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -11,33 +19,41 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.8'
-cudnn:
-- '9.10'
+- None
 cxx_compiler:
-- vs2022
+- clangxx
+cxx_compiler_version:
+- '19'
 fmt:
 - '12.0'
 github_actions_labels:
-- cirun-azure-windows-4xlarge
+- cirun-macos-m4-large
 is_rc:
 - 'False'
 libabseil:
 - '20250512'
+libblas:
+- 3.9.* *netlib
+libcblas:
+- 3.9.* *netlib
+liblapack:
+- 3.9.* *netlib
 libmagma_sparse:
 - '2.9'
 libprotobuf:
 - 6.31.1
 libtorch:
 - '2.7'
-magma:
-- '2.9'
+llvm_openmp:
+- '19'
+macos_machine:
+- x86_64-apple-darwin13.4.0
 megabuild:
-- true
+- false
 mkl:
-- '2025'
+- '2023'
 mkl_devel:
-- '2025'
+- '2023'
 numpy:
 - '2'
 orc:
@@ -53,11 +69,11 @@ python:
 pytorch:
 - '2.7'
 target_platform:
-- win-64
+- osx-64
 zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
 - - channel_targets
   - is_rc
-- - cuda_compiler_version
-  - cudnn
 zlib:
 - '1'
