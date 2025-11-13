@@ -28,11 +28,25 @@ jobs:
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_ha2c154fc', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+          - CONFIG: linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version12.9cudnn9is_rcFalse
+            SHORT_CONFIG: linux_64_blas_implgenericchannel_targets_hc8af127f
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_hc8af127f', 'linux', 'x64', 'self-hosted']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.9cudnn9.10is_rcFalse
             SHORT_CONFIG: linux_64_blas_implmklchannel_targetscond_h7212c4e1
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_h7212c4e1', 'linux', 'x64', 'self-hosted']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+          - CONFIG: linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.9cudnn9is_rcFalse
+            SHORT_CONFIG: linux_64_blas_implmklchannel_targetscond_h816026e3
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_h816026e3', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9cudnn9.10is_rcFalse
@@ -42,11 +56,23 @@ jobs:
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h537c0401', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+          - CONFIG: linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9cudnn9is_rcFalse
+            SHORT_CONFIG: linux_aarch64_channel_targetsconda-forge_h35e0a403
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h35e0a403', 'linux', 'x64', 'self-hosted']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8cudnn9.10is_rcFalse
             SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hbb7ba508
             UPLOAD_PACKAGES: True
             os: windows
             runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hbb7ba508', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8cudnn9is_rcFalse
+            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_h325455e7
+            UPLOAD_PACKAGES: True
+            os: windows
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_h325455e7', 'windows', 'x64', 'self-hosted']
     steps:
 
     - name: Checkout code
@@ -165,11 +191,9 @@ jobs:
       run: |
         if [[ "$OS" == "ubuntu" ]]; then
           STATUS=${{ steps.build-linux.outcome }}
-        fi
-        if [[ "$OS" == "macos" ]]; then
+        elif [[ "$OS" == "macos" ]]; then
           STATUS=${{ steps.build-macos.outcome }}
-        fi
-        if [[ "$OS" == "windows" ]]; then
+        elif [[ "$OS" == "windows" ]]; then
           STATUS=${{ steps.build-windows.outcome }}
         fi
         if [ -z "$STATUS" ]; then
