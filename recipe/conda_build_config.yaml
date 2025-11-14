@@ -31,9 +31,6 @@ github_actions_labels:
 - cirun-macos-m4-large          # [osx]
 - cirun-azure-windows-4xlarge   # [win]
 
-megabuild:
-- true
-
 is_python_min:
 - true
 
