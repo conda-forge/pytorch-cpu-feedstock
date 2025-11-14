@@ -48,8 +48,6 @@ llvm_openmp:
 - '19'
 macos_machine:
 - arm64-apple-darwin20.0.0
-megabuild:
-- true
 mkl:
 - '2023'
 numpy:
