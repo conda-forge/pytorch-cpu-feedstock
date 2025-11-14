@@ -49,7 +49,7 @@ llvm_openmp:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 megabuild:
-- false
+- true
 mkl:
 - '2023'
 mkl_devel:
