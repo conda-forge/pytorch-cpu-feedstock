@@ -13,9 +13,11 @@ cuda_compiler:
 cuda_compiler_version:
 - '12.8'
 cudnn:
-- '9.10'
+- '9'
 cxx_compiler:
 - vs2022
+fmt:
+- '12.0'
 github_actions_labels:
 - cirun-azure-windows-4xlarge
 is_rc:
@@ -45,12 +47,9 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 pybind11_abi:
-- '4'
+- '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
 - 3.12.* *_cpython
-- 3.13.* *_cp313
 pytorch:
 - '2.7'
 target_platform:
@@ -58,7 +57,5 @@ target_platform:
 zip_keys:
 - - channel_targets
   - is_rc
-- - cuda_compiler_version
-  - cudnn
 zlib:
 - '1'
