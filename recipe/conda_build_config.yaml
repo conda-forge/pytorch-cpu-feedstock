@@ -32,9 +32,7 @@ github_actions_labels:
 - cirun-azure-windows-4xlarge   # [win]
 
 megabuild:
-- true      # [linux]
-- false     # [osx]
-- true      # [win]
+- true
 
 is_python_min:
 - true
