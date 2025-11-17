@@ -36,7 +36,14 @@ if(WITH_TORCH_PYTHON)
     ${torch_python}
   )
 
+  set(MSVC_UTF8_FLAG)
+  if(MSVC)
+    # The source code is in utf-8 encoding
+    set(MSVC_UTF8_FLAG "/utf-8")
+  endif()
+
   target_compile_options(cmake_test PRIVATE
     ${TORCH_CXX_FLAGS}
+    ${MSVC_UTF8_FLAG}
   )
 endif()
