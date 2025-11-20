@@ -63,6 +63,9 @@ if [[ "${sha:-}" == "" ]]; then
   sha=$(git rev-parse HEAD)
 fi
 
+# HACK
+cp .scripts/download_osx_sdk.sh $CONDA_PREFIX/bin/
+
 echo -e "\n\nRunning the build setup script."
 source run_conda_forge_build_setup
 
