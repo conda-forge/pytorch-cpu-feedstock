@@ -75,19 +75,18 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
-  skip: true  # [not (osx and arm64)]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
   ignore_run_exports_from:
-    - python *                               # [megabuild]
-    - numpy *                                # [megabuild]
-    - cross-python_{{ target_platform }}     # [megabuild and build_platform != target_platform]
+    - python *
+    - numpy *
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
   ignore_run_exports:
-    - python *                               # [megabuild]
-    - numpy *                                # [megabuild]
+    - python *
+    - numpy *
     - libmagma_sparse
 
 requirements:
@@ -95,11 +94,9 @@ requirements:
   # We use python to build libtorch as well because it is easier
   build:
     # When you change 3.12 here, change it in build.sh/bld.bat as well
-    - python 3.12                            # [megabuild and build_platform != target_platform]
-    - python                                 # [not megabuild and build_platform != target_platform]
+    - python 3.12                            # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - numpy  *                               # [megabuild and build_platform != target_platform]
-    - numpy                                  # [not megabuild and build_platform != target_platform]
+    - numpy  *                               # [build_platform != target_platform]
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
@@ -141,10 +138,8 @@ requirements:
     - libcusparse-dev
     {% endif %}
     # other requirements
-    - python 3.12  # [megabuild]
-    - python       # [not megabuild]
-    - numpy *      # [megabuild]
-    - numpy        # [not megabuild]
+    - python 3.12
+    - numpy *
     - pip
     - setuptools
     - pyyaml
@@ -313,9 +308,7 @@ outputs:
         - zlib
         - fmt
       run:
-        - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
-        # for non-megabuild, allow libtorch from any python version
-        - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
+        - {{ pin_subpackage('libtorch', exact=True) }}
         - llvm-openmp
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
@@ -552,15 +545,13 @@ outputs:
   {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [megabuild and cuda_compiler_version == "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                  # [not megabuild]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     requirements:
       run:
-        - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [megabuild and cuda_compiler_version != "None"]
-        - pytorch {{ version }} cpu_{{ blas_impl }}*{{ build }}     # [megabuild and cuda_compiler_version == "None"]
-        - {{ pin_subpackage("pytorch", exact=True) }}               # [not megabuild]
+        - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [cuda_compiler_version != "None"]
+        - pytorch {{ version }} cpu_{{ blas_impl }}*{{ build }}     # [cuda_compiler_version == "None"]
     test:
       imports:
         - torch
