@@ -96,7 +96,7 @@ if not "%cuda_compiler_version%" == "None" (
     @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
     @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
 
-    set "TORCH_CUDA_ARCH_LIST=7.0+PTX"
+    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
     set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
 
     set MAGMA_HOME=%LIBRARY_PREFIX%

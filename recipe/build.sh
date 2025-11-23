@@ -225,7 +225,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     case ${cuda_compiler_version} in
         12.[89])
-            export TORCH_CUDA_ARCH_LIST="7.0+PTX"
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
             ;;
         *)
             echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
