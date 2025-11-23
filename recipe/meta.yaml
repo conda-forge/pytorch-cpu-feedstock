@@ -471,9 +471,9 @@ outputs:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/318#issuecomment-2620080859
         {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}
         # trivial accuracy problems
-        {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [unix and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda " %}                # [unix and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [unix and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda" %}                 # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [linux and cuda_compiler_version != "None"]
         # These tests require higher-resource or more recent GPUs than the CI provides
         {% set skips = skips ~ " or test_sdpa_inference_mode_aot_compile" %}            # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or (TestNN and test_grid_sample)" %}                   # [linux and cuda_compiler_version != "None"]
@@ -498,9 +498,9 @@ outputs:
         {% set skips = skips ~ " or (test_gradgrad_nn_Transformer and _cuda_)" %}       # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_avg_pool3d_backward2" %}                       # [linux and cuda_compiler_version != "None"]
         # MKL problems
-        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}           # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}   # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # non-MKL problems
-        {% set skips = skips ~ " or test_gather_scatter_cpu or test_index_put2_cpu " %}             # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_gather_scatter_cpu or test_index_put2_cpu" %}      # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
         # these tests are failing with low -n values
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
