@@ -75,7 +75,7 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
-  skip: true  # [not osx]
+  skip: true  # [not (osx and arm64)]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -515,6 +515,10 @@ outputs:
         {% set skips = skips ~ " or (TestNN and test_Conv3d_stride_padding)" %}          # [win]
         # flaky test, fragile to GC behavior
         {% set skips = skips ~ " or (TestTorch and test_tensor_cycle_via_slots)" %}
+        # unexpected success
+        {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
+        # "quantized engine NoQEngine is not supported"
+        {% set skips = skips ~ " or test_qengine " %}                                   # [osx and arm64]
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
