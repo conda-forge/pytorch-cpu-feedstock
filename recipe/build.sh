@@ -98,7 +98,12 @@ export BUILD_CUSTOM_PROTOBUF=OFF
 rm -rf $PREFIX/bin/protoc
 export USE_SYSTEM_PYBIND11=1
 export USE_SYSTEM_EIGEN_INSTALL=1
+export USE_SYSTEM_FMT=1
 export Python_ROOT_DIR=$PREFIX
+
+# force using cblas_dot when cross-compiling
+# (this matches the behavior to our patches)
+export PYTORCH_BLAS_USE_CBLAS_DOT=ON
 
 # workaround to stop setup.py from trying to check whether we checked out
 # all submodules (we don't use all of them)
@@ -195,15 +200,17 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export CUDAToolkit_ROOT=${PREFIX}
     case ${target_platform} in
         linux-64)
-            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/x86_64-linux
+            CUDA_TARGET=x86_64-linux
             ;;
         linux-aarch64)
-            export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/sbsa-linux
+            CUDA_TARGET=sbsa-linux
             ;;
         *)
             echo "unknown CUDA arch, edit build.sh"
             exit 1
     esac
+    export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/${CUDA_TARGET}
+    sed -i -e "s,@CUDA_TARGET@,${CUDA_TARGET}," torch/_inductor/cpp_builder.py
 
     # Compatibility matrix for update: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
     # Warning from pytorch v1.12.1: In the future we will require one to

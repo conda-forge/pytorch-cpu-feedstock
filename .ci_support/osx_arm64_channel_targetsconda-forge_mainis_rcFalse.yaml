@@ -24,6 +24,10 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '19'
+fmt:
+- '12.0'
+github_actions_labels:
+- cirun-macos-m4-large
 is_rc:
 - 'False'
 libabseil:
@@ -43,12 +47,8 @@ libtorch:
 llvm_openmp:
 - '19'
 macos_machine:
-- x86_64-apple-darwin13.4.0
-megabuild:
-- false
+- arm64-apple-darwin20.0.0
 mkl:
-- '2023'
-mkl_devel:
 - '2023'
 numpy:
 - '2'
@@ -59,13 +59,16 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 pybind11_abi:
-- '4'
+- '11'
 python:
+- 3.10.* *_cpython
+- 3.11.* *_cpython
+- 3.12.* *_cpython
 - 3.13.* *_cp313
 pytorch:
 - '2.7'
 target_platform:
-- osx-64
+- osx-arm64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version

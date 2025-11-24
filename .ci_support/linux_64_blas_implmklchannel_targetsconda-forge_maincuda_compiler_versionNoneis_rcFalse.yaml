@@ -24,6 +24,8 @@ cxx_compiler_version:
 - '14'
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
+fmt:
+- '12.0'
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 is_rc:
@@ -44,8 +46,6 @@ libtorch:
 - '2.7'
 magma:
 - '2.9'
-megabuild:
-- true
 mkl:
 - '2025'
 mkl_devel:
@@ -61,7 +61,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 pybind11_abi:
-- '4'
+- '11'
 python:
 - 3.10.* *_cpython
 - 3.11.* *_cpython
@@ -76,7 +76,6 @@ zip_keys:
   - cxx_compiler_version
   - c_stdlib_version
   - cuda_compiler_version
-  - cudnn
 - - channel_targets
   - is_rc
 zlib:

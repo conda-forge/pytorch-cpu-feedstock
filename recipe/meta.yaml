@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.8.0" %}
-{% set build = 2 %}
+{% set version = "2.9.1" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -16,7 +16,7 @@
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.4.0" %}
+{% set triton = "3.5.1" %}
 
 package:
   name: libtorch
@@ -35,35 +35,34 @@ source:
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-    sha256: c70a2c9488f6f6e8af5982a10d1cc2c37b7df5e6506d839daa5d5e250953d7b5
+    sha256: e17504700ebc4c87f9b57059df1c4d790b769458c04db144c7a92aea90f2c92b
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
-      # backport https://github.com/pytorch/pytorch/pull/137084
-      - patches/0002-Help-find-numpy.patch
-      - patches/0003-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
+      - patches/0002-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
       # conda-specific patch, lets us override CUDA paths
-      - patches/0004-Allow-overriding-CUDA-related-paths.patch
+      - patches/0003-Allow-overriding-CUDA-related-paths.patch
       # fix BLAS calling convention for openblas
-      - patches/0005-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
-      # fix mkl-2024 issue
-      # https://github.com/pytorch/pytorch/pull/143894
-      - patches/0006-fix-issue-142484.patch
-      - patches/0007-Fix-FindOpenBLAS.patch
+      - patches/0004-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+      - patches/0005-Fix-FindOpenBLAS.patch
       # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
-      - patches/0008-point-include-paths-to-Conda-prefix-include-dir.patch
-      - patches/0009-Add-conda-prefix-to-inductor-include-paths.patch
-      - patches/0010-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
-      - patches/0011-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
-      - patches/0012-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+      - patches/0006-point-include-paths-to-Conda-prefix-include-dir.patch
+      - patches/0007-Add-conda-prefix-to-inductor-include-lib-paths.patch
+      - patches/0008-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
+      - patches/0009-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
+      - patches/0010-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
       # backport https://github.com/pytorch/pytorch/pull/148668
-      - patches/0013-Fix-CUPTI-lookup-to-include-target-directory.patch
+      - patches/0011-Fix-CUPTI-lookup-to-include-target-directory.patch
       # skip a test that fails with numpy 2.3; can be dropped for pytorch>2.7
-      - patches/0014-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      - patches/0012-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
-      - patches/0015-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0013-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      # backport https://github.com/pytorch/pytorch/pull/166824
+      - patches/0014-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
+      - patches/0015-Fix-building-kineto-against-system-fmt.patch
+      # backport https://github.com/pytorch/pytorch/pull/159828
+      - patches/0016-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
       - patches/0018-Use-Intel-LLVM-openmp.patch
-      - patches_submodules/fbgemm/0001-remove-DESTINATION-lib-from-CMake-install-directives.patch     # [win]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -82,12 +81,12 @@ build:
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
   ignore_run_exports_from:
-    - python *                               # [megabuild]
-    - numpy *                                # [megabuild]
-    - cross-python_{{ target_platform }}     # [megabuild and build_platform != target_platform]
+    - python *
+    - numpy *
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
   ignore_run_exports:
-    - python *                               # [megabuild]
-    - numpy *                                # [megabuild]
+    - python *
+    - numpy *
     - libmagma_sparse
 
 requirements:
@@ -95,11 +94,9 @@ requirements:
   # We use python to build libtorch as well because it is easier
   build:
     # When you change 3.12 here, change it in build.sh/bld.bat as well
-    - python 3.12                            # [megabuild and build_platform != target_platform]
-    - python                                 # [not megabuild and build_platform != target_platform]
+    - python 3.12                            # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - numpy  *                               # [megabuild and build_platform != target_platform]
-    - numpy                                  # [not megabuild and build_platform != target_platform]
+    - numpy  *                               # [build_platform != target_platform]
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
@@ -141,10 +138,8 @@ requirements:
     - libcusparse-dev
     {% endif %}
     # other requirements
-    - python 3.12  # [megabuild]
-    - python       # [not megabuild]
-    - numpy *      # [megabuild]
-    - numpy        # [not megabuild]
+    - python 3.12
+    - numpy *
     - pip
     - setuptools
     - pyyaml
@@ -166,6 +161,7 @@ requirements:
     - pybind11-abi
     - eigen
     - zlib
+    - fmt
   run:
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
@@ -210,8 +206,6 @@ test:
         "torch_cuda_linalg"
     ] + (cuda_compiler_version != "None") * [
         "c10_cuda", "caffe2_nvrtc", "torch_cuda"
-    ] + target_platform.startswith("win") * [
-        "asmjit", "fbgemm"
     ]
     %}
     {% for each_lib in torch_libs %}
@@ -312,10 +306,9 @@ outputs:
         - pkg-config  # [unix]
         - typing_extensions
         - zlib
+        - fmt
       run:
-        - {{ pin_subpackage('libtorch', exact=True) }}  # [megabuild]
-        # for non-megabuild, allow libtorch from any python version
-        - libtorch {{ version }}.* *_{{ build }}        # [not megabuild]
+        - {{ pin_subpackage('libtorch', exact=True) }}
         - llvm-openmp
         - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
         - nomkl                             # [blas_impl != "mkl"]
@@ -363,7 +356,9 @@ outputs:
         - ninja
         - boto3
         - hypothesis
-        - pytest
+        # pytest-9 causes failure due to PytestRemovedIn9Warning
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/448#issuecomment-3529016115
+        - pytest <9
         - tabulate
         - pydot
         - pip
@@ -409,7 +404,7 @@ outputs:
         # We have had issues with openmp .dylibs being doubly loaded in certain cases. These two tests catch the (observed) issue
         - python -c "import torch; import numpy"
         - python -c "import numpy; import torch"
-        - python -c "import numpy as np;import torch;x = torch.tensor([2], dtype=torch.complex128);assert torch.dot(x, x).real == 4.0"
+        - python -c "import numpy as np;import torch;x = torch.tensor([2], dtype=torch.complex128);res = torch.dot(x, x); assert res.real == 4.0, res"
         # distributed support is enabled by default on linux; for mac, we enable it manually in build.sh
         - python -c "import torch; assert torch.distributed.is_available()"         # [linux or osx]
         - python -c "import torch; assert torch.backends.cuda.is_built()"           # [cuda_compiler_version != "None"]
@@ -471,9 +466,9 @@ outputs:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/318#issuecomment-2620080859
         {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}
         # trivial accuracy problems
-        {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [unix and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda " %}                # [unix and cuda_compiler_version != "None"]
-        {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [unix and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda" %}                 # [linux and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestTorch and test_index_add_correctness)" %}      # [linux and cuda_compiler_version != "None"]
         # These tests require higher-resource or more recent GPUs than the CI provides
         {% set skips = skips ~ " or test_sdpa_inference_mode_aot_compile" %}            # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or (TestNN and test_grid_sample)" %}                   # [linux and cuda_compiler_version != "None"]
@@ -498,9 +493,9 @@ outputs:
         {% set skips = skips ~ " or (test_gradgrad_nn_Transformer and _cuda_)" %}       # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_avg_pool3d_backward2" %}                       # [linux and cuda_compiler_version != "None"]
         # MKL problems
-        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}           # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}   # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # non-MKL problems
-        {% set skips = skips ~ " or test_gather_scatter_cpu or test_index_put2_cpu " %}             # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
+        {% set skips = skips ~ " or test_gather_scatter_cpu or test_index_put2_cpu" %}      # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
         # these tests are failing with low -n values
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
         {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
@@ -519,6 +514,10 @@ outputs:
         {% set skips = skips ~ " or (TestNN and test_Conv3d_stride_padding)" %}          # [win]
         # flaky test, fragile to GC behavior
         {% set skips = skips ~ " or (TestTorch and test_tensor_cycle_via_slots)" %}
+        # unexpected success
+        {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
+        # "quantized engine NoQEngine is not supported"
+        {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
@@ -550,15 +549,13 @@ outputs:
   {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
   - name: {{ pytorch_cpu_gpu }}
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [megabuild and cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [megabuild and cuda_compiler_version == "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                  # [not megabuild]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     requirements:
       run:
-        - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [megabuild and cuda_compiler_version != "None"]
-        - pytorch {{ version }} cpu_{{ blas_impl }}*{{ build }}     # [megabuild and cuda_compiler_version == "None"]
-        - {{ pin_subpackage("pytorch", exact=True) }}               # [not megabuild]
+        - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [cuda_compiler_version != "None"]
+        - pytorch {{ version }} cpu_{{ blas_impl }}*{{ build }}     # [cuda_compiler_version == "None"]
     test:
       imports:
         - torch

@@ -80,6 +80,7 @@ set "USE_OPENMP=ON"
 set USE_SYSTEM_EIGEN_INSTALL=1
 set USE_SYSTEM_PYBIND11=1
 set USE_SYSTEM_SLEEF=1
+set USE_SYSTEM_FMT=1
 
 @REM workaround to stop setup.py from trying to check whether we checked out
 @REM all submodules (we don't use all of them)
@@ -198,9 +199,8 @@ if "%PKG_NAME%" == "libtorch" (
     if %ERRORLEVEL% neq 0 exit 1
 
     @REM Move the binaries into the packages site-package directory
-    @REM the only content of torch\bin, {asmjit,fbgemm}.dll, also exists in torch\lib
-    robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ torch*.dll c10.dll shm.dll asmjit.dll fbgemm.dll
-    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ torch*.lib c10.lib shm.lib asmjit.lib fbgemm.lib
+    robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ torch*.dll c10.dll shm.dll
+    robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ torch*.lib c10.lib shm.lib
     if not "%cuda_compiler_version%" == "None" (
         robocopy /NP /NFL /NDL /NJH /E torch\bin\ %LIBRARY_BIN%\ c10_cuda.dll caffe2_nvrtc.dll
         robocopy /NP /NFL /NDL /NJH /E torch\lib\ %LIBRARY_LIB%\ c10_cuda.lib caffe2_nvrtc.lib

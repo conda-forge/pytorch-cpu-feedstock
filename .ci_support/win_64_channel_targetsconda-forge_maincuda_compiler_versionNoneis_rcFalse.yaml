@@ -16,6 +16,8 @@ cudnn:
 - '9'
 cxx_compiler:
 - vs2022
+fmt:
+- '12.0'
 github_actions_labels:
 - cirun-azure-windows-4xlarge
 is_rc:
@@ -30,8 +32,6 @@ libtorch:
 - '2.7'
 magma:
 - '2.9'
-megabuild:
-- true
 mkl:
 - '2025'
 mkl_devel:
@@ -45,7 +45,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 pybind11_abi:
-- '4'
+- '11'
 python:
 - 3.10.* *_cpython
 - 3.11.* *_cpython
@@ -58,7 +58,5 @@ target_platform:
 zip_keys:
 - - channel_targets
   - is_rc
-- - cuda_compiler_version
-  - cudnn
 zlib:
 - '1'
