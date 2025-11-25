@@ -1,13 +1,9 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
-- gcc
-c_compiler_version:
-- '13'
+- vs2022
 c_stdlib:
-- sysroot
-c_stdlib_version:
-- '2.17'
+- vs
 channel_sources:
 - conda-forge
 channel_targets:
@@ -17,25 +13,15 @@ cuda_compiler:
 cuda_compiler_version:
 - '12.9'
 cudnn:
-- '9.10'
+- '9'
 cxx_compiler:
-- gxx
-cxx_compiler_version:
-- '13'
-docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- vs2022
 github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- cirun-azure-windows-4xlarge
 is_rc:
 - 'False'
 libabseil:
 - '20250512'
-libblas:
-- 3.9.* *netlib
-libcblas:
-- 3.9.* *netlib
-liblapack:
-- 3.9.* *netlib
 libmagma_sparse:
 - '2.9'
 libprotobuf:
@@ -48,8 +34,8 @@ megabuild:
 - true
 mkl:
 - '2025'
-nccl:
-- '2'
+mkl_devel:
+- '2025'
 numpy:
 - '2'
 orc:
@@ -68,13 +54,8 @@ python:
 pytorch:
 - '2.7'
 target_platform:
-- linux-aarch64
+- win-64
 zip_keys:
-- - c_compiler_version
-  - cxx_compiler_version
-  - c_stdlib_version
-  - cuda_compiler_version
-  - cudnn
 - - channel_targets
   - is_rc
 zlib:
