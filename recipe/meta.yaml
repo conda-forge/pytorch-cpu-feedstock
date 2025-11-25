@@ -53,7 +53,7 @@ source:
       - patches/0010-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
       # backport https://github.com/pytorch/pytorch/pull/148668
       - patches/0011-Fix-CUPTI-lookup-to-include-target-directory.patch
-      # skip a test that fails with numpy 2.3; can be dropped for pytorch>2.7
+      # skip a test that fails with numpy v2.3; still triggers as of pytorch v2.9
       - patches/0012-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
       - patches/0013-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
@@ -165,9 +165,6 @@ requirements:
   run:
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
-    # These constraints ensure conflict between pytorch and
-    # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
-    # built into place.
     # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
     - pytorch-cpu {{ version }}    # [cuda_compiler_version == "None"]
     - pytorch-gpu <0.0a0           # [cuda_compiler_version == "None"]
@@ -178,7 +175,7 @@ requirements:
     # if using OpenBLAS, ensure that a version compatible with OpenMP is used
     # otherwise, we get the following warnings:
     # OpenBLAS Warning : Detect OpenMP Loop and this application may hang. Please rebuild the library with USE_OPENMP=1 option.
-    - libopenblas * openmp_*          # [unix and blas_impl != "mkl"]
+    - libopenblas * openmp_*       # [unix and blas_impl != "mkl"]
     - openblas * openmp_*          # [unix and blas_impl != "mkl"]
 
 # these tests are for the libtorch output below, but due to
@@ -327,9 +324,6 @@ outputs:
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
       run_constrained:
-        # These constraints ensure conflict between pytorch and
-        # pytorch-cpu 1.1 which we built before conda-forge had GPU infrastructure
-        # built into place.
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
         - pytorch-cpu {{ version }}    # [cuda_compiler_version == "None"]
         - pytorch-gpu <0.0a0           # [cuda_compiler_version == "None"]
@@ -386,8 +380,6 @@ outputs:
       source_files:
         # Only include the source_files if we are actually going to run the tests.
         - test
-        # tools/ is needed to optimise test run
-        # as of pytorch=2.0.0, there is a bug when trying to run tests without the tools
         - tools
       commands:
         # Run pip check so as to ensure that all pytorch packages are installed
@@ -537,12 +529,8 @@ outputs:
         - cmake --build .                   # [unix]
         - cmake --build . --config Release  # [win]
 
-  # 2021/08/01, hmaarrfk
-  # While this seems like a roundabout way of defining the package name
-  # It helps the linter avoid errors on a package not having tests.
-  {% set pytorch_cpu_gpu = "pytorch-cpu" %}   # [cuda_compiler_version == "None"]
-  {% set pytorch_cpu_gpu = "pytorch-gpu" %}   # [cuda_compiler_version != "None"]
-  - name: {{ pytorch_cpu_gpu }}
+  - name: pytorch-cpu   # [cuda_compiler_version == "None"]
+  - name: pytorch-gpu   # [cuda_compiler_version != "None"]
     build:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [cuda_compiler_version == "None"]
