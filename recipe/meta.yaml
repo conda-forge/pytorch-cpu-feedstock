@@ -516,7 +516,11 @@ outputs:
         {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
         # test only one python version on aarch because emulation is super-slow;
         # disable hypothesis because it randomly yields health check errors
+
+        # the opengpu server has a card with sm_70, an architecture dropped by CUDA 13.0
+        {% if (cuda_compiler_version or "0").split(".")[0]|int < 13 %}
         - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings    # [not aarch64 or py==312]
+        {% endif %}
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
