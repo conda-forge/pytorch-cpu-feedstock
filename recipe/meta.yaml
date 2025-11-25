@@ -378,11 +378,6 @@ outputs:
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         - pybind11
-        # cudnn >=9.11 removed support older GPUs that are still supported by CUDA 12
-        # pin tests since the CI uses sm70 that is no longer supported at the moment
-        # waiting to rebuild everything for cudnn 9.10, until we can redo
-        # https://github.com/conda-forge/admin-requests/pull/1687
-        - cudnn <9.11               # [cuda_compiler_version != "None"]
       imports:
         - torch
         - torch._C
