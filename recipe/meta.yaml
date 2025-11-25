@@ -69,6 +69,9 @@ build:
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
+  missing_dso_whitelist:
+    - '*/libcuda.so.*'    # [linux]
+    - '*/nvcuda.dll'      # [win]
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
   ignore_run_exports_from:
@@ -115,9 +118,9 @@ requirements:
     - cuda-nvtx-dev
     - cuda-profiler-api
     - cuda-version {{ cuda_compiler_version }}
-    - cudnn
     - cusparselt
     - libcublas-dev
+    - libcudnn-dev
     - libcudss-dev
     - libcufile-dev         # [linux]
     - libcufft-dev
@@ -261,8 +264,8 @@ outputs:
         - cuda-profiler-api
         - cuda-version {{ cuda_compiler_version }}
         - cusparselt
-        - cudnn
         - libcublas-dev
+        - libcudnn-dev
         - libcudss-dev
         - libcufile-dev         # [linux]
         - libcufft-dev
