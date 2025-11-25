@@ -13,7 +13,7 @@ cuda_compiler:
 cuda_compiler_version:
 - '12.8'
 cudnn:
-- '9.10'
+- '9'
 cxx_compiler:
 - vs2022
 github_actions_labels:
@@ -58,7 +58,5 @@ target_platform:
 zip_keys:
 - - channel_targets
   - is_rc
-- - cuda_compiler_version
-  - cudnn
 zlib:
 - '1'
