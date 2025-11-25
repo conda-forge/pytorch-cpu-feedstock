@@ -98,7 +98,7 @@ if not "%cuda_compiler_version%" == "None" (
     if "%cuda_compiler_version:~0,2%"=="12" (
         set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
     ) else if "%cuda_compiler_version%" == "13.0" (
-        set "TORCH_CUDA_ARCH_LIST=7.5;8.0;8.6;9.0;10.0;11.0;12.0+PTX"
+        set "TORCH_CUDA_ARCH_LIST=7.5+PTX"
         REM c.f. https://github.com/pytorch/pytorch/pull/161316
         set "TORCH_NVCC_FLAGS=!TORCH_NVCC_FLAGS! -compress-mode=size"
     ) else (
