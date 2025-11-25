@@ -58,7 +58,5 @@ target_platform:
 zip_keys:
 - - channel_targets
   - is_rc
-- - cuda_compiler_version
-  - cudnn
 zlib:
 - '1'
