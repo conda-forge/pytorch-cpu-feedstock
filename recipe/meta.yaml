@@ -115,27 +115,28 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    - cudnn                           # [cuda_compiler_version != "None"]
-    - nccl                            # [cuda_compiler_version != "None" and linux]
-    - magma                           # [cuda_compiler_version != "None"]
-    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-    - nvtx-c                          # [cuda_compiler_version != "None"]
     {% if cuda_compiler_version != "None" %}
-    - cuda-driver-dev                 # [linux]
     - cuda-cudart-dev
     - cuda-cupti-dev
+    - cuda-driver-dev       # [linux]
+    - cuda-nvml-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
-    - cuda-nvml-dev
     - cuda-profiler-api
+    - cuda-version {{ cuda_compiler_version }}
+    - cudnn
     - cusparselt
     - libcublas-dev
     - libcudss-dev
-    - libcufile-dev  # [linux]
+    - libcufile-dev         # [linux]
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
     - libcusparse-dev
+    # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
+    - magma
+    - nccl                  # [linux]
+    - nvtx-c
     {% endif %}
     # other requirements
     - python 3.12
@@ -257,28 +258,28 @@ outputs:
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None" and linux]
-        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-        - nvtx-c                          # [cuda_compiler_version != "None"]
-        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
-        - magma                           # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
-        - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
         - cuda-cupti-dev
+        - cuda-driver-dev       # [linux]
+        - cuda-nvml-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
-        - cuda-nvml-dev
         - cuda-profiler-api
+        - cuda-version {{ cuda_compiler_version }}
         - cusparselt
+        - cudnn
         - libcublas-dev
         - libcudss-dev
-        - libcufile-dev  # [linux]
+        - libcufile-dev         # [linux]
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
         - libcusparse-dev
+        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
+        - magma
+        - nccl                  # [linux]
+        - nvtx-c
         {% endif %}
         # other requirements
         - python
