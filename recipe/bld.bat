@@ -93,11 +93,18 @@ if not "%cuda_compiler_version%" == "None" (
     set USE_NCCL=0
     set USE_STATIC_NCCL=0
 
-    @REM set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%desired_cuda%
-    @REM set CUDA_BIN_PATH=%CUDA_PATH%\bin
-
-    set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
     set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
+
+    if "%cuda_compiler_version:~0,2%"=="12" (
+        set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
+    ) else if "%cuda_compiler_version%" == "13.0" (
+        set "TORCH_CUDA_ARCH_LIST=7.5;8.0;8.6;9.0;10.0;11.0;12.0+PTX"
+        REM c.f. https://github.com/pytorch/pytorch/pull/161316
+        set "TORCH_NVCC_FLAGS=!TORCH_NVCC_FLAGS! -compress-mode=size"
+    ) else (
+        echo "unsupported cuda version. edit build_pytorch.bat"
+        exit /b 1
+    )
 
     set MAGMA_HOME=%LIBRARY_PREFIX%
     set "PATH=%CUDA_BIN_PATH%;%PATH%"
