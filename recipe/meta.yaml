@@ -67,6 +67,8 @@ source:
 
 build:
   number: {{ build }}
+  # debug
+  skip: true  # [not win]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
@@ -232,6 +234,7 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
+      skip: true  # [py!=312]
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -335,6 +338,7 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
+      skip: true  # [py!=312]
     requirements:
       host:
         - python
@@ -372,6 +376,8 @@ outputs:
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         - pybind11
+        # not required upstream, but useful
+        - pytest-timeout
       imports:
         - torch
         - torch._C
@@ -447,11 +453,11 @@ outputs:
         # doesn't crash, but gets different result on aarch + CUDA
         {% set skips = skips ~ " or illcondition_matrix_input_should_not_crash_cpu" %}  # [aarch64 and cuda_compiler_version != "None"]
         # may crash spuriously
-        {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}
-        {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
+        {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}         # [not win]
+        {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}    # [not win]
         # tests that fail due to resource clean-up issues (non-unique temporary libraries), see
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/318#issuecomment-2620080859
-        {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}
+        {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}             # [not win]
         # trivial accuracy problems
         {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda" %}                 # [linux and cuda_compiler_version != "None"]
@@ -484,23 +490,13 @@ outputs:
         # non-MKL problems
         {% set skips = skips ~ " or test_gather_scatter_cpu or test_index_put2_cpu" %}      # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
         # these tests are failing with low -n values
-        {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}
-        {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}
-        {% set skips = skips ~ " or test_composite_registered_to_cpu_mode_nothing" %}
+        {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}    # [not win]
+        {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}       # [not win]
+        {% set skips = skips ~ " or test_composite_registered_to_cpu_mode_nothing" %}   # [not win]
         # these tests are failing on windows
         {% set skips = skips ~ " or (TestMkldnnCPU and test_batch_norm_2d_cpu)" %}       # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv1d_dilated)" %}                 # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv1d_pad_same_dilated)" %}        # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv2d_pad_same_dilated)" %}        # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv2d_padding)" %}                 # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv2d_strided)" %}                 # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv3d_dilated)" %}                 # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv3d_dilated_strided)" %}         # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv3d_pad_same_dilated)" %}        # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv3d_stride)" %}                  # [win]
-        {% set skips = skips ~ " or (TestNN and test_Conv3d_stride_padding)" %}          # [win]
         # flaky test, fragile to GC behavior
-        {% set skips = skips ~ " or (TestTorch and test_tensor_cycle_via_slots)" %}
+        {% set skips = skips ~ " or (TestTorch and test_tensor_cycle_via_slots)" %}     # [not win]
         # unexpected success
         {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
         # "quantized engine NoQEngine is not supported"
@@ -514,7 +510,7 @@ outputs:
         {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
         # test only one python version on aarch because emulation is super-slow;
         # disable hypothesis because it randomly yields health check errors
-        - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --disable-warnings    # [not aarch64 or py==312]
+        - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings    # [not aarch64 or py==312]
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
