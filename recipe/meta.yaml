@@ -450,6 +450,12 @@ outputs:
         {% set skips = skips ~ " or test_addbmm or test_baddbmm or test_bmm" %}         # [aarch64]
         # doesn't crash, but gets different result on aarch + CUDA
         {% set skips = skips ~ " or illcondition_matrix_input_should_not_crash_cpu" %}  # [aarch64 and cuda_compiler_version != "None"]
+        # may crash spuriously
+        {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}         # [not win]
+        {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}    # [not win]
+        # tests that fail due to resource clean-up issues (non-unique temporary libraries), see
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/318#issuecomment-2620080859
+        {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}             # [not win]
         # trivial accuracy problems
         {% set skips = skips ~ " or test_BCELoss_weights_no_reduce_cuda" %}             # [linux and cuda_compiler_version != "None"]
         {% set skips = skips ~ " or test_ctc_loss_cudnn_tensor_cuda" %}                 # [linux and cuda_compiler_version != "None"]
@@ -481,6 +487,14 @@ outputs:
         {% set skips = skips ~ " or (TestLinalgCPU and test_inverse_errors_large_cpu)" %}   # [linux and blas_impl == "mkl" and cuda_compiler_version != "None"]
         # non-MKL problems
         {% set skips = skips ~ " or test_gather_scatter_cpu or test_index_put2_cpu" %}      # [linux and blas_impl != "mkl" and cuda_compiler_version != "None"]
+        # these tests are failing with low -n values
+        {% set skips = skips ~ " or test_base_does_not_require_grad_mode_nothing" %}    # [not win]
+        {% set skips = skips ~ " or test_base_does_not_require_grad_mode_warn" %}       # [not win]
+        {% set skips = skips ~ " or test_composite_registered_to_cpu_mode_nothing" %}   # [not win]
+        # these tests are failing on windows
+        {% set skips = skips ~ " or (TestMkldnnCPU and test_batch_norm_2d_cpu)" %}       # [win]
+        # flaky test, fragile to GC behavior
+        {% set skips = skips ~ " or (TestTorch and test_tensor_cycle_via_slots)" %}     # [not win]
         # unexpected success
         {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
         # "quantized engine NoQEngine is not supported"
