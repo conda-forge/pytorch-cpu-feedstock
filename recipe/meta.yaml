@@ -374,6 +374,8 @@ outputs:
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         - pybind11
+        # not required upstream, but useful
+        - pytest-timeout
       imports:
         - torch
         - torch._C
@@ -510,6 +512,8 @@ outputs:
         {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
         # qnnpack_add(): Got empty input tensor.
         {% set skips = skips ~ " or test_tensoriterator_output_setup" %}                # [osx and arm64]
+        # hangs
+        {% set skips = skips ~ " or test_avg_pool3d_backward2_mps" %}                   # [osx and arm64]
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
@@ -519,7 +523,7 @@ outputs:
         {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
         # test only one python version on aarch because emulation is super-slow;
         # disable hypothesis because it randomly yields health check errors
-        - pytest {{ jobs }} -v {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --disable-warnings    # [not aarch64 or py==312]
+        - pytest {{ jobs }} -v {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings    # [not aarch64 or py==312]
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
