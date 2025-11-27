@@ -515,6 +515,7 @@ outputs:
         # may hang
         {% set skips = skips ~ " or test_avg_pool3d_backward2_mps" %}                   # [osx and arm64]
         {% set skips = skips ~ " or test_forward_nn_NLLLoss_mps_float32" %}             # [osx and arm64]
+        {% set skips = skips ~ " or test_forward_nn_Transformer_mps_float16" %}         # [osx and arm64]
         {% set skips = skips ~ " or test_gather_scatter_mps" %}                         # [osx and arm64]
         {% set skips = skips ~ " or non_contiguous_tensors_nn_GRU_train_mode_mps" %}    # [osx and arm64]
 
