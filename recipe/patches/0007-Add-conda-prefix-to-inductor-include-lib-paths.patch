@@ -10,8 +10,9 @@ dependencies (e.g., sleef).
 Note that this is for inductor's JIT mode, not its AOT mode, for which the
 end user provides a <filename>_compile_flags.json file.
 
-Updated to use `sys.prefix` per
-https://github.com/conda-forge/pytorch-cpu-feedstock/issues/424.
+Updated to use `sysconfig.get_config_vars("prefix")` per
+https://github.com/conda-forge/pytorch-cpu-feedstock/issues/424
+and https://github.com/conda-forge/pytorch-cpu-feedstock/issues/447.
 ---
  torch/_inductor/cpp_builder.py | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
@@ -24,8 +25,8 @@ index e2cb445ed10..89905bec464 100644
          + python_include_dirs
          + torch_include_dirs
          + omp_include_dir_paths
-+        + [sys.prefix + '/include']
-+        + [sys.prefix + '/targets/@CUDA_TARGET@/include']
++        + [sysconfig.get_config_vars("prefix") + '/include']
++        + [sysconfig.get_config_vars("prefix") + '/targets/@CUDA_TARGET@/include']
      )
      cflags = sys_libs_cflags + omp_cflags
      ldflags = omp_ldflags
