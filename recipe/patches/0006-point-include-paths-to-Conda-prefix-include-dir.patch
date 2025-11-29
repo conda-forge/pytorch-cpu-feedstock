@@ -19,7 +19,7 @@ index 902d2fe6ce0..3701edf1ce4 100644
      """
      lib_include = os.path.join(_TORCH_PATH, 'include')
 +    # Account for conda prefix.
-+    conda_pieces = [sysconfig.get_config_vars("prefix")] + IS_WINDOWS * ["Library"] + ["include"]
++    conda_pieces = [sysconfig.get_config_var("prefix")] + IS_WINDOWS * ["Library"] + ["include"]
 +    conda_include = os.path.join(*conda_pieces)
      paths = [
 +        conda_include,

@@ -25,13 +25,13 @@ index e2cb445ed10..89905bec464 100644
          + python_include_dirs
          + torch_include_dirs
          + omp_include_dir_paths
-+        + [sysconfig.get_config_vars("prefix") + '/include']
-+        + [sysconfig.get_config_vars("prefix") + '/targets/@CUDA_TARGET@/include']
++        + [sysconfig.get_config_var('prefix') + '/include']
++        + [sysconfig.get_config_var('prefix') + '/targets/@CUDA_TARGET@/include']
      )
      cflags = sys_libs_cflags + omp_cflags
      ldflags = omp_ldflags
 -    libraries_dirs = python_libraries_dirs + torch_libraries_dirs + omp_lib_dir_paths
-+    libraries_dirs = python_libraries_dirs + torch_libraries_dirs + omp_lib_dir_paths + [sys.prefix + '/targets/@CUDA_TARGET@/lib/stubs']
++    libraries_dirs = python_libraries_dirs + torch_libraries_dirs + omp_lib_dir_paths + [sysconfig.get_config_var('prefix') + '/targets/@CUDA_TARGET@/lib/stubs']
      libraries = torch_libraries + omp_lib
      passthrough_args = (
          sys_libs_passthrough_args + isa_ps_args_build_flags + omp_passthrough_args
