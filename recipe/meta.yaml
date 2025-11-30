@@ -518,7 +518,7 @@ outputs:
         {% set skips = skips ~ " or test_forward_nn_Transformer_mps" %}                 # [osx and arm64]
         {% set skips = skips ~ " or test_gather_scatter_mps" %}                         # [osx and arm64]
         {% set skips = skips ~ " or test_if_train_and_eval_modes_differ_nn_TransformerDecoderLayer_mps" %}  # [osx and arm64]
-        {% set skips = skips ~ " or non_contiguous_tensors_nn_GRU_train_mode_mps" %}    # [osx and arm64]
+        {% set skips = skips ~ " or (non_contiguous_tensors_nn and train_mode_mps)" %}  # [osx and arm64]
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
