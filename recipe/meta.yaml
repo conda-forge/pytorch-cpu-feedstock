@@ -67,6 +67,8 @@ source:
 
 build:
   number: {{ build }}
+  # debug
+  skip: true  # [cuda_compiler_version != "13.0"]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
@@ -78,6 +80,9 @@ build:
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
+  missing_dso_whitelist:
+    - '*/libcuda.so.*'    # [linux]
+    - '*/nvcuda.dll'      # [win]
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
   ignore_run_exports_from:
@@ -115,27 +120,29 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    - cudnn                           # [cuda_compiler_version != "None"]
-    - nccl                            # [cuda_compiler_version != "None" and linux]
-    - magma                           # [cuda_compiler_version != "None"]
-    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-    - nvtx-c                          # [cuda_compiler_version != "None"]
     {% if cuda_compiler_version != "None" %}
-    - cuda-driver-dev                 # [linux]
     - cuda-cudart-dev
     - cuda-cupti-dev
+    - cuda-driver-dev       # [linux]
+    - cuda-nvml-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
-    - cuda-nvml-dev
     - cuda-profiler-api
+    - cuda-version {{ cuda_compiler_version }}
     - cusparselt
     - libcublas-dev
+    - libcudnn-dev
     - libcudss-dev
-    - libcufile-dev  # [linux]
+    - libcufile-dev         # [linux]
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
     - libcusparse-dev
+    - libmagma-devel        # [cuda_compiler_version != "12.8"]
+    # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
+    - magma                 # [cuda_compiler_version == "12.8"]
+    - nccl                  # [linux]
+    - nvtx-c
     {% endif %}
     # other requirements
     - python 3.12
@@ -232,6 +239,8 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
+      # debug
+      skip: true  # [py!=312]
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -257,28 +266,29 @@ outputs:
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None" and linux]
-        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-        - nvtx-c                          # [cuda_compiler_version != "None"]
-        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
-        - magma                           # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
-        - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
         - cuda-cupti-dev
+        - cuda-driver-dev       # [linux]
+        - cuda-nvml-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
-        - cuda-nvml-dev
         - cuda-profiler-api
+        - cuda-version {{ cuda_compiler_version }}
         - cusparselt
         - libcublas-dev
+        - libcudnn-dev
         - libcudss-dev
-        - libcufile-dev  # [linux]
+        - libcufile-dev         # [linux]
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
         - libcusparse-dev
+        - libmagma-devel        # [cuda_compiler_version != "12.8"]
+        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
+        - magma                 # [cuda_compiler_version == "12.8"]
+        - nccl                  # [linux]
+        - nvtx-c
         {% endif %}
         # other requirements
         - python
@@ -335,6 +345,8 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
+      # debug
+      skip: true  # [py!=312]
     requirements:
       host:
         - python
@@ -514,7 +526,11 @@ outputs:
         {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
         # test only one python version on aarch because emulation is super-slow;
         # disable hypothesis because it randomly yields health check errors
+
+        # the opengpu server has a card with sm_70, an architecture dropped by CUDA 13.0
+        {% if (cuda_compiler_version or "0").split(".")[0]|int < 13 %}
         - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --disable-warnings    # [not aarch64 or py==312]
+        {% endif %}
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
