@@ -3,8 +3,9 @@ From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
 Subject: [PATCH 06/13] point include paths to Conda prefix include dir
 
-Updated to use `sys.prefix` per
-https://github.com/conda-forge/pytorch-cpu-feedstock/issues/424.
+Updated to use `sysconfig.get_config_vars("prefix")` per
+https://github.com/conda-forge/pytorch-cpu-feedstock/issues/424
+and https://github.com/conda-forge/pytorch-cpu-feedstock/issues/447.
 ---
  torch/utils/cpp_extension.py | 5 +++++
  1 file changed, 5 insertions(+)
@@ -18,7 +19,7 @@ index 902d2fe6ce0..3701edf1ce4 100644
      """
      lib_include = os.path.join(_TORCH_PATH, 'include')
 +    # Account for conda prefix.
-+    conda_pieces = [sys.prefix] + IS_WINDOWS * ["Library"] + ["include"]
++    conda_pieces = [sysconfig.get_config_var("prefix")] + IS_WINDOWS * ["Library"] + ["include"]
 +    conda_include = os.path.join(*conda_pieces)
      paths = [
 +        conda_include,
