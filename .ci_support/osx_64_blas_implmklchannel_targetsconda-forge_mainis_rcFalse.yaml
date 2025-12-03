@@ -32,12 +32,6 @@ is_rc:
 - 'False'
 libabseil:
 - '20250512'
-libblas:
-- 3.9.* *netlib
-libcblas:
-- 3.9.* *netlib
-liblapack:
-- 3.9.* *netlib
 libmagma_sparse:
 - '2.9'
 libprotobuf:
