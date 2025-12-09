@@ -1,0 +1,6 @@
+@echo on
+
+if "%CF_TORCH_CUDA_ARCH_LIST_BACKUP%" == "UNSET" (
+    set "CF_TORCH_CUDA_ARCH_LIST="
+    set "CF_TORCH_CUDA_ARCH_LIST_BACKUP="
+)
