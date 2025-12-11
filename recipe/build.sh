@@ -2,6 +2,9 @@
 
 set -ex
 
+# intentional abort
+exit 1
+
 echo "#########################################################################"
 echo "Building ${PKG_NAME} (py: ${PY_VER}) using BLAS implementation $blas_impl"
 echo "#########################################################################"
