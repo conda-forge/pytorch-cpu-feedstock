@@ -21,23 +21,44 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
-            SHORT_CONFIG: linux_64_blas_implgenericchannel_targets_h71a96c7d
+          - CONFIG: linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargeis_rcFalse
+            SHORT_CONFIG: linux_64_blas_implgenericchannel_targets_h363e2150
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-cpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_h71a96c7d', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_h363e2150', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
-            SHORT_CONFIG: linux_64_blas_implmklchannel_targetscond_h5b18f8bc
+            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+          - CONFIG: linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-2xlargeis_rcFalse
+            SHORT_CONFIG: linux_64_blas_implgenericchannel_targets_h2c933d06
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-cpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_h5b18f8bc', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-cpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_h2c933d06', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
-            SHORT_CONFIG: linux_aarch64_channel_targetsconda-forge_heefc8d83
+          - CONFIG: linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargeis_rcFalse
+            SHORT_CONFIG: linux_64_blas_implmklchannel_targetscond_hd80499cc
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-cpu-2xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_heefc8d83', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_hd80499cc', 'linux', 'x64', 'self-hosted']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+          - CONFIG: linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-2xlargeis_rcFalse
+            SHORT_CONFIG: linux_64_blas_implmklchannel_targetscond_h15efae7b
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['cirun-openstack-cpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_h15efae7b', 'linux', 'x64', 'self-hosted']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+          - CONFIG: linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargeis_rcFalse
+            SHORT_CONFIG: linux_aarch64_channel_targetsconda-forge_h5253e8f1
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h5253e8f1', 'linux', 'x64', 'self-hosted']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+          - CONFIG: linux_aarch64_channel_targetsconda-forge_maincuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-2xlargeis_rcFalse
+            SHORT_CONFIG: linux_aarch64_channel_targetsconda-forge_h7285529d
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['cirun-openstack-cpu-2xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h7285529d', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
             SHORT_CONFIG: osx_64_blas_implgenericchannel_targetsco_h709642d7

@@ -27,7 +27,6 @@ docker_image:
 fmt:
 - '12.0'
 github_actions_labels:
-- cirun-openstack-cpu-2xlarge
 - cirun-openstack-gpu-2xlarge
 is_rc:
 - 'False'
