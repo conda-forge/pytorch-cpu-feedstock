@@ -27,6 +27,7 @@ blas_impl:
 
 # https://github.com/conda-forge/.cirun
 github_actions_labels:
+- cirun-openstack-cpu-xlarge    # [linux]
 - cirun-openstack-gpu-2xlarge   # [linux]
 - cirun-macos-m4-large          # [osx]
 - cirun-azure-windows-4xlarge   # [win]
