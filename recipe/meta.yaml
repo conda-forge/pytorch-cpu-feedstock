@@ -242,6 +242,8 @@ outputs:
     script: build.sh    # [unix]
     script: bld.bat     # [win]
     build:
+      # CUDA builds on GPU agents, non-CUDA builds on CPU agents; see above
+      {{ diagonalize }}
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
@@ -345,6 +347,8 @@ outputs:
 
   - name: pytorch-tests
     build:
+      # CUDA builds on GPU agents, non-CUDA builds on CPU agents; see above
+      {{ diagonalize }}
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
@@ -545,6 +549,8 @@ outputs:
   - name: pytorch-cpu   # [cuda_compiler_version == "None"]
   - name: pytorch-gpu   # [cuda_compiler_version != "None"]
     build:
+      # CUDA builds on GPU agents, non-CUDA builds on CPU agents; see above
+      {{ diagonalize }}
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
