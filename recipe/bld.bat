@@ -228,11 +228,11 @@ if "%PKG_NAME%" == "libtorch" (
     if %ERRORLEVEL% neq 0 exit 1
 
     mkdir %PREFIX%\etc\conda\activate.d
-    copy %RECIPE_DIR%\activate-replaced.bat %PREFIX%\etc\conda\activate.d\~libtorch_activate.bat
+    copy %RECIPE_DIR%\activate-replaced.bat %PREFIX%\etc\conda\activate.d\libtorch_activate.bat
     if %ERRORLEVEL% neq 0 exit 1
 
     mkdir %PREFIX%\etc\conda\deactivate.d
-    copy %RECIPE_DIR%\deactivate.bat %PREFIX%\etc\conda\deactivate.d\~libtorch_deactivate.bat
+    copy %RECIPE_DIR%\deactivate.bat %PREFIX%\etc\conda\deactivate.d\libtorch_deactivate.bat
     if %ERRORLEVEL% neq 0 exit 1
 
 ) else if "%PKG_NAME%" == "pytorch" (
