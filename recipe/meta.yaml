@@ -60,6 +60,109 @@ source:
       # backport https://github.com/pytorch/pytorch/pull/159828
       - patches/0014-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
       - patches/0015-Use-Intel-LLVM-openmp.patch
+
+  # submodules; not included in default tarball due to https://github.com/dear-github/dear-github/issues/214
+  # and pytorch doesn't provide them for rcs yet: https://github.com/pytorch/pytorch/issues/124759
+  # see https://github.com/pytorch/pytorch/tree/{{ version }}/third_party
+  - folder: third_party/FP16
+    git_url: https://github.com/Maratyszcza/FP16.git
+    git_rev: 4dfe081cf6bcd15db339cf2680b9281b8451eeb3
+  - folder: third_party/FXdiv
+    git_url: https://github.com/Maratyszcza/FXdiv.git
+    git_rev: b408327ac2a15ec3e43352421954f5b1967701d1
+  - folder: third_party/NNPACK
+    git_url: https://github.com/Maratyszcza/NNPACK.git
+    git_rev: c07e3a0400713d546e0dea2d5466dd22ea389c73
+  # - folder: third_party/NVTX  # skipped due to USE_SYSTEM_NVTX
+  - folder: third_party/VulkanMemoryAllocator
+    git_url: https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+    git_rev: 1d8f600fd424278486eade7ed3e877c99f0846b1
+  - folder: third_party/XNNPACK
+    git_url: https://github.com/google/XNNPACK.git
+    git_rev: 51a0103656eff6fc9bfd39a4597923c4b542c883
+  - folder: third_party/benchmark
+    git_url: https://github.com/google/benchmark.git
+    git_rev: 299e5928955cc62af9968370293b916f5130916f
+  - folder: third_party/composable_kernel
+    git_url: https://github.com/ROCm/composable_kernel.git
+    git_rev: 7fe50dc3da2069d6645d9deb8c017a876472a977
+  - folder: third_party/cpp-httplib
+    git_url: https://github.com/yhirose/cpp-httplib.git
+    git_rev: 89c932f313c6437c38f2982869beacc89c2f2246
+  - folder: third_party/cpuinfo
+    git_url: https://github.com/pytorch/cpuinfo.git
+    git_rev: f858c30bcb16f8effd5ff46996f0514539e17abc
+  - folder: third_party/cudnn_frontend
+    git_url: https://github.com/NVIDIA/cudnn-frontend.git
+    git_rev: 0b1577c8c83401237d601d0d0db5210506705396
+  - folder: third_party/cutlass
+    git_url: https://github.com/NVIDIA/cutlass.git
+    git_rev: f88806b1e31dfa579842638740216dd41fc6c588
+  # - folder: third_party/eigen  # skipped due to USE_SYSTEM_EIGEN_INSTALL
+  - folder: third_party/fbgemm
+    git_url: https://github.com/pytorch/fbgemm.git
+    git_rev: a4a112c26ac01c78a86317cf54c69481478d95d2
+  - folder: third_party/flash-attention
+    git_url: https://github.com/Dao-AILab/flash-attention.git
+    git_rev: 979702c87a8713a8e0a5e9fee122b90d2ef13be5
+  - folder: third_party/flatbuffers
+    git_url: https://github.com/google/flatbuffers.git
+    git_rev: a2cd1ea3b6d3fee220106b5fed3f7ce8da9eb757
+  - folder: third_party/fmt
+    git_url: https://github.com/fmtlib/fmt.git
+    git_rev: 407c905e45ad75fc29bf0f9bb7c5c2fd3475976f
+  - folder: third_party/gemmlowp/gemmlowp
+    git_url: https://github.com/google/gemmlowp.git
+    git_rev: 3fb5c176c17c765a3492cd2f0321b0dab712f350
+  - folder: third_party/gloo
+    git_url: https://github.com/facebookincubator/gloo.git
+    git_rev: 54cbae0d3a67fa890b4c3d9ee162b7860315e341
+  - folder: third_party/googletest
+    git_url: https://github.com/google/googletest.git
+    git_rev: 52eb8108c5bdec04579160ae17225d66034bd723
+  - folder: third_party/ideep
+    git_url: https://github.com/intel/ideep.git
+    git_rev: 719d8e6cd7f7a0e01b155657526d693acf97c2b3
+  - folder: third_party/ittapi
+    git_url: https://github.com/intel/ittapi.git
+    git_rev: dec1d23ca65ab069d225dfe40dea14f455170959
+  - folder: third_party/kineto
+    git_url: https://github.com/pytorch/kineto.git
+    git_rev: 31f85df8fbd89c188f14ef10f1ec65379786b943
+  - folder: third_party/kleidiai
+    git_url: https://github.com/ARM-software/kleidiai.git
+    git_rev: d7770c89632329a9914ef1a90289917597639cbe
+  - folder: third_party/mimalloc
+    git_url: https://github.com/microsoft/mimalloc.git
+    git_rev: fbd8b99c2b828428947d70fdc046bb55609be93e
+  - folder: third_party/nlohmann
+    git_url: https://github.com/nlohmann/json.git
+    git_rev: 55f93686c01528224f448c19128836e7df245f72
+  - folder: third_party/onnx
+    git_url: https://github.com/onnx/onnx.git
+    git_rev: e709452ef2bbc1d113faf678c24e6d3467696e83
+  - folder: third_party/opentelemetry-cpp
+    git_url: https://github.com/open-telemetry/opentelemetry-cpp.git
+    git_rev: a799f4aed9c94b765dcdaabaeab7d5e7e2310878
+  - folder: third_party/pocketfft
+    git_url: https://github.com/mreineck/pocketfft.git
+    git_rev: 0fa0ef591e38c2758e3184c6c23e497b9f732ffa
+  # - folder: third_party/protobuf  # skipped due to BUILD_CUSTOM_PROTOBUF=OFF
+  - folder: third_party/psimd
+    git_url: https://github.com/Maratyszcza/psimd.git
+    git_rev: 072586a71b55b7f8c584153d223e95687148a900
+  - folder: third_party/pthreadpool
+    git_url: https://github.com/Maratyszcza/pthreadpool.git
+    git_rev: 4fe0e1e183925bf8cfa6aae24237e724a96479b8
+  # - folder: third_party/pybind11  # skipped due to USE_SYSTEM_PYBIND11
+  - folder: third_party/python-peachpy
+    git_url: https://github.com/malfet/PeachPy.git
+    git_rev: f45429b087dd7d5bc78bb40dc7cf06425c252d67
+  # - folder: third_party/sleef  # skipped due to USE_SYSTEM_SLEEF
+  - folder: third_party/tensorpipe
+    git_url: https://github.com/pytorch/tensorpipe.git
+    git_rev: 2b4cd91092d335a697416b2a3cb398283246849d
+    patches:
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
