@@ -254,6 +254,7 @@ else
     # for CPU builds. Not to be confused with MKL.
     export USE_MKLDNN=1
     export USE_CUDA=0
+    export TORCH_CUDA_ARCH_LIST=""
 fi
 
 echo '${CXX}'=${CXX}
@@ -279,6 +280,14 @@ case ${PKG_NAME} in
 
     # Keep the original backed up to sed later
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
+
+    for CHANGE in "activate" "deactivate"
+    do
+        mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
+        sed -e "s/@cf_torch_cuda_arch_list@/${TORCH_CUDA_ARCH_LIST}/g" \
+        "${RECIPE_DIR}/${CHANGE}.sh" > "${PREFIX}/etc/conda/${CHANGE}.d/libtorch_${CHANGE}.sh"
+    done
+
     ;;
   pytorch)
     $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -v --no-clean --config-settings=--global-option=-q \
