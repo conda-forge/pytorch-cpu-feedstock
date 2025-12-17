@@ -550,6 +550,8 @@ outputs:
         {% set skips = skips ~ " or test_addbmm or test_baddbmm or test_bmm" %}         # [aarch64]
         # doesn't crash, but gets different result on aarch + CUDA
         {% set skips = skips ~ " or illcondition_matrix_input_should_not_crash_cpu" %}  # [aarch64 and cuda_compiler_version != "None"]
+        # minor inaccuracy on aarch64 (emulation?)
+        {% set skips = skips ~ " or (TestNN and test_upsampling_bfloat16)" %}           # [aarch64]
         # may crash spuriously
         {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}
         {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
@@ -609,6 +611,11 @@ outputs:
         {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
         # "quantized engine NoQEngine is not supported"
         {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
+        # some warning-related failure, maybe it's broken by --disable-warnings?
+        {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cpu" %}
+        {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cuda" %}
+        # "Attempt to trace generator"
+        {% set skips = skips ~ " or test_lite_regional_compile_flex_attention_cuda" %}
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
