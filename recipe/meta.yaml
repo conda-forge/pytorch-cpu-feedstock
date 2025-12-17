@@ -264,6 +264,7 @@ requirements:
     - eigen
     - zlib
     - fmt
+    - packaging
   run:
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
@@ -406,6 +407,7 @@ outputs:
         - typing_extensions
         - zlib
         - fmt
+        - packaging
       run:
         - {{ pin_subpackage('libtorch', exact=True) }}
         - llvm-openmp
