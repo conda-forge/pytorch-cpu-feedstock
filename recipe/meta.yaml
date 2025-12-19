@@ -73,7 +73,9 @@ source:
   - folder: third_party/NNPACK
     git_url: https://github.com/Maratyszcza/NNPACK.git
     git_rev: c07e3a0400713d546e0dea2d5466dd22ea389c73
-  # - folder: third_party/NVTX  # skipped due to USE_SYSTEM_NVTX
+  - folder: third_party/NVTX
+    git_url: https://github.com/NVIDIA/NVTX.git
+    git_rev: 3ebbc93ded7285963bff932c678fa367eb393ba6
   - folder: third_party/VulkanMemoryAllocator
     git_url: https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
     git_rev: 1d8f600fd424278486eade7ed3e877c99f0846b1
