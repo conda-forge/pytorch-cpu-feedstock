@@ -7,7 +7,7 @@ cxx_compiler_version:   # [aarch64]
   - 13                  # [aarch64]
 
 MACOSX_SDK_VERSION:         # [osx]
-  - 13.3                    # [osx]
+  - 14.5                    # [osx]
 
 channel_targets:
   - conda-forge main

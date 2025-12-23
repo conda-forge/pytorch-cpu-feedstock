@@ -1,0 +1,28 @@
+From 6161984bbdb6a3ca0ebbc5647b50c5d4db4c03f5 Mon Sep 17 00:00:00 2001
+From: Isuru Fernando <isuruf@gmail.com>
+Date: Thu, 31 Jul 2025 12:34:30 -0500
+Subject: [PATCH 15/15] Use Intel/LLVM openmp
+
+This make MSVC use __kmp_* symbols available in both libiomp.dll
+and libiomp5md.dll instead of vcomp* symbols which are only in
+vcomp140.dll and libiomp5md.dll, but are missing in libiomp.dll
+---
+ cmake/Modules/FindOpenMP.cmake | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/Modules/FindOpenMP.cmake b/cmake/Modules/FindOpenMP.cmake
+index 8a9abff3982..336a9a927a9 100644
+--- a/cmake/Modules/FindOpenMP.cmake
++++ b/cmake/Modules/FindOpenMP.cmake
+@@ -122,9 +122,9 @@ function(_OPENMP_FLAG_CANDIDATES LANG)
+     set(OMP_FLAG_MIPSpro "-mp")
+     if(__header_dir MATCHES ".*Microsoft Visual Studio.*")
+       # MSVC header. No need to pass it as additional include.
+-      set(OMP_FLAG_MSVC "-openmp:experimental" "-openmp")
++      set(OMP_FLAG_MSVC "-openmp:llvm" "-openmp:experimental" "-openmp")
+     else()
+-      set(OMP_FLAG_MSVC "-openmp:experimental -I${__header_dir}" "-openmp -I${__header_dir}")
++      set(OMP_FLAG_MSVC "-openmp:llvm" "-openmp:experimental -I${__header_dir}" "-openmp -I${__header_dir}")
+     endif()
+     set(OMP_FLAG_PathScale "-openmp")
+     set(OMP_FLAG_NAG "-openmp")

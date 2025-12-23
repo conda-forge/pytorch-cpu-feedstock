@@ -1,0 +1,36 @@
+From ed5cdb12101ce038ff6f4d07d26e8fd02b044925 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Thu, 23 Jan 2025 22:58:14 +1100
+Subject: [PATCH 05/15] point include paths to Conda prefix include dir
+
+Updated to use `sysconfig.get_config_vars("prefix")` per
+https://github.com/conda-forge/pytorch-cpu-feedstock/issues/424
+and https://github.com/conda-forge/pytorch-cpu-feedstock/issues/447.
+---
+ torch/utils/cpp_extension.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
+index f29c382f0e3..e9557d43ee1 100644
+--- a/torch/utils/cpp_extension.py
++++ b/torch/utils/cpp_extension.py
+@@ -1567,12 +1567,18 @@ def include_paths(device_type: str = "cpu", torch_include_dirs=True) -> list[str
+     Returns:
+         A list of include path strings.
+     """
+-    paths = []
+     lib_include = os.path.join(_TORCH_PATH, 'include')
++    # Account for conda prefix.
++    conda_pieces = [sysconfig.get_config_var("prefix")] + IS_WINDOWS * ["Library"] + ["include"]
++    conda_include = os.path.join(*conda_pieces)
++    paths = [
++        conda_include,
++    ]
+     if torch_include_dirs:
+         paths.extend([
+             lib_include,
+             # Remove this once torch/torch.h is officially no longer supported for C++ extensions.
++            os.path.join(conda_include, 'torch', 'csrc', 'api', 'include'),
+             os.path.join(lib_include, 'torch', 'csrc', 'api', 'include'),
+         ])
+     if device_type == "cuda" and IS_HIP_EXTENSION:
