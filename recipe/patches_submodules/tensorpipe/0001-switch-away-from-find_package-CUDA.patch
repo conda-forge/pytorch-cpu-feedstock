@@ -3,10 +3,6 @@ From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Sun, 2 Feb 2025 08:54:01 +1100
 Subject: [PATCH] switch away from find_package(CUDA)
 
----
- tensorpipe/CMakeLists.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/third_party/tensorpipe/tensorpipe/CMakeLists.txt b/third_party/tensorpipe/tensorpipe/CMakeLists.txt
 index efcffc2..1c3b2ca 100644
 --- a/third_party/tensorpipe/tensorpipe/CMakeLists.txt
