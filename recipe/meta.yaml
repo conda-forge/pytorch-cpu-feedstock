@@ -23,9 +23,6 @@
     {% set diagonalize = True %}
 {% endif %}
 
-# ensure github_actions_labels appears "used" from POV of conda-{build,smithy}
-# [github_actions_labels]
-
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
