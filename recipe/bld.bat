@@ -1,6 +1,9 @@
 @echo On
 setlocal enabledelayedexpansion
 
+:: intentional abort
+exit 1
+
 @REM remove pyproject.toml to avoid installing deps from pip
 if EXIST pyproject.toml (
   DEL pyproject.toml

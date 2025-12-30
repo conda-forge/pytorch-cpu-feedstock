@@ -1,5 +1,5 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - gcc
 c_compiler_version:
@@ -27,7 +27,7 @@ docker_image:
 fmt:
 - '12.0'
 github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- cirun-openstack-cpu-xlarge
 is_rc:
 - 'True'
 libabseil:
