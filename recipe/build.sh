@@ -302,7 +302,11 @@ case ${PKG_NAME} in
     for f in bin/* lib/* share/* include/*; do
       if [[ -e "$PREFIX/$f" ]]; then
         rm -rf $f
-        ln -sf $PREFIX/$f $PWD/$f
+        # do not symlink include files back
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/447#issuecomment-3712968499
+        if [[ ${f} != include/* ]]; then
+          ln -sf $PREFIX/$f $PWD/$f
+        fi
       fi
     done
     popd
