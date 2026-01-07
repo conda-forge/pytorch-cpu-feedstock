@@ -13,16 +13,6 @@
 {% set build = build + 100 %}
 {% endif %}
 
-# CUDA builds on GPU agents, non-CUDA builds on CPU agents; these gymnastics would be avoidable with
-# https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
-{% set diagonalize = False %}
-{% if False %}
-{% elif target_platform.startswith("linux") and cuda_compiler_version == "None" and "gpu" in github_actions_labels %}
-    {% set diagonalize = True %}
-{% elif target_platform.startswith("linux") and cuda_compiler_version != "None" and "cpu" in github_actions_labels %}
-    {% set diagonalize = True %}
-{% endif %}
-
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
@@ -76,8 +66,8 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
-  {% if diagonalize %}
   # CUDA builds on GPU agents, non-CUDA builds on CPU agents; see above
+  {% if (cuda_compiler_version == "None" and "gpu" in github_actions_labels) or (cuda_compiler_version != "None" and "cpu" in github_actions_labels) %}
   skip: true
   {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
