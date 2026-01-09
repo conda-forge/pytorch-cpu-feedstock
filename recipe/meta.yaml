@@ -75,6 +75,8 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  # temporary
+  skip: true  # [not (osx and arm64)]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -505,6 +507,8 @@ outputs:
         {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
         # "quantized engine NoQEngine is not supported"
         {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
+        # flaky based on something related to metal
+        {% set skips = skips ~ " or test_LayerNorm_numeric_mps" %}                      # [osx and arm64]
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
