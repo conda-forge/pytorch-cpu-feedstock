@@ -1,7 +1,7 @@
-From 2d7566334da792a27f7a01f6e8ac34975915156c Mon Sep 17 00:00:00 2001
+From 6830ebeb5fee531037ef45632a1f9b67fa7f0ce8 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Mon, 3 Nov 2025 14:59:04 +0100
-Subject: [PATCH 15/15] Fix building kineto against system fmt
+Subject: [PATCH 15/17] Fix building kineto against system fmt
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

@@ -1,7 +1,7 @@
-From 80d19fab767e27bc950b8e229b11294495192a1e Mon Sep 17 00:00:00 2001
+From cdb2e4b52e2b41b8810cc858b01f6c04a7f438bf Mon Sep 17 00:00:00 2001
 From: Yukio Siraichi <yukio.siraichi@gmail.com>
 Date: Tue, 30 Sep 2025 01:10:13 +0000
-Subject: [PATCH 14/14] Add USE_SYSTEM options for KLEIDI, CUDNN_FRONTEND,
+Subject: [PATCH 14/17] Add USE_SYSTEM options for KLEIDI, CUDNN_FRONTEND,
  CUTLASS, and FMT
 
 This commit adds CMake options to allow users to use system-installed versions of four libraries instead of the bundled versions
@@ -11,9 +11,9 @@ PR: https://github.com/pytorch/pytorch/pull/166824
 ---
  CMakeLists.txt               |  8 +++++
  aten/src/ATen/CMakeLists.txt | 17 +++++++--
- cmake/Dependencies.cmake     | 69 +++++++++++++++++++++++++++---------
+ cmake/Dependencies.cmake     | 67 ++++++++++++++++++++++++++++--------
  cmake/Summary.cmake          |  4 +++
- 4 files changed, 80 insertions(+), 18 deletions(-)
+ 4 files changed, 79 insertions(+), 17 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index ce7890f002d..6d55828e61e 100644
@@ -137,9 +137,6 @@ index 4a9fe193830..8b3a1b2629a 100644
 -# `fmt` is compatible with a superset of the compilers that PyTorch is, it
 -# shouldn't be too bad to just disable the checks.
 -set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
--
--list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
--set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
 +# Install `fmtlib` header.
 +# This was the default behavior before version 12.0.0.
 +# Since PyTorch C API depends on it, make it available for projects that
@@ -149,7 +146,9 @@ index 4a9fe193830..8b3a1b2629a 100644
 +  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
 +  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
 +  add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
-+
+ 
+-list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
+-set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
 +  # Disable compiler feature checks for `fmt`.
 +  #
 +  # CMake compiles a little program to check compiler features. Some of our build

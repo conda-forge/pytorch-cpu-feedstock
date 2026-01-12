@@ -1,7 +1,7 @@
-From 93be0373dd974e80eb9544892319dfc1a4d29c65 Mon Sep 17 00:00:00 2001
+From b655d933c39a3562e421b9b7140dabe18ebef42b Mon Sep 17 00:00:00 2001
 From: Eddie Yan <eddiey@nvidia.com>
 Date: Tue, 5 Aug 2025 00:49:50 +0000
-Subject: [PATCH 16/16] Attempt to fix torch.backends.cudnn.rnn import
+Subject: [PATCH 16/17] Attempt to fix torch.backends.cudnn.rnn import
 
 torch.backends.cudnn module in order to expose the .conv.fp32_precision
 and .rnn.fp32_precision settings. However, it fails to account for the
