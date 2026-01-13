@@ -1,7 +1,7 @@
-From afa9e9bc6e2f6db7af3b3a46e608bc8d2833f18d Mon Sep 17 00:00:00 2001
+From 30891e1424a7695175f62974627e6a3bb5b63b78 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Wed, 27 Nov 2024 13:47:23 +0100
-Subject: [PATCH 03/13] Allow overriding CUDA-related paths
+Subject: [PATCH 03/17] Allow overriding CUDA-related paths
 
 ---
  cmake/Modules/FindCUDAToolkit.cmake | 2 +-

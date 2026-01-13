@@ -1,7 +1,7 @@
-From 846567d76fe17ac1c9f1154bb439c6a106445dce Mon Sep 17 00:00:00 2001
+From 29c61185422f07e177d2657cc69e9284a489ffdf Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Thu, 6 Mar 2025 13:57:25 +0100
-Subject: [PATCH 11/13] Fix CUPTI lookup to include target directory
+Subject: [PATCH 11/17] Fix CUPTI lookup to include target directory
 
 ---
  cmake/Dependencies.cmake | 2 ++
