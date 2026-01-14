@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.10.0-rc3" %}
-{% set build = 1 %}
+{% set version = "2.10.0-rc6" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -25,7 +25,7 @@ package:
 source:
 {% if "rc" in version %}
   - url: https://download.pytorch.org/source_code/test/pytorch-v{{ version }}.tar.gz
-    sha256: 3200721908010568b3715332a989948ea731242681935220beef090ae608aef2
+    sha256: f35b2d7839b284410e5be9ec2eeb7a3049e09c1b8f6a871d3f2cad495d93dcd6
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
