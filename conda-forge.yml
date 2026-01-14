@@ -4,6 +4,7 @@ azure:
     timeoutInMinutes: 1
 bot:
   abi_migration_branches:
+  - v2.9.x
   - v2.8.x
 build_platform:
   linux_aarch64: linux_64

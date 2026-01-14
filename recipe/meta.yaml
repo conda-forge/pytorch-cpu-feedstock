@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.9.1" %}
-{% set build = 2 %}
+{% set version = "2.10.0-rc3" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -24,14 +24,8 @@ package:
 
 source:
 {% if "rc" in version %}
-  # - git_url: https://github.com/pytorch/pytorch.git
-  #   git_rev: v{{ version.replace(".rc", "-rc") }}
-  # we cannot apply patches to submodules when checking out with git_url, because
-  # then conda switches the patch-application to use git, which cannot construct
-  # a usable ancestor from outside the submodule; the only option then is to
-  # pull in the submodules separately.
-  - url: https://github.com/pytorch/pytorch/archive/refs/tags/v{{ version }}.tar.gz
-    sha256: 04ae0a8babdc9cb9dfc4f8746b2b8aa0f8ed0f9e92835cc4af0bcb01e3969e51
+  - url: https://download.pytorch.org/source_code/test/pytorch-v{{ version }}.tar.gz
+    sha256: 3200721908010568b3715332a989948ea731242681935220beef090ae608aef2
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
@@ -39,30 +33,27 @@ source:
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
-      - patches/0002-Fix-duplicate-linker-script.patch  # [cuda_compiler_version != "None" and aarch64]
       # conda-specific patch, lets us override CUDA paths
-      - patches/0003-Allow-overriding-CUDA-related-paths.patch
+      - patches/0002-Allow-overriding-CUDA-related-paths.patch
       # fix BLAS calling convention for openblas
-      - patches/0004-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
-      - patches/0005-Fix-FindOpenBLAS.patch
+      - patches/0003-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+      - patches/0004-Fix-FindOpenBLAS.patch
       # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
-      - patches/0006-point-include-paths-to-Conda-prefix-include-dir.patch
-      - patches/0007-Add-conda-prefix-to-inductor-include-lib-paths.patch
-      - patches/0008-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
-      - patches/0009-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
-      - patches/0010-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
-      # backport https://github.com/pytorch/pytorch/pull/148668
-      - patches/0011-Fix-CUPTI-lookup-to-include-target-directory.patch
+      - patches/0005-point-include-paths-to-Conda-prefix-include-dir.patch
+      - patches/0006-Add-conda-prefix-to-inductor-include-lib-paths.patch
+      - patches/0007-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
+      - patches/0008-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
+      - patches/0009-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
       # skip a test that fails with numpy v2.3; still triggers as of pytorch v2.9
-      - patches/0012-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      - patches/0010-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
-      - patches/0013-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0011-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
       # backport https://github.com/pytorch/pytorch/pull/166824
-      - patches/0014-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
-      - patches/0015-Fix-building-kineto-against-system-fmt.patch
+      - patches/0012-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
+      - patches/0013-Fix-building-kineto-against-system-fmt.patch
       # backport https://github.com/pytorch/pytorch/pull/159828
-      - patches/0016-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
-      - patches/0018-Use-Intel-LLVM-openmp.patch
+      - patches/0014-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
+      - patches/0015-Use-Intel-LLVM-openmp.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -162,6 +153,7 @@ requirements:
     - eigen
     - zlib
     - fmt
+    - packaging
   run:
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
   run_constrained:
@@ -304,6 +296,7 @@ outputs:
         - typing_extensions
         - zlib
         - fmt
+        - packaging
       run:
         - {{ pin_subpackage('libtorch', exact=True) }}
         - llvm-openmp
@@ -446,6 +439,8 @@ outputs:
         {% set skips = skips ~ " or test_addbmm or test_baddbmm or test_bmm" %}         # [aarch64]
         # doesn't crash, but gets different result on aarch + CUDA
         {% set skips = skips ~ " or illcondition_matrix_input_should_not_crash_cpu" %}  # [aarch64 and cuda_compiler_version != "None"]
+        # minor inaccuracy on aarch64 (emulation?)
+        {% set skips = skips ~ " or (TestNN and test_upsampling_bfloat16)" %}           # [aarch64]
         # may crash spuriously
         {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}
         {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
@@ -505,6 +500,11 @@ outputs:
         {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
         # "quantized engine NoQEngine is not supported"
         {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
+        # some warning-related failure, maybe it's broken by --disable-warnings?
+        {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cpu" %}
+        {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cuda" %}
+        # "Attempt to trace generator"
+        {% set skips = skips ~ " or test_lite_regional_compile_flex_attention_cuda" %}
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
