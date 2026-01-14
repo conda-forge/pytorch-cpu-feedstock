@@ -281,12 +281,14 @@ case ${PKG_NAME} in
     # Keep the original backed up to sed later
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
 
-    for CHANGE in "activate" "deactivate"
-    do
-        mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
-        sed -e "s/@cf_torch_cuda_arch_list@/${TORCH_CUDA_ARCH_LIST}/g" \
-        "${RECIPE_DIR}/${CHANGE}.sh" > "${PREFIX}/etc/conda/${CHANGE}.d/libtorch_${CHANGE}.sh"
-    done
+    if [[ "${cuda_compiler_version}" != "None" ]]; then
+        for CHANGE in "activate" "deactivate"
+        do
+            mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
+            sed -e "s/@cf_torch_cuda_arch_list@/${TORCH_CUDA_ARCH_LIST}/g" \
+            "${RECIPE_DIR}/${CHANGE}.sh" > "${PREFIX}/etc/conda/${CHANGE}.d/libtorch_${CHANGE}.sh"
+        done
+    fi
 
     ;;
   pytorch)
