@@ -223,17 +223,19 @@ if "%PKG_NAME%" == "libtorch" (
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
     if %ERRORLEVEL% neq 0 exit 1
 
-    sed -e "s/@cf_torch_cuda_arch_list@/%TORCH_CUDA_ARCH_LIST%/g" ^
-        %RECIPE_DIR%\activate.bat > %RECIPE_DIR%\activate-replaced.bat
-    if %ERRORLEVEL% neq 0 exit 1
+    if not "%cuda_compiler_version%" == "None" (
+        sed -e "s/@cf_torch_cuda_arch_list@/%TORCH_CUDA_ARCH_LIST%/g" ^
+            %RECIPE_DIR%\activate.bat > %RECIPE_DIR%\activate-replaced.bat
+        if %ERRORLEVEL% neq 0 exit 1
 
-    mkdir %PREFIX%\etc\conda\activate.d
-    copy %RECIPE_DIR%\activate-replaced.bat %PREFIX%\etc\conda\activate.d\libtorch_activate.bat
-    if %ERRORLEVEL% neq 0 exit 1
+        mkdir %PREFIX%\etc\conda\activate.d
+        copy %RECIPE_DIR%\activate-replaced.bat %PREFIX%\etc\conda\activate.d\libtorch_activate.bat
+        if %ERRORLEVEL% neq 0 exit 1
 
-    mkdir %PREFIX%\etc\conda\deactivate.d
-    copy %RECIPE_DIR%\deactivate.bat %PREFIX%\etc\conda\deactivate.d\libtorch_deactivate.bat
-    if %ERRORLEVEL% neq 0 exit 1
+        mkdir %PREFIX%\etc\conda\deactivate.d
+        copy %RECIPE_DIR%\deactivate.bat %PREFIX%\etc\conda\deactivate.d\libtorch_deactivate.bat
+        if %ERRORLEVEL% neq 0 exit 1
+    )
 
 ) else if "%PKG_NAME%" == "pytorch" (
     @REM Move libtorch_python and remove the other directories afterwards.
