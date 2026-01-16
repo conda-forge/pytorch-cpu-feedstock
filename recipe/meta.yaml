@@ -493,7 +493,7 @@ outputs:
         # these tests are failing on windows
         {% set skips = skips ~ " or (TestMkldnnCPU and test_batch_norm_2d_cpu)" %}       # [win]
         # flaky test, fragile to GC behavior
-        {% set skips = skips ~ " or (TestTorch and test_tensor_cycle_via_slots)" %}     # [not win]
+        {% set skips = skips ~ " or (TestTorch and test_tensor_cycle_via_slots)" %}
         # unexpected success
         {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
         # "quantized engine NoQEngine is not supported"
