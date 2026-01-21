@@ -1,5 +1,5 @@
 blas_impl:
-- generic
+- mkl
 c_compiler:
 - gcc
 c_compiler_version:
@@ -11,11 +11,11 @@ c_stdlib_version:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge pytorch_rc
+- conda-forge main
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.9'
 cudnn:
 - '9'
 cxx_compiler:
@@ -29,7 +29,7 @@ fmt:
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 is_rc:
-- 'True'
+- 'False'
 libabseil:
 - '20250512'
 libblas:
