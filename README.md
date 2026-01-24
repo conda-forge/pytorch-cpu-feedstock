@@ -40,14 +40,14 @@ Current release info
 Installing pytorch-cpu
 ======================
 
-Installing `pytorch-cpu` from the `conda-forge/label/pytorch_rc` channel can be achieved by adding `conda-forge/label/pytorch_rc` to your channels with:
+Installing `pytorch-cpu` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
 ```
-conda config --add channels conda-forge/label/pytorch_rc
+conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge/label/pytorch_rc` channel has been enabled, `libtorch, pytorch, pytorch-cpu, pytorch-gpu, pytorch-tests` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `libtorch, pytorch, pytorch-cpu, pytorch-gpu, pytorch-tests` can be installed with `conda`:
 
 ```
 conda install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
@@ -62,26 +62,26 @@ mamba install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
 It is possible to list all of the versions of `libtorch` available on your platform with `conda`:
 
 ```
-conda search libtorch --channel conda-forge/label/pytorch_rc
+conda search libtorch --channel conda-forge
 ```
 
 or with `mamba`:
 
 ```
-mamba search libtorch --channel conda-forge/label/pytorch_rc
+mamba search libtorch --channel conda-forge
 ```
 
 Alternatively, `mamba repoquery` may provide more information:
 
 ```
 # Search all versions available on your platform:
-mamba repoquery search libtorch --channel conda-forge/label/pytorch_rc
+mamba repoquery search libtorch --channel conda-forge
 
 # List packages depending on `libtorch`:
-mamba repoquery whoneeds libtorch --channel conda-forge/label/pytorch_rc
+mamba repoquery whoneeds libtorch --channel conda-forge
 
 # List dependencies of `libtorch`:
-mamba repoquery depends libtorch --channel conda-forge/label/pytorch_rc
+mamba repoquery depends libtorch --channel conda-forge
 ```
 
 

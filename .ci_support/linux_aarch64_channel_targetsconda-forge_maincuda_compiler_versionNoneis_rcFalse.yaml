@@ -11,7 +11,7 @@ c_stdlib_version:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge pytorch_rc
+- conda-forge main
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
@@ -25,11 +25,11 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
 fmt:
-- '12.0'
+- '12.1'
 github_actions_labels:
 - cirun-openstack-gpu-2xlarge
 is_rc:
-- 'True'
+- 'False'
 libabseil:
 - '20250512'
 libblas:

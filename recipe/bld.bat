@@ -108,6 +108,7 @@ if not "%cuda_compiler_version%" == "None" (
     @REM MKLDNN is an Apache-2.0 licensed library for DNNs and is used
     @REM for CPU builds. Not to be confused with MKL.
     set "USE_MKLDNN=1"
+    set "TORCH_CUDA_ARCH_LIST="
 
     @REM On windows, env vars are case-insensitive and setup.py
     @REM passes all env vars starting with CUDA_*, CMAKE_* to
@@ -221,6 +222,21 @@ if "%PKG_NAME%" == "libtorch" (
     @REM Keep the original backed up to sed later
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
     if %ERRORLEVEL% neq 0 exit 1
+
+    if not "%cuda_compiler_version%" == "None" (
+        sed -e "s/@cf_torch_cuda_arch_list@/%TORCH_CUDA_ARCH_LIST%/g" ^
+            %RECIPE_DIR%\activate.bat > %RECIPE_DIR%\activate-replaced.bat
+        if %ERRORLEVEL% neq 0 exit 1
+
+        mkdir %PREFIX%\etc\conda\activate.d
+        copy %RECIPE_DIR%\activate-replaced.bat %PREFIX%\etc\conda\activate.d\libtorch_activate.bat
+        if %ERRORLEVEL% neq 0 exit 1
+
+        mkdir %PREFIX%\etc\conda\deactivate.d
+        copy %RECIPE_DIR%\deactivate.bat %PREFIX%\etc\conda\deactivate.d\libtorch_deactivate.bat
+        if %ERRORLEVEL% neq 0 exit 1
+    )
+
 ) else if "%PKG_NAME%" == "pytorch" (
     @REM Move libtorch_python and remove the other directories afterwards.
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\bin\ %LIBRARY_BIN%\ torch_python.dll
