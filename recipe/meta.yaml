@@ -498,6 +498,8 @@ outputs:
         {% set skips = skips ~ " or test_forward_nn_Bilinear_mps_float16" %}            # [osx and arm64]
         # "quantized engine NoQEngine is not supported"
         {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
+        # flaky failure on osx
+        {% set skips = skips ~ " or test_LayerNorm_numeric_mps" %}                      # [osx and arm64]
         # some warning-related failure, maybe it's broken by --disable-warnings?
         {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cpu" %}
         {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cuda" %}
