@@ -66,6 +66,8 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  # temporary to avoid wasting CI cycles
+  skip: true  # [not (osx or aarch64)]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -449,6 +451,8 @@ outputs:
         {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}             # [not win]
         # minor inaccuracy on aarch64 (emulation?)
         {% set skips = skips ~ " or (TestNN and test_upsampling_bfloat16)" %}           # [aarch64]
+        # flaky failure: `Exec format error: '$PREFIX/bin/python3.12'`
+        {% set skips = skips ~ " or test_terminate_handler_on_crash" %}                 # [aarch64]
         # may crash spuriously
         {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}
         {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
