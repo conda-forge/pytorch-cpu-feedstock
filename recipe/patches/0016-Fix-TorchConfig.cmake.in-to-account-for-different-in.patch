@@ -1,0 +1,42 @@
+From 1d2b8bdebd64b3a7027a6f14b19ba481a6f6342d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Tue, 27 Jan 2026 19:31:46 +0100
+Subject: [PATCH 16/16] Fix TorchConfig.cmake.in to account for different
+ include dirs
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Update the include logic to detect whether it's dealing with the include
+directory in site-packages or the top-level include directory, and set
+the paths appropriately.  In the former case, we need to reference
+`torch/csrc/api/include` from the top-level include directory.
+
+Signed-off-by: Michał Górny <mgorny@quansight.com>
+---
+ cmake/TorchConfig.cmake.in | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
+index 471b7154ed0..22c879f6d56 100644
+--- a/cmake/TorchConfig.cmake.in
++++ b/cmake/TorchConfig.cmake.in
+@@ -53,14 +53,15 @@ else()
+ endif()
+ 
+ # Include directories.
+-if(EXISTS "${TORCH_INSTALL_PREFIX}/include")
++if(EXISTS "${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include")
++  # top-level include directory
+   set(TORCH_INCLUDE_DIRS
+-    ${TORCH_INSTALL_PREFIX}/include
+     ${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include)
+ else()
++  # site-packages include directory
+   set(TORCH_INCLUDE_DIRS
+     ${TORCH_INSTALL_PREFIX}/include
+-    ${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include)
++    ${TORCH_INSTALL_PREFIX}/../../../../include/torch/csrc/api/include)
+ endif()
+ 
+ # Library dependencies.
