@@ -545,8 +545,16 @@ outputs:
 
         # test integrity of CMake metadata and ensure that THPLayoutType is visible as a symbol from libtorch_python
         - cd cmake_test
-        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS .   # [unix]
-        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% .  # [win]
+        - mkdir build build2
+        - cd build
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS ..   # [unix]
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% ..  # [win]
+        - cmake --build .                   # [unix]
+        - cmake --build . --config Release  # [win]
+        - cd ../build2
+        # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/479
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=$SP_DIR/torch/share/cmake/Torch $CMAKE_ARGS ..    # [unix]
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=%SP_DIR%/torch/share/cmake/Torch %CMAKE_ARGS% ..  # [win]
         - cmake --build .                   # [unix]
         - cmake --build . --config Release  # [win]
 
