@@ -1,0 +1,36 @@
+From 529bebd5f4a56a61fb8737c52724367387c786ca Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Tue, 27 Jan 2026 19:31:46 +0100
+Subject: [PATCH 16/16] Remove torch/csrc/api/include from TorchConfig.cmake.in
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+We no longer symlink that directory, so do not add it to include
+directories.  It should not be necessary, given these headers are in the
+top-level include directory in the prefix.
+
+Signed-off-by: Michał Górny <mgorny@gentoo.org>
+---
+ cmake/TorchConfig.cmake.in | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
+index 471b7154ed0..f34884651b1 100644
+--- a/cmake/TorchConfig.cmake.in
++++ b/cmake/TorchConfig.cmake.in
+@@ -55,12 +55,10 @@ endif()
+ # Include directories.
+ if(EXISTS "${TORCH_INSTALL_PREFIX}/include")
+   set(TORCH_INCLUDE_DIRS
+-    ${TORCH_INSTALL_PREFIX}/include
+-    ${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include)
++    ${TORCH_INSTALL_PREFIX}/include)
+ else()
+   set(TORCH_INCLUDE_DIRS
+-    ${TORCH_INSTALL_PREFIX}/include
+-    ${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include)
++    ${TORCH_INSTALL_PREFIX}/include)
+ endif()
+ 
+ # Library dependencies.
