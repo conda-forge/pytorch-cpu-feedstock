@@ -1,0 +1,50 @@
+From bcd9144bea44798bdc2223f0f9a25132e7e9e47a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Tue, 27 Jan 2026 19:31:46 +0100
+Subject: [PATCH 16/16] Fix TorchConfig.cmake.in to account for different
+ include dirs
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Update the include logic to detect whether it's dealing with the include
+directory in site-packages or the top-level include directory, and set
+the paths appropriately.  In the former case, we need to reference
+`torch/csrc/api/include` from the top-level include directory.
+
+Signed-off-by: Michał Górny <mgorny@quansight.com>
+---
+ cmake/TorchConfig.cmake.in | 7 ++++---
+ third_party/kineto         | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
+index 471b7154ed0..22c879f6d56 100644
+--- a/cmake/TorchConfig.cmake.in
++++ b/cmake/TorchConfig.cmake.in
+@@ -53,14 +53,15 @@ else()
+ endif()
+ 
+ # Include directories.
+-if(EXISTS "${TORCH_INSTALL_PREFIX}/include")
++if(EXISTS "${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include")
++  # top-level include directory
+   set(TORCH_INCLUDE_DIRS
+-    ${TORCH_INSTALL_PREFIX}/include
+     ${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include)
+ else()
++  # site-packages include directory
+   set(TORCH_INCLUDE_DIRS
+     ${TORCH_INSTALL_PREFIX}/include
+-    ${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include)
++    ${TORCH_INSTALL_PREFIX}/../../../../include/torch/csrc/api/include)
+ endif()
+ 
+ # Library dependencies.
+diff --git a/third_party/kineto b/third_party/kineto
+index 31f85df8fbd..5e7501833f1 160000
+--- a/third_party/kineto
++++ b/third_party/kineto
+@@ -1 +1 @@
+-Subproject commit 31f85df8fbd89c188f14ef10f1ec65379786b943
++Subproject commit 5e7501833f1021ce6f618572d3baf657b6319658
