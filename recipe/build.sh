@@ -212,6 +212,8 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/${CUDA_TARGET}
     sed -i -e "s,@CUDA_TARGET@,${CUDA_TARGET}," torch/_inductor/cpp_builder.py
 
+    export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+
     # Compatibility matrix for update: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
     # Warning from pytorch v1.12.1: In the future we will require one to
     # explicitly pass TORCH_CUDA_ARCH_LIST to cmake instead of implicitly
@@ -227,11 +229,16 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
         12.[89])
             export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
             ;;
+        13.0)
+            export TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;9.0;10.0;11.0;12.0+PTX"
+            # c.f. https://github.com/pytorch/pytorch/pull/161316
+            export TORCH_NVCC_FLAGS="$TORCH_NVCC_FLAGS -compress-mode=size"
+            ;;
         *)
             echo "No CUDA architecture list exists for CUDA v${cuda_compiler_version}. See build.sh for information on adding one."
             exit 1
     esac
-    export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+
     export NCCL_ROOT_DIR=$PREFIX
     export NCCL_INCLUDE_DIR=$PREFIX/include
     export USE_SYSTEM_NCCL=1

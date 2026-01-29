@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.10.0" %}
-{% set build = 0 %}
+{% set build = 1 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -16,7 +16,7 @@
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.5.1" %}
+{% set triton = "3.6.0" %}
 
 package:
   name: libtorch
@@ -54,6 +54,8 @@ source:
       # backport https://github.com/pytorch/pytorch/pull/159828
       - patches/0014-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
       - patches/0015-Use-Intel-LLVM-openmp.patch
+      # continued $PREFIX/include headers
+      - patches/0016-Fix-TorchConfig.cmake.in-to-account-for-different-in.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -66,9 +68,20 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  # CUDA builds on GPU agents, non-CUDA builds on CPU agents; c.f.
+  # https://github.com/conda-forge/conda-smithy/pull/2434; the skip could be avoided
+  # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
+  # (plus a mechanism similar to CF_CUDA_ENABLED, preliminarily called CF_SELF_HOSTED).
+  # condition needs to be on a single line for conda-build to catch used variables
+  {% if (cuda_compiler_version == "None" and "gpu" in github_actions_labels) or (cuda_compiler_version != "None" and "cpu" in github_actions_labels) %}
+  skip: true
+  {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
+  missing_dso_whitelist:
+    - '*/libcuda.so.*'    # [linux]
+    - '*/nvcuda.dll'      # [win]
   run_exports:
     - {{ pin_subpackage('libtorch', max_pin='x.x') }}
   ignore_run_exports_from:
@@ -106,27 +119,29 @@ requirements:
     - rsync     # [unix]
   host:
     # GPU requirements
-    - cudnn                           # [cuda_compiler_version != "None"]
-    - nccl                            # [cuda_compiler_version != "None" and linux]
-    - magma                           # [cuda_compiler_version != "None"]
-    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-    - nvtx-c                          # [cuda_compiler_version != "None"]
     {% if cuda_compiler_version != "None" %}
-    - cuda-driver-dev                 # [linux]
     - cuda-cudart-dev
     - cuda-cupti-dev
+    - cuda-driver-dev       # [linux]
+    - cuda-nvml-dev
     - cuda-nvrtc-dev
     - cuda-nvtx-dev
-    - cuda-nvml-dev
     - cuda-profiler-api
+    - cuda-version {{ cuda_compiler_version }}
     - cusparselt
     - libcublas-dev
+    - libcudnn-dev
     - libcudss-dev
-    - libcufile-dev  # [linux]
+    - libcufile-dev         # [linux]
     - libcufft-dev
     - libcurand-dev
     - libcusolver-dev
     - libcusparse-dev
+    - libmagma-devel        # [cuda_compiler_version != "12.8"]
+    # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
+    - magma                 # [cuda_compiler_version == "12.8"]
+    - nccl                  # [linux]
+    - nvtx-c
     {% endif %}
     # other requirements
     - python 3.12
@@ -249,28 +264,29 @@ outputs:
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
-        - cudnn                           # [cuda_compiler_version != "None"]
-        - nccl                            # [cuda_compiler_version != "None" and linux]
-        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-        - nvtx-c                          # [cuda_compiler_version != "None"]
-        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
-        - magma                           # [cuda_compiler_version != "None"]
         {% if cuda_compiler_version != "None" %}
-        - cuda-driver-dev                 # [linux]
         - cuda-cudart-dev
         - cuda-cupti-dev
+        - cuda-driver-dev       # [linux]
+        - cuda-nvml-dev
         - cuda-nvrtc-dev
         - cuda-nvtx-dev
-        - cuda-nvml-dev
         - cuda-profiler-api
+        - cuda-version {{ cuda_compiler_version }}
         - cusparselt
         - libcublas-dev
+        - libcudnn-dev
         - libcudss-dev
-        - libcufile-dev  # [linux]
+        - libcufile-dev         # [linux]
         - libcufft-dev
         - libcurand-dev
         - libcusolver-dev
         - libcusparse-dev
+        - libmagma-devel        # [cuda_compiler_version != "12.8"]
+        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
+        - magma                 # [cuda_compiler_version == "12.8"]
+        - nccl                  # [linux]
+        - nvtx-c
         {% endif %}
         # other requirements
         - python
@@ -516,7 +532,11 @@ outputs:
         {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
         # test only one python version on aarch because emulation is super-slow;
         # disable hypothesis because it randomly yields health check errors
+
+        # the opengpu server has a card with sm_70, an architecture dropped by CUDA 13.0
+        {% if (cuda_compiler_version or "0").split(".")[0]|int < 13 %}
         - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings    # [not aarch64 or py==312]
+        {% endif %}
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
@@ -526,8 +546,16 @@ outputs:
 
         # test integrity of CMake metadata and ensure that THPLayoutType is visible as a symbol from libtorch_python
         - cd cmake_test
-        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS .   # [unix]
-        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% .  # [win]
+        - mkdir build build2
+        - cd build
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS ..   # [unix]
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% ..  # [win]
+        - cmake --build .                   # [unix]
+        - cmake --build . --config Release  # [win]
+        - cd ../build2
+        # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/479
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=$SP_DIR/torch/share/cmake/Torch $CMAKE_ARGS ..    # [unix]
+        - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=%SP_DIR%/torch/share/cmake/Torch %CMAKE_ARGS% ..  # [win]
         - cmake --build .                   # [unix]
         - cmake --build . --config Release  # [win]
 

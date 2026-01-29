@@ -3,7 +3,7 @@ blas_impl:
 c_compiler:
 - gcc
 c_compiler_version:
-- '14'
+- '13'
 c_stdlib:
 - sysroot
 c_stdlib_version:
@@ -16,18 +16,16 @@ cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
 - None
-cudnn:
-- '9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '14'
+- '13'
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- cirun-openstack-cpu-xlarge
 is_rc:
 - 'False'
 libabseil:
@@ -36,26 +34,26 @@ libblas:
 - 3.9.* *netlib
 libcblas:
 - 3.9.* *netlib
+libcudnn_dev:
+- '9'
 liblapack:
 - 3.9.* *netlib
+libmagma_devel:
+- '2.9'
 libmagma_sparse:
 - '2.9'
 libprotobuf:
 - 6.31.1
 libtorch:
-- '2.7'
-magma:
 - '2.9'
 mkl:
-- '2025'
-mkl_devel:
 - '2025'
 nccl:
 - '2'
 numpy:
 - '2'
 orc:
-- 2.2.1
+- 2.2.2
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -67,10 +65,11 @@ python:
 - 3.11.* *_cpython
 - 3.12.* *_cpython
 - 3.13.* *_cp313
+- 3.14.* *_cp314
 pytorch:
-- '2.7'
+- '2.9'
 target_platform:
-- linux-64
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
