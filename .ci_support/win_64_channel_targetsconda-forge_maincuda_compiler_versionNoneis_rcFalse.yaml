@@ -29,7 +29,7 @@ libmagma_sparse:
 libprotobuf:
 - 6.31.1
 libtorch:
-- '2.7'
+- '2.9'
 magma:
 - '2.9'
 mkl:
@@ -39,7 +39,7 @@ mkl_devel:
 numpy:
 - '2'
 orc:
-- 2.2.1
+- 2.2.2
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -52,7 +52,7 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 pytorch:
-- '2.7'
+- '2.9'
 target_platform:
 - win-64
 zip_keys:
