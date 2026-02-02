@@ -105,6 +105,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+    - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
     - libuv                     # [win]
     - llvm-openmp
     - cmake
@@ -253,6 +254,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+        - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -346,6 +348,7 @@ outputs:
       detect_binary_files_with_prefix: false
     requirements:
       host:
+        - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
         - python
       run:
         - pytorch {{ version }} cuda*_{{ blas_impl }}_py{{ CONDA_PY }}*{{ build }}   # [cuda_compiler_version != "None"]
@@ -566,6 +569,8 @@ outputs:
       string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     requirements:
+      host:
+        - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
       run:
         - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [cuda_compiler_version != "None"]
         - pytorch {{ version }} cpu_{{ blas_impl }}*{{ build }}     # [cuda_compiler_version == "None"]
