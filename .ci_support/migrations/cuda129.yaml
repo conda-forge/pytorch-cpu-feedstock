@@ -44,24 +44,8 @@ __migrator:
     ref: https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#new-features
 
 # need to stay on CUDA 12.8 on windows due to https://github.com/pytorch/pytorch/issues/156181
-cuda_compiler_version:         # [((linux and (x86_64 or aarch64)) or win64) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 12.9                       # [(linux and (x86_64 or aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 12.8                       # [win64 and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
+cuda_compiler_version:         # [win]
+  - 12.8                       # [win]
 
-cuda_compiler_version_min:     # [((linux and (x86_64 or aarch64)) or win64) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 12.9                       # [((linux and (x86_64 or aarch64)) or win64) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-
-c_stdlib_version:              # [(linux and (x86_64 or aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 2.17                       # [(linux and (x86_64 or aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-
-# Compiler pinnings deviate from global migrator in order to honor pinnings in local conda_build_config for aarch64
-c_compiler_version:            # [(linux and (x86_64 or aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 14                         # [(linux and (x86_64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 13                         # [(linux and (aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-
-cxx_compiler_version:          # [(linux and (x86_64 or aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 14                         # [(linux and (x86_64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 13                         # [(linux and (aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-
-fortran_compiler_version:      # [(linux and (x86_64 or aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
-  - 14                         # [(linux and (x86_64 or aarch64)) and os.environ.get("CF_CUDA_ENABLED", "False") == "True"]
+cuda_compiler_version_min:     # [win]
+  - 12.9                       # [win]
