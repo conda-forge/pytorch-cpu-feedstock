@@ -16,9 +16,9 @@ __migrator:
     cuda_compiler_version:
       - 12.4
       - 12.6
+      - 12.9
       - None
       - 12.8
-      - 12.9
       - 13.0
       # to allow manual opt-in for CUDA 11.8, see
       # https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/7472
