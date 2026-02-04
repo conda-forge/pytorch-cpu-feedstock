@@ -31,7 +31,7 @@ github_actions_labels:
 is_rc:
 - 'False'
 libabseil:
-- '20250512'
+- '20260107'
 libblas:
 - 3.9.* *netlib
 libcblas:
@@ -45,7 +45,7 @@ libmagma_devel:
 libmagma_sparse:
 - '2.9'
 libprotobuf:
-- 6.31.1
+- 6.33.5
 libtorch:
 - '2.9'
 llvm_openmp:
