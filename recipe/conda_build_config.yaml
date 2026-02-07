@@ -27,8 +27,8 @@ blas_impl:
 
 # https://github.com/conda-forge/.cirun
 github_actions_labels:
-- ghcr.io/cirruslabs/ubuntu-runner-amd64:24.04      # [linux64]
+- ghcr.io/cirruslabs/ubuntu-runner-amd64:24.04-xl   # [linux64]
 - ghcr.io/cirruslabs/ubuntu-runner-arm64:24.04      # [linux and aarch64]
 - ghcr.io/cirruslabs/ubuntu-runner-amd64-gpu:24.04  # [linux]
-- ghcr.io/cirruslabs/macos-runner:tahoe             # [osx]
+- ghcr.io/cirruslabs/macos-runner:tahoe-xl          # [osx]
 - cirun-azure-windows-4xlarge                       # [win]
