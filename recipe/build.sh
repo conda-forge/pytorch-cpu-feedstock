@@ -132,7 +132,13 @@ if [[ "${CI}" == "github_actions" ]]; then
     # h-vetinari/hmaarrfk -- May 2024
     # reduce parallelism to avoid getting OOM-killed on
     # cirun-openstack-gpu-2xlarge, which has 32GB RAM, 8 CPUs
-    export MAX_JOBS=4
+    if [[ "${github_actions_labels}" == *ubuntu-runner-amd64*-xl ]]; then
+        # ubuntu-xl runners have 96GB
+        echo "CPUs go BRRRRR"
+        export MAX_JOBS=16
+    else
+        export MAX_JOBS=4
+    fi
 elif [[ "${CI}" == "azure" ]]; then
     export MAX_JOBS=${CPU_COUNT}
 else

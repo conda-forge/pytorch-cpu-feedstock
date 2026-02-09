@@ -13,6 +13,8 @@
 {% set build = build + 100 %}
 {% endif %}
 
+{% set github_actions_labels = github_actions_labels %} # Force use
+
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
