@@ -76,9 +76,7 @@ build:
   {% if (cuda_compiler_version == "None" and "gpu" in github_actions_labels) or (cuda_compiler_version != "None" and "cpu" in github_actions_labels) %}
   skip: true
   {% endif %}
-  {% if (arm_variant_type != "tegra") %}
-  skip: true
-  {% endif %}
+  skip: true  # [not (aarch64 and cuda_compiler_version != "None" and arm_variant_type == "tegra")]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -108,7 +106,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-    - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
+    - arm-variant * {{ arm_variant_type }}   # [linux and aarch64 and cuda_compiler_version != "None"]
     - libuv                     # [win]
     - llvm-openmp
     - cmake
@@ -257,7 +255,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
-        - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
+        - arm-variant * {{ arm_variant_type }}   # [linux and aarch64 and cuda_compiler_version != "None"]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version

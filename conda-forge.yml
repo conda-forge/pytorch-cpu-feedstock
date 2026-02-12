@@ -1,7 +1,5 @@
 azure:
   free_disk_space: true
-  settings_linux:
-    timeoutInMinutes: 1
 bot:
   abi_migration_branches:
   - v2.9.x
@@ -23,7 +21,7 @@ github_actions:
   - push
   - pull_request
 provider:
-  linux_64: github_actions
+  # linux_64: github_actions
   osx_arm64: github_actions
   win_64: github_actions
 test: native_and_emulated
