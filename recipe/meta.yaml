@@ -76,6 +76,9 @@ build:
   {% if (cuda_compiler_version == "None" and "gpu" in github_actions_labels) or (cuda_compiler_version != "None" and "cpu" in github_actions_labels) %}
   skip: true
   {% endif %}
+  {% if (arm_variant_type != "tegra") %}
+  skip: true
+  {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
