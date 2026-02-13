@@ -105,12 +105,6 @@ jobs:
         STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
       shell: bash
       run: |
-        # Create a swap file
-        sudo fallocate -l 10GiB /swapfile || true
-        sudo chmod 600 /swapfile || true
-        sudo mkswap /swapfile || true
-        sudo swapon /swapfile || true
-
         if [[ "$(uname -m)" == "x86_64" ]]; then
           echo "::group::Configure binfmt_misc"
           docker run --rm --privileged multiarch/qemu-user-static:register --reset --credential yes
