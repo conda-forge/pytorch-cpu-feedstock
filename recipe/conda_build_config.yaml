@@ -29,6 +29,6 @@ blas_impl:
 github_actions_labels:
 - ghcr.io/cirruslabs/ubuntu-runner-amd64:24.04-xl   # [linux64]
 - ghcr.io/cirruslabs/ubuntu-runner-arm64:24.04      # [linux and aarch64]
-- ghcr.io/cirruslabs/ubuntu-runner-amd64-gpu:24.04  # [linux]
+- ghcr.io/cirruslabs/ubuntu-runner-amd64-gpu:24.04  # [linux and cuda_compiler_version not in (None, "")]
 - ghcr.io/cirruslabs/macos-runner:tahoe-xl          # [osx]
 - cirun-azure-windows-4xlarge                       # [win]
