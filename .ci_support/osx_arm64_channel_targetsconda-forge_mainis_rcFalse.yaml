@@ -27,7 +27,7 @@ cxx_compiler_version:
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-macos-m4-large
+- ghcr.io/cirruslabs/macos-runner:tahoe-xl
 is_rc:
 - 'False'
 libabseil:

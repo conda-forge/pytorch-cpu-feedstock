@@ -78,6 +78,16 @@ fi
 
 ( endgroup "Configure Docker" ) 2> /dev/null
 
+( startgroup "Configure swapfile" ) 2> /dev/null
+
+# Create a swap file
+sudo fallocate -l 20GiB /swapfile || true
+sudo chmod 600 /swapfile || true
+sudo mkswap /swapfile || true
+sudo swapon /swapfile || true
+
+( endgroup "Configure swapfile" ) 2> /dev/null
+
 ( startgroup "Start Docker" ) 2> /dev/null
 
 export UPLOAD_PACKAGES="${UPLOAD_PACKAGES:-True}"

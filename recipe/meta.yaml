@@ -13,6 +13,8 @@
 {% set build = build + 100 %}
 {% endif %}
 
+{% set github_actions_labels = github_actions_labels %} # Force use
+
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
@@ -73,7 +75,7 @@ build:
   # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
   # (plus a mechanism similar to CF_CUDA_ENABLED, preliminarily called CF_SELF_HOSTED).
   # condition needs to be on a single line for conda-build to catch used variables
-  {% if (cuda_compiler_version == "None" and "gpu" in github_actions_labels) or (cuda_compiler_version != "None" and "cpu" in github_actions_labels) %}
+  {% if (cuda_compiler_version == "None" and "gpu" in github_actions_labels) or (cuda_compiler_version != "None" and "64:" in github_actions_labels) %}
   skip: true
   {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
