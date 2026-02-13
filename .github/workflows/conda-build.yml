@@ -85,7 +85,7 @@ jobs:
             SHORT_CONFIG: osx_arm64_channel_targetsconda-forge_mai_h5f57e26b
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['ghcr.io/cirruslabs/macos-runner:tahoe-xl', 'macOS', 'arm64', 'self-hosted']
+            runs_on: ['ghcr.io/cirruslabs/macos-runner:tahoe-xl']
     steps:
 
     - name: Checkout code
