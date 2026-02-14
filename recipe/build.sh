@@ -225,7 +225,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # See:
     # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
     # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
-    if [[ "${arm_variant_type}" == "tegra" && "${target_platform}" == "linux-aarch64" && "${cuda_compiler_version}" == 12.* ]]; then
+    if [[ "${arm_variant_type}" == "tegra" ]]; then
         export TORCH_CUDA_ARCH_LIST="8.7;10.1+PTX"
     else
         case ${cuda_compiler_version} in
