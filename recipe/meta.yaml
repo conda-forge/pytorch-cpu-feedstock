@@ -56,6 +56,8 @@ source:
       - patches/0015-Use-Intel-LLVM-openmp.patch
       # continued $PREFIX/include headers
       - patches/0016-Fix-TorchConfig.cmake.in-to-account-for-different-in.patch
+      # backport https://github.com/pytorch/pytorch/pull/174647
+      - patches/0017-Fix-ICE-in-GCC-14-with-arm.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
