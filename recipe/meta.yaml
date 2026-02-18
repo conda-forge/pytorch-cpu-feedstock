@@ -18,6 +18,11 @@
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
 {% set triton = "3.6.0" %}
 
+# Tegra (NVIDIA Jetson) vs SBSA (ARM server) variant suffix for build strings
+# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/303
+{% set arm_variant = arm_variant_type | default("sbsa") %}
+{% set tegra_suffix = "_tegra" if arm_variant == "tegra" else "" %}
+
 package:
   name: libtorch
   version: {{ version.replace("-", ".") }}
@@ -76,8 +81,8 @@ build:
   {% if (cuda_compiler_version == "None" and "gpu" in github_actions_labels) or (cuda_compiler_version != "None" and "cpu" in github_actions_labels) %}
   skip: true
   {% endif %}
-  string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
-  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
+  string: cuda{{ cuda_compiler_version | replace('.', '') }}{{ tegra_suffix }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
+  string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
   missing_dso_whitelist:
     - '*/libcuda.so.*'    # [linux]
@@ -177,7 +182,7 @@ requirements:
     - pytorch-gpu <0.0a0           # [cuda_compiler_version == "None"]
     - pytorch-gpu {{ version }}    # [cuda_compiler_version != "None"]
     - pytorch-cpu <0.0a0           # [cuda_compiler_version != "None"]
-    - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_*_{{ build }}  # [cuda_compiler_version != "None"]
+    - pytorch {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}{{ tegra_suffix }}_{{ blas_impl }}_*_{{ build }}  # [cuda_compiler_version != "None"]
     - pytorch {{ version }} cpu_{{ blas_impl }}_*_{{ build }}                                                 # [cuda_compiler_version == "None"]
     # if using OpenBLAS, ensure that a version compatible with OpenMP is used
     # otherwise, we get the following warnings:
@@ -236,8 +241,8 @@ outputs:
     script: build.sh    # [unix]
     script: bld.bat     # [win]
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}{{ tegra_suffix }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
@@ -341,8 +346,8 @@ outputs:
 
   - name: pytorch-tests
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}{{ tegra_suffix }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     requirements:
       host:
@@ -562,8 +567,8 @@ outputs:
   - name: pytorch-cpu   # [cuda_compiler_version == "None"]
   - name: pytorch-gpu   # [cuda_compiler_version != "None"]
     build:
-      string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [cuda_compiler_version != "None"]
-      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [cuda_compiler_version == "None"]
+      string: cuda{{ cuda_compiler_version | replace('.', '') }}{{ tegra_suffix }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}    # [cuda_compiler_version != "None"]
+      string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                                   # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     requirements:
       run:

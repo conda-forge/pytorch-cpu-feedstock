@@ -1,0 +1,16 @@
+migrator_ts: 1739000000.0
+__migrator:
+  kind: version
+  migration_number: 1
+  operation: key_add
+  paused: true
+  build_number: 1
+
+# Note: this migration should not be unpaused!
+# It's intended to be copied on an as-needed basis to feedstocks
+# that want to support tegra (NVIDIA Jetson) builds.
+# See https://github.com/conda-forge/pytorch-cpu-feedstock/issues/303
+
+arm_variant_type:
+  - sbsa
+  - tegra
