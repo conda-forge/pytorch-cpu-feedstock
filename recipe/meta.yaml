@@ -385,7 +385,6 @@ outputs:
         - cmake
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
-        - pybind11
         # not required upstream, but useful
         - pytest-timeout
       imports:
