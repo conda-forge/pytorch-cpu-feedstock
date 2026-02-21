@@ -167,6 +167,8 @@ requirements:
     - pkg-config  # [unix]
     - typing_extensions
     - pybind11
+    # see https://github.com/pytorch/pytorch/pull/175115
+    - pybind11 <3.0.2
     - pybind11-abi
     - eigen
     - zlib
@@ -308,6 +310,8 @@ outputs:
         - libprotobuf
         - llvm-openmp
         - pybind11
+        # see https://github.com/pytorch/pytorch/pull/175115
+        - pybind11 <3.0.2
         - pybind11-abi
         - eigen
         - sleef
@@ -333,6 +337,8 @@ outputs:
         - networkx
         - optree >=0.13.0
         - pybind11
+        # https://github.com/pytorch/pytorch/pull/175115
+        - pybind11 <3.0.2
         - setuptools
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
