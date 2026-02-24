@@ -1,21 +1,84 @@
-From 967c8b365a12753e12931087b9f135eca2852f1c Mon Sep 17 00:00:00 2001
+From 44659d96e67c15c4b626ae98046898f0de47d93b Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
-Subject: [PATCH 05/17] use our own PREFIX for include paths etc.
+Subject: [PATCH 05/15] use our own PREFIX for include paths etc.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Updated to use `sysconfig.get_config_vars("prefix")` per
-https://github.com/conda-forge/pytorch-cpu-feedstock/issues/424
-and https://github.com/conda-forge/pytorch-cpu-feedstock/issues/447.
+- Obviously, we want to reuse the conda-native dependencies we've already brought
+  along as dependencies; aside from avoiding duplication, this is also necessary
+  to avoid failures if system versions are being used (e.g. sleef).
 
+- The pytorch builds in conda-forge symlink the headers in the python package
+  `pytorch` from the expected location in site-packages back to `$PREFIX/include`
+  where the actual headers are present from `libtorch`. Note that only C/C++ headers
+  independent of python are in `$PREFIX/include`, the rest stays in site-packages.
+
+- However, symlinks are not available on windows, and CMake may get confused as well,
+  so we need to fix the CMake metadata in `TorchConfig.cmake.in` to account for the
+  fact that most of the headers are in $PREFIX/include, not site-packages (see #479).
+
+- For downstream cross-compilation via `torch/utils/cpp_extension.py`, we need to
+  avoid re-including the torch-specific headers from both PREFIX and BUILD_PREFIX;
+  at the same time, we keep target-specific CUDA paths to avoid that downstream
+  packages have to do this manually (this needs some templating at install-time,
+  see build.sh). For more background see feedstock issues #424, #447, #487
+
+- The same concern applies to `torch/_inductor/cpp_builder.py`. Note that this is
+  for inductor's JIT mode, not its AOT mode, for which the end user provides a
+  <filename>_compile_flags.json file.
+
+Co-Authored-By: Daniel Petry <dpetry@anaconda.com>
 Co-Authored-By: Michał Górny <mgorny@quansight.com>
 Co-Authored-By: Tobias Fischer <info@tobiasfischer.info>
 ---
- torch/utils/cpp_extension.py | 34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ cmake/TorchConfig.cmake.in     |  7 ++++---
+ torch/_inductor/cpp_builder.py |  4 +++-
+ torch/utils/cpp_extension.py   | 34 ++++++++++++++++++++--------------
+ 3 files changed, 27 insertions(+), 18 deletions(-)
 
+diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
+index 0b32ffa99ce..dcce7b38015 100644
+--- a/cmake/TorchConfig.cmake.in
++++ b/cmake/TorchConfig.cmake.in
+@@ -53,14 +53,15 @@ else()
+ endif()
+ 
+ # Include directories.
+-if(EXISTS "${TORCH_INSTALL_PREFIX}/include")
++if(EXISTS "${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include")
++  # top-level include directory
+   set(TORCH_INCLUDE_DIRS
+-    ${TORCH_INSTALL_PREFIX}/include
+     ${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include)
+ else()
++  # site-packages include directory
+   set(TORCH_INCLUDE_DIRS
+     ${TORCH_INSTALL_PREFIX}/include
+-    ${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include)
++    ${TORCH_INSTALL_PREFIX}/../../../../include/torch/csrc/api/include)
+ endif()
+ 
+ # Library dependencies.
+diff --git a/torch/_inductor/cpp_builder.py b/torch/_inductor/cpp_builder.py
+index 6a6b7d15ae3..0a4724e5c17 100644
+--- a/torch/_inductor/cpp_builder.py
++++ b/torch/_inductor/cpp_builder.py
+@@ -1520,10 +1520,12 @@ def get_cpp_torch_options(
+         + python_include_dirs
+         + torch_include_dirs
+         + omp_include_dir_paths
++        + [sysconfig.get_config_var('prefix') + '/include']
++        + [sysconfig.get_config_var('prefix') + '/targets/@CUDA_TARGET@/include']
+     )
+     cflags = sys_libs_cflags + omp_cflags
+     ldflags = omp_ldflags
+-    libraries_dirs = python_libraries_dirs + torch_libraries_dirs + omp_lib_dir_paths
++    libraries_dirs = python_libraries_dirs + torch_libraries_dirs + omp_lib_dir_paths + [sysconfig.get_config_var('prefix') + '/targets/@CUDA_TARGET@/lib/stubs']
+     libraries = torch_libraries + omp_lib
+     passthrough_args = (
+         sys_libs_passthrough_args + isa_ps_args_build_flags + omp_passthrough_args
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
 index f29c382f0e3..d865df1684b 100644
 --- a/torch/utils/cpp_extension.py
