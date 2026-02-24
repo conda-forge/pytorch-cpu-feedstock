@@ -335,6 +335,8 @@ outputs:
         - setuptools
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
+        # see https://github.com/conda-forge/sympy-feedstock/issues/67
+        - mpmath <1.4
       run_constrained:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
         - pytorch-cpu {{ version }}    # [cuda_compiler_version == "None"]
