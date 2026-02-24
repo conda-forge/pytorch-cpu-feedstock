@@ -1,7 +1,7 @@
-From 1d2b8bdebd64b3a7027a6f14b19ba481a6f6342d Mon Sep 17 00:00:00 2001
+From 23d7d62da86a6dcad7b34d447b50b3e6eb93d18c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Tue, 27 Jan 2026 19:31:46 +0100
-Subject: [PATCH 16/16] Fix TorchConfig.cmake.in to account for different
+Subject: [PATCH 16/17] Fix TorchConfig.cmake.in to account for different
  include dirs
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

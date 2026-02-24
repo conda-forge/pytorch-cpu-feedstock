@@ -215,6 +215,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     esac
     export CUDAToolkit_TARGET_DIR=${PREFIX}/targets/${CUDA_TARGET}
     sed -i -e "s,@CUDA_TARGET@,${CUDA_TARGET}," torch/_inductor/cpp_builder.py
+    sed -i -e "s,@CUDA_TARGET@,${CUDA_TARGET}," torch/utils/cpp_extension.py
 
     export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
 

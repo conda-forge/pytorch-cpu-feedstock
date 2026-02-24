@@ -1,7 +1,7 @@
-From cf7cb253294cabb9e460de8ce99f41e3dbf35360 Mon Sep 17 00:00:00 2001
+From 3ae1d08a4f3045194082695f83784fadeb6ad3ea Mon Sep 17 00:00:00 2001
 From: Yukio Siraichi <yukio.siraichi@gmail.com>
 Date: Tue, 30 Sep 2025 01:10:13 +0000
-Subject: [PATCH 12/15] Add USE_SYSTEM options for KLEIDI, CUDNN_FRONTEND,
+Subject: [PATCH 12/17] Add USE_SYSTEM options for KLEIDI, CUDNN_FRONTEND,
  CUTLASS, and FMT
 
 This commit adds CMake options to allow users to use system-installed versions of four libraries instead of the bundled versions
@@ -11,9 +11,9 @@ PR: https://github.com/pytorch/pytorch/pull/166824
 ---
  CMakeLists.txt               |  8 +++++
  aten/src/ATen/CMakeLists.txt | 17 ++++++++--
- cmake/Dependencies.cmake     | 65 ++++++++++++++++++++++++++----------
+ cmake/Dependencies.cmake     | 63 +++++++++++++++++++++++++++---------
  cmake/Summary.cmake          |  4 +++
- 4 files changed, 75 insertions(+), 19 deletions(-)
+ 4 files changed, 74 insertions(+), 18 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 5304d054e84..a45da811631 100644
@@ -42,7 +42,7 @@ index 5304d054e84..a45da811631 100644
  
  # /Z7 override option When generating debug symbols, CMake default to use the
 diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
-index c413b589b5f..e8076cae834 100644
+index 11eef8f508c..683488fd8a2 100644
 --- a/aten/src/ATen/CMakeLists.txt
 +++ b/aten/src/ATen/CMakeLists.txt
 @@ -704,8 +704,21 @@ if(USE_CUDA AND NOT USE_ROCM)
@@ -70,7 +70,7 @@ index c413b589b5f..e8076cae834 100644
    if($ENV{ATEN_STATIC_CUDA})
      if(CUDA_VERSION VERSION_LESS_EQUAL 12.9)
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index e8d8bc58096..cccfc4c5538 100644
+index d2168da264b..07cf3dec461 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -962,7 +962,14 @@ if(USE_CUDNN)
@@ -143,9 +143,6 @@ index e8d8bc58096..cccfc4c5538 100644
 -# `fmt` is compatible with a superset of the compilers that PyTorch is, it
 -# shouldn't be too bad to just disable the checks.
 -set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
--
--list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
--set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
 +  # Disable compiler feature checks for `fmt`.
 +  #
 +  # CMake compiles a little program to check compiler features. Some of our build
@@ -154,7 +151,9 @@ index e8d8bc58096..cccfc4c5538 100644
 +  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
 +  # shouldn't be too bad to just disable the checks.
 +  set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
-+
+ 
+-list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
+-set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
 +  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
 +  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
 +else()

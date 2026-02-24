@@ -1,7 +1,7 @@
-From 4ae2acaff849e97005c5b4607dc541d089e91599 Mon Sep 17 00:00:00 2001
+From 188ed6285d97bad14ba4da2e33d3394efd2f8a77 Mon Sep 17 00:00:00 2001
 From: Eddie Yan <eddiey@nvidia.com>
 Date: Tue, 5 Aug 2025 00:49:50 +0000
-Subject: [PATCH 14/15] Attempt to fix torch.backends.cudnn.rnn import
+Subject: [PATCH 14/17] Attempt to fix torch.backends.cudnn.rnn import
 
 torch.backends.cudnn module in order to expose the .conv.fp32_precision
 and .rnn.fp32_precision settings. However, it fails to account for the
@@ -41,7 +41,7 @@ index 0ebfe192f8d..2aafc98064b 100644
          torch.backends.cudnn.conv.fp32_precision = "none"
          torch.backends.cudnn.rnn.fp32_precision = "tf32"
 diff --git a/torch/backends/cudnn/__init__.py b/torch/backends/cudnn/__init__.py
-index 267594531db..7d06f503e14 100644
+index 5cd6ec297c7..d5bb6926840 100644
 --- a/torch/backends/cudnn/__init__.py
 +++ b/torch/backends/cudnn/__init__.py
 @@ -15,6 +15,8 @@ from torch.backends import (
@@ -53,7 +53,7 @@ index 267594531db..7d06f503e14 100644
  
  try:
      from torch._C import _cudnn
-@@ -215,7 +217,6 @@ class CudnnModule(PropModule):
+@@ -229,7 +231,6 @@ class CudnnModule(PropModule):
          torch._C._get_cudnn_allow_tf32, torch._C._set_cudnn_allow_tf32
      )
      conv = _FP32Precision("cuda", "conv")

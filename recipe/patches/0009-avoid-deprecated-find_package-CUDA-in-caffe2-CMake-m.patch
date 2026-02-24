@@ -1,7 +1,7 @@
-From 2a6d0bdcc31eee3a7a327ba8aea08b34a36279ee Mon Sep 17 00:00:00 2001
+From 95519402eb7710f2ed46993db5a071932cb29410 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
-Subject: [PATCH 09/15] avoid deprecated `find_package(CUDA)` in caffe2 CMake
+Subject: [PATCH 09/17] avoid deprecated `find_package(CUDA)` in caffe2 CMake
  metadata
 
 vendor the not-available-anymore function torch_cuda_get_nvcc_gencode_flag from CMake
@@ -352,10 +352,10 @@ index 3cdf5fb914b..729041636eb 100644
  # Get the XPU arch flags specified by TORCH_XPU_ARCH_LIST.
  # Usage:
 diff --git a/setup.py b/setup.py
-index 3e82b9a6c81..e282c653a42 100644
+index da38ba785f1..ad39dd1572e 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1262,7 +1262,7 @@ class build_ext(setuptools.command.build_ext.build_ext):
+@@ -1264,7 +1264,7 @@ class build_ext(setuptools.command.build_ext.build_ext):
          else:
              report("-- Not using cuDNN")
          if cmake_cache_vars["USE_CUDA"]:

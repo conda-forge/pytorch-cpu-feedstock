@@ -1,4 +1,4 @@
-From 8fd509399e25cb4b265dff663d3f777406001f2e Mon Sep 17 00:00:00 2001
+From 71b54158a798c596ce313032ef9f411335c2e4a5 Mon Sep 17 00:00:00 2001
 From: Nikita Shulga <2453524+malfet@users.noreply.github.com>
 Date: Tue, 10 Feb 2026 04:35:39 +0000
 Subject: [PATCH 17/17] Fix ICE in GCC 14 with arm
@@ -36,7 +36,7 @@ Approved by: https://github.com/seemethere
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/aten/src/ATen/native/cpu/Unfold2d.cpp b/aten/src/ATen/native/cpu/Unfold2d.cpp
-index ed69998e99f79..9ae1391e2603e 100644
+index ed69998e99f..9ae1391e260 100644
 --- a/aten/src/ATen/native/cpu/Unfold2d.cpp
 +++ b/aten/src/ATen/native/cpu/Unfold2d.cpp
 @@ -169,8 +169,9 @@ void unfolded2d_acc_channels_last(
