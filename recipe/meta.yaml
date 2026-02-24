@@ -137,9 +137,7 @@ requirements:
     - libcurand-dev
     - libcusolver-dev
     - libcusparse-dev
-    - libmagma-devel        # [cuda_compiler_version != "12.8"]
-    # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
-    - magma                 # [cuda_compiler_version == "12.8"]
+    - libmagma-devel
     - nccl                  # [linux]
     - nvtx-c
     {% endif %}
@@ -285,9 +283,7 @@ outputs:
         - libcurand-dev
         - libcusolver-dev
         - libcusparse-dev
-        - libmagma-devel        # [cuda_compiler_version != "12.8"]
-        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
-        - magma                 # [cuda_compiler_version == "12.8"]
+        - libmagma-devel
         - nccl                  # [linux]
         - nvtx-c
         {% endif %}
