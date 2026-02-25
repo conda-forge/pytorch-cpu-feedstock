@@ -16,6 +16,11 @@ export PACKAGE_TYPE=conda
 # remove pyproject.toml to avoid installing deps from pip
 rm -rf pyproject.toml
 
+# remove runtime pin for setuptools, upstream added it to workaround
+# breakage from transitive dependencies using pkg_resources. we can handle
+# these dependencies directly in conda-forge.
+sed -i -e '/setuptools<82/d' setup.py
+
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
