@@ -1,7 +1,7 @@
 From 5b384c3e8723023fe20ac4afbf48914b7e092860 Mon Sep 17 00:00:00 2001
 From: Nikita Shulga <2453524+malfet@users.noreply.github.com>
 Date: Tue, 10 Feb 2026 04:35:39 +0000
-Subject: [PATCH 15/15] Fix ICE in GCC 14 with arm
+Subject: [PATCH 15/16] Fix ICE in GCC 14 with arm
 
 Updated preprocessor directive for GCC version check and removed BF16 condition. I.e. right now SVE256 compilation with gcc-14.2 on Debian13 for ` -march=armv8-a+sve+bf16`
 
