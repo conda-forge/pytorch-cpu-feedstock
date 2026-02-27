@@ -10,6 +10,9 @@ build_platform:
   osx_64: osx_arm64
 conda_build:
   pkg_format: '2'
+  # use highest possible compression (smaller package -> less upload time) to try to
+  # combat timouts on windows see https://github.com/conda/infrastructure/issues/1159
+  zstd_compression_level: 22
 conda_forge_output_validation: true
 github:
   branch_name: main

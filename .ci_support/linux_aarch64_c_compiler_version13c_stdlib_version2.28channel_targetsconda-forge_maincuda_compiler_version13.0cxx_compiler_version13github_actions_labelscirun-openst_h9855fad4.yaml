@@ -1,3 +1,5 @@
+arm_variant_type:
+- sbsa
 blas_impl:
 - generic
 c_compiler:
@@ -75,6 +77,7 @@ zip_keys:
   - cxx_compiler_version
   - c_stdlib_version
   - cuda_compiler_version
+  - arm_variant_type
 - - channel_targets
   - is_rc
 zlib:
