@@ -236,14 +236,14 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
     # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     if [[ "${arm_variant_type}" == "tegra" ]]; then
-        export TORCH_CUDA_ARCH_LIST="8.7;10.1+PTX"
+        export TORCH_CUDA_ARCH_LIST="10.1+PTX"
     else
         case ${cuda_compiler_version} in
             12.[89])
-                export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
+                export TORCH_CUDA_ARCH_LIST="7.0+PTX"
                 ;;
             13.0)
-                export TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;9.0;10.0;11.0;12.0+PTX"
+                export TORCH_CUDA_ARCH_LIST="12.0+PTX"
                 # c.f. https://github.com/pytorch/pytorch/pull/161316
                 export TORCH_NVCC_FLAGS="$TORCH_NVCC_FLAGS -compress-mode=size"
                 ;;
