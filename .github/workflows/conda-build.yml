@@ -103,21 +103,36 @@ jobs:
             UPLOAD_PACKAGES: True
             os: macos
             runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_arm64_channel_targetsconda-forge_mai_h5f57e26b', 'macOS', 'arm64', 'self-hosted']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hca575dce
+          - CONFIG: win_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
+            SHORT_CONFIG: win_64_blas_implgenericchannel_targetsco_h1ad9e5a9
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hca575dce', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_h28fca69f
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_blas_implgenericchannel_targetsco_h1ad9e5a9', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+            SHORT_CONFIG: win_64_blas_implgenericchannel_targetsco_h35759631
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_h28fca69f', 'windows', 'x64', 'self-hosted']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hc68ac914
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_blas_implgenericchannel_targetsco_h35759631', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+            SHORT_CONFIG: win_64_blas_implgenericchannel_targetsco_h33bfcb87
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hc68ac914', 'windows', 'x64', 'self-hosted']
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_blas_implgenericchannel_targetsco_h33bfcb87', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
+            SHORT_CONFIG: win_64_blas_implmklchannel_targetsconda-_h5584df3e
+            UPLOAD_PACKAGES: True
+            os: windows
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_blas_implmklchannel_targetsconda-_h5584df3e', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+            SHORT_CONFIG: win_64_blas_implmklchannel_targetsconda-_h9ea961f3
+            UPLOAD_PACKAGES: True
+            os: windows
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_blas_implmklchannel_targetsconda-_h9ea961f3', 'windows', 'x64', 'self-hosted']
+          - CONFIG: win_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+            SHORT_CONFIG: win_64_blas_implmklchannel_targetsconda-_h02c6a2e0
+            UPLOAD_PACKAGES: True
+            os: windows
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_blas_implmklchannel_targetsconda-_h02c6a2e0', 'windows', 'x64', 'self-hosted']
     steps:
 
     - name: Checkout code
