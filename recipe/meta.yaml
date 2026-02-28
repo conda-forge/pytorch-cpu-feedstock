@@ -1,6 +1,6 @@
-# if you wish to build release candidate number X, append the version string with ".rcX"
-{% set version = "2.10.0" %}
-{% set build = 3 %}
+# if you wish to build release candidate number X, append the version string with "-rcX"
+{% set version = "2.11.0-rc3" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -25,7 +25,7 @@ package:
 source:
 {% if "rc" in version %}
   - url: https://download.pytorch.org/source_code/test/pytorch-v{{ version }}.tar.gz
-    sha256: f35b2d7839b284410e5be9ec2eeb7a3049e09c1b8f6a871d3f2cad495d93dcd6
+    sha256: 28774a4df0b06ee0b31d3380118c112fae05a99e00aacee26c1c8a8eafa50806
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
@@ -50,11 +50,7 @@ source:
       # backport https://github.com/pytorch/pytorch/pull/166824
       - patches/0011-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
       - patches/0012-Fix-building-kineto-against-system-fmt.patch
-      # backport https://github.com/pytorch/pytorch/pull/159828
-      - patches/0013-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
       - patches/0014-Use-Intel-LLVM-openmp.patch
-      # backport https://github.com/pytorch/pytorch/pull/174647
-      - patches/0015-Fix-ICE-in-GCC-14-with-arm.patch
       - patches/0016-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
@@ -68,6 +64,7 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  skip: true  # [not linux64 or cuda_compiler_version!='12.9' or blas_impl=='mkl']
   # CUDA builds on GPU agents, non-CUDA builds on CPU agents; c.f.
   # https://github.com/conda-forge/conda-smithy/pull/2434; the skip could be avoided
   # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
