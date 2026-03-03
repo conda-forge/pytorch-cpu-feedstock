@@ -3,7 +3,7 @@ schema_version: 1
 context:
   # If you wish to build a release candidate, append ".rcX" to the version
   version: "2.10.0"
-  base_build: 3
+  base_build: 4
   # see https://github.com/pytorch/pytorch/blame/v${{ version }}/.ci/docker/ci_commit_pins/triton.txt
   triton: "3.6.0"
 
