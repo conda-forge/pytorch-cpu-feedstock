@@ -48,14 +48,16 @@ source:
           - patches/0016-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
+build:
+  # We keep the original base build number and let variants
+  # influence the solver preference via variants / migrations.
+  number: ${{ base_build }}
+
 outputs:
   # Core C++ library (matches v0 top-level package/libtorch)
   - package:
       name: libtorch
     build:
-      # We keep the original base build number and let variants
-      # influence the solver preference via variants / migrations.
-      number: ${{ base_build }}
       dynamic_linking:
         rpath_allowlist:
           - "*/libcuda.so.*"
