@@ -4,6 +4,7 @@ MACOSX_SDK_VERSION:
 - '14.5'
 blas_impl:
 - generic
+- mkl
 c_compiler:
 - clang
 c_compiler_version:
@@ -16,8 +17,6 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
-cuda_compiler:
-- cuda-nvcc
 cuda_compiler_version:
 - None
 cxx_compiler:
@@ -28,36 +27,24 @@ fmt:
 - '12.1'
 github_actions_labels:
 - cirun-macos-m4-large
-is_rc:
-- 'False'
 libabseil:
 - '20260107'
 libblas:
 - 3.9.* *netlib
 libcblas:
 - 3.9.* *netlib
-libcudnn_dev:
-- '9'
 liblapack:
 - 3.9.* *netlib
-libmagma_devel:
-- '2.9'
-libmagma_sparse:
-- '2.9'
 libprotobuf:
 - 6.33.5
-libtorch:
-- '2.9'
 llvm_openmp:
 - '19'
 macos_machine:
-- arm64-apple-darwin20.0.0
-mkl:
+- x86_64-apple-darwin13.4.0
+mkl_devel:
 - '2023'
 numpy:
 - '2'
-orc:
-- 2.2.2
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -70,14 +57,10 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
-pytorch:
-- '2.9'
 target_platform:
-- osx-arm64
+- osx-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - channel_targets
-  - is_rc
 zlib:
 - '1'
