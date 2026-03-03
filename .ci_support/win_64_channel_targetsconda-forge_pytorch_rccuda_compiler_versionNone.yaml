@@ -1,0 +1,48 @@
+blas_impl:
+- mkl
+c_compiler:
+- vs2022
+c_stdlib:
+- vs
+channel_sources:
+- conda-forge
+channel_targets:
+- conda-forge pytorch_rc
+cuda_compiler:
+- cuda-nvcc
+cuda_compiler_version:
+- None
+cxx_compiler:
+- vs2022
+fmt:
+- '12.1'
+github_actions_labels:
+- cirun-azure-windows-4xlarge
+libabseil:
+- '20260107'
+libcudnn_dev:
+- '9'
+libmagma_devel:
+- '2.9'
+libprotobuf:
+- 6.33.5
+mkl_devel:
+- '2025'
+numpy:
+- '2'
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+pybind11_abi:
+- '11'
+python:
+- 3.10.* *_cpython
+- 3.11.* *_cpython
+- 3.12.* *_cpython
+- 3.13.* *_cp313
+- 3.14.* *_cp314
+target_platform:
+- win-64
+zlib:
+- '1'
