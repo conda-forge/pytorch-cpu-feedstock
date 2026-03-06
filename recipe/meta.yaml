@@ -539,8 +539,8 @@ outputs:
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
         # obviously this test can only be done for other python versions.
-        - test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-313.pyc          # [py!=313 and unix]
-        - if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-313.pyc exit 1   # [py!=313 and win]
+        - test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-314.pyc          # [py!=314 and unix]
+        - if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-314.pyc exit 1   # [py!=314 and win]
 
         # test integrity of CMake metadata and ensure that THPLayoutType is visible as a symbol from libtorch_python
         - cd cmake_test
