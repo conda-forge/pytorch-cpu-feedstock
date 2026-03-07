@@ -21,12 +21,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-xlargeis_rcTrue
-            SHORT_CONFIG: linux_64_blas_implgenericc_stdlib_versio_h60a2b694
+          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargeis_rcTrue
+            SHORT_CONFIG: linux_64_blas_implgenericc_stdlib_versio_h178faf96
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-cpu-xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_stdlib_versio_h60a2b694', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericc_stdlib_versio_h178faf96', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
     steps:
 
     - name: Checkout code

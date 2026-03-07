@@ -15,7 +15,7 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -25,7 +25,7 @@ docker_image:
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-openstack-cpu-xlarge
+- cirun-openstack-gpu-2xlarge
 is_rc:
 - 'True'
 libabseil:
