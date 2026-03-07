@@ -11,11 +11,11 @@ c_stdlib_version:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.9'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -25,9 +25,9 @@ docker_image:
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-openstack-cpu-xlarge
+- cirun-openstack-gpu-2xlarge
 is_rc:
-- 'False'
+- 'True'
 libabseil:
 - '20260107'
 libblas:
@@ -48,8 +48,6 @@ libtorch:
 - '2.9'
 mkl:
 - '2025'
-mkl_devel:
-- '2025'
 nccl:
 - '2'
 numpy:
@@ -63,9 +61,6 @@ pin_run_as_build:
 pybind11_abi:
 - '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
