@@ -33,55 +33,54 @@ Current release info
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libtorch-green.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch-green.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--cpu-green.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--gpu-green.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--tests-green.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) |
 
 Installing pytorch-cpu
 ======================
 
-Installing `pytorch-cpu` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+Installing `pytorch-cpu` from the `conda-forge/label/pytorch_rc` channel can be achieved by adding `conda-forge/label/pytorch_rc` to your channels with:
 
 ```
-conda config --add channels conda-forge
+conda config --add channels conda-forge/label/pytorch_rc
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `libtorch, pytorch, pytorch-cpu, pytorch-gpu, pytorch-tests` can be installed with `conda`:
+Once the `conda-forge/label/pytorch_rc` channel has been enabled, `libtorch, pytorch, pytorch-gpu, pytorch-tests` can be installed with `conda`:
 
 ```
-conda install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
+conda install libtorch pytorch pytorch-gpu pytorch-tests
 ```
 
 or with `mamba`:
 
 ```
-mamba install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
+mamba install libtorch pytorch pytorch-gpu pytorch-tests
 ```
 
 It is possible to list all of the versions of `libtorch` available on your platform with `conda`:
 
 ```
-conda search libtorch --channel conda-forge
+conda search libtorch --channel conda-forge/label/pytorch_rc
 ```
 
 or with `mamba`:
 
 ```
-mamba search libtorch --channel conda-forge
+mamba search libtorch --channel conda-forge/label/pytorch_rc
 ```
 
 Alternatively, `mamba repoquery` may provide more information:
 
 ```
 # Search all versions available on your platform:
-mamba repoquery search libtorch --channel conda-forge
+mamba repoquery search libtorch --channel conda-forge/label/pytorch_rc
 
 # List packages depending on `libtorch`:
-mamba repoquery whoneeds libtorch --channel conda-forge
+mamba repoquery whoneeds libtorch --channel conda-forge/label/pytorch_rc
 
 # List dependencies of `libtorch`:
-mamba repoquery depends libtorch --channel conda-forge
+mamba repoquery depends libtorch --channel conda-forge/label/pytorch_rc
 ```
 
 
