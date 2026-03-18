@@ -1,17 +1,9 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '11.0'
-MACOSX_SDK_VERSION:
-- '14.5'
 blas_impl:
-- generic
+- mkl
 c_compiler:
-- clang
-c_compiler_version:
-- '19'
+- vs2022
 c_stdlib:
-- macosx_deployment_target
-c_stdlib_version:
-- '11.0'
+- vs
 channel_sources:
 - conda-forge
 channel_targets:
@@ -19,27 +11,19 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- None
+- '13.0'
 cxx_compiler:
-- clangxx
-cxx_compiler_version:
-- '19'
+- vs2022
 fmt:
 - '12.1'
 github_actions_labels:
-- ghcr.io/cirruslabs/macos-runner:tahoe-xl
+- self-hosted@cirun-azure-windows-4xlarge
 is_rc:
 - 'False'
 libabseil:
 - '20260107'
-libblas:
-- 3.9.* *netlib
-libcblas:
-- 3.9.* *netlib
 libcudnn_dev:
 - '9'
-liblapack:
-- 3.9.* *netlib
 libmagma_devel:
 - '2.9'
 libmagma_sparse:
@@ -48,12 +32,12 @@ libprotobuf:
 - 6.33.5
 libtorch:
 - '2.9'
-llvm_openmp:
-- '19'
-macos_machine:
-- arm64-apple-darwin20.0.0
+magma:
+- '2.9'
 mkl:
-- '2023'
+- '2025'
+mkl_devel:
+- '2025'
 numpy:
 - '2'
 orc:
@@ -73,10 +57,8 @@ python:
 pytorch:
 - '2.9'
 target_platform:
-- osx-arm64
+- win-64
 zip_keys:
-- - c_compiler_version
-  - cxx_compiler_version
 - - channel_targets
   - is_rc
 zlib:

@@ -16,7 +16,6 @@ github:
   tooling_branch_name: main
 github_actions:
   resize_win_partitions: true
-  self_hosted: true
   store_build_artifacts: true
   timeout_minutes: 1440
   triggers:
@@ -26,6 +25,6 @@ provider:
   linux_aarch64: github_actions
   linux_64: github_actions
   osx_arm64: github_actions
-  osx_64: null
-  win_64: null
+  osx_64: azure
+  win_64: github_actions
 test: native_and_emulated

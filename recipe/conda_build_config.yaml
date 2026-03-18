@@ -25,10 +25,9 @@ blas_impl:
   # deprioritized on windows, would be nice to have
   - generic                     # [unix]
 
-# https://github.com/conda-forge/.cirun
 github_actions_labels:
-- ghcr.io/cirruslabs/ubuntu-runner-amd64:24.04-xl   # [linux64]
-- ghcr.io/cirruslabs/ubuntu-runner-arm64:24.04      # [linux and aarch64]
-- ghcr.io/cirruslabs/ubuntu-runner-amd64-gpu:24.04  # [linux and cuda_compiler_version not in (None, "")]
-- ghcr.io/cirruslabs/macos-runner:tahoe-xl          # [osx]
-- cirun-azure-windows-4xlarge                       # [win]
+- self-hosted@cirun-openstack-cpu-xlarge    # [linux64]
+- self-hosted@cirun-openstack-gpu-2xlarge   # [linux64]
+- default                                   # [linux and aarch64]
+- ghcr.io/cirruslabs/macos-runner:tahoe-xl  # [osx and arm64]
+- self-hosted@cirun-azure-windows-4xlarge   # [win]

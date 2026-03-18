@@ -1,4 +1,5 @@
 @echo On
+exit 1
 setlocal enabledelayedexpansion
 
 @REM remove pyproject.toml to avoid installing deps from pip
