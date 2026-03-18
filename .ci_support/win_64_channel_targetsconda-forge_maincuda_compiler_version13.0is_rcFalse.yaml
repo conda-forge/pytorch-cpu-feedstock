@@ -32,8 +32,6 @@ libprotobuf:
 - 6.33.5
 libtorch:
 - '2.9'
-magma:
-- '2.9'
 mkl:
 - '2025'
 mkl_devel:

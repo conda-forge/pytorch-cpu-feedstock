@@ -79,24 +79,31 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse</td>
+              <td>linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version13is_rcFalse</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version13is_rcFalse" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse</td>
+              <td>linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse</td>
+              <td>linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0cxx_compiler_version13is_rcFalse</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0cxx_compiler_version13is_rcFalse" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_c_compiler_version14c_stdlib_version2.34channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2441&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytorch-cpu-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_c_compiler_version14c_stdlib_version2.34channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse" alt="variant">
                 </a>
               </td>
             </tr><tr>

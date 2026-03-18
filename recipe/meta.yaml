@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.10.0" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -39,23 +39,23 @@ source:
       - patches/0003-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
       - patches/0004-Fix-FindOpenBLAS.patch
       # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
-      - patches/0005-point-include-paths-to-Conda-prefix-include-dir.patch
-      - patches/0006-Add-conda-prefix-to-inductor-include-lib-paths.patch
-      - patches/0007-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
-      - patches/0008-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch                       # [win]
-      - patches/0009-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+      - patches/0005-use-our-own-PREFIX-for-include-paths-etc.patch
+      - patches/0006-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
+      - patches/0007-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch         # [win]
+      - patches/0008-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
       # skip a test that fails with numpy v2.3; still triggers as of pytorch v2.9
-      - patches/0010-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      - patches/0009-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
-      - patches/0011-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0010-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
       # backport https://github.com/pytorch/pytorch/pull/166824
-      - patches/0012-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
-      - patches/0013-Fix-building-kineto-against-system-fmt.patch
+      - patches/0011-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
+      - patches/0012-Fix-building-kineto-against-system-fmt.patch
       # backport https://github.com/pytorch/pytorch/pull/159828
-      - patches/0014-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
-      - patches/0015-Use-Intel-LLVM-openmp.patch
-      # continued $PREFIX/include headers
-      - patches/0016-Fix-TorchConfig.cmake.in-to-account-for-different-in.patch
+      - patches/0013-Attempt-to-fix-torch.backends.cudnn.rnn-import.patch
+      - patches/0014-Use-Intel-LLVM-openmp.patch
+      # backport https://github.com/pytorch/pytorch/pull/174647
+      - patches/0015-Fix-ICE-in-GCC-14-with-arm.patch
+      - patches/0016-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -105,6 +105,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+    - arm-variant * {{ arm_variant_type }}   # [linux and aarch64 and cuda_compiler_version != "None"]
     - libuv                     # [win]
     - llvm-openmp
     - cmake
@@ -137,9 +138,7 @@ requirements:
     - libcurand-dev
     - libcusolver-dev
     - libcusparse-dev
-    - libmagma-devel        # [cuda_compiler_version != "12.8"]
-    # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
-    - magma                 # [cuda_compiler_version == "12.8"]
+    - libmagma-devel
     - nccl                  # [linux]
     - nvtx-c
     {% endif %}
@@ -164,6 +163,8 @@ requirements:
     - pkg-config  # [unix]
     - typing_extensions
     - pybind11
+    # see https://github.com/pytorch/pytorch/pull/175115
+    - pybind11 <3.0.2
     - pybind11-abi
     - eigen
     - zlib
@@ -253,6 +254,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}                 # [cuda_compiler_version != "None"]
+        - arm-variant * {{ arm_variant_type }}   # [linux and aarch64 and cuda_compiler_version != "None"]
         - cmake
         - ninja
         # Keep libprotobuf here so that a compatibile version
@@ -282,9 +284,7 @@ outputs:
         - libcurand-dev
         - libcusolver-dev
         - libcusparse-dev
-        - libmagma-devel        # [cuda_compiler_version != "12.8"]
-        # cannot (yet) use libmagma-devel due to https://github.com/conda-forge/libmagma-feedstock/issues/32
-        - magma                 # [cuda_compiler_version == "12.8"]
+        - libmagma-devel
         - nccl                  # [linux]
         - nvtx-c
         {% endif %}
@@ -304,6 +304,8 @@ outputs:
         - libprotobuf
         - llvm-openmp
         - pybind11
+        # see https://github.com/pytorch/pytorch/pull/175115
+        - pybind11 <3.0.2
         - pybind11-abi
         - eigen
         - sleef
@@ -329,9 +331,13 @@ outputs:
         - networkx
         - optree >=0.13.0
         - pybind11
+        # https://github.com/pytorch/pytorch/pull/175115
+        - pybind11 <3.0.2
         - setuptools
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
+        # see https://github.com/conda-forge/sympy-feedstock/issues/67
+        - mpmath <1.4
       run_constrained:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
         - pytorch-cpu {{ version }}    # [cuda_compiler_version == "None"]
@@ -346,6 +352,7 @@ outputs:
       detect_binary_files_with_prefix: false
     requirements:
       host:
+        - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
         - python
       run:
         - pytorch {{ version }} cuda*_{{ blas_impl }}_py{{ CONDA_PY }}*{{ build }}   # [cuda_compiler_version != "None"]
@@ -380,7 +387,6 @@ outputs:
         - cmake
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
-        - pybind11
         # not required upstream, but useful
         - pytest-timeout
       imports:
@@ -566,6 +572,8 @@ outputs:
       string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                   # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
     requirements:
+      host:
+        - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
       run:
         - pytorch {{ version }} cuda*_{{ blas_impl }}*{{ build }}   # [cuda_compiler_version != "None"]
         - pytorch {{ version }} cpu_{{ blas_impl }}*{{ build }}     # [cuda_compiler_version == "None"]
