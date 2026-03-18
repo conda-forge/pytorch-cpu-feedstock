@@ -19,7 +19,6 @@ github:
   tooling_branch_name: main
 github_actions:
   resize_win_partitions: true
-  self_hosted: true
   store_build_artifacts: true
   timeout_minutes: 1440
   triggers:
