@@ -7,19 +7,17 @@ c_stdlib:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.8'
+- '13.0'
 cxx_compiler:
 - vs2022
 fmt:
 - '12.1'
-github_actions_labels:
-- cirun-azure-windows-4xlarge
 is_rc:
-- 'False'
+- 'True'
 libabseil:
 - '20260107'
 libcudnn_dev:
@@ -39,7 +37,7 @@ mkl_devel:
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -47,9 +45,6 @@ pin_run_as_build:
 pybind11_abi:
 - '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
