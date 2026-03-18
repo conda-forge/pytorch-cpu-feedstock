@@ -26,8 +26,6 @@ cxx_compiler_version:
 - '19'
 fmt:
 - '12.1'
-github_actions_labels:
-- cirun-macos-m4-large
 is_rc:
 - 'True'
 libabseil:

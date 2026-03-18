@@ -26,29 +26,29 @@ jobs:
             SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.1_hb34e363a
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['linux', 'x64', 'self-hosted']
+            runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: linux_64_blas_implmklc_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compiler_version13.0is_rcTrue
             SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.2_he8ffdae3
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['linux', 'x64', 'self-hosted']
+            runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcis_rcTrue
             SHORT_CONFIG: osx_64_blas_implmklchannel_targetsconda-_hae519702
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_64_blas_implmklchannel_targetsconda-_hae519702', 'macOS', 'arm64', 'self-hosted']
+            runs_on: ['macos-latest']
           - CONFIG: win_64_channel_targetsconda-forge_pytorch_rccuda_compiler_version13.0is_rcTrue
             SHORT_CONFIG: win_64_channel_targetsconda-forge_pytorc_h0b088e95
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_pytorc_h0b088e95', 'windows', 'x64', 'self-hosted']
+            runs_on: ['windows-latest']
           - CONFIG: win_64_channel_targetsconda-forge_pytorch_rccuda_compiler_versionNoneis_rcTrue
             SHORT_CONFIG: win_64_channel_targetsconda-forge_pytorc_hffeaf219
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_pytorc_hffeaf219', 'windows', 'x64', 'self-hosted']
+            runs_on: ['windows-latest']
     steps:
 
     - name: Checkout code

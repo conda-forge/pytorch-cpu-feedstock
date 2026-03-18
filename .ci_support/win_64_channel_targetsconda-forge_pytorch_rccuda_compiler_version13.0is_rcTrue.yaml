@@ -16,8 +16,6 @@ cxx_compiler:
 - vs2022
 fmt:
 - '12.1'
-github_actions_labels:
-- cirun-azure-windows-4xlarge
 is_rc:
 - 'True'
 libabseil:
