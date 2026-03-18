@@ -1,45 +1,29 @@
-arm_variant_type:
-- tegra
 blas_impl:
-- generic
+- mkl
 c_compiler:
-- gcc
-c_compiler_version:
-- '14'
+- vs2022
 c_stdlib:
-- sysroot
-c_stdlib_version:
-- '2.34'
+- vs
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.9'
+- None
 cxx_compiler:
-- gxx
-cxx_compiler_version:
-- '14'
-docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- vs2022
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- cirun-azure-windows-4xlarge
 is_rc:
-- 'False'
+- 'True'
 libabseil:
 - '20260107'
-libblas:
-- 3.9.* *netlib
-libcblas:
-- 3.9.* *netlib
 libcudnn_dev:
 - '9'
-liblapack:
-- 3.9.* *netlib
 libmagma_devel:
 - '2.9'
 libmagma_sparse:
@@ -50,12 +34,12 @@ libtorch:
 - '2.9'
 mkl:
 - '2025'
-nccl:
-- '2'
+mkl_devel:
+- '2025'
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -63,21 +47,13 @@ pin_run_as_build:
 pybind11_abi:
 - '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
 - '2.9'
 target_platform:
-- linux-aarch64
+- win-64
 zip_keys:
-- - c_compiler_version
-  - cxx_compiler_version
-  - c_stdlib_version
-  - cuda_compiler_version
-  - arm_variant_type
 - - channel_targets
   - is_rc
 zlib:
