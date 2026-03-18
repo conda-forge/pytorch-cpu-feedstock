@@ -6,8 +6,8 @@ bot:
   abi_migration_branches:
   - v2.9.x
 build_platform:
-  linux_aarch64: linux_64
-  osx_64: osx_arm64
+  linux_aarch64: linux_aarch64
+  osx_arm64: osx_arm64
 conda_build:
   pkg_format: '2'
   # use highest possible compression (smaller package -> less upload time) to try to
@@ -19,14 +19,15 @@ github:
   tooling_branch_name: main
 github_actions:
   resize_win_partitions: true
-  self_hosted: true
   store_build_artifacts: true
   timeout_minutes: 1440
   triggers:
   - push
   - pull_request
 provider:
+  linux_aarch64: github_actions
   linux_64: github_actions
   osx_arm64: github_actions
+  osx_64: azure
   win_64: github_actions
 test: native_and_emulated
