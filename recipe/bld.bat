@@ -231,7 +231,7 @@ if "%PKG_NAME%" == "libtorch" (
     if %ERRORLEVEL% neq 0 exit 1
 
     if not "%cuda_compiler_version%" == "None" (
-        %PYTHON% %RECIPE_DIR%\write_activation_json.py
+        python %RECIPE_DIR%\write_activation_json.py
         if %ERRORLEVEL% neq 0 exit 1
     )
 
