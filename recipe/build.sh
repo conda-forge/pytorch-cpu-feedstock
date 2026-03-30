@@ -298,7 +298,7 @@ case ${PKG_NAME} in
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
 
     if [[ "${cuda_compiler_version}" != "None" ]]; then
-        $PREFIX/bin/python ${RECIPE_DIR}/write_activation_json.py
+        python ${RECIPE_DIR}/write_activation_json.py
     fi
 
     ;;
