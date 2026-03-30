@@ -226,6 +226,11 @@ test:
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
     - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
 
+    # env_vars.d JSON sets CF_TORCH_CUDA_ARCH_LIST on activation
+    - test -f $PREFIX/etc/conda/env_vars.d/libtorch.json                                                                                                                                                                                                    # [cuda_compiler_version != "None" and unix]
+    - if not exist %PREFIX%\etc\conda\env_vars.d\libtorch.json exit 1                                                                                                                                                                                       # [cuda_compiler_version != "None" and win]
+    - python -c "import json, os, pathlib; d=json.loads((pathlib.Path(os.environ['PREFIX']) / 'etc' / 'conda' / 'env_vars.d' / 'libtorch.json').read_text()); assert 'CF_TORCH_CUDA_ARCH_LIST' in d and d['CF_TORCH_CUDA_ARCH_LIST'], repr(d)"              # [cuda_compiler_version != "None"]
+
     # test integrity of CMake metadata
     - cd cmake_test
     - cmake -GNinja -DCMAKE_CXX_STANDARD=17 $CMAKE_ARGS .   # [unix]
