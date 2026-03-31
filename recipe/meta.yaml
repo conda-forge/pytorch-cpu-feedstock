@@ -226,6 +226,9 @@ test:
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
     - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
 
+    # env_vars.d JSON sets CF_TORCH_CUDA_ARCH_LIST on activation
+    - python -c "import os; v = os.environ.get('CF_TORCH_CUDA_ARCH_LIST'); assert v, f'CF_TORCH_CUDA_ARCH_LIST not set or empty (got {v!r})'"  # [cuda_compiler_version != "None"]
+
     # test integrity of CMake metadata
     - cd cmake_test
     - cmake -GNinja -DCMAKE_CXX_STANDARD=17 $CMAKE_ARGS .   # [unix]
