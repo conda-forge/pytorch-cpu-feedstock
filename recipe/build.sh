@@ -231,7 +231,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
     # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     if [[ "${arm_variant_type}" == "tegra" ]]; then
-        export TORCH_CUDA_ARCH_LIST="8.7;10.1+PTX"
+        # Only build for the 8.7 architecture, which is the one used by Jetson Orin.
+        # The Jetson Thor lineup will start supporting 11.0 using CUDA 13 which doesn't require the tegra variant.
+        export TORCH_CUDA_ARCH_LIST="8.7+PTX"
     else
         case ${cuda_compiler_version} in
             12.[89])
@@ -298,12 +300,7 @@ case ${PKG_NAME} in
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
 
     if [[ "${cuda_compiler_version}" != "None" ]]; then
-        for CHANGE in "activate" "deactivate"
-        do
-            mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
-            sed -e "s/@cf_torch_cuda_arch_list@/${TORCH_CUDA_ARCH_LIST}/g" \
-            "${RECIPE_DIR}/${CHANGE}.sh" > "${PREFIX}/etc/conda/${CHANGE}.d/libtorch_${CHANGE}.sh"
-        done
+        python ${RECIPE_DIR}/write_activation_json.py
     fi
 
     ;;
