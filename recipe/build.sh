@@ -231,7 +231,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     # https://pytorch.org/docs/stable/cpp_extension.html (Compute capabilities)
     # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
     if [[ "${arm_variant_type}" == "tegra" ]]; then
-        export TORCH_CUDA_ARCH_LIST="8.7;10.1+PTX"
+        # Only build for the 8.7 architecture, which is the one used by Jetson Orin.
+        # The Jetson Thor lineup will start supporting 11.0 using CUDA 13 which doesn't require the tegra variant.
+        export TORCH_CUDA_ARCH_LIST="8.7+PTX"
     else
         case ${cuda_compiler_version} in
             12.[89])
