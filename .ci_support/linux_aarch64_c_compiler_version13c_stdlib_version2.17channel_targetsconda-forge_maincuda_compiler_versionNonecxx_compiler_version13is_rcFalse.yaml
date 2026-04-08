@@ -1,9 +1,11 @@
+arm_variant_type:
+- sbsa
 blas_impl:
 - generic
 c_compiler:
 - gcc
 c_compiler_version:
-- '14'
+- '13'
 c_stdlib:
 - sysroot
 c_stdlib_version:
@@ -19,13 +21,13 @@ cuda_compiler_version:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '14'
+- '13'
 docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- quay.io/condaforge/linux-anvil-aarch64:alma9
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-openstack-cpu-xlarge
+- blacksmith-16vcpu-ubuntu-2404-arm
 is_rc:
 - 'False'
 libabseil:
@@ -48,14 +50,12 @@ libtorch:
 - '2.9'
 mkl:
 - '2025'
-mkl_devel:
-- '2025'
 nccl:
 - '2'
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -71,12 +71,13 @@ python:
 pytorch:
 - '2.9'
 target_platform:
-- linux-64
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
   - c_stdlib_version
   - cuda_compiler_version
+  - arm_variant_type
 - - channel_targets
   - is_rc
 zlib:

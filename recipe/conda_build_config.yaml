@@ -27,7 +27,7 @@ blas_impl:
 
 # https://github.com/conda-forge/.cirun
 github_actions_labels:
-- cirun-openstack-cpu-xlarge    # [linux]
-- cirun-openstack-gpu-2xlarge   # [linux]
-- cirun-macos-m4-large          # [osx]
-- cirun-azure-windows-4xlarge   # [win]
+- blacksmith-16vcpu-ubuntu-2404      # [linux and x86_64]
+- blacksmith-16vcpu-ubuntu-2404-arm  # [linux and aarch64]
+- blacksmith-12vcpu-macos-latest     # [osx]
+- blacksmith-16vcpu-windows-2025     # [win]

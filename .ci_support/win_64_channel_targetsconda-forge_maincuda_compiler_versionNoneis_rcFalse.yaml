@@ -17,7 +17,7 @@ cxx_compiler:
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-azure-windows-4xlarge
+- blacksmith-16vcpu-windows-2025
 is_rc:
 - 'False'
 libabseil:
@@ -39,7 +39,7 @@ mkl_devel:
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
