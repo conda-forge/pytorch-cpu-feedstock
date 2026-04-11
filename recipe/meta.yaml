@@ -144,7 +144,7 @@ requirements:
     - python 3.12
     - numpy *
     - pip
-    - setuptools
+    - setuptools <82
     - pyyaml
     - requests
     - six
@@ -290,7 +290,7 @@ outputs:
         - python
         - numpy
         - pip
-        - setuptools
+        - setuptools <82
         - pyyaml
         - requests
         - six
@@ -331,7 +331,7 @@ outputs:
         - pybind11
         # https://github.com/pytorch/pytorch/pull/175115
         - pybind11 <3.0.2
-        - setuptools
+        - setuptools <82
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
       run_constrained:
