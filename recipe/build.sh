@@ -134,10 +134,12 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
 fi
 
 if [[ "${CI}" == "github_actions" ]]; then
-    # h-vetinari/hmaarrfk -- May 2024
+    # jaimerg -- Apr 2026
     # reduce parallelism to avoid getting OOM-killed on
-    # cirun-openstack-gpu-2xlarge, which has 32GB RAM, 8 CPUs
-    export MAX_JOBS=4
+    # blacksmith-16vCPU has 64GB on x64 and 48GB on ARM (linux)
+    # blacksmith-16vCPU has 58GB on x64 (windows)
+    # blacksmith-12vCPU has 48GB on ARM (osx)
+    export MAX_JOBS=8
 elif [[ "${CI}" == "azure" ]]; then
     export MAX_JOBS=${CPU_COUNT}
 else
