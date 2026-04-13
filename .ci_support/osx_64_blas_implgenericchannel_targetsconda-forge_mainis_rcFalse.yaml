@@ -27,7 +27,7 @@ cxx_compiler_version:
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-macos-m4-large
+- blacksmith-12vcpu-macos-latest
 is_rc:
 - 'False'
 libabseil:
@@ -59,7 +59,7 @@ mkl_devel:
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -67,9 +67,6 @@ pin_run_as_build:
 pybind11_abi:
 - '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:

@@ -1,15 +1,15 @@
 arm_variant_type:
-- tegra
+- sbsa
 blas_impl:
 - generic
 c_compiler:
 - gcc
 c_compiler_version:
-- '14'
+- '13'
 c_stdlib:
 - sysroot
 c_stdlib_version:
-- '2.34'
+- '2.28'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -17,17 +17,17 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.9'
+- '13.0'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '14'
+- '13'
 docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- quay.io/condaforge/linux-anvil-aarch64:alma9
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- blacksmith-16vcpu-ubuntu-2404-arm
 is_rc:
 - 'False'
 libabseil:
@@ -55,7 +55,7 @@ nccl:
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -63,9 +63,6 @@ pin_run_as_build:
 pybind11_abi:
 - '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
