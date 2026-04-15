@@ -22,55 +22,11 @@ jobs:
       max-parallel: 50
       matrix:
         include:
-          - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
-            SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.1_hb8a19044
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_64_blas_implmklc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
-            SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.2_h9c1f7cb3
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse
-            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_stdl_h5e3372c8
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
-          - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0cxx_compiler_version13is_rcFalse
-            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_stdl_h6c347ff8
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
-          - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
-            SHORT_CONFIG: osx_64_blas_implgenericchannel_targetsco_h709642d7
-            UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['blacksmith-12vcpu-macos-latest']
-          - CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalse
-            SHORT_CONFIG: osx_64_blas_implmklchannel_targetsconda-_h747b3c68
-            UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['blacksmith-12vcpu-macos-latest']
           - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
             SHORT_CONFIG: osx_arm64_channel_targetsconda-forge_mai_h5f57e26b
             UPLOAD_PACKAGES: True
             os: macos
             runs_on: ['blacksmith-12vcpu-macos-latest']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_h28fca69f
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['blacksmith-16vcpu-windows-2025']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hc68ac914
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['blacksmith-16vcpu-windows-2025']
     steps:
 
     - name: Checkout code
@@ -169,7 +125,7 @@ jobs:
         # default value; make it explicit, as it needs to match with artefact
         # generation below. Not configurable for now, can be revisited later
         CONDA_BLD_DIR: C:\bld
-        MINIFORGE_HOME: C:\Miniforge
+        MINIFORGE_HOME: ${{ contains(runner.arch, 'ARM') && 'C' || 'D' }}:\Miniforge
         PYTHONUNBUFFERED: 1
         CONFIG: ${{ matrix.CONFIG }}
         CI: github_actions
