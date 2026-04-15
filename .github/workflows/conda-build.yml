@@ -22,11 +22,21 @@ jobs:
       max-parallel: 50
       matrix:
         include:
-          - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
-            SHORT_CONFIG: osx_arm64_channel_targetsconda-forge_mai_h5f57e26b
+          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
+            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hca575dce
             UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['blacksmith-12vcpu-macos-latest']
+            os: windows
+            runs_on: ['blacksmith-16vcpu-windows-2025']
+          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_h28fca69f
+            UPLOAD_PACKAGES: True
+            os: windows
+            runs_on: ['blacksmith-16vcpu-windows-2025']
+          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hc68ac914
+            UPLOAD_PACKAGES: True
+            os: windows
+            runs_on: ['blacksmith-16vcpu-windows-2025']
     steps:
 
     - name: Checkout code
