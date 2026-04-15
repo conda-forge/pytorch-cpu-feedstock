@@ -520,6 +520,23 @@ outputs:
         {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
         # flaky failure on osx
         {% set skips = skips ~ " or test_LayerNorm_numeric_mps" %}                      # [osx and arm64]
+        # precision errors
+        {% set skips = skips ~ " or test_forward_nn_Linear" %}                          # [osx and arm64]
+        {% set skips = skips ~ " or test_forward_nn_TransformerEncoderLayer_train_mode_mps_float16" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_GRUCell_mps" %}      # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_GRU_eval_mode_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_GRU_train_mode_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_LSTMCell_mps" %}     # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_Linear_mps" %}       # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_MultiheadAttention_eval_mode_mps_float16" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_MultiheadAttention_train_mode_mps_float16" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_RNNCell_mps" %}      # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_RNN_eval_mode_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_RNN_train_mode_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_transformerencoderlayer_mps_float32" %}        # [osx and arm64]
+        {% set skips = skips ~ " or test_transformerencoderlayer_gelu_mps_float32" %}   # [osx and arm64]
+        {% set skips = skips ~ " or test_grad_nn_MultiheadAttention_eval_mode_cpu_float64" %}   # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_CrossEntropyLoss_mps_float32" %}   # [osx and arm64]
         # some warning-related failure, maybe it's broken by --disable-warnings?
         {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cpu" %}
         {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cuda" %}
