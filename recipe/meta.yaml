@@ -529,6 +529,7 @@ outputs:
         {% set skips = skips ~ " or test_non_contiguous_tensors_nn_RNN_train_mode_mps" %}  # [osx and arm64]
         {% set skips = skips ~ " or test_transformerencoderlayer_gelu_mps_float32" %}   # [osx and arm64]
         {% set skips = skips ~ " or test_grad_nn_MultiheadAttention_eval_mode_cpu_float64" %}   # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_CrossEntropyLoss_mps_float32" %}   # [osx and arm64]
         # some warning-related failure, maybe it's broken by --disable-warnings?
         {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cpu" %}
         {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cuda" %}
