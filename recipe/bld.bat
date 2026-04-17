@@ -98,6 +98,7 @@ if not "%cuda_compiler_version%" == "None" (
     if "%cuda_compiler_version:~0,2%"=="12" (
         set "TORCH_CUDA_ARCH_LIST=7.0+PTX"
     ) else if "%cuda_compiler_version%" == "13.0" (
+        SET MAX_JOBS=2
         set "TORCH_CUDA_ARCH_LIST=12.0+PTX"
         REM c.f. https://github.com/pytorch/pytorch/pull/161316
         set "TORCH_NVCC_FLAGS=!TORCH_NVCC_FLAGS! -compress-mode=size"
