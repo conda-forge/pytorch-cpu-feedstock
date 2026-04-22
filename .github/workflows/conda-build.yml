@@ -22,11 +22,24 @@ jobs:
       max-parallel: 50
       matrix:
         include:
-          - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
-            SHORT_CONFIG: osx_arm64_channel_targetsconda-forge_mai_h5f57e26b
+          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hca575dce
             UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['blacksmith-12vcpu-macos-latest']
+            os: windows
+            runs_on: ['blacksmith-16vcpu-windows-2025']
+          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_h28fca69f
+            UPLOAD_PACKAGES: True
+            os: windows
+            runs_on: ['blacksmith-16vcpu-windows-2025']
+          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hc68ac914
+            UPLOAD_PACKAGES: True
+            os: windows
+            runs_on: ['blacksmith-16vcpu-windows-2025']
     steps:
 
     - name: Checkout code
@@ -124,7 +137,7 @@ jobs:
       env:
         # default value; make it explicit, as it needs to match with artefact
         # generation below. Not configurable for now, can be revisited later
-        CONDA_BLD_DIR: C:\bld
+        CONDA_BLD_PATH: C:\bld
         MINIFORGE_HOME: ${{ contains(runner.arch, 'ARM') && 'C' || 'D' }}:\Miniforge
         PYTHONUNBUFFERED: 1
         CONFIG: ${{ matrix.CONFIG }}
@@ -161,7 +174,7 @@ jobs:
       id: prepare-artifacts
       shell: bash
       # we do not want to trigger artefact creation if the build was cancelled
-      if: ${{ always() && steps.determine-status.outputs.status != 'cancelled' }}
+      if: ${{ always() && steps.determine-status.outputs.status != 'cancelled' && matrix.STORE_BUILD_ARTIFACTS }}
       env:
         CI: github_actions
         CONFIG: ${{ matrix.CONFIG }}
@@ -173,15 +186,15 @@ jobs:
         export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
         export ARTIFACT_STAGING_DIR="$GITHUB_WORKSPACE"
         if [ $OS == "macos" ]; then
-          export CONDA_BLD_DIR="${MINIFORGE_HOME:-${HOME}/miniforge3}/conda-bld"
+          export CONDA_BLD_PATH="${MINIFORGE_HOME:-${HOME}/miniforge3}/conda-bld"
         elif [ $OS == "windows" ]; then
           # this needs to be consistent with build step, see above
-          export CONDA_BLD_DIR="C:\\bld"
+          export CONDA_BLD_PATH="C:\\bld"
         else
-          export CONDA_BLD_DIR="build_artifacts"
+          export CONDA_BLD_PATH="build_artifacts"
         fi
-        # Archive everything in CONDA_BLD_DIR except environments
-        # Archive the CONDA_BLD_DIR environments only when the job fails
+        # Archive everything in CONDA_BLD_PATH except environments
+        # Archive the CONDA_BLD_PATH environments only when the job fails
         # Use different prefix for successful and failed build artifacts
         # so random failures don't prevent rebuilds from creating artifacts.
         if [ $JOB_STATUS == "failure" ]; then
