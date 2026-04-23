@@ -27,7 +27,7 @@ blas_impl:
 
 # https://github.com/conda-forge/.cirun
 github_actions_labels:
-- cirun-openstack-cpu-xlarge    # [linux]
-- cirun-openstack-gpu-2xlarge   # [linux]
-- cirun-macos-m4-large          # [osx]
-- cirun-azure-windows-4xlarge   # [win]
+- namespace-profile-16cpu-on-linux-64       # [linux and x86_64]
+- namespace-profile-16cpu-on-linux-aarch64  # [linux and aarch64]
+- namespace-profile-12cpu-on-osx-arm64      # [osx]
+- namespace-profile-16cpu-on-win-64         # [win]
