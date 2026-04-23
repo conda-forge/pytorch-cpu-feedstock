@@ -11,7 +11,7 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.8'
 cxx_compiler:
 - vs2022
 fmt:
@@ -22,8 +22,14 @@ is_rc:
 - 'False'
 libabseil:
 - '20260107'
+libblas:
+- 3.9.* *netlib
+libcblas:
+- 3.9.* *netlib
 libcudnn_dev:
 - '9'
+liblapack:
+- 3.9.* *netlib
 libmagma_devel:
 - '2.9'
 libmagma_sparse:
