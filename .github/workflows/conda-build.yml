@@ -22,6 +22,94 @@ jobs:
       max-parallel: 50
       matrix:
         include:
+          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_64_blas_implgenericc_stdlib_versio_ha337e3e8
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_64_blas_implgenericc_stdlib_versio_hce440a74
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_64_blas_implgenericc_stdlib_versio_h6d8c6d32
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+          - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.1_h3446106f
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+          - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.1_hb8a19044
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+          - CONFIG: linux_64_blas_implmklc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.2_h9c1f7cb3
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+          - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version13is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_stdl_h1357704e
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
+          - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_stdl_h5e3372c8
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
+          - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0cxx_compiler_version13is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_stdl_h6c347ff8
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
+          - CONFIG: linux_aarch64_c_compiler_version14c_stdlib_version2.34channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: linux_aarch64_c_compiler_version14c_stdl_h435f282d
+            UPLOAD_PACKAGES: True
+            os: ubuntu
+            runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
+          - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: osx_64_blas_implgenericchannel_targetsco_h709642d7
+            UPLOAD_PACKAGES: True
+            os: macos
+            runs_on: ['blacksmith-12vcpu-macos-latest']
+          - CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: osx_64_blas_implmklchannel_targetsconda-_h747b3c68
+            UPLOAD_PACKAGES: True
+            os: macos
+            runs_on: ['blacksmith-12vcpu-macos-latest']
+          - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
+            SHORT_CONFIG: osx_arm64_channel_targetsconda-forge_mai_h5f57e26b
+            UPLOAD_PACKAGES: True
+            os: macos
+            runs_on: ['blacksmith-12vcpu-macos-latest']
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
             STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hca575dce
@@ -138,7 +226,7 @@ jobs:
         # default value; make it explicit, as it needs to match with artefact
         # generation below. Not configurable for now, can be revisited later
         CONDA_BLD_PATH: C:\bld
-        MINIFORGE_HOME: C:\Miniforge
+        MINIFORGE_HOME: ${{ contains(runner.arch, 'ARM') && 'C' || 'D' }}:\Miniforge
         PYTHONUNBUFFERED: 1
         CONFIG: ${{ matrix.CONFIG }}
         CI: github_actions
