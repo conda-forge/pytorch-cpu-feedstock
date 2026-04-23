@@ -31,9 +31,3 @@ github_actions_labels:
 - blacksmith-16vcpu-ubuntu-2404-arm  # [linux and aarch64]
 - blacksmith-12vcpu-macos-latest     # [osx]
 - blacksmith-16vcpu-windows-2025     # [win]
-
-is_python_min:
-- true
-
-python:
-- 3.13.* *_cp313
