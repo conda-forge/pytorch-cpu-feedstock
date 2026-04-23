@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.10.0" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -225,6 +225,9 @@ test:
     # CMake files in share
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
     - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
+
+    # env_vars.d JSON sets CF_TORCH_CUDA_ARCH_LIST on activation
+    - python -c "import os; v = os.environ.get('CF_TORCH_CUDA_ARCH_LIST'); assert v, f'CF_TORCH_CUDA_ARCH_LIST not set or empty (got {v!r})'"  # [cuda_compiler_version != "None"]
 
     # test integrity of CMake metadata
     - cd cmake_test
