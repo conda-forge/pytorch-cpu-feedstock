@@ -1,6 +1,0 @@
-@echo off
-
-if "%CF_TORCH_CUDA_ARCH_LIST_BACKUP%" == "NOT_SET" (
-    set "CF_TORCH_CUDA_ARCH_LIST="
-    set "CF_TORCH_CUDA_ARCH_LIST_BACKUP="
-)
