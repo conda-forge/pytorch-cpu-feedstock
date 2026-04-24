@@ -1,0 +1,26 @@
+From 1ddba0ff755b9a1291be5b1543a50aed154423cb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@quansight.com>
+Date: Fri, 24 Apr 2026 20:20:05 +0200
+Subject: [PATCH 17/17] Declare `_tryToInferTypeImpl` with `TORCH_PYTHON_API`
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Michał Górny <mgorny@quansight.com>
+---
+ torch/csrc/jit/python/pybind_utils.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/torch/csrc/jit/python/pybind_utils.h b/torch/csrc/jit/python/pybind_utils.h
+index 378bf4636fd..bad53cd9bb2 100644
+--- a/torch/csrc/jit/python/pybind_utils.h
++++ b/torch/csrc/jit/python/pybind_utils.h
+@@ -373,7 +373,7 @@ InferredType tryToInferContainerType(py::handle input, bool primitiveTypeOnly);
+ namespace detail {
+ 
+ // Additional implementations for tryToInferType().
+-std::optional<InferredType> _tryToInferTypeImpl(py::handle input);
++TORCH_PYTHON_API std::optional<InferredType> _tryToInferTypeImpl(py::handle input);
+ 
+ } // namespace detail
+ 

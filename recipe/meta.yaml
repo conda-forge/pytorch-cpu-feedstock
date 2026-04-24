@@ -56,6 +56,7 @@ source:
       - patches/0017-Fix-build-with-MAGMA-2.10.0.patch
       # backport https://github.com/pytorch/pytorch/pull/175283
       - patches/0018-Ensure-test_tensorinv-uses-well-conditioned-inputs-1.patch
+      - patches/0019-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
