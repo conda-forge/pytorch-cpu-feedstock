@@ -54,6 +54,7 @@ source:
       - patches/0016-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
       # backport https://github.com/pytorch/pytorch/pull/175283
       - patches/0017-Ensure-test_tensorinv-uses-well-conditioned-inputs-1.patch
+      - patches/0018-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
