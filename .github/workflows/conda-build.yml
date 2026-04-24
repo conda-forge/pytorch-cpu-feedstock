@@ -29,20 +29,8 @@ jobs:
             os: ubuntu
             runs_on: ['blacksmith-16vcpu-ubuntu-2404']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: linux_64_blas_implgenericc_stdlib_versio_hce440a74
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: linux_64_blas_implgenericc_stdlib_versio_h6d8c6d32
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
           - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
             STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.1_h3446106f
@@ -50,84 +38,26 @@ jobs:
             os: ubuntu
             runs_on: ['blacksmith-16vcpu-ubuntu-2404']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
+          - CONFIG: linux_aarch64_arm_variant_typesbsac_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version13is_rcFalse
             STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.1_hb8a19044
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_64_blas_implmklc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: linux_64_blas_implmklc_stdlib_version2.2_h9c1f7cb3
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version13is_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_stdl_h1357704e
+            SHORT_CONFIG: linux_aarch64_arm_variant_typesbsac_comp_hfc60734d
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
-          - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
+          - CONFIG: linux_aarch64_arm_variant_typetegrac_compiler_version14c_stdlib_version2.34channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse
             STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_stdl_h5e3372c8
+            SHORT_CONFIG: linux_aarch64_arm_variant_typetegrac_com_hbab3d77c
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
-          - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0cxx_compiler_version13is_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: linux_aarch64_c_compiler_version13c_stdl_h6c347ff8
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
-          - CONFIG: linux_aarch64_c_compiler_version14c_stdlib_version2.34channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: linux_aarch64_c_compiler_version14c_stdl_h435f282d
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['blacksmith-16vcpu-ubuntu-2404-arm']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
-          - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: osx_64_blas_implgenericchannel_targetsco_h709642d7
-            UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['blacksmith-12vcpu-macos-latest']
-          - CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: osx_64_blas_implmklchannel_targetsconda-_h747b3c68
-            UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['blacksmith-12vcpu-macos-latest']
-          - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: osx_arm64_channel_targetsconda-forge_mai_h5f57e26b
-            UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['blacksmith-12vcpu-macos-latest']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hca575dce
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['blacksmith-16vcpu-windows-2025']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_h28fca69f
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['blacksmith-16vcpu-windows-2025']
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
-            STORE_BUILD_ARTIFACTS: True
-            SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hc68ac914
-            UPLOAD_PACKAGES: True
-            os: windows
-            runs_on: ['blacksmith-16vcpu-windows-2025']
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
     steps:
 
     - name: Checkout code
@@ -137,6 +67,8 @@ jobs:
       id: build-linux
       if: matrix.os == 'ubuntu'
       env:
+        MINIFORGE_HOME: ${{ matrix.tools_install_dir }}
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
         CONFIG: ${{ matrix.CONFIG }}
         UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
         DOCKER_IMAGE: ${{ matrix.DOCKER_IMAGE }}
@@ -161,6 +93,8 @@ jobs:
         else
           export IS_PR_BUILD="False"
         fi
+        export MINIFORGE_HOME="${MINIFORGE_HOME/#~/${HOME}}"
+        export CONDA_BLD_PATH="${CONDA_BLD_PATH/#~/${HOME}}"
         echo "::endgroup::"
         ./.scripts/run_docker_build.sh
 
@@ -168,6 +102,8 @@ jobs:
       id: build-macos
       if: matrix.os == 'macos'
       env:
+        MINIFORGE_HOME: ${{ matrix.tools_install_dir }}
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
         CONFIG: ${{ matrix.CONFIG }}
         UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
         CI: github_actions
@@ -186,6 +122,8 @@ jobs:
         else
           export IS_PR_BUILD="False"
         fi
+        export MINIFORGE_HOME="${MINIFORGE_HOME/#~/${HOME}}"
+        export CONDA_BLD_PATH="${CONDA_BLD_PATH/#~/${HOME}}"
         ./.scripts/run_osx_build.sh
 
     # https://github.com/aktech/cirun-azure-resize-disk
@@ -223,10 +161,8 @@ jobs:
         set "sha=%GITHUB_SHA%"
         call ".scripts\run_win_build.bat"
       env:
-        # default value; make it explicit, as it needs to match with artefact
-        # generation below. Not configurable for now, can be revisited later
-        CONDA_BLD_PATH: C:\bld
-        MINIFORGE_HOME: C:\Miniforge
+        MINIFORGE_HOME: ${{ matrix.tools_install_dir }}
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
         PYTHONUNBUFFERED: 1
         CONFIG: ${{ matrix.CONFIG }}
         CI: github_actions
@@ -264,23 +200,18 @@ jobs:
       # we do not want to trigger artefact creation if the build was cancelled
       if: ${{ always() && steps.determine-status.outputs.status != 'cancelled' && matrix.STORE_BUILD_ARTIFACTS }}
       env:
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
         CI: github_actions
         CONFIG: ${{ matrix.CONFIG }}
         SHORT_CONFIG: ${{ matrix.SHORT_CONFIG }}
         JOB_STATUS: ${{ steps.determine-status.outputs.status }}
         OS: ${{ matrix.os }}
       run: |
+        export MINIFORGE_HOME="${MINIFORGE_HOME/#~/${HOME}}"
+        export CONDA_BLD_PATH="${CONDA_BLD_PATH/#~/${HOME}}"
         export CI_RUN_ID=$GITHUB_RUN_ID
         export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
         export ARTIFACT_STAGING_DIR="$GITHUB_WORKSPACE"
-        if [ $OS == "macos" ]; then
-          export CONDA_BLD_PATH="${MINIFORGE_HOME:-${HOME}/miniforge3}/conda-bld"
-        elif [ $OS == "windows" ]; then
-          # this needs to be consistent with build step, see above
-          export CONDA_BLD_PATH="C:\\bld"
-        else
-          export CONDA_BLD_PATH="build_artifacts"
-        fi
         # Archive everything in CONDA_BLD_PATH except environments
         # Archive the CONDA_BLD_PATH environments only when the job fails
         # Use different prefix for successful and failed build artifacts
