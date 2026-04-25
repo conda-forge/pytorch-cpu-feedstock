@@ -139,6 +139,7 @@ requirements:
     - libcusparse-dev
     - libmagma-devel
     - nccl                  # [linux]
+    - nccl <2.29            # [linux and cuda_compiler_version=="12.9" and arm_variant_type!="tegra"]
     - nvtx-c
     {% endif %}
     # other requirements
@@ -285,6 +286,7 @@ outputs:
         - libcusparse-dev
         - libmagma-devel
         - nccl                  # [linux]
+        - nccl <2.29            # [linux and cuda_compiler_version=="12.9" and arm_variant_type!="tegra"]
         - nvtx-c
         {% endif %}
         # other requirements
