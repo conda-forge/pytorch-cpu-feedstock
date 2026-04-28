@@ -25,7 +25,7 @@ docker_image:
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- namespace-profile-16cpu-on-linux-64
 is_rc:
 - 'False'
 libabseil:
@@ -55,7 +55,7 @@ nccl:
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
