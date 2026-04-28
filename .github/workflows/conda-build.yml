@@ -82,7 +82,7 @@ jobs:
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['namespace-profile-16cpu-on-linux-aarch64']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
           - CONFIG: linux_aarch64_arm_variant_typesbsac_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse
@@ -91,7 +91,7 @@ jobs:
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['namespace-profile-16cpu-on-linux-aarch64']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
           - CONFIG: linux_aarch64_arm_variant_typesbsac_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0cxx_compiler_version13is_rcFalse
@@ -100,7 +100,7 @@ jobs:
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['namespace-profile-16cpu-on-linux-aarch64']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
           - CONFIG: linux_aarch64_arm_variant_typetegrac_compiler_version14c_stdlib_version2.34channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse
@@ -109,7 +109,7 @@ jobs:
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['namespace-profile-16cpu-on-linux-aarch64']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
           - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
