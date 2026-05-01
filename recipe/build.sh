@@ -139,7 +139,12 @@ if [[ "${CI}" == "github_actions" ]]; then
     # blacksmith-16vCPU has 64GB on x64 and 48GB on ARM (linux)
     # blacksmith-16vCPU has 58GB on x64 (windows)
     # blacksmith-12vCPU has 48GB on ARM (osx)
-    export MAX_JOBS=8
+    if [[ "$target_platform" == "linux-aarch64" ]]; then
+        # aarch64 seems to be OOM-ing
+        export MAX_JOBS=4
+    else
+        export MAX_JOBS=8
+    fi
 elif [[ "${CI}" == "azure" ]]; then
     export MAX_JOBS=${CPU_COUNT}
 else
