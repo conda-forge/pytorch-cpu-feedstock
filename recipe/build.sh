@@ -141,7 +141,7 @@ if [[ "${CI}" == "github_actions" ]]; then
     # blacksmith-12vCPU has 48GB on ARM (osx)
     if [[ "$target_platform" == "linux-aarch64" ]]; then
         # aarch64 seems to be OOM-ing
-        export MAX_JOBS=4
+        export MAX_JOBS=16
     else
         export MAX_JOBS=8
     fi
