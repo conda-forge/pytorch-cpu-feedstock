@@ -1,17 +1,15 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '11.0'
-MACOSX_SDK_VERSION:
-- '14.5'
+arm_variant_type:
+- tegra
 blas_impl:
 - generic
 c_compiler:
-- clang
+- gcc
 c_compiler_version:
-- '19'
+- '14'
 c_stdlib:
-- macosx_deployment_target
+- sysroot
 c_stdlib_version:
-- '11.0'
+- '2.34'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -19,15 +17,17 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- None
+- '12.9'
 cxx_compiler:
-- clangxx
+- gxx
 cxx_compiler_version:
-- '19'
+- '14'
+docker_image:
+- quay.io/condaforge/linux-anvil-aarch64:alma9
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-macos-m4-large
+- namespace-profile-16cpu-on-linux-aarch64
 is_rc:
 - 'False'
 libabseil:
@@ -48,18 +48,14 @@ libprotobuf:
 - 6.33.5
 libtorch:
 - '2.9'
-llvm_openmp:
-- '19'
-macos_machine:
-- x86_64-apple-darwin13.4.0
 mkl:
-- '2023'
-mkl_devel:
-- '2023'
+- '2025'
+nccl:
+- '2'
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -75,10 +71,13 @@ python:
 pytorch:
 - '2.9'
 target_platform:
-- osx-64
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
+  - c_stdlib_version
+  - cuda_compiler_version
+  - arm_variant_type
 - - channel_targets
   - is_rc
 zlib:

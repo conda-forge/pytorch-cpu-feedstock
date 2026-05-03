@@ -9,7 +9,7 @@ c_compiler_version:
 c_stdlib:
 - sysroot
 c_stdlib_version:
-- '2.28'
+- '2.17'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -17,17 +17,17 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '13.0'
+- None
 cxx_compiler:
 - gxx
 cxx_compiler_version:
 - '13'
 docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- quay.io/condaforge/linux-anvil-aarch64:alma9
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-openstack-gpu-2xlarge
+- namespace-profile-16cpu-on-linux-aarch64
 is_rc:
 - 'False'
 libabseil:
@@ -55,7 +55,7 @@ nccl:
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x

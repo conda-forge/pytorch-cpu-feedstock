@@ -16,6 +16,11 @@ export PACKAGE_TYPE=conda
 # remove pyproject.toml to avoid installing deps from pip
 rm -rf pyproject.toml
 
+# remove runtime pin for setuptools, upstream added it to workaround
+# breakage from transitive dependencies using pkg_resources. we can handle
+# these dependencies directly in conda-forge.
+sed -i -e '/setuptools<82/d' setup.py
+
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
@@ -129,10 +134,17 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
 fi
 
 if [[ "${CI}" == "github_actions" ]]; then
-    # h-vetinari/hmaarrfk -- May 2024
+    # jaimerg -- Apr 2026
     # reduce parallelism to avoid getting OOM-killed on
-    # cirun-openstack-gpu-2xlarge, which has 32GB RAM, 8 CPUs
-    export MAX_JOBS=4
+    # blacksmith-16vCPU has 64GB on x64 and 48GB on ARM (linux)
+    # blacksmith-16vCPU has 58GB on x64 (windows)
+    # blacksmith-12vCPU has 48GB on ARM (osx)
+    if [[ "$target_platform" == "linux-aarch64" ]]; then
+        # aarch64 seems to be OOM-ing
+        export MAX_JOBS=16
+    else
+        export MAX_JOBS=8
+    fi
 elif [[ "${CI}" == "azure" ]]; then
     export MAX_JOBS=${CPU_COUNT}
 else
