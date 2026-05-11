@@ -33,13 +33,13 @@ libtorch:
 magma:
 - '2.9'
 mkl:
-- '2025'
+- '2026'
 mkl_devel:
-- '2025'
+- '2026'
 numpy:
 - '2'
 orc:
-- 2.2.2
+- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
