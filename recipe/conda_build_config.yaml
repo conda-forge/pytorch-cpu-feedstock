@@ -27,7 +27,6 @@ blas_impl:
 
 # https://github.com/conda-forge/.cirun
 github_actions_labels:
-- namespace-profile-16cpu-on-linux-64       # [linux and x86_64]
-- namespace-profile-16cpu-on-linux-aarch64  # [linux and aarch64]
+- namespace-profile-16cpu-on-linux-64       # [linux]
 - namespace-profile-12cpu-on-osx-arm64      # [osx]
 - namespace-profile-16cpu-on-win-64         # [win]
