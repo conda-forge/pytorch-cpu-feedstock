@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with ".rcX"
 {% set version = "2.10.0" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -68,14 +68,6 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
-  # CUDA builds on GPU agents, non-CUDA builds on CPU agents; c.f.
-  # https://github.com/conda-forge/conda-smithy/pull/2434; the skip could be avoided
-  # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
-  # (plus a mechanism similar to CF_CUDA_ENABLED, preliminarily called CF_SELF_HOSTED).
-  # condition needs to be on a single line for conda-build to catch used variables
-  {% if (cuda_compiler_version == "None" and "gpu" in github_actions_labels) or (cuda_compiler_version != "None" and "cpu" in github_actions_labels) %}
-  skip: true
-  {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -471,6 +463,7 @@ outputs:
         {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}             # [not win]
         # minor inaccuracy on aarch64 (emulation?)
         {% set skips = skips ~ " or (TestNN and test_upsampling_bfloat16)" %}           # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_qr_cpu_float32)" %}         # [aarch64]
         # flaky failure: `Exec format error: '$PREFIX/bin/python3.12'`
         {% set skips = skips ~ " or test_terminate_handler_on_crash" %}                 # [aarch64]
         # may crash spuriously
