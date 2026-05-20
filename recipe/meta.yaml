@@ -150,6 +150,7 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
+    - onednn                # [not win]
     - libabseil
     - libprotobuf
     - llvm-openmp
@@ -295,6 +296,7 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
+        - onednn                # [not win]
         - libabseil
         - libprotobuf
         - llvm-openmp
