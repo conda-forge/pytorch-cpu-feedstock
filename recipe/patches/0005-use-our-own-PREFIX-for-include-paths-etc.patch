@@ -1,7 +1,7 @@
-From ee5bdd3ac4db527de90d057b3a8f5af6a991d920 Mon Sep 17 00:00:00 2001
+From 5123b5e5201d8be441527034490bdd97e0a22be4 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
-Subject: [PATCH 05/18] use our own PREFIX for include paths etc.
+Subject: [PATCH 05/14] use our own PREFIX for include paths etc.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -39,7 +39,7 @@ Co-Authored-By: Tobias Fischer <info@tobiasfischer.info>
  3 files changed, 33 insertions(+), 18 deletions(-)
 
 diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
-index abf5c814911..475dc3b88ce 100644
+index 5749c67db11..30136780358 100644
 --- a/cmake/TorchConfig.cmake.in
 +++ b/cmake/TorchConfig.cmake.in
 @@ -53,9 +53,16 @@ else()
@@ -63,10 +63,10 @@ index abf5c814911..475dc3b88ce 100644
  # Library dependencies.
  if(@BUILD_SHARED_LIBS@)
 diff --git a/torch/_inductor/cpp_builder.py b/torch/_inductor/cpp_builder.py
-index 6dd6e0d2b5c..fbfa3175836 100644
+index c4a801d9ba6..170d02833d7 100644
 --- a/torch/_inductor/cpp_builder.py
 +++ b/torch/_inductor/cpp_builder.py
-@@ -1522,10 +1522,12 @@ def get_cpp_torch_options(
+@@ -1590,10 +1590,12 @@ def get_cpp_torch_options(
          + python_include_dirs
          + torch_include_dirs
          + omp_include_dir_paths
@@ -74,14 +74,14 @@ index 6dd6e0d2b5c..fbfa3175836 100644
 +        + [sysconfig.get_config_var('prefix') + '/targets/@CUDA_TARGET@/include']
      )
      cflags = sys_libs_cflags + omp_cflags
-     ldflags = omp_ldflags
+     ldflags = sys_libs_ldflags + omp_ldflags
 -    libraries_dirs = python_libraries_dirs + torch_libraries_dirs + omp_lib_dir_paths
 +    libraries_dirs = python_libraries_dirs + torch_libraries_dirs + omp_lib_dir_paths + [sysconfig.get_config_var('prefix') + '/targets/@CUDA_TARGET@/lib/stubs']
      libraries = torch_libraries + omp_lib
      passthrough_args = (
          sys_libs_passthrough_args + isa_ps_args_build_flags + omp_passthrough_args
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index 109a6608aa4..492a6833ec1 100644
+index 3e9d5d3823c..9a040f48200 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
 @@ -1618,31 +1618,37 @@ def include_paths(device_type: str = "cpu", torch_include_dirs=True) -> list[str
