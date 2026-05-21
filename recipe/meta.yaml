@@ -540,6 +540,26 @@ outputs:
         {% set skips = skips ~ " or test_cpp_warnings_have_python_context_cuda" %}
         # "Attempt to trace generator"
         {% set skips = skips ~ " or test_lite_regional_compile_flex_attention_cuda" %}
+        # Regressions in 2.11.0
+        {% set skips = skips ~ " or test_compile_dyn_quant_matmul_4bit" %}               # [win and cuda_compiler_version == "13.0"]
+        {% set skips = skips ~ " or test__int8_mm_m" %}                                  # [win and cuda_compiler_version == "13.0"]
+        {% set skips = skips ~ " or test_pdist_cuda_gradgrad_unimplemented" %}           # [win and cuda_compiler_version == "13.0"]
+        {% set skips = skips ~ " or test_inverse_errors_large_cpu" %}                    # [win and cuda_compiler_version == "13.0"]
+        {% set skips = skips ~ " or test_addmm_cpu_float16" %}                           # [aarch64]
+        {% set skips = skips ~ " or test_addmv_cpu_float16" %}                           # [aarch64]
+        {% set skips = skips ~ " or test_dot_vs_numpy_cpu_float16" %}                    # [aarch64]
+        {% set skips = skips ~ " or test_grouped_mm_cpu_unaligned_cpu_float16" %}        # [aarch64]
+        {% set skips = skips ~ " or test__int4_mm_m" %}                                  # [aarch64]
+        {% set skips = skips ~ " or (test_forward_nn_ConvTranspose and cpu_float16)" %}  # [aarch64]
+        {% set skips = skips ~ " or (test_conv_deconv and cpu_float16)" %}               # [aarch64]
+        {% set skips = skips ~ " or test_conv_nhwc_lower_precision_cpu_float16" %}       # [aarch64]
+        {% set skips = skips ~ " or test_conv_transpose_nhwc_lower_precision_cpu_float16" %}  # [aarch64]
+        {% set skips = skips ~ " or test_matmul_lower_precision_cpu_float16" %}          # [aarch64]
+        {% set skips = skips ~ " or (test_save_load_nn_ConvTranspose and cpu_complex32)" %}  # [aarch64]
+        {% set skips = skips ~ " or (test_if_train_and_eval_modes_differ_nn_ConvTranspose and cpu_complex32)" %}  # [aarch64]
+        {% set skips = skips ~ " or test_memory_format_nn_ConvTranspose1d_cpu_complex32" %}  # [aarch64]
+        {% set skips = skips ~ " or (test_non_contiguous_tensors_nn_ConvTranspose and cpu_complex32)" %}  # [aarch64]
+        {% set skips = skips ~ " or test_activations_bfloat16_half_cpu_cpu_float16" %}   # [aarch64]
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
