@@ -25,9 +25,9 @@ libabseil:
 libcudnn_dev:
 - '9'
 libmagma_devel:
-- '2.9'
+- 2.10.0
 libmagma_sparse:
-- '2.9'
+- 2.10.0
 libprotobuf:
 - 6.33.5
 libtorch:
