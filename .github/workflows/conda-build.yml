@@ -19,86 +19,130 @@ jobs:
     timeout-minutes: 1200
     strategy:
       fail-fast: false
+      max-parallel: 50
       matrix:
         include:
           - CONFIG: linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargeis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: linux_64_blas_implgenericchannel_targets_h363e2150
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_h363e2150', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_h363e2150']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
+            docker_run_args:  --gpus all
           - CONFIG: linux_64_blas_implgenericchannel_targetsconda-forge_maincuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-xlargeis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: linux_64_blas_implgenericchannel_targets_h9402311f
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-cpu-xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_h9402311f', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-cpu-xlarge--${{ github.run_id }}-linux_64_blas_implgenericchannel_targets_h9402311f']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargeis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: linux_64_blas_implmklchannel_targetscond_hd80499cc
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_hd80499cc', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_hd80499cc']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
+            docker_run_args:  --gpus all
           - CONFIG: linux_64_blas_implmklchannel_targetsconda-forge_maincuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-xlargeis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: linux_64_blas_implmklchannel_targetscond_h45d9f33e
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-cpu-xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_h45d9f33e', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-cpu-xlarge--${{ github.run_id }}-linux_64_blas_implmklchannel_targetscond_h45d9f33e']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_aarch64_channel_targetsconda-forge_maincuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargeis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: linux_aarch64_channel_targetsconda-forge_h5253e8f1
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h5253e8f1', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h5253e8f1']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
+            docker_run_args:  --gpus all
           - CONFIG: linux_aarch64_channel_targetsconda-forge_maincuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-xlargeis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: linux_aarch64_channel_targetsconda-forge_h817f1986
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-cpu-xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h817f1986', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-cpu-xlarge--${{ github.run_id }}-linux_aarch64_channel_targetsconda-forge_h817f1986']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: osx_64_blas_implgenericchannel_targetsco_h709642d7
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_64_blas_implgenericchannel_targetsco_h709642d7', 'macOS', 'arm64', 'self-hosted']
+            runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_64_blas_implgenericchannel_targetsco_h709642d7']
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: ~/miniforge3/conda-bld
+            docker_run_args: 
           - CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: osx_64_blas_implmklchannel_targetsconda-_h747b3c68
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_64_blas_implmklchannel_targetsconda-_h747b3c68', 'macOS', 'arm64', 'self-hosted']
+            runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_64_blas_implmklchannel_targetsconda-_h747b3c68']
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: ~/miniforge3/conda-bld
+            docker_run_args: 
           - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: osx_arm64_channel_targetsconda-forge_mai_h5f57e26b
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_arm64_channel_targetsconda-forge_mai_h5f57e26b', 'macOS', 'arm64', 'self-hosted']
+            runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_arm64_channel_targetsconda-forge_mai_h5f57e26b']
+            tools_install_dir: ~/miniforge3
+            build_workspace_dir: ~/miniforge3/conda-bld
+            docker_run_args: 
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hca575dce
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hca575dce', 'windows', 'x64', 'self-hosted']
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hca575dce']
+            tools_install_dir: C:\Miniforge
+            build_workspace_dir: C:\\bld\\
+            docker_run_args: 
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+            STORE_BUILD_ARTIFACTS: True
             SHORT_CONFIG: win_64_channel_targetsconda-forge_maincu_hc68ac914
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hc68ac914', 'windows', 'x64', 'self-hosted']
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hc68ac914']
+            tools_install_dir: C:\Miniforge
+            build_workspace_dir: C:\\bld\\
+            docker_run_args: 
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
     - name: Build on Linux
       id: build-linux
       if: matrix.os == 'ubuntu'
       env:
+        MINIFORGE_HOME: ${{ matrix.tools_install_dir }}
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
         CONFIG: ${{ matrix.CONFIG }}
         UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
         DOCKER_IMAGE: ${{ matrix.DOCKER_IMAGE }}
         CI: github_actions
-        CONDA_FORGE_DOCKER_RUN_ARGS: "${{ matrix.CONDA_FORGE_DOCKER_RUN_ARGS }}"
+        CONDA_FORGE_DOCKER_RUN_ARGS: "${{ matrix.docker_run_args }}"
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
         FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}
@@ -118,6 +162,8 @@ jobs:
         else
           export IS_PR_BUILD="False"
         fi
+        export MINIFORGE_HOME="${MINIFORGE_HOME/#~/${HOME}}"
+        export CONDA_BLD_PATH="${CONDA_BLD_PATH/#~/${HOME}}"
         echo "::endgroup::"
         ./.scripts/run_docker_build.sh
 
@@ -125,6 +171,8 @@ jobs:
       id: build-macos
       if: matrix.os == 'macos'
       env:
+        MINIFORGE_HOME: ${{ matrix.tools_install_dir }}
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
         CONFIG: ${{ matrix.CONFIG }}
         UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
         CI: github_actions
@@ -143,6 +191,8 @@ jobs:
         else
           export IS_PR_BUILD="False"
         fi
+        export MINIFORGE_HOME="${MINIFORGE_HOME/#~/${HOME}}"
+        export CONDA_BLD_PATH="${CONDA_BLD_PATH/#~/${HOME}}"
         ./.scripts/run_osx_build.sh
 
     # https://github.com/aktech/cirun-azure-resize-disk
@@ -180,10 +230,8 @@ jobs:
         set "sha=%GITHUB_SHA%"
         call ".scripts\run_win_build.bat"
       env:
-        # default value; make it explicit, as it needs to match with artefact
-        # generation below. Not configurable for now, can be revisited later
-        CONDA_BLD_DIR: C:\bld
-        MINIFORGE_HOME: D:\Miniforge
+        MINIFORGE_HOME: ${{ matrix.tools_install_dir }}
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
         PYTHONUNBUFFERED: 1
         CONFIG: ${{ matrix.CONFIG }}
         CI: github_actions
@@ -219,27 +267,22 @@ jobs:
       id: prepare-artifacts
       shell: bash
       # we do not want to trigger artefact creation if the build was cancelled
-      if: ${{ always() && steps.determine-status.outputs.status != 'cancelled' }}
+      if: ${{ always() && steps.determine-status.outputs.status != 'cancelled' && matrix.STORE_BUILD_ARTIFACTS }}
       env:
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
         CI: github_actions
         CONFIG: ${{ matrix.CONFIG }}
         SHORT_CONFIG: ${{ matrix.SHORT_CONFIG }}
         JOB_STATUS: ${{ steps.determine-status.outputs.status }}
         OS: ${{ matrix.os }}
       run: |
+        export MINIFORGE_HOME="${MINIFORGE_HOME/#~/${HOME}}"
+        export CONDA_BLD_PATH="${CONDA_BLD_PATH/#~/${HOME}}"
         export CI_RUN_ID=$GITHUB_RUN_ID
         export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
         export ARTIFACT_STAGING_DIR="$GITHUB_WORKSPACE"
-        if [ $OS == "macos" ]; then
-          export CONDA_BLD_DIR="${MINIFORGE_HOME:-${HOME}/miniforge3}/conda-bld"
-        elif [ $OS == "windows" ]; then
-          # this needs to be consistent with build step, see above
-          export CONDA_BLD_DIR="C:\\bld"
-        else
-          export CONDA_BLD_DIR="build_artifacts"
-        fi
-        # Archive everything in CONDA_BLD_DIR except environments
-        # Archive the CONDA_BLD_DIR environments only when the job fails
+        # Archive everything in CONDA_BLD_PATH except environments
+        # Archive the CONDA_BLD_PATH environments only when the job fails
         # Use different prefix for successful and failed build artifacts
         # so random failures don't prevent rebuilds from creating artifacts.
         if [ $JOB_STATUS == "failure" ]; then
@@ -255,7 +298,7 @@ jobs:
         fi
 
     - name: Store conda build artifacts
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: ${{ always() && steps.prepare-artifacts.outcome == 'success' }}
       with:
         name: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_NAME }}
@@ -264,7 +307,7 @@ jobs:
       continue-on-error: true
 
     - name: Store conda build environment artifacts
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       # only relevant if build failed, see above
       if: ${{ always() && steps.determine-status.outputs.status == 'failure' && steps.prepare-artifacts.outcome == 'success' }}
       with:
