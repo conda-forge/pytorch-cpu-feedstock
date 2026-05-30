@@ -56,6 +56,8 @@ source:
       # backport https://github.com/pytorch/pytorch/pull/174647
       - patches/0015-Fix-ICE-in-GCC-14-with-arm.patch
       - patches/0016-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
+      # backport https://github.com/pytorch/pytorch/pull/180388
+      - patches/0017-Fix-build-with-MAGMA-2.10.0.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
