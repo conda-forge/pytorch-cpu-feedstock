@@ -30,6 +30,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -38,6 +39,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_64_blas_implgenericc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -46,6 +48,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -54,6 +57,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -62,6 +66,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_64_blas_implmklc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -70,6 +75,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version13is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -78,6 +84,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNonecxx_compiler_version13is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -86,6 +93,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_aarch64_c_compiler_version13c_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0cxx_compiler_version13is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -94,6 +102,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: linux_aarch64_c_compiler_version14c_stdlib_version2.34channel_targetsconda-forge_maincuda_compiler_version12.9cxx_compiler_version14is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -102,6 +111,7 @@ jobs:
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             tools_install_dir: ~/miniforge3
             build_workspace_dir: build_artifacts
+            docker_run_args: 
           - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -109,6 +119,7 @@ jobs:
             runs_on: ['namespace-profile-12cpu-on-osx-arm64']
             tools_install_dir: ~/miniforge3
             build_workspace_dir: ~/miniforge3/conda-bld
+            docker_run_args: 
           - CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -116,6 +127,7 @@ jobs:
             runs_on: ['namespace-profile-12cpu-on-osx-arm64']
             tools_install_dir: ~/miniforge3
             build_workspace_dir: ~/miniforge3/conda-bld
+            docker_run_args: 
           - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -123,27 +135,31 @@ jobs:
             runs_on: ['namespace-profile-12cpu-on-osx-arm64']
             tools_install_dir: ~/miniforge3
             build_workspace_dir: ~/miniforge3/conda-bld
+            docker_run_args: 
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['namespace-profile-16cpu-on-win-64']
-            tools_install_dir: D:\Miniforge
-            build_workspace_dir: D:\\bld\\
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hca575dce']
+            tools_install_dir: C:\Miniforge
+            build_workspace_dir: C:\\bld\\
+            docker_run_args: 
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['namespace-profile-16cpu-on-win-64']
-            tools_install_dir: D:\Miniforge
-            build_workspace_dir: D:\\bld\\
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_h28fca69f']
+            tools_install_dir: C:\Miniforge
+            build_workspace_dir: C:\\bld\\
+            docker_run_args: 
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['namespace-profile-16cpu-on-win-64']
-            tools_install_dir: D:\Miniforge
-            build_workspace_dir: D:\\bld\\
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hc68ac914']
+            tools_install_dir: C:\Miniforge
+            build_workspace_dir: C:\\bld\\
+            docker_run_args: 
     steps:
 
     - name: Checkout code
@@ -159,7 +175,7 @@ jobs:
         UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
         DOCKER_IMAGE: ${{ matrix.DOCKER_IMAGE }}
         CI: github_actions
-        CONDA_FORGE_DOCKER_RUN_ARGS: "${{ matrix.CONDA_FORGE_DOCKER_RUN_ARGS }}"
+        CONDA_FORGE_DOCKER_RUN_ARGS: "${{ matrix.docker_run_args }}"
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
         FEEDSTOCK_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.STAGING_BINSTAR_TOKEN }}

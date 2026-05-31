@@ -22,9 +22,9 @@ github_actions:
   - push
   - pull_request
 provider:
-  linux_aarch64: github_actions
   linux_64: github_actions
-  osx_arm64: github_actions
+  linux_aarch64: github_actions
   osx_64: github_actions
+  osx_arm64: github_actions
   win_64: github_actions
 test: native_and_emulated
