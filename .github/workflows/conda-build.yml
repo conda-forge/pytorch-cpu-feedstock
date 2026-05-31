@@ -140,25 +140,25 @@ jobs:
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['namespace-profile-16cpu-on-win-64']
-            tools_install_dir: D:\Miniforge
-            build_workspace_dir: D:\\bld\\
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hca575dce']
+            tools_install_dir: C:\Miniforge
+            build_workspace_dir: C:\\bld\\
             docker_run_args: 
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['namespace-profile-16cpu-on-win-64']
-            tools_install_dir: D:\Miniforge
-            build_workspace_dir: D:\\bld\\
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_h28fca69f']
+            tools_install_dir: C:\Miniforge
+            build_workspace_dir: C:\\bld\\
             docker_run_args: 
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: windows
-            runs_on: ['namespace-profile-16cpu-on-win-64']
-            tools_install_dir: D:\Miniforge
-            build_workspace_dir: D:\\bld\\
+            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hc68ac914']
+            tools_install_dir: C:\Miniforge
+            build_workspace_dir: C:\\bld\\
             docker_run_args: 
     steps:
 
