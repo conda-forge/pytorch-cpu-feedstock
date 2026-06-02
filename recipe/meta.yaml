@@ -126,7 +126,8 @@ requirements:
     - cusparselt
     - libcublas-dev
     - libcudnn-dev
-    - libcudss-dev
+    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/490#issuecomment-4603758942
+    - libcudss-dev <0.8
     - libcufile-dev         # [linux]
     - libcufft-dev
     - libcurand-dev
@@ -273,7 +274,8 @@ outputs:
         - cusparselt
         - libcublas-dev
         - libcudnn-dev
-        - libcudss-dev
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/490#issuecomment-4603758942
+        - libcudss-dev <0.8
         - libcufile-dev         # [linux]
         - libcufft-dev
         - libcurand-dev
