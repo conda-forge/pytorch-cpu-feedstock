@@ -1,0 +1,43 @@
+From dc1d381cbb45c75ae280c1493663fc38fa4b27f1 Mon Sep 17 00:00:00 2001
+From: Grayson Derossi <graysonderossi@gmail.com>
+Date: Thu, 19 Feb 2026 21:17:45 +0000
+Subject: [PATCH] Ensure test_tensorinv uses well-conditioned inputs (#175283)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+`test_tensorinv_cuda_float32` is failing on multiple GPU types because one of the test matrices is ill-conditioned and has potential for numerical error that's right on the bubble given the current tolerance. Changing the underlying algorithm from using a transpose to not using a transpose was enough to shift this test from passing to failing.
+
+This PR changes the setup of this test to remove the precision override and instead use `make_fullrank_matrices_with_distinct_singular_values` to ensure that inputs are well-conditioned, like is already done for `test_linalg_lu_family`.
+
+Fixes #175282
+
+Pull Request resolved: https://github.com/pytorch/pytorch/pull/175283
+Approved by: https://github.com/malfet
+
+Signed-off-by: Michał Górny <mgorny@quansight.com>
+---
+ test/test_linalg.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/test/test_linalg.py b/test/test_linalg.py
+index 0399bcd0ff0..dc93bb96c04 100644
+--- a/test/test_linalg.py
++++ b/test/test_linalg.py
+@@ -3751,11 +3751,14 @@ class TestLinalg(TestCase):
+     @skipCUDAIfNoMagma
+     @skipCPUIfNoLapack
+     @dtypes(*floating_and_complex_types())
+-    @precisionOverride({torch.float: 1e-3, torch.cfloat: 1e-3})
+     def test_tensorinv(self, device, dtype):
++        make_fullrank = make_fullrank_matrices_with_distinct_singular_values
+ 
+         def run_test(a_shape, ind):
+-            a = torch.randn(a_shape, dtype=dtype, device=device)
++            n = 1
++            for s in a_shape[:ind]:
++                n *= s
++            a = make_fullrank(n, n, dtype=dtype, device=device).reshape(a_shape)
+             a_numpy = a.cpu().numpy()
+             result = torch.linalg.tensorinv(a, ind=ind)
+             expected = np.linalg.tensorinv(a_numpy, ind=ind)
