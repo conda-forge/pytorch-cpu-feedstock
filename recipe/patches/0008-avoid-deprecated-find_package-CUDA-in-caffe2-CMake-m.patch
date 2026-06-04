@@ -1,4 +1,4 @@
-From d9fa2097c4c809e37bd7e5a61578cecf68d8c770 Mon Sep 17 00:00:00 2001
+From f7493a84dad6a04f3dbdef8a52ba17f98d43f98a Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
 Subject: [PATCH 08/15] avoid deprecated `find_package(CUDA)` in caffe2 CMake
@@ -12,13 +12,13 @@ vendor the not-available-anymore function torch_cuda_get_nvcc_gencode_flag from 
 Signed-off-by: Michał Górny <mgorny@quansight.com>
 ---
  caffe2/CMakeLists.txt      |  10 +--
- cmake/Dependencies.cmake   |   2 +-
+ cmake/Dependencies.cmake   |   4 +-
  cmake/Summary.cmake        |  10 +--
  cmake/TorchConfig.cmake.in |   2 +-
  cmake/public/cuda.cmake    |  48 ++++----------
  cmake/public/utils.cmake   | 127 +++++++++++++++++++++++++++++++++++++
  setup.py                   |   2 +-
- 7 files changed, 152 insertions(+), 49 deletions(-)
+ 7 files changed, 153 insertions(+), 50 deletions(-)
 
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
 index 1e3d0353d75..7f99c5f0347 100644
@@ -56,7 +56,7 @@ index 1e3d0353d75..7f99c5f0347 100644
    target_compile_definitions(torch_cuda PRIVATE USE_CUDA)
  
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 2d399948d29..7788ee19ec2 100644
+index 2d399948d29..ef74cec001a 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -964,7 +964,7 @@ endif()
@@ -68,6 +68,15 @@ index 2d399948d29..7788ee19ec2 100644
  else()
    find_path(nvtx3_dir NAMES nvtx3 PATHS "${PROJECT_SOURCE_DIR}/third_party/NVTX/c/include" NO_DEFAULT_PATH)
  endif()
+@@ -1167,7 +1167,7 @@ if(USE_UCC)
+ endif()
+ 
+ # ---[ CUB
+-if(USE_CUDA AND CUDA_VERSION VERSION_LESS 13.0)
++if(USE_CUDA AND CUDAToolkit_VERSION VERSION_LESS 13.0)
+   find_package(CUB)
+   if(NOT CUB_FOUND)
+     message(FATAL_ERROR "Cannot find CUB.")
 diff --git a/cmake/Summary.cmake b/cmake/Summary.cmake
 index 2d68d81c6b3..7e314d6bfe1 100644
 --- a/cmake/Summary.cmake
