@@ -33,8 +33,10 @@ source:
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
+      # revert https://github.com/pytorch/pytorch/pull/177640 as it broke cross
+      - patches/0002-Revert-Move-environment-variable-handling-from-setup.patch
       # conda-specific patch, lets us override CUDA paths
-      - patches/0002-Allow-overriding-CUDA-related-paths.patch
+      - patches/0002b-Allow-overriding-CUDA-related-paths.patch
       # fix BLAS calling convention for openblas
       - patches/0003-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
       - patches/0004-Fix-FindOpenBLAS.patch
