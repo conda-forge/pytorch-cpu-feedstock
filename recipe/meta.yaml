@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
 {% set version = "2.11.0" %}
-{% set build = 0 %}
+{% set build = 1 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -50,13 +50,15 @@ source:
       # backport https://github.com/pytorch/pytorch/pull/166824
       - patches/0011-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
       - patches/0012-Fix-building-kineto-against-system-fmt.patch
-      - patches/0014-Use-Intel-LLVM-openmp.patch
-      - patches/0016-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
+      - patches/0013-Use-Intel-LLVM-openmp.patch
+      - patches/0014-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
       # backport https://github.com/pytorch/pytorch/pull/180388
-      - patches/0017-Fix-build-with-MAGMA-2.10.0.patch
+      - patches/0015-Fix-build-with-MAGMA-2.10.0-180388.patch
       # backport https://github.com/pytorch/pytorch/pull/175283
-      - patches/0018-Ensure-test_tensorinv-uses-well-conditioned-inputs-1.patch
-      - patches/0019-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
+      - patches/0016-Ensure-test_tensorinv-uses-well-conditioned-inputs-1.patch
+      - patches/0017-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
+      # backport https://github.com/pytorch/pytorch/pull/173366
+      - patches/0018-Allow-gcc-14-with-CUDA-12.8-173366.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:

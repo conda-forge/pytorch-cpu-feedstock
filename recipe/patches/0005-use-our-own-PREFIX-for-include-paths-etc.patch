@@ -1,7 +1,7 @@
-From 97ef248e4150e8cace5f21c8f8fa9eb87f768ff0 Mon Sep 17 00:00:00 2001
+From ee5bdd3ac4db527de90d057b3a8f5af6a991d920 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
-Subject: [PATCH 05/13] use our own PREFIX for include paths etc.
+Subject: [PATCH 05/18] use our own PREFIX for include paths etc.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -81,10 +81,10 @@ index 6dd6e0d2b5c..fbfa3175836 100644
      passthrough_args = (
          sys_libs_passthrough_args + isa_ps_args_build_flags + omp_passthrough_args
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index a63bff50d5e..7da14c2429c 100644
+index 109a6608aa4..492a6833ec1 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
-@@ -1604,31 +1604,37 @@ def include_paths(device_type: str = "cpu", torch_include_dirs=True) -> list[str
+@@ -1618,31 +1618,37 @@ def include_paths(device_type: str = "cpu", torch_include_dirs=True) -> list[str
      Returns:
          A list of include path strings.
      """
