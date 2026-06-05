@@ -23,11 +23,11 @@ cxx_compiler:
 cxx_compiler_version:
 - '13'
 docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- quay.io/condaforge/linux-anvil-aarch64:alma9
 fmt:
 - '12.1'
 github_actions_labels:
-- namespace-profile-16cpu-on-linux-64
+- namespace-profile-16cpu-on-linux-aarch64
 is_rc:
 - 'False'
 libabseil:
@@ -47,7 +47,7 @@ libmagma_sparse:
 libprotobuf:
 - 6.33.5
 libtorch:
-- '2.9'
+- '2.10'
 mkl:
 - '2026'
 nccl:
@@ -69,7 +69,7 @@ python:
 - 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
-- '2.9'
+- '2.10'
 target_platform:
 - linux-aarch64
 zip_keys:
