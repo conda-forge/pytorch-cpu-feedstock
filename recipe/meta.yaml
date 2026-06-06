@@ -409,14 +409,11 @@ outputs:
         - python -c "import numpy as np;import torch;x = torch.tensor([2], dtype=torch.complex128);res = torch.dot(x, x); assert res.real == 4.0, res"
         # distributed support is enabled by default on linux; for mac, we enable it manually in build.sh
         - python -c "import torch; assert torch.distributed.is_available()"         # [linux or osx]
+        - python -c "import torch; assert torch.backends.mps.is_available()"        # [osx]
         - python -c "import torch; assert torch.backends.cuda.is_built()"           # [cuda_compiler_version != "None"]
         - python -c "import torch; assert torch.backends.cudnn.is_available()"      # [cuda_compiler_version != "None"]
         - python -c "import torch; assert torch.backends.cudnn.enabled"             # [cuda_compiler_version != "None"]
         - python -c "import torch; assert torch.version.cuda is not None"           # [cuda_compiler_version != "None"]
-        # At conda-forge, we target versions of OSX that are too old for MPS support
-        # But if users install a newer version of OSX, they will have MPS support
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/123#issuecomment-1186355073
-        # - python -c "import torch; assert torch.backends.mps.is_available()" # [osx]
 
         # python-version-specific library (default location in SP_DIR symlinks back to this)
         - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}           # [unix]
