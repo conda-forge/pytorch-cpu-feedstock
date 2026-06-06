@@ -341,6 +341,10 @@ outputs:
         - pytorch-gpu <0.0a0           # [cuda_compiler_version == "None"]
         - pytorch-gpu {{ version }}    # [cuda_compiler_version != "None"]
         - pytorch-cpu <0.0a0           # [cuda_compiler_version != "None"]
+    test:
+      imports:
+        - torch
+        - torch._C
 
   - name: pytorch-tests
     build:
@@ -386,9 +390,6 @@ outputs:
         - nvtx-c                    # [cuda_compiler_version != "None"]
         # not required upstream, but useful
         - pytest-timeout
-      imports:
-        - torch
-        - torch._C
       files:
         - cmake_test/
       source_files:
