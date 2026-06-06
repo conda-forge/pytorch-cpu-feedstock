@@ -556,12 +556,12 @@ outputs:
         {% set skips = skips ~ " or test_activations_bfloat16_half_cpu_cpu_float16" %}   # [aarch64]
         {% set skips = skips ~ " or test_linear_lowp_cpu_float16" %}                     # [aarch64]
 
-        - export OMP_NUM_THREADS=4  # [unix]
+        - export OMP_NUM_THREADS=4      # [unix]
+        - export ONEDNN_VERBOSE=all     # [unix]
+        - set ONEDNN_VERBOSE=all        # [win]
         # reduced paralellism to avoid OOM for CUDA builds
         {% set jobs = "-n 2" %}
         {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
-        - set ONEDNN_VERBOSE=all       # [win]
-        - export ONEDNN_VERBOSE=all    # [unix]
         # disable hypothesis because it randomly yields health check errors
         - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings --force-short-summary
 
