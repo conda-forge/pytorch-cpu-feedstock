@@ -424,7 +424,8 @@ outputs:
         - if not exist %SP_DIR%\torch\lib\torch_python.lib exit 1   # [win]
         - if not exist %SP_DIR%\torch\lib\_C.lib exit 1             # [win]
 
-        # a reasonably safe subset of tests that should run under 15 minutes
+        # the whole test suite takes forever, but we should get a good enough coverage
+        # for potential packaging problems by running a fixed subset
         {% set tests = " ".join([
             "test/test_autograd.py",
             "test/test_autograd_fallback.py",
@@ -555,22 +556,17 @@ outputs:
         {% set skips = skips ~ " or test_activations_bfloat16_half_cpu_cpu_float16" %}   # [aarch64]
         {% set skips = skips ~ " or test_linear_lowp_cpu_float16" %}                     # [aarch64]
 
-        # the whole test suite takes forever, but we should get a good enough coverage
-        # for potential packaging problems by running a fixed subset
         - export OMP_NUM_THREADS=4  # [unix]
         # reduced paralellism to avoid OOM for CUDA builds
         {% set jobs = "-n 2" %}
         {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
-        # test only one python version on aarch because emulation is super-slow;
-        # disable hypothesis because it randomly yields health check errors
-
-        # the opengpu server has a card with sm_70, an architecture dropped by CUDA 13.0
         - set ONEDNN_VERBOSE=all       # [win]
         - export ONEDNN_VERBOSE=all    # [unix]
+        # disable hypothesis because it randomly yields health check errors
         - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings --force-short-summary
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
-        # duplicate `.pyc` files due to newest py-ver (3.13) in the build environment not matching the one in host;
+        # duplicate `.pyc` files due to newest py-ver (3.14) in the build environment not matching the one in host;
         # obviously this test can only be done for other python versions.
         - test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-314.pyc          # [py!=314 and unix]
         - if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-314.pyc exit 1   # [py!=314 and win]
