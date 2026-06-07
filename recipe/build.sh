@@ -140,7 +140,7 @@ if [[ "${CI}" == "github_actions" ]]; then
     # blacksmith-16vCPU has 58GB on x64 (windows)
     # blacksmith-12vCPU has 48GB on ARM (osx)
     if [[ "${target_platform}" == "linux-aarch64" ]]; then
-        export MAX_JOBS=6
+        export MAX_JOBS=4
     else
         export MAX_JOBS=8
     fi
