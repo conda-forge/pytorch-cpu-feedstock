@@ -464,7 +464,7 @@ outputs:
             {% set skips = skips ~ " or test_linear_lowp" %}                            # [aarch64]
             {% set skips = skips ~ " or test_matmul_lower_precision" %}                 # [aarch64]
         # ... for complex32
-        {% set skips = skips ~ ")) or (cpu_float32 and (dummy_for_consistency_below"%}  # [aarch64]
+        {% set skips = skips ~ ")) or (_cpu_complex32 and (dummy_for_consistency_below"%}  # [aarch64]
             {% set skips = skips ~ " or test_forward_nn_ConvTranspose" %}               # [aarch64]
             {% set skips = skips ~ " or test_if_train_and_eval_modes_differ_nn_ConvTr" %}  # [aarch64]
             {% set skips = skips ~ " or test_memory_format_nn_ConvTranspose1d" %}       # [aarch64]
