@@ -57,6 +57,11 @@ source:
       - patches/0017-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
       # backport https://github.com/pytorch/pytorch/pull/173366
       - patches/0018-Allow-gcc-14-with-CUDA-12.8-173366.patch
+      # fix a test-isolation leak in test_incorrect_abstract_impl that globally
+      # disables autograd dispatch and causes hundreds of spurious
+      # "element 0 of tensors does not require grad" failures
+      # backport https://github.com/pytorch/pytorch/pull/186550
+      - patches/0019-Fix-dispatch-key-guard-leak-in-test_incorrect_abstr.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
