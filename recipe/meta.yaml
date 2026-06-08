@@ -62,6 +62,10 @@ source:
       # "element 0 of tensors does not require grad" failures
       # backport https://github.com/pytorch/pytorch/pull/186550
       - patches/0019-Fix-dispatch-key-guard-leak-in-test_incorrect_abstr.patch
+      # escape backslashes/quotes when CMAKE_CXX_FLAGS etc. are baked into
+      # macros.h build strings, so the Windows (MSVC) build of caffe2/core/common.cc
+      # doesn't choke on backslash paths -> C4129/C2065 'EHsc'
+      - patches/0020-Escape-backslashes-quotes-in-macros.h-build-strings.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
