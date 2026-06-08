@@ -434,9 +434,9 @@ outputs:
             "test/test_torch.py",
             "test/test_xnnpack_integration.py",
         ]) %}
-        # tests torch.compile; these add a lot of runtime (e.g. 15->60min for
-        # the test suite on windows), so run them for only one python version
-        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not osx]
+        # tests torch.compile; avoid on aarch because it adds >4h in test runtime in emulation;
+        # they add a lot of runtime (15->60min on windows), so run them for only one python version
+        {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not (aarch64 or osx)]
 
         {% set skips = "(TestTorch and test_print)" %}
         # minor tolerance violations
@@ -471,14 +471,31 @@ outputs:
             {% set skips = skips ~ " or test_non_contiguous_tensors_nn_ConvTranspo" %}  # [aarch64]
             {% set skips = skips ~ " or test_save_load_nn_ConvTranspose" %}             # [aarch64]
         {% set skips = skips ~ "))"%}                                                   # [aarch64]
+        # timeouts and failures on aarch, see https://github.com/conda-forge/pytorch-cpu-feedstock/pull/298#issuecomment-2555888508
+        {% set skips = skips ~ " or test_pynode_destruction_deadlock" %}                # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_cholesky_cpu_float32)" %}   # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_pca_lowrank_cpu)" %}        # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_svd_lowrank_cpu)" %}        # [aarch64]
+        {% set skips = skips ~ " or (TestMkldnnCPU and test_lstm_cpu)" %}               # [aarch64]
+        # very long-running tests in emulation
+        {% set skips = skips ~ " or test_eigh_lwork_lapack" %}                          # [aarch64]
+        {% set skips = skips ~ " or test_gradgrad_nn_LSTM" %}                           # [aarch64]
+        {% set skips = skips ~ " or test_grad_nn_Transformer" %}                        # [aarch64]
+        {% set skips = skips ~ " or test_inverse_errors_large" %}                       # [aarch64]
+        {% set skips = skips ~ " or (TestXNNPACKConv1dTransformPass and test_conv1d_basic)" %}  # [aarch64]
+        # doesn't crash, but gets different result on aarch + CUDA
+        {% set skips = skips ~ " or illcondition_matrix_input_should_not_crash_cpu" %}  # [aarch64 and cuda_compiler_version != "None"]
         # may crash spuriously
         {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}         # [not win]
         {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}    # [not win]
         # tests that fail due to resource clean-up issues (non-unique temporary libraries), see
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/318#issuecomment-2620080859
         {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}             # [not win]
-        # crash on aarch64
+        # minor inaccuracy on aarch64 (emulation?)
         {% set skips = skips ~ " or (TestNN and test_upsampling_bfloat16)" %}           # [aarch64]
+        {% set skips = skips ~ " or (TestLinalgCPU and test_qr_cpu_float32)" %}         # [aarch64]
+        # flaky failure: `Exec format error: '$PREFIX/bin/python3.12'`
+        {% set skips = skips ~ " or test_terminate_handler_on_crash" %}                 # [aarch64]
         # may crash spuriously
         {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}
         {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
@@ -565,8 +582,9 @@ outputs:
         # reduced paralellism to avoid OOM for CUDA builds
         {% set jobs = "-n 2" %}
         {% set jobs = "-n 1" %}     # [linux64 and cuda_compiler_version != "None"]
+        # test only one python version on aarch because emulation is super-slow;
         # disable hypothesis because it randomly yields health check errors
-        - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings --force-short-summary
+        - pytest {{ jobs }} {{ tests }} -k "not ({{ skips }})" -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings --force-short-summary   # [not aarch64 or py==312]
 
         # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329, where we picked up
         # duplicate `.pyc` files due to newest py-ver (3.14) in the build environment not matching the one in host;
