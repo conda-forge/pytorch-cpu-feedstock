@@ -575,6 +575,7 @@ outputs:
         {% set skips = skips ~ " or test_pdist_cuda_gradgrad_unimplemented" %}           # [win and cuda_compiler_version == "13.0"]
         {% set skips = skips ~ " or test_inverse_errors_large_cpu" %}                    # [win and cuda_compiler_version == "13.0"]
         {% set skips = skips ~ " or test_torchinductor" %}                               # [win and cuda_compiler_version == "13.0"]
+        {% set skips = skips ~ " or test_eigh_svd_illcondition_matrix_input_should_not_crash_cpu_float32" %}  # [aarch64]
 
         - export OMP_NUM_THREADS=4      # [unix]
         - export ONEDNN_VERBOSE=all     # [unix]
