@@ -139,7 +139,6 @@ requirements:
     - cusparselt
     - libcublas-dev
     - libcudnn-dev
-    # patch 0021 targets the cuDSS 0.8 API (was pinned <0.8 in PR #490)
     - libcudss-dev
     - libcufile-dev         # [linux]
     - libcufft-dev
@@ -286,7 +285,6 @@ outputs:
         - cusparselt
         - libcublas-dev
         - libcudnn-dev
-        # patch 0021 targets the cuDSS 0.8 API (was pinned <0.8 in PR #490)
         - libcudss-dev
         - libcufile-dev         # [linux]
         - libcufft-dev
