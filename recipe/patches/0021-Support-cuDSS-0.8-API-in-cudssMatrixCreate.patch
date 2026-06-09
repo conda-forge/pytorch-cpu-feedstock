@@ -1,53 +1,37 @@
-From d5796d77ab490f05d7d8c5287a0478ce9d16589f Mon Sep 17 00:00:00 2001
+From 5a6ca5f10267913a447f66320d41f29a23cc2344 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark@ramonaoptics.com>
-Date: Mon, 8 Jun 2026 14:05:40 -0400
-Subject: [PATCH] Support cuDSS 0.8 API in cudssMatrixCreate{Dn,Csr}
+Date: Tue, 9 Jun 2026 08:01:19 -0400
+Subject: [PATCH] Update cuDSS matrix-create calls for cuDSS 0.8 API
 
-cuDSS 0.8 changed the dense/CSR matrix constructors:
-- the data-type arguments are now the new cudssDataType_t enum instead of
-  cudaDataType_t (the enumerators alias the cudaDataType_t values, e.g.
-  CUDSS_R_32F == CUDA_R_32F, but it is a distinct C++ type so the old
-  CUDA_R_* values no longer type-check);
-- cudssMatrixCreateCsr gained a leading offsetType argument (for the row
-  offsets) ahead of the existing index type.
-
-PyTorch only supported the cuDSS 0.7 signatures, so building against cuDSS
-0.8 (libcudss 0.8.0.x) failed to compile. Guard the calls on
-CUDSS_VERSION >= 800 and use the CUDSS_R_* enumerators (offsetType and
-indexType are both CUDSS_R_32I since the row offsets and column indices are
-int32). The 0.7 path is unchanged, so both versions compile.
-
-Verified by compiling the call against both the real cuDSS 0.7.1 and 0.8.0
-headers.
+cuDSS 0.8 changed cudssMatrixCreateDn/cudssMatrixCreateCsr to take the new
+cudssDataType_t enum instead of cudaDataType_t, and cudssMatrixCreateCsr
+gained a leading offsetType argument. Use the CUDSS_R_* enumerators and pass
+offsetType (CUDSS_R_32I, matching the int32 row offsets). conda-forge ships
+libcudss >= 0.8, so this targets the new API directly.
 
 Signed-off-by: Mark Harfouche <mark@ramonaoptics.com>
 ---
- .../ATen/native/sparse/cuda/SparseCsrTensorMath.cu    | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/aten/src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu b/aten/src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu
-index bb4b095..a64ab4f 100644
+index bb4b095..0e637ab 100644
 --- a/aten/src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu
 +++ b/aten/src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu
-@@ -754,10 +754,21 @@ void _apply_sparse_csr_linear_solve(
+@@ -754,10 +754,12 @@ void _apply_sparse_csr_linear_solve(
      scalar_t* values_ptr = values.data_ptr<scalar_t>();
      scalar_t* b_ptr = b.data_ptr<scalar_t>();
      scalar_t* x_ptr = x.data_ptr<scalar_t>();
-+#if defined(CUDSS_VERSION) && CUDSS_VERSION >= 800
-+    // cuDSS 0.8 changed cudssMatrixCreate{Dn,Csr} to take the new cudssDataType_t
-+    // enum (instead of cudaDataType_t) and added an offsetType argument to the CSR
-+    // constructor. The cudssDataType_t enumerators alias the cudaDataType_t values
-+    // but are a distinct C++ type, so we must use the CUDSS_R_* names here.
+-    auto CUDA_R_TYP = std::is_same_v<scalar_t, double> ? CUDA_R_64F : CUDA_R_32F;
+-    TORCH_CUDSS_CHECK(cudssMatrixCreateDn(&b_mt, b.size(0), 1, b.size(0), b_ptr, CUDA_R_TYP, CUDSS_LAYOUT_COL_MAJOR));
+-    TORCH_CUDSS_CHECK(cudssMatrixCreateDn(&x_mt, x.size(0), 1, x.size(0), x_ptr, CUDA_R_TYP, CUDSS_LAYOUT_COL_MAJOR));
+-    TORCH_CUDSS_CHECK(cudssMatrixCreateCsr(&A_mt, A.size(0), A.size(1),  A._nnz(), rowOffsets, rowOffsets + crow.size(0), colIndices, values_ptr, CUDA_R_32I, CUDA_R_TYP, CUDSS_MTYPE_GENERAL, CUDSS_MVIEW_FULL, CUDSS_BASE_ZERO));
++    // cuDSS >= 0.8 takes the cudssDataType_t enum (not cudaDataType_t) and
++    // cudssMatrixCreateCsr has an extra leading offsetType argument.
 +    auto CUDSS_R_TYP = std::is_same_v<scalar_t, double> ? CUDSS_R_64F : CUDSS_R_32F;
 +    TORCH_CUDSS_CHECK(cudssMatrixCreateDn(&b_mt, b.size(0), 1, b.size(0), b_ptr, CUDSS_R_TYP, CUDSS_LAYOUT_COL_MAJOR));
 +    TORCH_CUDSS_CHECK(cudssMatrixCreateDn(&x_mt, x.size(0), 1, x.size(0), x_ptr, CUDSS_R_TYP, CUDSS_LAYOUT_COL_MAJOR));
 +    TORCH_CUDSS_CHECK(cudssMatrixCreateCsr(&A_mt, A.size(0), A.size(1),  A._nnz(), rowOffsets, rowOffsets + crow.size(0), colIndices, values_ptr, CUDSS_R_32I, CUDSS_R_32I, CUDSS_R_TYP, CUDSS_MTYPE_GENERAL, CUDSS_MVIEW_FULL, CUDSS_BASE_ZERO));
-+#else
-     auto CUDA_R_TYP = std::is_same_v<scalar_t, double> ? CUDA_R_64F : CUDA_R_32F;
-     TORCH_CUDSS_CHECK(cudssMatrixCreateDn(&b_mt, b.size(0), 1, b.size(0), b_ptr, CUDA_R_TYP, CUDSS_LAYOUT_COL_MAJOR));
-     TORCH_CUDSS_CHECK(cudssMatrixCreateDn(&x_mt, x.size(0), 1, x.size(0), x_ptr, CUDA_R_TYP, CUDSS_LAYOUT_COL_MAJOR));
-     TORCH_CUDSS_CHECK(cudssMatrixCreateCsr(&A_mt, A.size(0), A.size(1),  A._nnz(), rowOffsets, rowOffsets + crow.size(0), colIndices, values_ptr, CUDA_R_32I, CUDA_R_TYP, CUDSS_MTYPE_GENERAL, CUDSS_MVIEW_FULL, CUDSS_BASE_ZERO));
-+#endif
    }));
    TORCH_CUDSS_CHECK(cudssExecute(handle, CUDSS_PHASE_ANALYSIS, config, cudss_data, A_mt, x_mt, b_mt));
    TORCH_CUDSS_CHECK(cudssExecute(handle, CUDSS_PHASE_FACTORIZATION, config, cudss_data, A_mt, x_mt, b_mt));
