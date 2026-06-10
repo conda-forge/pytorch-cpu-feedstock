@@ -1,7 +1,7 @@
-From 0c5b33383fcfaae425967ab1e767c7ed3e4c1d63 Mon Sep 17 00:00:00 2001
+From c073ea4223a0021a57b8575261bae755bf7a192b Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Mon, 3 Nov 2025 14:59:04 +0100
-Subject: [PATCH 12/18] Fix building kineto against system fmt
+Subject: [PATCH 12/16] Fix building kineto against system fmt
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -12,10 +12,10 @@ Signed-off-by: Michał Górny <mgorny@gentoo.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 01719c78765..cad1ea8f43f 100644
+index 07cf3dec461..b523948d09f 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -1639,7 +1639,7 @@ else()
+@@ -1634,7 +1634,7 @@ else()
    if(NOT fmt_FOUND)
      message(FATAL_ERROR "Cannot find system fmt library. Please install libfmt-dev or set USE_SYSTEM_FMT=OFF")
    endif()

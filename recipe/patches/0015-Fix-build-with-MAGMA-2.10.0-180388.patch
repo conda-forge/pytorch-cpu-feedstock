@@ -1,7 +1,7 @@
-From 34646f97c0b7601a5a43d43dca0f1ca1ca7e5b21 Mon Sep 17 00:00:00 2001
+From 7caa160444685c78d21b83207382e36b274c63e4 Mon Sep 17 00:00:00 2001
 From: Silvio Traversaro <silvio@traversaro.it>
 Date: Thu, 16 Apr 2026 16:36:17 +0000
-Subject: [PATCH 15/18] Fix build with MAGMA 2.10.0 (#180388)
+Subject: [PATCH 17/17] Fix build with MAGMA 2.10.0 (#180388)
 
 I am aware that MAGMA is deprecated, but this is relatively low hanging fruit I experienced when building PyTorch against MAGMA 2.10.0 .
 
@@ -17,7 +17,7 @@ Approved by: https://github.com/nikitaved, https://github.com/Skylion007
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/aten/src/ATen/native/cuda/linalg/BatchLinearAlgebra.cpp b/aten/src/ATen/native/cuda/linalg/BatchLinearAlgebra.cpp
-index 83e957cc672..2dc769956ea 100644
+index 525714e..55e03e4 100644
 --- a/aten/src/ATen/native/cuda/linalg/BatchLinearAlgebra.cpp
 +++ b/aten/src/ATen/native/cuda/linalg/BatchLinearAlgebra.cpp
 @@ -53,11 +53,11 @@ struct MagmaInitializer {
@@ -36,16 +36,16 @@ index 83e957cc672..2dc769956ea 100644
  #endif
  
  #else
-@@ -153,7 +153,7 @@ void magmaLuSolveBatched(
-     scalar_t** dB_array, magma_int_t lddb, magma_int_t& info,
-     magma_int_t batchsize, const MAGMAQueue& magma_queue, magma_trans_t trans);
+@@ -183,7 +183,7 @@ void magmaGels(
+     scalar_t* dA, magma_int_t ldda, scalar_t* dB, magma_int_t lddb,
+     scalar_t* hwork, magma_int_t lwork, magma_int_t* info);
  
 -#if AT_MAGMA_VERSION >= 254
 +#if AT_MAGMA_VERSION >= 20504
  
  template <>
  void magmaLdlHermitian<double>(
-@@ -209,7 +209,7 @@ void magmaLdlHermitian<c10::complex<float>>(
+@@ -239,7 +239,7 @@ void magmaLdlHermitian<c10::complex<float>>(
    AT_CUDA_CHECK(cudaGetLastError());
  }
  
@@ -54,7 +54,7 @@ index 83e957cc672..2dc769956ea 100644
  
  template<>
  void magmaLu<double>(
-@@ -818,7 +818,7 @@ void ldl_factor_kernel(
+@@ -1120,7 +1120,7 @@ void ldl_factor_kernel(
      // If cusolver and magma 2.5.4+ are both available and hermitian=true,
      // call magma for complex inputs
  #ifdef USE_LINALG_SOLVER
@@ -63,3 +63,6 @@ index 83e957cc672..2dc769956ea 100644
        if (LD.is_complex() && hermitian) {
          return ldl_factor_magma(
              LD, pivots, info, upper, hermitian);
+-- 
+2.43.0
+
