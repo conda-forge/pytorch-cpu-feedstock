@@ -1,7 +1,7 @@
-From f208aa2b48f439fa9a5a014daf66e1a7bd80d5c5 Mon Sep 17 00:00:00 2001
+From 72422632191044ce3c60e94a6c9384398a3780b9 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 27 Feb 2026 09:33:18 +1100
-Subject: [PATCH 14/18] for win+CUDA, remove USE_CUDA guard for skip in
+Subject: [PATCH 16/16] for win+CUDA, remove USE_CUDA guard for skip in
  compiled_autograd.h
 
 upstream does not consider torch.compile supported on windows, apparently,
@@ -16,10 +16,10 @@ Suggested-By: Tobias Fischer <info@tobiasfischer.info>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/torch/csrc/dynamo/compiled_autograd.h b/torch/csrc/dynamo/compiled_autograd.h
-index 22cdd3c65f3..e8de37eb4d7 100644
+index ca9eb3e638f..9a3aecaf73e 100644
 --- a/torch/csrc/dynamo/compiled_autograd.h
 +++ b/torch/csrc/dynamo/compiled_autograd.h
-@@ -1115,7 +1115,7 @@ struct IValuePacker {
+@@ -1107,7 +1107,7 @@ struct IValuePacker {
    // parsing. See torch::jit::toIValue for more information.
    static at::TypePtr packed_type() {
      // On windows CPU is support compiled autograd.

@@ -1,7 +1,7 @@
-From 18e33468c30e4fbba1ac4242efdeb8041858467a Mon Sep 17 00:00:00 2001
+From 45a5afa3d85caef736feccf2cfbd0cedf730cf14 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Tue, 28 Jan 2025 10:58:29 +1100
-Subject: [PATCH 07/18] remove `DESTINATION lib` from CMake `install(TARGETS`
+Subject: [PATCH 07/16] remove `DESTINATION lib` from CMake `install(TARGETS`
  directives
 
 Suggested-By: Silvio Traversaro <silvio@traversaro.it>
@@ -29,10 +29,10 @@ index f82e460cafc..d5df53938c3 100644
  
  install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
 diff --git a/c10/cuda/CMakeLists.txt b/c10/cuda/CMakeLists.txt
-index a3376140cde..4979ecc54ea 100644
+index 2604f677858..dcad42167ea 100644
 --- a/c10/cuda/CMakeLists.txt
 +++ b/c10/cuda/CMakeLists.txt
-@@ -86,7 +86,7 @@ if(NOT BUILD_LIBTORCHLESS)
+@@ -83,7 +83,7 @@ if(NOT BUILD_LIBTORCHLESS)
  # Note: for now, we will put all export path into one single Caffe2Targets group
  # to deal with the cmake deployment need. Inside the Caffe2Targets set, the
  # individual libraries like libc10.so and libcaffe2.so are still self-contained.
@@ -42,7 +42,7 @@ index a3376140cde..4979ecc54ea 100644
  endif()
  
 diff --git a/c10/hip/CMakeLists.txt b/c10/hip/CMakeLists.txt
-index 33a5b2c10a6..c52300c5b9c 100644
+index ef24471dba8..a410383de27 100644
 --- a/c10/hip/CMakeLists.txt
 +++ b/c10/hip/CMakeLists.txt
 @@ -56,7 +56,7 @@ if(NOT BUILD_LIBTORCHLESS)
@@ -68,7 +68,7 @@ index c2fa65ba35e..3a384395e4a 100644
    add_subdirectory(test)
  endif()
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 0a419e46a5b..4b284e5ade7 100644
+index 6cbaecc5d2e..c6986007740 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
 @@ -575,7 +575,7 @@ if(USE_CUDA)
@@ -80,7 +80,7 @@ index 0a419e46a5b..4b284e5ade7 100644
    if(USE_NCCL)
      list(APPEND Caffe2_GPU_SRCS
        ${TORCH_SRC_DIR}/csrc/cuda/nccl.cpp)
-@@ -657,7 +657,7 @@ if(USE_ROCM)
+@@ -656,7 +656,7 @@ if(USE_ROCM)
    target_link_libraries(caffe2_nvrtc hip::amdhip64 hiprtc::hiprtc)
    target_include_directories(caffe2_nvrtc PRIVATE ${CMAKE_BINARY_DIR})
    target_compile_definitions(caffe2_nvrtc PRIVATE USE_ROCM __HIP_PLATFORM_AMD__)
@@ -89,7 +89,7 @@ index 0a419e46a5b..4b284e5ade7 100644
  endif()
  
  if(NOT NO_API AND NOT BUILD_LITE_INTERPRETER)
-@@ -1121,7 +1121,7 @@ elseif(USE_CUDA)
+@@ -1119,7 +1119,7 @@ elseif(USE_CUDA)
            CUDA::culibos ${CMAKE_DL_LIBS})
      endif()
      set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../aten/src/ATen/native/cuda/LinearAlgebraStubs.cpp PROPERTIES COMPILE_FLAGS "-DBUILD_LAZY_CUDA_LINALG")
@@ -98,7 +98,7 @@ index 0a419e46a5b..4b284e5ade7 100644
    endif()
  
    if(USE_PRECOMPILED_HEADERS)
-@@ -1598,17 +1598,17 @@ endif()
+@@ -1594,17 +1594,17 @@ endif()
  
  caffe2_interface_library(torch torch_library)
  
@@ -121,7 +121,7 @@ index 0a419e46a5b..4b284e5ade7 100644
  
  target_link_libraries(torch PUBLIC torch_cpu_library)
  
-@@ -1751,7 +1751,7 @@ if(BUILD_SHARED_LIBS)
+@@ -1747,7 +1747,7 @@ if(BUILD_SHARED_LIBS)
        target_link_libraries(torch_global_deps torch::nvtoolsext)
      endif()
    endif()
@@ -131,10 +131,10 @@ index 0a419e46a5b..4b284e5ade7 100644
  
  # ---[ Caffe2 HIP sources.
 diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
-index 471fe0c9c1f..a1693c1f9cd 100644
+index 3a3ca0f1236..0e2c682fd97 100644
 --- a/torch/CMakeLists.txt
 +++ b/torch/CMakeLists.txt
-@@ -464,7 +464,7 @@ if(NOT TORCH_PYTHON_LINK_FLAGS STREQUAL "")
+@@ -466,7 +466,7 @@ if(NOT TORCH_PYTHON_LINK_FLAGS STREQUAL "")
      set_target_properties(torch_python PROPERTIES LINK_FLAGS ${TORCH_PYTHON_LINK_FLAGS})
  endif()
  
