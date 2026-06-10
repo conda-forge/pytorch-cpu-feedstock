@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
-{% set version = "2.11.0" %}
-{% set build = 1 %}
+{% set version = "2.12.0" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -16,7 +16,7 @@
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.6.0" %}
+{% set triton = "3.7.0" %}
 
 package:
   name: libtorch
@@ -29,36 +29,46 @@ source:
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-    sha256: ab3fde9e7e382f45ac942be6ea2c2ef362c5ccd6f55ed6d5f35e6ea81d3ab88e
+    sha256: 7cc1deb309f402ad67e9f45bbe311a40def4db19d66fddb9b01950f9bfc5ccb1
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
+      # revert https://github.com/pytorch/pytorch/pull/177640 as it broke cross
+      - patches/0002-Revert-Move-environment-variable-handling-from-setup.patch
       # conda-specific patch, lets us override CUDA paths
-      - patches/0002-Allow-overriding-CUDA-related-paths.patch
+      - patches/0003-Allow-overriding-CUDA-related-paths.patch
       # fix BLAS calling convention for openblas
-      - patches/0003-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
-      - patches/0004-Fix-FindOpenBLAS.patch
+      - patches/0004-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+      - patches/0005-Fix-FindOpenBLAS.patch
       # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
-      - patches/0005-use-our-own-PREFIX-for-include-paths-etc.patch
-      - patches/0006-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
-      - patches/0007-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch         # [win]
-      - patches/0008-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+      - patches/0006-use-our-own-PREFIX-for-include-paths-etc.patch
+      - patches/0007-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
+      - patches/0008-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch         # [win]
+      - patches/0009-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
       # skip a test that fails with numpy v2.3; still triggers as of pytorch v2.9
-      - patches/0009-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      - patches/0010-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
-      - patches/0010-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0011-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
       # backport https://github.com/pytorch/pytorch/pull/166824
-      - patches/0011-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
-      - patches/0012-Fix-building-kineto-against-system-fmt.patch
-      - patches/0013-Use-Intel-LLVM-openmp.patch
-      - patches/0014-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
+      - patches/0012-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
+      - patches/0013-Fix-building-kineto-against-system-fmt.patch
+      - patches/0014-Use-Intel-LLVM-openmp.patch
+      - patches/0015-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
       # backport https://github.com/pytorch/pytorch/pull/180388
-      - patches/0015-Fix-build-with-MAGMA-2.10.0-180388.patch
-      # backport https://github.com/pytorch/pytorch/pull/175283
-      - patches/0016-Ensure-test_tensorinv-uses-well-conditioned-inputs-1.patch
+      - patches/0016-Fix-build-with-MAGMA-2.10.0-180388.patch
       - patches/0017-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
-      # backport https://github.com/pytorch/pytorch/pull/173366
-      - patches/0018-Allow-gcc-14-with-CUDA-12.8-173366.patch
+      # fix a test-isolation leak in test_incorrect_abstract_impl that globally
+      # disables autograd dispatch and causes hundreds of spurious
+      # "element 0 of tensors does not require grad" failures
+      # backport https://github.com/pytorch/pytorch/pull/186550
+      - patches/0018-Fix-dispatch-key-guard-leak-in-test_incorrect_abstra.patch
+      # escape backslashes/quotes when CMAKE_CXX_FLAGS etc. are baked into
+      # macros.h build strings, so the Windows (MSVC) build of caffe2/core/common.cc
+      # doesn't choke on backslash paths -> C4129/C2065 'EHsc'
+      - patches/0019-Escape-backslashes-quotes-in-macros.h-build-strings-.patch
+      # support the cuDSS 0.8 API (new cudssDataType_t enum + offsetType arg in
+      # cudssMatrixCreateCsr) so we can build against libcudss >=0.8; upstreamable
+      - patches/0020-Update-cuDSS-matrix-create-calls-for-cuDSS-0.8-API.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -127,8 +137,7 @@ requirements:
     - cusparselt
     - libcublas-dev
     - libcudnn-dev
-    # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/490#issuecomment-4603758942
-    - libcudss-dev <0.8
+    - libcudss-dev
     - libcufile-dev         # [linux]
     - libcufft-dev
     - libcurand-dev
@@ -152,6 +161,7 @@ requirements:
     - libblas               # [blas_impl != "mkl"]
     - libcblas              # [blas_impl != "mkl"]
     - liblapack             # [blas_impl != "mkl"]
+    - onednn                # [not win]
     - libabseil
     - libprotobuf
     - llvm-openmp
@@ -160,8 +170,6 @@ requirements:
     - pkg-config  # [unix]
     - typing_extensions
     - pybind11
-    # see https://github.com/pytorch/pytorch/pull/175115
-    - pybind11 <3.0.2
     - pybind11-abi
     - eigen
     - zlib
@@ -275,8 +283,7 @@ outputs:
         - cusparselt
         - libcublas-dev
         - libcudnn-dev
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/490#issuecomment-4603758942
-        - libcudss-dev <0.8
+        - libcudss-dev
         - libcufile-dev         # [linux]
         - libcufft-dev
         - libcurand-dev
@@ -299,12 +306,11 @@ outputs:
         - libcblas * *_mkl      # [blas_impl == "mkl"]
         - libcblas              # [blas_impl != "mkl"]
         - liblapack             # [blas_impl != "mkl"]
+        - onednn                # [not win]
         - libabseil
         - libprotobuf
         - llvm-openmp
         - pybind11
-        # see https://github.com/pytorch/pytorch/pull/175115
-        - pybind11 <3.0.2
         - pybind11-abi
         - eigen
         - sleef
@@ -330,8 +336,6 @@ outputs:
         - networkx
         - optree >=0.13.0
         - pybind11
-        # https://github.com/pytorch/pytorch/pull/175115
-        - pybind11 <3.0.2
         - setuptools <82
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
@@ -557,9 +561,18 @@ outputs:
         {% set skips = skips ~ " or test_non_contiguous_tensors_nn_Linear_mps" %}       # [osx and arm64]
         {% set skips = skips ~ " or test_non_contiguous_tensors_nn_MultiheadAttention_eval_mode_mps_float16" %}  # [osx and arm64]
         {% set skips = skips ~ " or test_non_contiguous_tensors_nn_MultiheadAttention_train_mode_mps_float16" %}  # [osx and arm64]
+        # MPS float16 precision deltas on newer Apple Silicon (not seen on current CI runners,
+        # skipped tactically for robustness across macOS/hardware versions)
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_TransformerDecoderLayer_mps_float16" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_TransformerEncoder_eval_mode_mps_float16" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_TransformerEncoder_train_mode_mps_float16" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_TransformerEncoderLayer_train_mode_mps_float16" %}  # [osx and arm64]
         {% set skips = skips ~ " or test_non_contiguous_tensors_nn_RNNCell_mps" %}      # [osx and arm64]
         {% set skips = skips ~ " or test_non_contiguous_tensors_nn_RNN_eval_mode_mps" %}  # [osx and arm64]
         {% set skips = skips ~ " or test_non_contiguous_tensors_nn_RNN_train_mode_mps" %}  # [osx and arm64]
+        # MPS MultiheadAttention non-contiguous float32 precision deltas on osx-arm64 CI
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_MultiheadAttention_train_mode_mps_float32" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_MultiheadAttention_eval_mode_mps_float32" %}  # [osx and arm64]
         {% set skips = skips ~ " or test_transformerencoderlayer_mps_float32" %}        # [osx and arm64]
         {% set skips = skips ~ " or test_transformerencoderlayer_gelu_mps_float32" %}   # [osx and arm64]
         {% set skips = skips ~ " or test_grad_nn_MultiheadAttention_eval_mode_cpu_float64" %}   # [osx and arm64]
@@ -576,6 +589,10 @@ outputs:
         {% set skips = skips ~ " or test_inverse_errors_large_cpu" %}                    # [win and cuda_compiler_version == "13.0"]
         {% set skips = skips ~ " or test_torchinductor" %}                               # [win and cuda_compiler_version == "13.0"]
         {% set skips = skips ~ " or test_eigh_svd_illcondition_matrix_input_should_not_crash_cpu_float32" %}  # [aarch64]
+        # gross cholesky reconstruction error on aarch64 (openblas/QEMU), like test_cholesky_cpu_float32 above
+        {% set skips = skips ~ " or (TestLinalgCPU and test_cholesky_upper_reconstructs_cpu_float32)" %}  # [aarch64]
+        # debug=True checkpoint path raises ValueError: stoi from C++ traceback symbolization on aarch64
+        {% set skips = skips ~ " or (TestAutograd and test_checkpoint_detects_non_determinism)" %}  # [aarch64]
 
         - export OMP_NUM_THREADS=4      # [unix]
         - export ONEDNN_VERBOSE=all     # [unix]

@@ -1,0 +1,368 @@
+From 268cc8463048f2979447ba40f59e5ff01fc710d8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@quansight.com>
+Date: Thu, 4 Jun 2026 18:31:24 +0200
+Subject: [PATCH 02/20] Revert "Move environment variable handling from
+ setup.py to CMake (#177640)"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This reverts commit 0091142de72835d68e8d8bf568d875b3af2a1432. It broke
+cross-compilation, as EnvVarForwarding is done *after* the compiler
+check, so we cannot bypass the compiler check.
+
+Signed-off-by: Michał Górny <mgorny@quansight.com>
+---
+ CMakeLists.txt               |  11 ---
+ cmake/EnvVarForwarding.cmake | 138 -------------------------------
+ tools/setup_helpers/cmake.py | 152 +++++++++++++++++++++++++++++++----
+ 3 files changed, 135 insertions(+), 166 deletions(-)
+ delete mode 100644 cmake/EnvVarForwarding.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d5941243d66..bdc3d911555 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,17 +27,6 @@ endif()
+ # ---[ Project and semantic versioning.
+ project(Torch CXX C)
+ 
+-# When built via scikit-build-core, Python_EXECUTABLE is already set.
+-# For standalone cmake invocations, find it via find_package.
+-find_package(Python COMPONENTS Interpreter REQUIRED)
+-
+-# Forward environment variables to CMake variables, replicating the behavior
+-# previously handled by setup.py / tools/setup_helpers/cmake.py.
+-# When built via setup.py, these are already set as -D flags; the module
+-# skips variables that are already defined, so it is safe to include
+-# unconditionally.
+-include(cmake/EnvVarForwarding.cmake)
+-
+ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+   set(LINUX TRUE)
+ else()
+diff --git a/cmake/EnvVarForwarding.cmake b/cmake/EnvVarForwarding.cmake
+deleted file mode 100644
+index a31ce6db266..00000000000
+--- a/cmake/EnvVarForwarding.cmake
++++ /dev/null
+@@ -1,138 +0,0 @@
+-# Forward environment variables to CMake variables.
+-#
+-# This replicates the behavior of setup.py / tools/setup_helpers/cmake.py which
+-# passes all BUILD_*, USE_*, and CMAKE_* environment variables as -D flags, plus
+-# a set of additional variables that don't follow the prefix convention.
+-
+-# Additional env vars that are forwarded with a different CMake variable name.
+-set(_ENV_ALIASES
+-  "CUDNN_LIB_DIR=CUDNN_LIBRARY"
+-  "USE_CUDA_STATIC_LINK=CAFFE2_STATIC_LINK_CUDA"
+-)
+-
+-# Additional env vars forwarded with the same name.
+-set(_ENV_PASSTHROUGH
+-  UBSAN_FLAGS
+-  BLAS
+-  WITH_BLAS
+-  CUDA_HOST_COMPILER
+-  CUDA_NVCC_EXECUTABLE
+-  CUDA_SEPARABLE_COMPILATION
+-  CUDNN_LIBRARY
+-  CUDNN_INCLUDE_DIR
+-  CUDNN_ROOT
+-  EXPERIMENTAL_SINGLE_THREAD_POOL
+-  INSTALL_TEST
+-  INTEL_MKL_DIR
+-  INTEL_OMP_DIR
+-  MKL_THREADING
+-  MKLDNN_CPU_RUNTIME
+-  MSVC_Z7_OVERRIDE
+-  CAFFE2_USE_MSVC_STATIC_RUNTIME
+-  Numa_INCLUDE_DIR
+-  Numa_LIBRARIES
+-  ONNX_ML
+-  ONNX_NAMESPACE
+-  ATEN_THREADING
+-  WERROR
+-  OPENSSL_ROOT_DIR
+-  STATIC_DISPATCH_BACKEND
+-  SELECTED_OP_LIST
+-  TORCH_CUDA_ARCH_LIST
+-  TORCH_XPU_ARCH_LIST
+-  TRACING_BASED
+-  PYTHON_LIB_REL_PATH
+-)
+-
+-# Low-priority aliases: if the canonical var is not set, use the alias.
+-set(_LOW_PRIORITY_ALIASES
+-  "CUDA_HOST_COMPILER=CMAKE_CUDA_HOST_COMPILER"
+-  "CUDAHOSTCXX=CUDA_HOST_COMPILER"
+-  "CMAKE_CUDA_HOST_COMPILER=CUDA_HOST_COMPILER"
+-  "CMAKE_CUDA_COMPILER=CUDA_NVCC_EXECUTABLE"
+-  "CUDACXX=CUDA_NVCC_EXECUTABLE"
+-)
+-
+-# Forward aliased env vars (env name -> different cmake name)
+-foreach(_alias IN LISTS _ENV_ALIASES)
+-  string(REPLACE "=" ";" _parts "${_alias}")
+-  list(GET _parts 0 _env_name)
+-  list(GET _parts 1 _cmake_name)
+-  if(DEFINED ENV{${_env_name}} AND NOT DEFINED ${_cmake_name})
+-    set(${_cmake_name} "$ENV{${_env_name}}" CACHE STRING "From env ${_env_name}" FORCE)
+-  endif()
+-endforeach()
+-
+-# Forward passthrough env vars (same name)
+-foreach(_var IN LISTS _ENV_PASSTHROUGH)
+-  if(DEFINED ENV{${_var}} AND NOT DEFINED ${_var})
+-    set(${_var} "$ENV{${_var}}" CACHE STRING "From env ${_var}" FORCE)
+-  endif()
+-endforeach()
+-
+-# Forward all BUILD_*, USE_*, CMAKE_* env vars not already set as CMake
+-# variables, plus vars ending in EXITCODE or EXITCODE__TRYRUN_OUTPUT.
+-# This matches the existing behavior where setup.py passed everything with
+-# these prefixes/suffixes through to CMake.
+-# We use execute_process + env to get the full list since CMake has no
+-# built-in way to enumerate environment variables.
+-execute_process(
+-  COMMAND "${CMAKE_COMMAND}" -E environment
+-  OUTPUT_VARIABLE _all_env
+-  OUTPUT_STRIP_TRAILING_WHITESPACE
+-)
+-string(REPLACE "\n" ";" _env_lines "${_all_env}")
+-foreach(_line IN LISTS _env_lines)
+-  if(_line MATCHES "^([A-Za-z_0-9]+)=(.*)")
+-    set(_var_name "${CMAKE_MATCH_1}")
+-    set(_var_value "${CMAKE_MATCH_2}")
+-    # Only forward vars with BUILD_/USE_/CMAKE_ prefix or *EXITCODE* suffix.
+-    string(REGEX MATCH "^(BUILD_|USE_|CMAKE_)" _has_prefix "${_var_name}")
+-    string(REGEX MATCH "(EXITCODE|EXITCODE__TRYRUN_OUTPUT)$" _has_suffix "${_var_name}")
+-    if(NOT _has_prefix AND NOT _has_suffix)
+-      continue()
+-    endif()
+-    if(NOT DEFINED ${_var_name})
+-      set(${_var_name} "${_var_value}" CACHE STRING "From environment" FORCE)
+-    endif()
+-  endif()
+-endforeach()
+-
+-# Low-priority aliases
+-foreach(_alias IN LISTS _LOW_PRIORITY_ALIASES)
+-  string(REPLACE "=" ";" _parts "${_alias}")
+-  list(GET _parts 0 _env_name)
+-  list(GET _parts 1 _cmake_name)
+-  if(DEFINED ENV{${_env_name}} AND NOT DEFINED ${_cmake_name})
+-    set(${_cmake_name} "$ENV{${_env_name}}" CACHE STRING "From env alias ${_env_name}" FORCE)
+-  endif()
+-endforeach()
+-
+-# Ensure Python's purelib is on CMAKE_PREFIX_PATH so CMake can find
+-# packages installed there (e.g., pybind11, numpy).
+-if(Python_EXECUTABLE)
+-  execute_process(
+-    COMMAND "${Python_EXECUTABLE}" -c "import sysconfig; print(sysconfig.get_path('purelib'))"
+-    OUTPUT_VARIABLE _py_purelib
+-    OUTPUT_STRIP_TRAILING_WHITESPACE
+-    ERROR_QUIET
+-  )
+-  if(_py_purelib AND NOT "${_py_purelib}" STREQUAL "")
+-    list(PREPEND CMAKE_PREFIX_PATH "${_py_purelib}")
+-    # Preserve paths from the CMAKE_PREFIX_PATH environment variable.
+-    # Setting the cmake variable shadows the env var, so we must merge it in
+-    # explicitly. This ensures conda's prefix (e.g. /opt/conda/envs/py_3.10)
+-    # is present so cmake can find conda-provided libraries (libgomp, libnuma).
+-    if(DEFINED ENV{CMAKE_PREFIX_PATH} AND NOT "$ENV{CMAKE_PREFIX_PATH}" STREQUAL "")
+-      if(WIN32)
+-        # On Windows the env var is already ;-separated and : appears in drive
+-        # letters (e.g. C:\conda\envs\py310), so use it as-is.
+-        set(_env_prefix "$ENV{CMAKE_PREFIX_PATH}")
+-      else()
+-        string(REPLACE ":" ";" _env_prefix "$ENV{CMAKE_PREFIX_PATH}")
+-      endif()
+-      list(APPEND CMAKE_PREFIX_PATH ${_env_prefix})
+-    endif()
+-    list(REMOVE_DUPLICATES CMAKE_PREFIX_PATH)
+-  endif()
+-endif()
+diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
+index e3c5f2ce6e0..88f0fe5d309 100644
+--- a/tools/setup_helpers/cmake.py
++++ b/tools/setup_helpers/cmake.py
+@@ -12,6 +12,7 @@ import sys
+ import sysconfig
+ from pathlib import Path
+ from subprocess import CalledProcessError, check_call, check_output, DEVNULL
++from typing import cast
+ 
+ from .cmake_utils import CMakeValue, get_cmake_cache_variables_from_file
+ from .env import (
+@@ -243,34 +244,151 @@ class CMake:
+         _mkdir_p(install_dir)
+         _mkdir_p(self.build_dir)
+ 
+-        # Environment variable forwarding (BUILD_*, USE_*, CMAKE_*, aliases,
+-        # passthrough vars, CMAKE_PREFIX_PATH, low-priority aliases) is now
+-        # handled by cmake/EnvVarForwarding.cmake, which is included early in
+-        # the top-level CMakeLists.txt. Only options that require Python-side
+-        # detection are passed here.
++        # Store build options that are directly stored in environment variables
++        build_options: dict[str, CMakeValue] = {}
++
++        # Build options that do not start with "BUILD_", "USE_", or "CMAKE_" and are directly controlled by env vars.
++        # This is a dict that maps environment variables to the corresponding variable name in CMake.
++        additional_options = {
++            # Key: environment variable name. Value: Corresponding variable name to be passed to CMake. If you are
++            # adding a new build option to this block: Consider making these two names identical and adding this option
++            # in the block below.
++            "CUDNN_LIB_DIR": "CUDNN_LIBRARY",
++            "USE_CUDA_STATIC_LINK": "CAFFE2_STATIC_LINK_CUDA",
++        }
++        additional_options.update(
++            {
++                # Build options that have the same environment variable name and CMake variable name and that do not start
++                # with "BUILD_", "USE_", or "CMAKE_". If you are adding a new build option, also make sure you add it to
++                # CMakeLists.txt.
++                var: var
++                for var in (
++                    "UBSAN_FLAGS",
++                    "BLAS",
++                    "WITH_BLAS",
++                    "CUDA_HOST_COMPILER",
++                    "CUDA_NVCC_EXECUTABLE",
++                    "CUDA_SEPARABLE_COMPILATION",
++                    "CUDNN_LIBRARY",
++                    "CUDNN_INCLUDE_DIR",
++                    "CUDNN_ROOT",
++                    "EXPERIMENTAL_SINGLE_THREAD_POOL",
++                    "INSTALL_TEST",
++                    "JAVA_HOME",
++                    "INTEL_MKL_DIR",
++                    "INTEL_OMP_DIR",
++                    "MKL_THREADING",
++                    "MKLDNN_CPU_RUNTIME",
++                    "MSVC_Z7_OVERRIDE",
++                    "CAFFE2_USE_MSVC_STATIC_RUNTIME",
++                    "Numa_INCLUDE_DIR",
++                    "Numa_LIBRARIES",
++                    "ONNX_ML",
++                    "ONNX_NAMESPACE",
++                    "ATEN_THREADING",
++                    "WERROR",
++                    "OPENSSL_ROOT_DIR",
++                    "STATIC_DISPATCH_BACKEND",
++                    "SELECTED_OP_LIST",
++                    "TORCH_CUDA_ARCH_LIST",
++                    "TORCH_XPU_ARCH_LIST",
++                    "TRACING_BASED",
++                    "PYTHON_LIB_REL_PATH",
++                )
++            }
++        )
+ 
+-        build_options: dict[str, CMakeValue] = {
+-            "CMAKE_INSTALL_PREFIX": install_dir,
+-            "BUILD_PYTHON": build_python,
+-            "BUILD_TEST": build_test,
++        # Aliases which are lower priority than their canonical option
++        low_priority_aliases = {
++            "CUDA_HOST_COMPILER": "CMAKE_CUDA_HOST_COMPILER",
++            "CUDAHOSTCXX": "CUDA_HOST_COMPILER",
++            "CMAKE_CUDA_HOST_COMPILER": "CUDA_HOST_COMPILER",
++            "CMAKE_CUDA_COMPILER": "CUDA_NVCC_EXECUTABLE",
++            "CUDACXX": "CUDA_NVCC_EXECUTABLE",
+         }
++        for var, val in my_env.items():
++            # We currently pass over all environment variables that start with "BUILD_", "USE_", and "CMAKE_". This is
++            # because we currently have no reliable way to get the list of all build options we have specified in
++            # CMakeLists.txt. (`cmake -L` won't print dependent options when the dependency condition is not met.) We
++            # will possibly change this in the future by parsing CMakeLists.txt ourselves (then additional_options would
++            # also not be needed to be specified here).
++            true_var = additional_options.get(var)
++            if true_var is not None:
++                build_options[true_var] = val
++            elif var.startswith(("BUILD_", "USE_", "CMAKE_")) or var.endswith(
++                ("EXITCODE", "EXITCODE__TRYRUN_OUTPUT")
++            ):
++                build_options[var] = val
++
++            if var in low_priority_aliases:
++                key = low_priority_aliases[var]
++                if key not in build_options:
++                    build_options[key] = val
++
++        # The default value cannot be easily obtained in CMakeLists.txt. We set it here.
++        py_lib_path = sysconfig.get_path("purelib")
++        cmake_prefix_path = build_options.get("CMAKE_PREFIX_PATH")
++        if cmake_prefix_path:
++            build_options["CMAKE_PREFIX_PATH"] = (
++                py_lib_path + ";" + cast(str, cmake_prefix_path)
++            )
++        else:
++            build_options["CMAKE_PREFIX_PATH"] = py_lib_path
+ 
++        # Some options must be post-processed. Ideally, this list will be shrunk to only one or two options in the
++        # future, as CMake can detect many of these libraries pretty comfortably. We have them here for now before CMake
++        # integration is completed. They appear here not in the CMake.defines call below because they start with either
++        # "BUILD_" or "USE_" and must be overwritten here.
+         use_numpy = not check_negative_env_flag("USE_NUMPY")
+-        build_options["USE_NUMPY"] = use_numpy
++        build_options.update(
++            {
++                # Note: Do not add new build options to this dict if it is directly read from environment variable -- you
++                # only need to add one in `CMakeLists.txt`. All build options that start with "BUILD_", "USE_", or "CMAKE_"
++                # are automatically passed to CMake; For other options you can add to additional_options above.
++                "BUILD_PYTHON": build_python,
++                "BUILD_TEST": build_test,
++                # Most library detection should go to CMake script, except this one, which Python can do a much better job
++                # due to NumPy's inherent Pythonic nature.
++                "USE_NUMPY": use_numpy,
++            }
++        )
++
++        # Detect build dependencies from python lib path (in order to set *_HOME variables)
++        # NVSHMEM
++        nvshmem_py_dir = py_lib_path + "/nvidia/nvshmem"
++        if os.path.exists(nvshmem_py_dir):
++            build_options["NVSHMEM_PY_DIR"] = nvshmem_py_dir
++
++        # Options starting with CMAKE_
++        cmake__options = {
++            "CMAKE_INSTALL_PREFIX": install_dir,
++        }
++
++        # We set some CMAKE_* options in our Python build code instead of relying on the user's direct settings. Emit an
++        # error if the user also attempts to set these CMAKE options directly.
++        specified_cmake__options = set(build_options).intersection(cmake__options)
++        if len(specified_cmake__options) > 0:
++            eprint(
++                ", ".join(specified_cmake__options)
++                + " should not be specified in the environment variable. They are directly set by PyTorch build script."
++            )
++            sys.exit(1)
++        build_options.update(cmake__options)
++
+         if use_numpy:
+             try:
++                # This helps CMake find the correct include directory for NumPy
++                # This is especially useful in cross compiled environments
+                 import numpy
+ 
+-                build_options["Python_NumPy_INCLUDE_DIR"] = numpy.get_include()
++                Python_NumPy_INCLUDE_DIR = numpy.get_include()
++                build_options.update(
++                    dict(Python_NumPy_INCLUDE_DIR=Python_NumPy_INCLUDE_DIR)
++                )
+             except ImportError:
++                # use_numpy is just a hint.... so we can fail silently here
+                 pass
+ 
+-        # NVSHMEM detection from Python lib path
+-        py_lib_path = sysconfig.get_path("purelib")
+-        nvshmem_py_dir = py_lib_path + "/nvidia/nvshmem"
+-        if os.path.exists(nvshmem_py_dir):
+-            build_options["NVSHMEM_PY_DIR"] = nvshmem_py_dir
+-
+         CMake.defines(
+             args,
+             Python_EXECUTABLE=sys.executable,

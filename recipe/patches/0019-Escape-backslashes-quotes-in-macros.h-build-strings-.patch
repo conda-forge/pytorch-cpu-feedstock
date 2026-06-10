@@ -1,0 +1,53 @@
+From c3f7e8d9fec996c8e053064bc49d2c22dd0f864f Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark@ramonaoptics.com>
+Date: Mon, 8 Jun 2026 01:08:14 +0000
+Subject: [PATCH 19/20] Escape backslashes/quotes in macros.h build strings
+ (fix Windows build)
+
+caffe2/core/macros.h.in records CMAKE_CXX_FLAGS, CMAKE_CUDA_FLAGS and
+CMAKE_CXX_COMPILER into C++ string literals (for torch.__config__.show()).
+On Windows these contain backslash paths (e.g. conda build-prefix include
+dirs like -IC:\bld\..._h_env\Library\include) and the /EHsc flag; substituted
+verbatim by configure_file they form an invalid string literal, so MSVC emits
+C4129 (unrecognized character escape sequence) and then fails compiling
+caffe2/core/common.cc with C2065 "EHsc undeclared" / C2059 syntax errors.
+
+Escape backslashes and double-quotes in those three variables before
+configure_file. Scoped in a block() so the actual compiler flags used to
+build the project are unaffected.
+
+Signed-off-by: Mark Harfouche <mark@ramonaoptics.com>
+---
+ cmake/Codegen.cmake | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/cmake/Codegen.cmake b/cmake/Codegen.cmake
+index 60d00dd394e..40bd62b557e 100644
+--- a/cmake/Codegen.cmake
++++ b/cmake/Codegen.cmake
+@@ -43,9 +43,22 @@ execute_process(
+ )
+ 
+ # ---[ Write the macros file
+-configure_file(
+-    ${CMAKE_CURRENT_LIST_DIR}/../caffe2/core/macros.h.in
+-    ${CMAKE_BINARY_DIR}/caffe2/core/macros.h)
++# Some of the variables recorded in macros.h (for torch.__config__.show())
++# are embedded verbatim into C++ string literals -- e.g. CMAKE_CXX_FLAGS,
++# CMAKE_CUDA_FLAGS and CMAKE_CXX_COMPILER. On Windows these contain backslash
++# paths (e.g. -IC:\bld\..._h_env\Library\include) and quotes, which produce an
++# invalid string literal (MSVC: C4129 bad escape sequence, then C2065/C2059).
++# Escape backslashes and quotes so the generated header compiles. Scoped with
++# block() so the real compiler flags used for the build are left untouched.
++block()
++    foreach(_cf_var CMAKE_CXX_COMPILER CMAKE_CXX_FLAGS CMAKE_CUDA_FLAGS)
++        string(REPLACE "\\" "\\\\" ${_cf_var} "${${_cf_var}}")
++        string(REPLACE "\"" "\\\"" ${_cf_var} "${${_cf_var}}")
++    endforeach()
++    configure_file(
++        ${CMAKE_CURRENT_LIST_DIR}/../caffe2/core/macros.h.in
++        ${CMAKE_BINARY_DIR}/caffe2/core/macros.h)
++endblock()
+ 
+ # ---[ Installing the header files
+ install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../caffe2
