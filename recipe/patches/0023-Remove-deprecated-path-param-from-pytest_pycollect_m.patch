@@ -1,0 +1,25 @@
+From d77613be321eb73b641a839301372ff82e60737a Mon Sep 17 00:00:00 2001
+From: Jamie Robertson <jamierobertsongames@gmail.com>
+Date: Mon, 23 Mar 2026 15:28:58 +0000
+Subject: [PATCH] Remove deprecated `path` parameter from
+ pytest_pycollect_makemodule
+
+The `path` parameter (py.path.local) was deprecated in pytest 7 and
+removed in pytest 9. Only `module_path` (pathlib.Path) is needed.
+This fixes compatibility with pytest 9+.
+---
+ test/conftest.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/conftest.py b/test/conftest.py
+--- a/test/conftest.py
++++ b/test/conftest.py
+@@ -233,7 +233,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
+
+
+ @pytest.hookimpl(tryfirst=True)
+-def pytest_pycollect_makemodule(module_path, path, parent) -> Module:
++def pytest_pycollect_makemodule(module_path, parent) -> Module:
+     if parent.config.getoption("--use-main-module"):
+         mod = Module.from_parent(parent, path=module_path)
+         mod._getobj = MethodType(lambda x: sys.modules["__main__"], mod)
