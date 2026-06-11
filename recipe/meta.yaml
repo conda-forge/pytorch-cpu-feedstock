@@ -75,6 +75,9 @@ source:
       # pytest 9 removed the deprecated `path` argument of pytest_pycollect_makemodule
       # (from AnacondaRecipes); this lets us test with unpinned pytest
       - patches/0023-Remove-deprecated-path-param-from-pytest_pycollect_m.patch
+      # pytest-xdist cannot serialize torch builtin function objects in
+      # unittest subTest metadata
+      - patches/0024-Use-serializable-subtest-labels-in-autograd.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
