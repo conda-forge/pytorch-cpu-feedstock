@@ -69,6 +69,12 @@ source:
       # support the cuDSS 0.8 API (new cudssDataType_t enum + offsetType arg in
       # cudssMatrixCreateCsr) so we can build against libcudss >=0.8; upstreamable
       - patches/0021-Support-cuDSS-0.8-API-in-cudssMatrixCreate.patch
+      # Handlers.cpp uses std::unordered_map / std::vector without including them;
+      # fails to compile on osx-arm64 metal builds (from AnacondaRecipes)
+      - patches/0022-Add-missing-includes-in-c10d-control_plane-Handlers.patch
+      # pytest 9 removed the deprecated `path` argument of pytest_pycollect_makemodule
+      # (from AnacondaRecipes); this lets us test with unpinned pytest
+      - patches/0023-Remove-deprecated-path-param-from-pytest_pycollect_m.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -371,9 +377,10 @@ outputs:
         - ninja
         - boto3
         - hypothesis
-        # pytest-9 causes failure due to PytestRemovedIn9Warning
-        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/448#issuecomment-3529016115
-        - pytest <9
+        # pytest-9 compatibility of test/conftest.py is fixed by patch 0023
+        # (PytestRemovedIn9Warning, see
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/448#issuecomment-3529016115)
+        - pytest
         - tabulate
         - pydot
         - pip
@@ -443,6 +450,8 @@ outputs:
         {% set tests = tests ~ " test/inductor/test_torchinductor.py" %}    # [py==312 and not (aarch64 or osx)]
 
         {% set skips = "(TestTorch and test_print)" %}
+        # downloads a legacy module from download.pytorch.org; fails on network/SSL flakes
+        {% set skips = skips ~ " or (TestNN and test_module_backcompat)" %}
         # minor tolerance violations
         {% set skips = skips ~ " or test_1_sized_with_0_strided_cpu_float32" %}         # [osx]
         {% set skips = skips ~ " or test_batchnorm_nhwc_cpu" %}                         # [unix]

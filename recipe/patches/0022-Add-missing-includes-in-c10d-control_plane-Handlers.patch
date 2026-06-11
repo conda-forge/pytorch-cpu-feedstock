@@ -1,0 +1,27 @@
+From ac569bd0ba27d222e26fc2dd5671e47e4dcbd7cc Mon Sep 17 00:00:00 2001
+From: conda-forge <conda-forge@users.noreply.github.com>
+Date: Mon, 6 Nov 2023 13:48:00 -0500
+Subject: [PATCH] Add missing includes in c10d control_plane Handlers.hpp
+
+Handlers.cpp uses std::unordered_map and std::vector, but the header does
+not include them. It won't compile for osx-arm64 metal builds; other
+platforms only get away with it through transitive includes.
+---
+ torch/csrc/distributed/c10d/control_plane/Handlers.hpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/torch/csrc/distributed/c10d/control_plane/Handlers.hpp b/torch/csrc/distributed/c10d/control_plane/Handlers.hpp
+--- a/torch/csrc/distributed/c10d/control_plane/Handlers.hpp
++++ b/torch/csrc/distributed/c10d/control_plane/Handlers.hpp
+@@ -1,9 +1,11 @@
+ #pragma once
+
+ #include <functional>
+ #include <map>
+ #include <string>
++#include <unordered_map>
+ #include <utility>
++#include <vector>
+
+ #include <c10/macros/Export.h>
+
