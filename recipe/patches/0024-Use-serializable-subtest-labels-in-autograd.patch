@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: conda-forge <conda-forge@users.noreply.github.com>
+Date: Thu, 11 Jun 2026 00:00:00 +0000
+Subject: [PATCH] Use serializable subtest labels in autograd test
+
+pytest-xdist serializes unittest subtest reports through execnet. Passing
+torch builtin functions as subtest parameters makes the report fail to
+serialize before the actual assertions can be reported.
+---
+ test/test_autograd.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/test/test_autograd.py b/test/test_autograd.py
+--- a/test/test_autograd.py
++++ b/test/test_autograd.py
+@@ -12281,7 +12281,7 @@ class TestAutogradDeviceType(TestCase):
+     def test_min_max_aminmax_median_backprops_to_all_values(self, device):
+         # 1) Test min/max/median/nanmedian on both a non NaN and all NaN tensor
+         for f in [torch.min, torch.max, torch.median, torch.nanmedian]:
+-            with self.subTest(f=f):
++            with self.subTest(f=f.__name__):
+                 x1 = torch.tensor(
+                     [1.0, 0.0, 1.0, 0.0, 1.0, 0.0], device=device, requires_grad=True
+                 )
+@@ -12309,7 +12309,7 @@ class TestAutogradDeviceType(TestCase):
+             return torch.aminmax(x)[1]
+ 
+         for f in [torch.amin, torch.amax, amax2, amin2]:
+-            with self.subTest(f=f):
++            with self.subTest(f=f.__name__):
+                 x1 = torch.tensor(
+                     [1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+                     device=device,
