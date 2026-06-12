@@ -7,6 +7,9 @@ Subject: [PATCH] Remove deprecated `path` parameter from
 The `path` parameter (py.path.local) was deprecated in pytest 7 and
 removed in pytest 9. Only `module_path` (pathlib.Path) is needed.
 This fixes compatibility with pytest 9+.
+
+Taken from AnacondaRecipes/pytorch-feedstock (originally
+recipe/patches/0023-remove-conftest-extra-param.patch).
 ---
  test/conftest.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

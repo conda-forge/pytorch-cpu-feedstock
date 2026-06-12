@@ -499,8 +499,6 @@ outputs:
         {% set skips = skips ~ " or test_grad_nn_Transformer" %}                        # [aarch64]
         {% set skips = skips ~ " or test_inverse_errors_large" %}                       # [aarch64]
         {% set skips = skips ~ " or (TestXNNPACKConv1dTransformPass and test_conv1d_basic)" %}  # [aarch64]
-        # errors (possibly QEMU-related) with openblas 0.3.30
-        {% set skips = skips ~ " or test_addbmm or test_baddbmm or test_bmm" %}         # [aarch64]
         # gross cholesky reconstruction error on aarch64 (openblas/QEMU), like test_cholesky_cpu_float32 above
         {% set skips = skips ~ " or (TestLinalgCPU and test_cholesky_upper_reconstructs_cpu_float32)" %}  # [aarch64]
         # debug=True checkpoint path raises ValueError: stoi from C++ traceback symbolization on aarch64

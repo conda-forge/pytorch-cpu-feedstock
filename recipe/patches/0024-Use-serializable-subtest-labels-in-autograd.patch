@@ -1,6 +1,6 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: conda-forge <conda-forge@users.noreply.github.com>
-Date: Thu, 11 Jun 2026 00:00:00 +0000
+From f03203e8a3f3a32af0a2dd273b125b9bcdfd3e36 Mon Sep 17 00:00:00 2001
+From: Wolf Vollprecht <w.vollprecht@gmail.com>
+Date: Thu, 11 Jun 2026 19:21:57 +0200
 Subject: [PATCH] Use serializable subtest labels in autograd test
 
 pytest-xdist serializes unittest subtest reports through execnet. Passing
