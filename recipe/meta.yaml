@@ -33,6 +33,12 @@ source:
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
+      # conda-specific: make setup.py honor $CMAKE_ARGS so conda's cross-compilation
+      # toolchain reaches cmake before project(). Upstream PR #177640 moved env-var
+      # forwarding into cmake/EnvVarForwarding.cmake (include()d after project()),
+      # which is too late for the setup.py build path; honoring CMAKE_ARGS (as
+      # scikit-build-core/conda-forge do) puts it on the command line in time.
+      - patches/0002-Honor-CMAKE_ARGS-in-setup.py-cmake-invocation.patch
       # conda-specific patch, lets us override CUDA paths
       - patches/0003-Allow-overriding-CUDA-related-paths.patch
       # fix BLAS calling convention for openblas
