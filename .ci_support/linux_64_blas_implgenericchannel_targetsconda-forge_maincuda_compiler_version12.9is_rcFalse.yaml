@@ -40,22 +40,14 @@ liblapack:
 - 3.9.* *netlib
 libmagma_devel:
 - 2.10.0
-libmagma_sparse:
-- 2.10.0
 libprotobuf:
 - 6.33.5
-libtorch:
-- '2.10'
-mkl:
-- '2026'
 mkl_devel:
 - '2026'
 nccl:
 - '2'
 numpy:
 - '2'
-orc:
-- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -68,8 +60,6 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
-pytorch:
-- '2.10'
 target_platform:
 - linux-64
 zip_keys:
