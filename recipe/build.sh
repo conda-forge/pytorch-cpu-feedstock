@@ -78,17 +78,18 @@ export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
 export CMAKE_PREFIX_PATH=$PREFIX
 export CMAKE_BUILD_TYPE=Release
 
-for ARG in $CMAKE_ARGS; do
-  if [[ "$ARG" == "-DCMAKE_"* ]]; then
-    cmake_arg=$(echo $ARG | cut -d= -f1)
-    cmake_arg=$(echo $cmake_arg| cut -dD -f2-)
-    cmake_val=$(echo $ARG | cut -d= -f2-)
-    printf -v $cmake_arg "$cmake_val"
-    export ${cmake_arg}
-  fi
-done
-CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
-unset CMAKE_INSTALL_PREFIX
+# PyTorch's setup.py honors $CMAKE_ARGS (see patch
+# 0002b-Honor-CMAKE_ARGS-in-setup.py-cmake-invocation), so conda's flags reach
+# cmake on the command line *before* project() -- which is what cross
+# compilation needs (CMAKE_SYSTEM_NAME, CMAKE_OSX_SYSROOT, the cross binutils,
+# ...). Append $SRC_DIR to CMAKE_FIND_ROOT_PATH so cross find_* can locate things
+# unpacked in the source tree -- but only when conda actually set a root path
+# (i.e. when cross compiling); forcing one on a native build would over-restrict
+# find_*. (CMAKE_INSTALL_PREFIX is filtered out in patch 0002b, since cmake.py
+# sets its own.)
+CMAKE_ARGS="$(echo "$CMAKE_ARGS" | sed -E "s#(-DCMAKE_FIND_ROOT_PATH=[^[:space:]]*)#\1;${SRC_DIR}#")"
+export CMAKE_ARGS
+
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 # Always pass 0 to avoid appending ".post" to version string.
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
@@ -129,8 +130,12 @@ fi
 rm -rf $PREFIX/git
 
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
-    export COMPILER_WORKS_EXITCODE=0
-    export COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT=""
+    # We cross-compile without an emulator, so PyTorch's check_c_source_runs()
+    # "COMPILER_WORKS" try_run cannot execute the target binary. Preseed its
+    # result in the cache -- the CMake-sanctioned mechanism for try_run under
+    # cross compilation -- via $CMAKE_ARGS so it lands on the cmake command line
+    # before project(), rather than as a loose environment variable.
+    export CMAKE_ARGS="$CMAKE_ARGS -DCOMPILER_WORKS_EXITCODE=0 -DCOMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT="
 fi
 
 if [[ "${CI}" == "github_actions" ]]; then
