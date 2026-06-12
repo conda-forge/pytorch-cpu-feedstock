@@ -31,7 +31,7 @@ libmagma_sparse:
 libprotobuf:
 - 6.33.5
 libtorch:
-- '2.9'
+- '2.10'
 mkl:
 - '2026'
 mkl_devel:
@@ -53,7 +53,7 @@ python:
 - 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
-- '2.9'
+- '2.10'
 target_platform:
 - win-64
 zip_keys:
