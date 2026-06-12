@@ -1,0 +1,685 @@
+schema_version: 1
+
+context:
+  # if you wish to build release candidate number X, append the version string with ".rcX"
+  version: "2.12.0"
+  # Base build number. The CUDA variant gets +200 and the MKL variant +100 so
+  # that conda's solver prefers them where the platform supports them (this
+  # mirrors the old meta.yaml build-number juggling).
+  build_base: 0
+  build_number: ${{ build_base + (200 if cuda_compiler_version != "None" else 0) + (100 if blas_impl == "mkl" else 0) }}
+  # see https://github.com/pytorch/pytorch/blame/v${{ version }}/.ci/docker/ci_commit_pins/triton.txt
+  # pytorch and triton are released in tandem, see notes in their release process
+  # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
+  triton: "3.7.0"
+  release_sha256: "7cc1deb309f402ad67e9f45bbe311a40def4db19d66fddb9b01950f9bfc5ccb1"
+  rc_sha256: "3035931fff5b79e0300db69b0249e0c9c7ea5b394f451cb80e0280cbc2affcc2"
+  # build string fragment: cpu vs cuda + blas implementation
+  flavor: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) if cuda_compiler_version != "None" else "cpu" }}_${{ blas_impl }}
+
+recipe:
+  # name is ignored for multi-output recipes
+  name: pytorch-cpu
+  # normalize possible rc-style versions the same way the old recipe did
+  version: ${{ version | replace("-", ".") }}
+
+source:
+  # The "rc" tarballs live on download.pytorch.org; releases are GitHub assets.
+  # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
+  - url: ${{ "https://download.pytorch.org/source_code/test/pytorch-v" ~ version ~ ".tar.gz" if "rc" in version else "https://github.com/pytorch/pytorch/releases/download/v" ~ version ~ "/pytorch-v" ~ version ~ ".tar.gz" }}
+    sha256: ${{ rc_sha256 if "rc" in version else release_sha256 }}
+    patches:
+      - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
+      # revert https://github.com/pytorch/pytorch/pull/177640 as it broke cross
+      - patches/0002-Revert-Move-environment-variable-handling-from-setup.patch
+      # conda-specific patch, lets us override CUDA paths
+      - patches/0003-Allow-overriding-CUDA-related-paths.patch
+      # fix BLAS calling convention for openblas
+      - patches/0004-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+      - patches/0005-Fix-FindOpenBLAS.patch
+      # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
+      - patches/0006-use-our-own-PREFIX-for-include-paths-etc.patch
+      - patches/0007-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
+      - if: win
+        then:
+          - patches/0008-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch
+      - patches/0009-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+      # skip a test that fails with numpy v2.3; still triggers as of pytorch v2.9
+      - patches/0010-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      # backport https://github.com/pytorch/pytorch/pull/127702
+      - patches/0011-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      # backport https://github.com/pytorch/pytorch/pull/166824
+      - patches/0012-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
+      - patches/0013-Fix-building-kineto-against-system-fmt.patch
+      - patches/0014-Use-Intel-LLVM-openmp.patch
+      - if: cuda_compiler_version != "None"
+        then:
+          - patches/0015-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch
+      # backport https://github.com/pytorch/pytorch/pull/180388
+      - patches/0016-Fix-build-with-MAGMA-2.10.0-180388.patch
+      - patches/0017-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
+      # fix a test-isolation leak in test_incorrect_abstract_impl that globally
+      # disables autograd dispatch and causes hundreds of spurious
+      # "element 0 of tensors does not require grad" failures
+      # backport https://github.com/pytorch/pytorch/pull/186550
+      - patches/0018-Fix-dispatch-key-guard-leak-in-test_incorrect_abstra.patch
+      # escape backslashes/quotes when CMAKE_CXX_FLAGS etc. are baked into
+      # macros.h build strings, so the Windows (MSVC) build of caffe2/core/common.cc
+      # doesn't choke on backslash paths -> C4129/C2065 'EHsc'
+      - patches/0019-Escape-backslashes-quotes-in-macros.h-build-strings-.patch
+      # support the cuDSS 0.8 API (new cudssDataType_t enum + offsetType arg in
+      # cudssMatrixCreateCsr) so we can build against libcudss >=0.8; upstreamable
+      - patches/0020-Update-cuDSS-matrix-create-calls-for-cuDSS-0.8-API.patch
+      # Handlers.cpp uses std::unordered_map / std::vector without including them;
+      # fails to compile on osx-arm64 metal builds (from AnacondaRecipes)
+      - patches/0021-Add-missing-includes-in-c10d-control_plane-Handlers..patch
+      # pytest 9 removed the deprecated `path` argument of pytest_pycollect_makemodule
+      # (from AnacondaRecipes); this lets us test with unpinned pytest
+      - patches/0022-Remove-deprecated-path-parameter-from-pytest_pycolle.patch
+      # pytest-xdist cannot serialize torch builtin function objects in
+      # unittest subTest metadata
+      - patches/0023-Use-serializable-subtest-labels-in-autograd-test.patch
+      - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
+
+build:
+  number: ${{ build_number }}
+  # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
+  # We zip is_rc with channel_targets to assign different upload labels; this prevents rc builds being used
+  # unless specifically requested. skip == (is_rc XOR this-is-an-rc-version).
+  # NB: the is_rc variant value is the string "True"/"False", not a bool.
+  skip: ${{ (is_rc == "True") != ("rc" in version) }}
+
+outputs:
+  # ----------------------------------------------------------------------- #
+  # Staging build: compiles the heavy C++ (libtorch) exactly once per
+  # (target_platform, cuda, blas). Python/numpy are dropped from the variant
+  # so we don't recompile all of libtorch for every python version -- the
+  # per-python `pytorch` output below inherits this build tree and only
+  # rebuilds the python bindings on top of it.
+  # ----------------------------------------------------------------------- #
+  - staging:
+      name: libtorch-build
+    build:
+      # NOTE: staging builds accept only 'script'. This stage never references
+      # the ${{ python }} / ${{ numpy }} variant variables (python is pinned to
+      # 3.12.* literally), so it is not keyed on them and is built once per
+      # (target_platform, cuda, blas) -- the heavy C++ compile happens once.
+      script:
+        env:
+          PYTORCH_BUILD_STAGE: libtorch
+        # `file: build` runs build.sh on unix / build.bat on windows
+        file: build
+    requirements:
+      # Keep this list synchronized (except python*/numpy*) with the pytorch
+      # output below. We use python to build libtorch as well because it is easier.
+      build:
+        # When you change 3.12 here, change it in build.sh/bld.bat as well
+        - if: build_platform != target_platform
+          then:
+            - python 3.12.*
+            - cross-python_${{ target_platform }}
+            - numpy *
+        - ${{ stdlib("c") }}
+        - ${{ compiler("c") }}
+        - ${{ compiler("cxx") }}
+        - if: cuda_compiler_version != "None"
+          then:
+            - ${{ compiler("cuda") }}
+        - if: linux and aarch64 and cuda_compiler_version != "None"
+          then:
+            - arm-variant * ${{ arm_variant_type }}
+        - if: win
+          then:
+            - libuv
+        - llvm-openmp
+        - cmake
+        - ninja
+        # Keep libprotobuf here so that a compatible version of protobuf is
+        # installed between build and host
+        - libprotobuf
+        - protobuf
+        - if: linux
+          then:
+            - make
+        - if: win
+          then:
+            - sccache
+        - if: unix
+          then:
+            - grep
+            - rsync
+      host:
+        # GPU requirements
+        - if: cuda_compiler_version != "None"
+          then:
+            - cuda-cudart-dev
+            - cuda-cupti-dev
+            - cuda-nvml-dev
+            - cuda-nvrtc-dev
+            - cuda-nvtx-dev
+            - cuda-profiler-api
+            - cuda-version ${{ cuda_compiler_version }}.*
+            - cusparselt
+            - libcublas-dev
+            - libcudnn-dev
+            - libcudss-dev
+            - libcufft-dev
+            - libcurand-dev
+            - libcusolver-dev
+            - libcusparse-dev
+            - libmagma-devel
+            - nvtx-c
+        - if: linux and cuda_compiler_version != "None"
+          then:
+            - cuda-driver-dev
+            - libcufile-dev
+            - nccl
+            - if: cuda_compiler_version == "12.9" and arm_variant_type != "tegra"
+              then:
+                - nccl <2.29
+        # other requirements
+        - python 3.12.*
+        - numpy *
+        - pip
+        - setuptools <82
+        - pyyaml
+        - requests
+        - six
+        - if: blas_impl == "mkl"
+          then:
+            - mkl-devel
+            - libcblas * *_mkl
+          else:
+            - libblas
+            - libcblas
+            - liblapack
+        - if: not win
+          then:
+            - onednn
+        - libabseil
+        - libprotobuf
+        - llvm-openmp
+        - sleef
+        - libuv
+        - if: unix
+          then:
+            - pkg-config
+        - typing_extensions
+        - pybind11
+        - pybind11-abi
+        - eigen
+        - zlib
+        - fmt
+        - packaging
+      # libtorch is a C++ library; don't let python/numpy/cross-python pin it,
+      # and ignore the libmagma_sparse run-export (we link libmagma-devel).
+      ignore_run_exports:
+        from_package:
+          - if: build_platform != target_platform
+            then:
+              - cross-python_${{ target_platform }}
+        by_name:
+          - python
+          - numpy
+          - libmagma_sparse
+
+  # ----------------------------------------------------------------------- #
+  # Core C++ library. Just repackages the C++ artifacts from the staging build.
+  # ----------------------------------------------------------------------- #
+  - package:
+      name: libtorch
+    build:
+      string: ${{ flavor }}_${{ hash }}_${{ build_number }}
+      variant:
+        ignore_keys:
+          - python
+          - numpy
+      dynamic_linking:
+        missing_dso_allowlist:
+          - "*/libcuda.so.*"
+          - "*/nvcuda.dll"
+      prefix_detection:
+        ignore_binary_files: true
+      files:
+        # everything the staging C++ build produced, i.e. the non-python bits
+        - if: unix
+          then:
+            - lib/lib*
+            - bin/*
+            - include/**
+            - share/**
+            - etc/conda/**
+          else:
+            - Library/bin/*
+            - Library/lib/*
+            - Library/include/**
+            - Library/share/**
+            - etc/conda/**
+    inherit: libtorch-build
+    requirements:
+      run:
+        - if: blas_impl == "mkl"
+          then:
+            - libblas * *mkl
+      run_constraints:
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
+        - if: cuda_compiler_version == "None"
+          then:
+            - pytorch-cpu ==${{ version }}
+            - pytorch-gpu <0.0a0
+            - pytorch ==${{ version }} cpu_${{ blas_impl }}_*_${{ build_number }}
+          else:
+            - pytorch-gpu ==${{ version }}
+            - pytorch-cpu <0.0a0
+            - pytorch ==${{ version }} cuda${{ cuda_compiler_version | replace(".", "") }}_${{ blas_impl }}_*_${{ build_number }}
+        # if using OpenBLAS, ensure that a version compatible with OpenMP is used
+        # otherwise OpenBLAS may hang ("Detect OpenMP Loop ... rebuild with USE_OPENMP=1")
+        - if: unix and blas_impl != "mkl"
+          then:
+            - libopenblas * openmp_*
+            - openblas * openmp_*
+      run_exports:
+        - ${{ pin_subpackage("libtorch", upper_bound="x.x") }}
+      ignore_run_exports:
+        by_name:
+          - python
+          - numpy
+          - libmagma_sparse
+    tests:
+      - package_contents:
+          lib:
+            - c10
+            - shm
+            - torch
+            - torch_cpu
+            - torch_global_deps
+            - if: cuda_compiler_version != "None"
+              then:
+                - c10_cuda
+                - caffe2_nvrtc
+                - torch_cuda
+            - if: cuda_compiler_version != "None" and linux
+              then:
+                - torch_cuda_linalg
+          files:
+            - if: unix
+              then:
+                - share/cmake/Torch/TorchConfig.cmake
+              else:
+                - Library/share/cmake/Torch/TorchConfig.cmake
+      - requirements:
+          run:
+            # cmake needs a compiler to run package detection, see
+            # https://discourse.cmake.org/t/questions-about-find-package-cli-msvc/6194
+            - ${{ compiler("cxx") }}
+            - if: cuda_compiler_version != "None"
+              then:
+                # for CMake config to find cuda & nvrtc
+                - ${{ compiler("cuda") }}
+                - cuda-nvrtc-dev
+                - nvtx-c
+            - cmake
+            - ninja
+            - pkg-config
+        files:
+          recipe:
+            - cmake_test
+        script:
+          # test integrity of CMake metadata
+          - cd cmake_test
+          - if: unix
+            then: cmake -GNinja -DCMAKE_CXX_STANDARD=17 $CMAKE_ARGS .
+          - if: win
+            then: cmake -GNinja -DCMAKE_CXX_STANDARD=17 %CMAKE_ARGS% .
+
+  # ----------------------------------------------------------------------- #
+  # Main python package. Inherits the staging build tree and rebuilds only the
+  # python bindings (libtorch_python) for this variant's python version.
+  # ----------------------------------------------------------------------- #
+  - package:
+      name: pytorch
+    build:
+      string: ${{ flavor }}_py${{ python | version_to_buildstring }}_${{ hash }}_${{ build_number }}
+      prefix_detection:
+        ignore_binary_files: true
+      script:
+        env:
+          PYTORCH_BUILD_STAGE: pytorch
+        # `file: build` runs build.sh on unix / build.bat on windows
+        file: build
+      files:
+        # only the python-specific bits; the C++ libs belong to libtorch
+        - if: unix
+          then:
+            - lib/python*/site-packages/torch/**
+            - lib/libtorch_python*
+          else:
+            - Lib/site-packages/torch/**
+            - Library/bin/torch_python.dll
+            - Library/lib/torch_python.lib
+            - Library/lib/_C.lib
+    inherit: libtorch-build
+    requirements:
+      build:
+        - python
+        - if: build_platform != target_platform
+          then:
+            - cross-python_${{ target_platform }}
+            - numpy
+        - ${{ stdlib("c") }}
+        - ${{ compiler("c") }}
+        - ${{ compiler("cxx") }}
+        - if: cuda_compiler_version != "None"
+          then:
+            - ${{ compiler("cuda") }}
+        - if: linux and aarch64 and cuda_compiler_version != "None"
+          then:
+            - arm-variant * ${{ arm_variant_type }}
+        - cmake
+        - ninja
+        - libprotobuf
+        - protobuf
+        - if: linux
+          then:
+            - make
+        - if: win
+          then:
+            - sccache
+      host:
+        - ${{ pin_subpackage("libtorch", exact=True) }}
+        - if: cuda_compiler_version != "None"
+          then:
+            - cuda-cudart-dev
+            - cuda-cupti-dev
+            - cuda-nvml-dev
+            - cuda-nvrtc-dev
+            - cuda-nvtx-dev
+            - cuda-profiler-api
+            - cuda-version ${{ cuda_compiler_version }}.*
+            - cusparselt
+            - libcublas-dev
+            - libcudnn-dev
+            - libcudss-dev
+            - libcufft-dev
+            - libcurand-dev
+            - libcusolver-dev
+            - libcusparse-dev
+            - libmagma-devel
+            - nvtx-c
+        - if: linux and cuda_compiler_version != "None"
+          then:
+            - cuda-driver-dev
+            - libcufile-dev
+            - nccl
+            - if: cuda_compiler_version == "12.9" and arm_variant_type != "tegra"
+              then:
+                - nccl <2.29
+        - python
+        - numpy
+        - pip
+        - setuptools <82
+        - pyyaml
+        - requests
+        - six
+        - if: blas_impl == "mkl"
+          then:
+            - mkl-devel
+            - libcblas * *_mkl
+          else:
+            - libcblas
+            - liblapack
+        - if: not win
+          then:
+            - onednn
+        - libabseil
+        - libprotobuf
+        - llvm-openmp
+        - pybind11
+        - pybind11-abi
+        - eigen
+        - sleef
+        - libuv
+        - if: unix
+          then:
+            - pkg-config
+        - typing_extensions
+        - zlib
+        - fmt
+        - packaging
+      run:
+        - ${{ pin_subpackage("libtorch", exact=True) }}
+        - llvm-openmp
+        - if: blas_impl == "mkl"
+          then:
+            - libblas * *mkl
+          else:
+            - nomkl
+        - if: cuda_compiler_version != "None" and not win
+          then:
+            - triton ==${{ triton }}
+        # avoid that people without GPUs needlessly download ~0.5-1GB
+        - if: cuda_compiler_version != "None"
+          then:
+            - __cuda
+        - python
+        # other requirements, see https://github.com/pytorch/pytorch/blame/main/requirements.txt
+        - filelock
+        - fsspec
+        - jinja2
+        - networkx
+        - optree >=0.13.0
+        - pybind11
+        - setuptools <82
+        - sympy >=1.13.3
+        - typing_extensions >=4.10.0
+      run_constraints:
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
+        - if: cuda_compiler_version == "None"
+          then:
+            - pytorch-cpu ==${{ version }}
+            - pytorch-gpu <0.0a0
+          else:
+            - pytorch-gpu ==${{ version }}
+            - pytorch-cpu <0.0a0
+      run_exports:
+        - ${{ pin_subpackage("pytorch", upper_bound="x.x") }}
+        - ${{ pin_subpackage("libtorch", upper_bound="x.x") }}
+      ignore_run_exports:
+        from_package:
+          - if: build_platform != target_platform
+            then:
+              - cross-python_${{ target_platform }}
+        by_name:
+          - libmagma_sparse
+    tests:
+      - python:
+          imports:
+            - torch
+            - torch._C
+
+  # ----------------------------------------------------------------------- #
+  # Heavy test suite, kept as its own package so CI can run it as a separate
+  # job. The Jinja skip swamp now lives in recipe/run_pytorch_tests.py.
+  # ----------------------------------------------------------------------- #
+  - package:
+      name: pytorch-tests
+    build:
+      string: ${{ flavor }}_py${{ python | version_to_buildstring }}_${{ hash }}_${{ build_number }}
+    requirements:
+      host:
+        - if: linux and aarch64 and cuda_compiler_version != "None"
+          then:
+            - arm-variant * ${{ arm_variant_type }}
+        - python
+      run:
+        - if: cuda_compiler_version != "None"
+          then:
+            - pytorch ==${{ version }} cuda*_${{ blas_impl }}_py${{ python | version_to_buildstring }}*${{ build_number }}
+          else:
+            - pytorch ==${{ version }} cpu_${{ blas_impl }}_py${{ python | version_to_buildstring }}*${{ build_number }}
+    tests:
+      - requirements:
+          run:
+            - ${{ compiler("c") }}
+            - ${{ compiler("cxx") }}
+            - if: cuda_compiler_version != "None"
+              then:
+                # for torch.compile tests
+                - ${{ compiler("cuda") }}
+                - cuda-nvrtc-dev
+                - nvtx-c
+            - ninja
+            - boto3
+            - hypothesis
+            # pytest 9 compatibility of test/conftest.py is handled by patch 0022
+            - pytest
+            - tabulate
+            - pydot
+            - pip
+            - expecttest
+            - xmlrunner
+            - pyyaml
+            # required by run_test.py
+            - pytest-flakefinder
+            - pytest-rerunfailures
+            - pytest-xdist
+            # pytorch vendors its own pytest-shard; adding it here double-registers --shard-id
+            # for cmake_test
+            - cmake
+            # not required upstream, but useful
+            - pytest-timeout
+        files:
+          recipe:
+            - cmake_test
+            - run_pytorch_tests.py
+          source:
+            - test
+            - tools
+        script:
+          env:
+            PYTORCH_VARIANT_TARGET_PLATFORM: ${{ target_platform }}
+            PYTORCH_VARIANT_BLAS: ${{ blas_impl }}
+            PYTORCH_VARIANT_CUDA: ${{ cuda_compiler_version }}
+          content:
+            # Ensure that all pytorch packages are installed
+            # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
+            - pip check
+            - python -c "import torch; print(torch.__version__)"
+            - if: x86_64 and cuda_compiler_version == "None"
+              then: python -c "import torch; assert torch.backends.mkldnn.m.is_available()"
+            - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
+            # openmp .dylibs have been doubly-loaded in the past; these two orders catch it
+            - python -c "import torch; import numpy"
+            - python -c "import numpy; import torch"
+            - python -c "import numpy as np; import torch; x = torch.tensor([2], dtype=torch.complex128); res = torch.dot(x, x); assert res.real == 4.0, res"
+            # distributed support is on by default on linux; enabled manually for mac in build.sh
+            - if: linux or osx
+              then: python -c "import torch; assert torch.distributed.is_available()"
+            - if: osx
+              then: python -c "import torch; assert torch.backends.mps.is_available()"
+            - if: cuda_compiler_version != "None"
+              then:
+                - python -c "import torch; assert torch.backends.cuda.is_built()"
+                - python -c "import torch; assert torch.backends.cudnn.is_available()"
+                - python -c "import torch; assert torch.backends.cudnn.enabled"
+                - python -c "import torch; assert torch.version.cuda is not None"
+            # python-version-specific library (default location in SP_DIR symlinks back to this)
+            - if: unix
+              then: test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}
+            - if: win
+              then:
+                - if not exist %LIBRARY_BIN%\torch_python.dll exit 1
+                - if not exist %SP_DIR%\torch\lib\torch_python.lib exit 1
+                - if not exist %SP_DIR%\torch\lib\_C.lib exit 1
+            # the conda-forge subset of pytorch's test suite (skips live in the script)
+            - python run_pytorch_tests.py
+            # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329,
+            # where we picked up duplicate `.pyc` files due to a newer py-ver (3.14) in the build
+            # environment not matching host; can only check for other python versions.
+            - if: unix and (python | version_to_buildstring) != "314"
+              then: test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-314.pyc
+            - if: win and (python | version_to_buildstring) != "314"
+              then: if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-314.pyc exit 1
+            # test integrity of CMake metadata and that THPLayoutType is visible from libtorch_python
+            - cd cmake_test
+            - mkdir build build2
+            - cd build
+            - if: unix
+              then:
+                - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS ..
+                - cmake --build .
+              else:
+                - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% ..
+                - cmake --build . --config Release
+            - cd ../build2
+            # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/479
+            - if: unix
+              then:
+                - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=$SP_DIR/torch/share/cmake/Torch $CMAKE_ARGS ..
+                - cmake --build .
+              else:
+                - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=%SP_DIR%/torch/share/cmake/Torch %CMAKE_ARGS% ..
+                - cmake --build . --config Release
+
+  # ----------------------------------------------------------------------- #
+  # Compatibility meta-packages mirroring the cpu / gpu naming scheme.
+  # ----------------------------------------------------------------------- #
+  - package:
+      name: pytorch-cpu
+    build:
+      string: ${{ flavor }}_${{ hash }}_${{ build_number }}
+      skip: ${{ cuda_compiler_version != "None" }}
+    requirements:
+      run:
+        - pytorch ==${{ version }} cpu_${{ blas_impl }}*${{ build_number }}
+    tests:
+      - python:
+          imports:
+            - torch
+
+  - package:
+      name: pytorch-gpu
+    build:
+      string: ${{ flavor }}_${{ hash }}_${{ build_number }}
+      skip: ${{ cuda_compiler_version == "None" }}
+    requirements:
+      host:
+        - if: linux and aarch64 and cuda_compiler_version != "None"
+          then:
+            - arm-variant * ${{ arm_variant_type }}
+      run:
+        - pytorch ==${{ version }} cuda*_${{ blas_impl }}*${{ build_number }}
+    tests:
+      - python:
+          imports:
+            - torch
+
+about:
+  homepage: https://pytorch.org/
+  repository: https://github.com/pytorch/pytorch
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file:
+    - LICENSE
+    - NOTICE
+    - third_party/CMake/Copyright.txt
+  summary: PyTorch is an optimized tensor library for deep learning using GPUs and CPUs.
+  description: |
+    PyTorch is a Python package that provides two high-level features:
+      - Tensor computation (like NumPy) with strong GPU acceleration
+      - Deep neural networks built on a tape-based autograd system
+    You can reuse your favorite Python packages such as NumPy, SciPy, and Cython to extend PyTorch when needed.
+  documentation: https://pytorch.org/docs/
+
+extra:
+  recipe-maintainers:
+    - baszalmstra
+    - benjaminrwilson
+    - beckermr
+    - h-vetinari
+    - hmaarrfk
+    - jeongseok-meta
+    - mgorny
+    - sodre
+    - Tobias-Fischer
+  feedstock-name: pytorch-cpu

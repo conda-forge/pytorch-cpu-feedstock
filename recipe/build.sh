@@ -2,8 +2,15 @@
 
 set -ex
 
+# Which half of the build we are running. Set by the recipe:
+#   "libtorch" -> staging output, compiles the heavy C++ once (python-agnostic)
+#   "pytorch"  -> inheriting output, reuses the cached build tree to build the
+#                 python bindings for this variant's python
+# Falls back to PKG_NAME so the script still works under plain conda-build.
+PYTORCH_BUILD_STAGE="${PYTORCH_BUILD_STAGE:-$PKG_NAME}"
+
 echo "#########################################################################"
-echo "Building ${PKG_NAME} (py: ${PY_VER}) using BLAS implementation $blas_impl"
+echo "Building ${PYTORCH_BUILD_STAGE} (py: ${PY_VER}) using BLAS implementation $blas_impl"
 echo "#########################################################################"
 
 # This is used to detect if it's in the process of building pytorch
@@ -163,7 +170,7 @@ case "$blas_impl" in
         ;;
 esac
 
-if [[ "$PKG_NAME" == "pytorch" ]]; then
+if [[ "$PYTORCH_BUILD_STAGE" == "pytorch" ]]; then
   # Trick Cmake into thinking python hasn't changed
   sed "s/3\.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
   sed -i.bak "s/3;12/${PY_VER%.*};${PY_VER#*.}/g" build/CMakeCache.txt
@@ -285,7 +292,7 @@ fi
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
 
-case ${PKG_NAME} in
+case ${PYTORCH_BUILD_STAGE} in
   libtorch)
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.

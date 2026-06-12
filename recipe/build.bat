@@ -18,6 +18,11 @@ set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
 
+@REM Which half of the build we are running ("libtorch" = staging C++ build,
+@REM "pytorch" = inheriting per-python bindings build). Set by the recipe;
+@REM falls back to PKG_NAME so the script still works under plain conda-build.
+if not defined PYTORCH_BUILD_STAGE set "PYTORCH_BUILD_STAGE=%PKG_NAME%"
+
 @REM Reduce job count on cirun-azure-windows-2xlarge to avoid being OOM-killed.
 if "%CI%" == "github_actions" (
     SET MAX_JOBS=4
@@ -32,7 +37,7 @@ if "%blas_impl%" == "generic" (
     SET BLAS=MKL
 )
 
-if "%PKG_NAME%" == "pytorch" (
+if "%PYTORCH_BUILD_STAGE%" == "pytorch" (
   set "PIP_ACTION=install"
   set "PIP_VERBOSITY=-v"
   @REM We build libtorch for a specific python version.
@@ -192,7 +197,7 @@ if %ERRORLEVEL% neq 0 exit 1
 @REM This ensures that a user can quickly switch between python versions without the
 @REM need to redownload all the large CUDA binaries.
 
-if "%PKG_NAME%" == "libtorch" (
+if "%PYTORCH_BUILD_STAGE%" == "libtorch" (
     @REM Extract the compiled wheel into a temporary directory
     if not exist "%SRC_DIR%\dist" mkdir %SRC_DIR%\dist
     pushd %SRC_DIR%\dist
@@ -244,7 +249,7 @@ if "%PKG_NAME%" == "libtorch" (
         if %ERRORLEVEL% neq 0 exit 1
     )
 
-) else if "%PKG_NAME%" == "pytorch" (
+) else if "%PYTORCH_BUILD_STAGE%" == "pytorch" (
     @REM Move libtorch_python and remove the other directories afterwards.
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\bin\ %LIBRARY_BIN%\ torch_python.dll
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ torch_python.lib
