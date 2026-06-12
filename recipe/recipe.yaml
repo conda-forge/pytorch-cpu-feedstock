@@ -107,6 +107,8 @@ outputs:
       script:
         env:
           PYTORCH_BUILD_STAGE: libtorch
+          # staging outputs carry no PKG_VERSION, so pass the version explicitly
+          PYTORCH_BUILD_VERSION: ${{ version }}
         # `file: build` runs build.sh on unix / build.bat on windows
         file: build
     requirements:
@@ -174,7 +176,7 @@ outputs:
             - cuda-driver-dev
             - libcufile-dev
             - nccl
-            - if: cuda_compiler_version == "12.9" and arm_variant_type != "tegra"
+            - if: cuda_compiler_version == "12.9" and (arm_variant_type | default("sbsa")) != "tegra"
               then:
                 - nccl <2.29
         # other requirements
@@ -345,6 +347,7 @@ outputs:
       script:
         env:
           PYTORCH_BUILD_STAGE: pytorch
+          PYTORCH_BUILD_VERSION: ${{ version }}
         # `file: build` runs build.sh on unix / build.bat on windows
         file: build
       files:
@@ -411,7 +414,7 @@ outputs:
             - cuda-driver-dev
             - libcufile-dev
             - nccl
-            - if: cuda_compiler_version == "12.9" and arm_variant_type != "tegra"
+            - if: cuda_compiler_version == "12.9" and (arm_variant_type | default("sbsa")) != "tegra"
               then:
                 - nccl <2.29
         - python

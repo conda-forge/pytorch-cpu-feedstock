@@ -96,7 +96,9 @@ for ARG in $CMAKE_ARGS; do
 done
 CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
-export PYTORCH_BUILD_VERSION=$PKG_VERSION
+# In the staging build PKG_VERSION is empty (a staging output is not a versioned
+# package), so allow the recipe to pass the version in explicitly.
+export PYTORCH_BUILD_VERSION="${PYTORCH_BUILD_VERSION:-$PKG_VERSION}"
 # Always pass 0 to avoid appending ".post" to version string.
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 export PYTORCH_BUILD_NUMBER=0

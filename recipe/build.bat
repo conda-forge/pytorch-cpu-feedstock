@@ -13,7 +13,9 @@ if EXIST pyproject.toml (
 @REM for a failure with error message: "conda_package_handling.exceptions.ArchiveCreationError: <somefile> Cannot stat
 @REM while writing file")
 
-set PYTORCH_BUILD_VERSION=%PKG_VERSION%
+@REM In the staging build PKG_VERSION is empty (a staging output is not a
+@REM versioned package), so allow the recipe to pass the version in explicitly.
+if not defined PYTORCH_BUILD_VERSION set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM Always pass 0 to avoid appending ".post" to version string.
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
