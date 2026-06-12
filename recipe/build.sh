@@ -129,15 +129,6 @@ fi
 # I don't know where this folder comes from, but it's interfering with the build in osx-64
 rm -rf $PREFIX/git
 
-if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
-    # We cross-compile without an emulator, so PyTorch's check_c_source_runs()
-    # "COMPILER_WORKS" try_run cannot execute the target binary. Preseed its
-    # result in the cache -- the CMake-sanctioned mechanism for try_run under
-    # cross compilation -- via $CMAKE_ARGS so it lands on the cmake command line
-    # before project(), rather than as a loose environment variable.
-    export CMAKE_ARGS="$CMAKE_ARGS -DCOMPILER_WORKS_EXITCODE=0 -DCOMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT="
-fi
-
 if [[ "${CI}" == "github_actions" ]]; then
     # jaimerg -- Apr 2026
     # reduce parallelism to avoid getting OOM-killed on
