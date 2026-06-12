@@ -82,6 +82,9 @@ source:
       # pytest-xdist cannot serialize torch builtin function objects in
       # unittest subTest metadata
       - patches/0024-Use-serializable-subtest-labels-in-autograd.patch
+      # TEMPORARY debug: print CPU detection + USE_MKLDNN to diagnose the CUDA
+      # USE_MKLDNN=OFF regression (see PR discussion). Revert before merge.
+      - patches/0025-DEBUG-print-cpu-detection-and-USE_MKLDNN.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:

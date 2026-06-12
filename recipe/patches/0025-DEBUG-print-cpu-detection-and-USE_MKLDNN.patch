@@ -1,0 +1,34 @@
+From 1111111111111111111111111111111111111111 Mon Sep 17 00:00:00 2001
+From: Klaus Zimmermann <klaus_zimmermann@gmx.de>
+Date: Sat, 13 Jun 2026 00:00:00 +0000
+Subject: [PATCH] DEBUG: print CPU detection + USE_MKLDNN
+
+TEMPORARY diagnostic. CUDA builds end up with USE_MKLDNN=OFF (CPU builds
+get ON) because pytorch force-OFFs it via cmake_dependent_option when
+CPU_INTEL is false. Print the inputs (CMAKE_SYSTEM_PROCESSOR / _NAME /
+CROSSCOMPILING) and the resolved USE_MKLDNN so we can see what the CUDA
+configure actually detects. Revert before merge.
+---
+ CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d594124..2ba1b48 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -193,6 +193,7 @@ elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(ppc64le)")
+ elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(riscv64)")
+   set(CPU_RISCV ON)
+ endif()
++message(STATUS "CONDA-DEBUG cpu-detect: SYSTEM_NAME='${CMAKE_SYSTEM_NAME}' SYSTEM_PROCESSOR='${CMAKE_SYSTEM_PROCESSOR}' CROSSCOMPILING='${CMAKE_CROSSCOMPILING}' CPU_INTEL='${CPU_INTEL}' CPU_AARCH64='${CPU_AARCH64}' ENV_USE_MKLDNN='$ENV{USE_MKLDNN}' cache_USE_MKLDNN='${USE_MKLDNN}'")
+
+ # For non-supported platforms, turn USE_DISTRIBUTED off by default. It is not
+ # tested and likely won't work without additional changes.
+@@ -344,6 +345,7 @@ cmake_dependent_option(USE_ITT "Use Intel(R) VTune Profiler ITT functionality"
+ cmake_dependent_option(
+   USE_MKLDNN "Use MKLDNN. Only available on x86, x86_64, AArch64, ppc64le and riscv64."
+   "${CPU_INTEL}" "CPU_INTEL OR CPU_AARCH64 OR CPU_POWER OR CPU_RISCV" OFF)
++message(STATUS "CONDA-DEBUG after-option: USE_MKLDNN='${USE_MKLDNN}' (CPU_INTEL='${CPU_INTEL}')")
+ cmake_dependent_option(
+   USE_MKLDNN_ACL "Use Compute Library for the Arm architecture." OFF
+   "USE_MKLDNN AND CPU_AARCH64" OFF)
