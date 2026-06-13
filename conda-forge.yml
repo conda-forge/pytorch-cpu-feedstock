@@ -1,5 +1,4 @@
 azure:
-  free_disk_space: true
   settings_linux:
     timeoutInMinutes: 1
 bot:
