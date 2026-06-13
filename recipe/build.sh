@@ -295,7 +295,9 @@ echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
 
 case ${PYTORCH_BUILD_STAGE} in
-  libtorch)
+  build)
+    # Staging stage: compile libtorch once (the expensive part). The resulting
+    # build tree is cached and reused by the `libtorch` and `pytorch` stages.
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.
     if [[ "$target_platform" == linux-* ]]; then
@@ -305,15 +307,18 @@ case ${PYTORCH_BUILD_STAGE} in
         $PREFIX/bin/python setup.py -q build
     fi
 
+    # Keep the original backed up so the pytorch stage can sed it per python version
+    cp build/CMakeCache.txt build/CMakeCache.txt.orig
+    ;;
+  libtorch)
+    # Install the compiled C++ artifacts (from the cached build tree) into the
+    # libtorch output's prefix. No compilation happens here.
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/
     # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
     rsync -a build/lib.*/torch/share/* ${PREFIX}/share/
     mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
     rm ${PREFIX}/lib/libtorch_python.*
-
-    # Keep the original backed up to sed later
-    cp build/CMakeCache.txt build/CMakeCache.txt.orig
 
     if [[ "${cuda_compiler_version}" != "None" ]]; then
         for CHANGE in "activate" "deactivate"

@@ -12,8 +12,8 @@ conda_build:
   pkg_format: '2'
   zstd_compression_level: 22
 conda_build_tool: rattler-build
-conda_install_tool: pixi
 conda_forge_output_validation: true
+conda_install_tool: pixi
 github:
   branch_name: main
   tooling_branch_name: main

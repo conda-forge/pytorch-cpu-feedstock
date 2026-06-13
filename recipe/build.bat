@@ -67,12 +67,14 @@ if "%PYTORCH_BUILD_STAGE%" == "pytorch" (
   sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
   if %ERRORLEVEL% neq 0 exit 1
 
-) else (
-  @REM For the main script we just build a wheel for so that the C++/CUDA
-  @REM parts are built. Then they are reused in each python version.
+) else if "%PYTORCH_BUILD_STAGE%" == "build" (
+  @REM Staging stage: just build a wheel so the C++/CUDA parts are compiled
+  @REM once. The libtorch/pytorch stages reuse this cached build tree + wheel.
   set "PIP_ACTION=wheel"
   set "PIP_VERBOSITY=-vvv"
 )
+@REM NB: the "libtorch" stage sets no PIP_ACTION -- it only unpacks the wheel
+@REM that the "build" stage already produced (no recompile).
 
 set "BUILD_CUSTOM_PROTOBUF=OFF"
 set "USE_LITE_PROTO=ON"
@@ -179,14 +181,18 @@ if %ERRORLEVEL% neq 0 exit 1
 sccache --zero-stats
 if %ERRORLEVEL% neq 0 exit 1
 
-@REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
-if EXIST build (
-    cmake --build build --target clean
+@REM Only the build (wheel) and pytorch (install) stages invoke pip; the
+@REM libtorch stage just unpacks the cached wheel.
+if defined PIP_ACTION (
+    @REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
+    if EXIST build (
+        cmake --build build --target clean
+        if %ERRORLEVEL% neq 0 exit 1
+    )
+
+    %PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean --config-settings=--global-option=-q
     if %ERRORLEVEL% neq 0 exit 1
 )
-
-%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean --config-settings=--global-option=-q
-if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.
 @REM
@@ -199,8 +205,14 @@ if %ERRORLEVEL% neq 0 exit 1
 @REM This ensures that a user can quickly switch between python versions without the
 @REM need to redownload all the large CUDA binaries.
 
-if "%PYTORCH_BUILD_STAGE%" == "libtorch" (
-    @REM Extract the compiled wheel into a temporary directory
+if "%PYTORCH_BUILD_STAGE%" == "build" (
+    @REM Staging stage: the wheel has been built above; back up CMakeCache so the
+    @REM pytorch stage can sed it per python version.
+    copy build\CMakeCache.txt build\CMakeCache.txt.orig
+    if %ERRORLEVEL% neq 0 exit 1
+
+) else if "%PYTORCH_BUILD_STAGE%" == "libtorch" (
+    @REM Extract the wheel produced by the staging build into a temporary directory
     if not exist "%SRC_DIR%\dist" mkdir %SRC_DIR%\dist
     pushd %SRC_DIR%\dist
     for /f %%f in ('dir /b /S ..\torch-*.whl') do (
@@ -232,10 +244,6 @@ if "%PYTORCH_BUILD_STAGE%" == "libtorch" (
 
     popd
     popd
-
-    @REM Keep the original backed up to sed later
-    copy build\CMakeCache.txt build\CMakeCache.txt.orig
-    if %ERRORLEVEL% neq 0 exit 1
 
     if not "%cuda_compiler_version%" == "None" (
         sed -e "s/@cf_torch_cuda_arch_list@/%TORCH_CUDA_ARCH_LIST%/g" ^

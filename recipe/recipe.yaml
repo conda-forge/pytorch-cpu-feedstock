@@ -12,8 +12,6 @@ context:
   # pytorch and triton are released in tandem, see notes in their release process
   # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
   triton: "3.7.0"
-  release_sha256: "7cc1deb309f402ad67e9f45bbe311a40def4db19d66fddb9b01950f9bfc5ccb1"
-  rc_sha256: "3035931fff5b79e0300db69b0249e0c9c7ea5b394f451cb80e0280cbc2affcc2"
   # build string fragment: cpu vs cuda + blas implementation
   flavor: ${{ "cuda" ~ (cuda_compiler_version | replace(".", "")) if cuda_compiler_version != "None" else "cpu" }}_${{ blas_impl }}
 
@@ -27,7 +25,8 @@ source:
   # The "rc" tarballs live on download.pytorch.org; releases are GitHub assets.
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: ${{ "https://download.pytorch.org/source_code/test/pytorch-v" ~ version ~ ".tar.gz" if "rc" in version else "https://github.com/pytorch/pytorch/releases/download/v" ~ version ~ "/pytorch-v" ~ version ~ ".tar.gz" }}
-    sha256: ${{ rc_sha256 if "rc" in version else release_sha256 }}
+    # single sha; update this when switching between rc and final releases
+    sha256: 7cc1deb309f402ad67e9f45bbe311a40def4db19d66fddb9b01950f9bfc5ccb1
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
       # revert https://github.com/pytorch/pytorch/pull/177640 as it broke cross
@@ -104,9 +103,11 @@ outputs:
       # the ${{ python }} / ${{ numpy }} variant variables (python is pinned to
       # 3.12.* literally), so it is not keyed on them and is built once per
       # (target_platform, cuda, blas) -- the heavy C++ compile happens once.
+      # The `build` stage only compiles; the libtorch/pytorch outputs below
+      # inherit this build tree and install their respective files from it.
       script:
         env:
-          PYTORCH_BUILD_STAGE: libtorch
+          PYTORCH_BUILD_STAGE: build
           # staging outputs carry no PKG_VERSION, so pass the version explicitly
           PYTORCH_BUILD_VERSION: ${{ version }}
         # `file: build` runs build.sh on unix / build.bat on windows
@@ -176,7 +177,7 @@ outputs:
             - cuda-driver-dev
             - libcufile-dev
             - nccl
-            - if: cuda_compiler_version == "12.9" and (arm_variant_type | default("sbsa")) != "tegra"
+            - if: cuda_compiler_version == "12.9" and (arm_variant_type | default("sbsa")) == "sbsa"
               then:
                 - nccl <2.29
         # other requirements
@@ -226,7 +227,10 @@ outputs:
           - libmagma_sparse
 
   # ----------------------------------------------------------------------- #
-  # Core C++ library. Just repackages the C++ artifacts from the staging build.
+  # Core C++ library. Inherits the staging build tree and runs the `libtorch`
+  # stage of the build script, which installs the compiled C++ artifacts into
+  # this output's prefix (no files: globs needed -- the script installs exactly
+  # the non-python bits and rattler-build packages what it produced).
   # ----------------------------------------------------------------------- #
   - package:
       name: libtorch
@@ -242,23 +246,19 @@ outputs:
           - "*/nvcuda.dll"
       prefix_detection:
         ignore_binary_files: true
-      files:
-        # everything the staging C++ build produced, i.e. the non-python bits
-        - if: unix
-          then:
-            - lib/lib*
-            - bin/*
-            - include/**
-            - share/**
-            - etc/conda/**
-          else:
-            - Library/bin/*
-            - Library/lib/*
-            - Library/include/**
-            - Library/share/**
-            - etc/conda/**
+      script:
+        env:
+          PYTORCH_BUILD_STAGE: libtorch
+          PYTORCH_BUILD_VERSION: ${{ version }}
+        file: build
     inherit: libtorch-build
     requirements:
+      # the install stage only moves files out of the cached build tree
+      build:
+        - if: unix
+          then:
+            - rsync
+            - grep
       run:
         - if: blas_impl == "mkl"
           then:
@@ -350,17 +350,10 @@ outputs:
           PYTORCH_BUILD_VERSION: ${{ version }}
         # `file: build` runs build.sh on unix / build.bat on windows
         file: build
-      files:
-        # only the python-specific bits; the C++ libs belong to libtorch
-        - if: unix
-          then:
-            - lib/python*/site-packages/torch/**
-            - lib/libtorch_python*
-          else:
-            - Lib/site-packages/torch/**
-            - Library/bin/torch_python.dll
-            - Library/lib/torch_python.lib
-            - Library/lib/_C.lib
+        # No files: spec needed -- the C++ libs come in via the `libtorch` host
+        # dependency (base files), and the pytorch stage installs only the
+        # python bits (site-packages/torch + libtorch_python), which is exactly
+        # what rattler-build packages as the new files for this output.
     inherit: libtorch-build
     requirements:
       build:
@@ -414,7 +407,7 @@ outputs:
             - cuda-driver-dev
             - libcufile-dev
             - nccl
-            - if: cuda_compiler_version == "12.9" and (arm_variant_type | default("sbsa")) != "tegra"
+            - if: cuda_compiler_version == "12.9" and (arm_variant_type | default("sbsa")) == "sbsa"
               then:
                 - nccl <2.29
         - python
@@ -521,16 +514,11 @@ outputs:
           else:
             - pytorch ==${{ version }} cpu_${{ blas_impl }}_py${{ python | version_to_buildstring }}*${{ build_number }}
     tests:
+      # Heavy test suite: the conda-forge subset of pytorch's own tests. The
+      # file list and the skip list are built inline (numpy-style) so they live
+      # in the recipe; each platform selector is an ordinary if/then.
       - requirements:
           run:
-            - ${{ compiler("c") }}
-            - ${{ compiler("cxx") }}
-            - if: cuda_compiler_version != "None"
-              then:
-                # for torch.compile tests
-                - ${{ compiler("cuda") }}
-                - cuda-nvrtc-dev
-                - nvtx-c
             - ninja
             - boto3
             - hypothesis
@@ -542,87 +530,246 @@ outputs:
             - expecttest
             - xmlrunner
             - pyyaml
+            - numpy
             # required by run_test.py
             - pytest-flakefinder
             - pytest-rerunfailures
             - pytest-xdist
             # pytorch vendors its own pytest-shard; adding it here double-registers --shard-id
-            # for cmake_test
-            - cmake
             # not required upstream, but useful
             - pytest-timeout
         files:
-          recipe:
-            - cmake_test
-            - run_pytorch_tests.py
           source:
             - test
             - tools
         script:
-          env:
-            PYTORCH_VARIANT_TARGET_PLATFORM: ${{ target_platform }}
-            PYTORCH_VARIANT_BLAS: ${{ blas_impl }}
-            PYTORCH_VARIANT_CUDA: ${{ cuda_compiler_version }}
+          interpreter: python
           content:
-            # Ensure that all pytorch packages are installed
-            # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
-            - pip check
-            - python -c "import torch; print(torch.__version__)"
-            - if: x86_64 and cuda_compiler_version == "None"
-              then: python -c "import torch; assert torch.backends.mkldnn.m.is_available()"
-            - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
-            # openmp .dylibs have been doubly-loaded in the past; these two orders catch it
-            - python -c "import torch; import numpy"
-            - python -c "import numpy; import torch"
-            - python -c "import numpy as np; import torch; x = torch.tensor([2], dtype=torch.complex128); res = torch.dot(x, x); assert res.real == 4.0, res"
-            # distributed support is on by default on linux; enabled manually for mac in build.sh
-            - if: linux or osx
-              then: python -c "import torch; assert torch.distributed.is_available()"
-            - if: osx
-              then: python -c "import torch; assert torch.backends.mps.is_available()"
-            - if: cuda_compiler_version != "None"
+            - import os, subprocess, sys
+            - 'os.environ["OMP_NUM_THREADS"] = "4"'
+            - 'os.environ["ONEDNN_VERBOSE"] = "all"'
+            # aarch64 runs under emulation (super slow); only run the suite for one python there
+            - if: aarch64 and (python | version_to_buildstring) != "312"
               then:
-                - python -c "import torch; assert torch.backends.cuda.is_built()"
-                - python -c "import torch; assert torch.backends.cudnn.is_available()"
-                - python -c "import torch; assert torch.backends.cudnn.enabled"
-                - python -c "import torch; assert torch.version.cuda is not None"
-            # python-version-specific library (default location in SP_DIR symlinks back to this)
+                - 'print("aarch64: skipping heavy test suite for this python version"); sys.exit(0)'
+            # the whole suite takes forever; this fixed subset covers packaging problems
+            - 'tests = ["test/test_autograd.py", "test/test_autograd_fallback.py", "test/test_custom_ops.py", "test/test_linalg.py", "test/test_mkldnn.py", "test/test_modules.py", "test/test_nn.py", "test/test_torch.py", "test/test_xnnpack_integration.py"]'
+            # torch.compile (inductor) tests are expensive: one python, x86 desktop only
+            - if: (python | version_to_buildstring) == "312" and not (aarch64 or osx)
+              then: 'tests += ["test/inductor/test_torchinductor.py"]'
+            # --- skips, joined into a single -k "not (...)" expression ---
+            - 'skips = "(TestTorch and test_print)"'
+            # downloads a legacy module from download.pytorch.org; fails on network/SSL flakes
+            - 'skips += " or (TestNN and test_module_backcompat)"'
+            # may crash spuriously
+            - 'skips += " or (TestAutograd and test_profiler_seq_nr)"'
+            - 'skips += " or (TestAutograd and test_profiler_propagation)"'
+            # resource clean-up issues (non-unique temporary libraries)
+            - 'skips += " or test_mutable_custom_op_fixed_layout"'
+            # flaky, fragile to GC behavior
+            - 'skips += " or (TestTorch and test_tensor_cycle_via_slots)"'
+            # warning-related failures, maybe broken by --disable-warnings
+            - 'skips += " or test_cpp_warnings_have_python_context_cpu"'
+            - 'skips += " or test_cpp_warnings_have_python_context_cuda"'
+            # "Attempt to trace generator"
+            - 'skips += " or test_lite_regional_compile_flex_attention_cuda"'
+            - if: osx
+              then:
+                # minor tolerance violation
+                - 'skips += " or test_1_sized_with_0_strided_cpu_float32"'
             - if: unix
-              then: test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}
+              then:
+                - 'skips += " or test_batchnorm_nhwc_cpu"'
+                - 'skips += " or test_layer_norm_backwards_eps"'
+                # failing with low -n values
+                - 'skips += " or test_base_does_not_require_grad_mode_nothing"'
+                - 'skips += " or test_base_does_not_require_grad_mode_warn"'
+                - 'skips += " or test_composite_registered_to_cpu_mode_nothing"'
+            - if: aarch64
+              then:
+                # onednn errors ("unsupported {isa, datatype, ...}")
+                - 'skips += " or test__int4_mm_m"'
+                - 'skips += " or test_lstm_cpu"'
+                - 'skips += " or test_remove_no_ops_cpu"'
+                - 'skips += " or test_weight_norm_bwd_cpu"'
+                # ... onednn errors for float16
+                - 'skips += " or (_cpu_float16 and (test_activations_bfloat16_half_cpu or test_addbmm or test_addmm or test_addmv or test_baddbmm or test_bmm or test_conv_deconv or test_conv_nhwc_lower_precision or test_conv_transpose_nhwc_lower_precision or test_dot_vs_numpy or test_grouped_mm_cpu_unaligned or test_linear_lowp or test_matmul_lower_precision))"'
+                # ... onednn errors for complex32
+                - 'skips += " or (_cpu_complex32 and (test_forward_nn_ConvTranspose or test_if_train_and_eval_modes_differ_nn_ConvTr or test_memory_format_nn_ConvTranspose1d or test_non_contiguous_tensors_nn_ConvTranspo or test_save_load_nn_ConvTranspose))"'
+                # timeouts / failures on aarch
+                - 'skips += " or test_pynode_destruction_deadlock"'
+                - 'skips += " or (TestLinalgCPU and test_cholesky_cpu_float32)"'
+                - 'skips += " or (TestLinalgCPU and test_pca_lowrank_cpu)"'
+                - 'skips += " or (TestLinalgCPU and test_svd_lowrank_cpu)"'
+                - 'skips += " or (TestMkldnnCPU and test_lstm_cpu)"'
+                # very long-running tests in emulation
+                - 'skips += " or test_eigh_lwork_lapack"'
+                - 'skips += " or test_gradgrad_nn_LSTM"'
+                - 'skips += " or test_grad_nn_Transformer"'
+                - 'skips += " or test_inverse_errors_large"'
+                - 'skips += " or (TestXNNPACKConv1dTransformPass and test_conv1d_basic)"'
+                - 'skips += " or (TestLinalgCPU and test_cholesky_upper_reconstructs_cpu_float32)"'
+                - 'skips += " or (TestAutograd and test_checkpoint_detects_non_determinism)"'
+                - 'skips += " or (TestNN and test_upsampling_bfloat16)"'
+                - 'skips += " or (TestLinalgCPU and test_qr_cpu_float32)"'
+                - 'skips += " or test_terminate_handler_on_crash"'
+                - 'skips += " or test_eigh_svd_illcondition_matrix_input_should_not_crash_cpu_float32"'
+            - if: aarch64 and cuda_compiler_version != "None"
+              then:
+                - 'skips += " or illcondition_matrix_input_should_not_crash_cpu"'
+            - if: linux and cuda_compiler_version != "None"
+              then:
+                # trivial accuracy problems
+                - 'skips += " or test_BCELoss_weights_no_reduce_cuda"'
+                - 'skips += " or test_ctc_loss_cudnn_tensor_cuda"'
+                - 'skips += " or (TestTorch and test_index_add_correctness)"'
+                # require higher-resource / newer GPUs than CI provides
+                - 'skips += " or test_sdpa_inference_mode_aot_compile"'
+                - 'skips += " or (TestNN and test_grid_sample)"'
+                # rely on GPU failure handling
+                - 'skips += " or test_cublas_config_nondeterministic_alert_cuda"'
+                - 'skips += " or test_cross_entropy_loss_2d_out_of_bounds_class"'
+                - 'skips += " or test_indirect_device_assert"'
+                - 'skips += " or test_reentrant_parent_error_on_cpu_cuda"'
+                - 'skips += " or (GPUTests and test_scatter_reduce2)"'
+                - 'skips += " or test_ck_blas_library_cpu"'
+                - 'skips += " or test_matmul_offline_tunableop_cuda_float16"'
+                - 'skips += " or test_Conv3d_1x1x1_no_bias_cuda"'
+                - 'skips += " or test_isinf_cuda"'
+                - 'skips += " or test_donated_buffer_inplace_gpt"'
+                - 'skips += " or test_linear_dynamic_maxautotune_cuda"'
+                # skip some very long-running groups of tests
+                - 'skips += " or (test_gradgrad_nn_Transformer and _cuda_)"'
+                - 'skips += " or test_avg_pool3d_backward2"'
+            - if: linux and blas_impl == "mkl" and cuda_compiler_version != "None"
+              then:
+                - 'skips += " or (TestLinalgCPU and test_inverse_errors_large_cpu)"'
+            - if: linux and blas_impl != "mkl" and cuda_compiler_version != "None"
+              then:
+                - 'skips += " or test_gather_scatter_cpu or test_index_put2_cpu"'
             - if: win
               then:
-                - if not exist %LIBRARY_BIN%\torch_python.dll exit 1
-                - if not exist %SP_DIR%\torch\lib\torch_python.lib exit 1
-                - if not exist %SP_DIR%\torch\lib\_C.lib exit 1
-            # the conda-forge subset of pytorch's test suite (skips live in the script)
-            - python run_pytorch_tests.py
-            # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329,
-            # where we picked up duplicate `.pyc` files due to a newer py-ver (3.14) in the build
-            # environment not matching host; can only check for other python versions.
-            - if: unix and (python | version_to_buildstring) != "314"
-              then: test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-314.pyc
-            - if: win and (python | version_to_buildstring) != "314"
-              then: if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-314.pyc exit 1
-            # test integrity of CMake metadata and that THPLayoutType is visible from libtorch_python
-            - cd cmake_test
-            - mkdir build build2
-            - cd build
-            - if: unix
+                - 'skips += " or (TestMkldnnCPU and test_batch_norm_2d_cpu)"'
+            - if: win and cuda_compiler_version == "13.0"
               then:
-                - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS ..
-                - cmake --build .
-              else:
-                - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% ..
-                - cmake --build . --config Release
-            - cd ../build2
-            # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/479
-            - if: unix
+                # regressions in 2.11.0
+                - 'skips += " or test_compile_dyn_quant_matmul_4bit"'
+                - 'skips += " or test__int8_mm_m"'
+                - 'skips += " or test_pdist_cuda_gradgrad_unimplemented"'
+                - 'skips += " or test_inverse_errors_large_cpu"'
+                - 'skips += " or test_torchinductor"'
+            - if: osx and arm64
               then:
-                - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=$SP_DIR/torch/share/cmake/Torch $CMAKE_ARGS ..
-                - cmake --build .
-              else:
-                - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=%SP_DIR%/torch/share/cmake/Torch %CMAKE_ARGS% ..
-                - cmake --build . --config Release
+                # unexpected success / unsupported quantized engine / flaky MPS
+                - 'skips += " or test_forward_nn_Bilinear_mps_float16"'
+                - 'skips += " or test_qengine"'
+                - 'skips += " or test_LayerNorm_numeric_mps"'
+                # precision errors (MPS)
+                - 'skips += " or test_forward_nn_Linear"'
+                - 'skips += " or test_forward_nn_TransformerEncoderLayer_train_mode_mps_float16"'
+                - 'skips += " or test_non_contiguous_tensors_nn_GRUCell_mps"'
+                - 'skips += " or test_non_contiguous_tensors_nn_GRU_eval_mode_mps"'
+                - 'skips += " or test_non_contiguous_tensors_nn_GRU_train_mode_mps"'
+                - 'skips += " or test_non_contiguous_tensors_nn_LSTMCell_mps"'
+                - 'skips += " or test_non_contiguous_tensors_nn_Linear_mps"'
+                - 'skips += " or test_non_contiguous_tensors_nn_MultiheadAttention_eval_mode_mps_float16"'
+                - 'skips += " or test_non_contiguous_tensors_nn_MultiheadAttention_train_mode_mps_float16"'
+                - 'skips += " or test_non_contiguous_tensors_nn_TransformerDecoderLayer_mps_float16"'
+                - 'skips += " or test_non_contiguous_tensors_nn_TransformerEncoder_eval_mode_mps_float16"'
+                - 'skips += " or test_non_contiguous_tensors_nn_TransformerEncoder_train_mode_mps_float16"'
+                - 'skips += " or test_non_contiguous_tensors_nn_TransformerEncoderLayer_train_mode_mps_float16"'
+                - 'skips += " or test_non_contiguous_tensors_nn_RNNCell_mps"'
+                - 'skips += " or test_non_contiguous_tensors_nn_MultiheadAttention_train_mode_mps_float32"'
+                - 'skips += " or test_non_contiguous_tensors_nn_MultiheadAttention_eval_mode_mps_float32"'
+                - 'skips += " or test_non_contiguous_tensors_nn_RNN_eval_mode_mps"'
+                - 'skips += " or test_non_contiguous_tensors_nn_RNN_train_mode_mps"'
+                - 'skips += " or test_transformerencoderlayer_mps_float32"'
+                - 'skips += " or test_transformerencoderlayer_gelu_mps_float32"'
+                - 'skips += " or test_grad_nn_MultiheadAttention_eval_mode_cpu_float64"'
+                - 'skips += " or test_non_contiguous_tensors_nn_CrossEntropyLoss_mps_float32"'
+            # reduced parallelism to avoid OOM for CUDA builds
+            - 'jobs = "-n 2"'
+            - if: linux and x86_64 and cuda_compiler_version != "None"
+              then: 'jobs = "-n 1"'
+            - 'cmd = [sys.executable, "-m", "pytest"] + jobs.split() + tests + ["-k", f"not ({skips})", "-m", "not hypothesis", "--durations=50", "--timeout=1200", "--disable-warnings", "--force-short-summary"]'
+            - 'print("running:", " ".join(cmd), flush=True)'
+            - 'sys.exit(subprocess.call(cmd))'
+      # Packaging smoke tests + CMake integrity (shell).
+      - requirements:
+          run:
+            - ${{ compiler("c") }}
+            - ${{ compiler("cxx") }}
+            - if: cuda_compiler_version != "None"
+              then:
+                # for torch.compile / cmake cuda detection
+                - ${{ compiler("cuda") }}
+                - cuda-nvrtc-dev
+                - nvtx-c
+            - cmake
+            - ninja
+            - pip
+            - numpy
+        files:
+          recipe:
+            - cmake_test
+        script:
+          # Ensure that all pytorch packages are installed
+          # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/24
+          - pip check
+          - python -c "import torch; print(torch.__version__)"
+          - if: x86_64 and cuda_compiler_version == "None"
+            then: python -c "import torch; assert torch.backends.mkldnn.m.is_available()"
+          - python -c "import torch; torch.tensor(1).to('cpu').numpy(); print('numpy support enabled!!!')"
+          # openmp .dylibs have been doubly-loaded in the past; these two orders catch it
+          - python -c "import torch; import numpy"
+          - python -c "import numpy; import torch"
+          - python -c "import numpy as np; import torch; x = torch.tensor([2], dtype=torch.complex128); res = torch.dot(x, x); assert res.real == 4.0, res"
+          # distributed support is on by default on linux; enabled manually for mac in build.sh
+          - if: linux or osx
+            then: python -c "import torch; assert torch.distributed.is_available()"
+          - if: osx
+            then: python -c "import torch; assert torch.backends.mps.is_available()"
+          - if: cuda_compiler_version != "None"
+            then:
+              - python -c "import torch; assert torch.backends.cuda.is_built()"
+              - python -c "import torch; assert torch.backends.cudnn.is_available()"
+              - python -c "import torch; assert torch.backends.cudnn.enabled"
+              - python -c "import torch; assert torch.version.cuda is not None"
+          # python-version-specific library (default location in SP_DIR symlinks back to this)
+          - if: unix
+            then: test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}
+          - if: win
+            then:
+              - if not exist %LIBRARY_BIN%\torch_python.dll exit 1
+              - if not exist %SP_DIR%\torch\lib\torch_python.lib exit 1
+              - if not exist %SP_DIR%\torch\lib\_C.lib exit 1
+          # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329,
+          # where we picked up duplicate `.pyc` files due to a newer py-ver (3.14) in the build
+          # environment not matching host; can only check for other python versions.
+          - if: unix and (python | version_to_buildstring) != "314"
+            then: test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-314.pyc
+          - if: win and (python | version_to_buildstring) != "314"
+            then: if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-314.pyc exit 1
+          # test integrity of CMake metadata and that THPLayoutType is visible from libtorch_python
+          - cd cmake_test
+          - mkdir build build2
+          - cd build
+          - if: unix
+            then:
+              - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON $CMAKE_ARGS ..
+              - cmake --build .
+            else:
+              - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON %CMAKE_ARGS% ..
+              - cmake --build . --config Release
+          - cd ../build2
+          # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/479
+          - if: unix
+            then:
+              - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=$SP_DIR/torch/share/cmake/Torch $CMAKE_ARGS ..
+              - cmake --build .
+            else:
+              - cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DWITH_TORCH_PYTHON=ON -DTorch_DIR=%SP_DIR%/torch/share/cmake/Torch %CMAKE_ARGS% ..
+              - cmake --build . --config Release
 
   # ----------------------------------------------------------------------- #
   # Compatibility meta-packages mirroring the cpu / gpu naming scheme.
