@@ -16,8 +16,6 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
-cuda_compiler:
-- cuda-nvcc
 cuda_compiler_version:
 - None
 cxx_compiler:
@@ -36,28 +34,16 @@ libblas:
 - 3.9.* *netlib
 libcblas:
 - 3.9.* *netlib
-libcudnn_dev:
-- '9'
 liblapack:
 - 3.9.* *netlib
-libmagma_devel:
-- 2.10.0
-libmagma_sparse:
-- 2.10.0
 libprotobuf:
 - 6.33.5
-libtorch:
-- '2.10'
 llvm_openmp:
 - '19'
 macos_machine:
 - arm64-apple-darwin20.0.0
-mkl:
-- '2023'
 numpy:
 - '2'
-orc:
-- 2.3.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -70,8 +56,6 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
-pytorch:
-- '2.10'
 target_platform:
 - osx-arm64
 zip_keys:

@@ -2,8 +2,15 @@
 
 set -ex
 
+# Which half of the build we are running. Set by the recipe:
+#   "libtorch" -> staging output, compiles the heavy C++ once (python-agnostic)
+#   "pytorch"  -> inheriting output, reuses the cached build tree to build the
+#                 python bindings for this variant's python
+# Falls back to PKG_NAME so the script still works under plain conda-build.
+PYTORCH_BUILD_STAGE="${PYTORCH_BUILD_STAGE:-$PKG_NAME}"
+
 echo "#########################################################################"
-echo "Building ${PKG_NAME} (py: ${PY_VER}) using BLAS implementation $blas_impl"
+echo "Building ${PYTORCH_BUILD_STAGE} (py: ${PY_VER}) using BLAS implementation $blas_impl"
 echo "#########################################################################"
 
 # This is used to detect if it's in the process of building pytorch
@@ -89,7 +96,9 @@ for ARG in $CMAKE_ARGS; do
 done
 CMAKE_FIND_ROOT_PATH+=";$SRC_DIR"
 unset CMAKE_INSTALL_PREFIX
-export PYTORCH_BUILD_VERSION=$PKG_VERSION
+# In the staging build PKG_VERSION is empty (a staging output is not a versioned
+# package), so allow the recipe to pass the version in explicitly.
+export PYTORCH_BUILD_VERSION="${PYTORCH_BUILD_VERSION:-$PKG_VERSION}"
 # Always pass 0 to avoid appending ".post" to version string.
 # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 export PYTORCH_BUILD_NUMBER=0
@@ -163,7 +172,7 @@ case "$blas_impl" in
         ;;
 esac
 
-if [[ "$PKG_NAME" == "pytorch" ]]; then
+if [[ "$PYTORCH_BUILD_STAGE" == "pytorch" ]]; then
   # Trick Cmake into thinking python hasn't changed
   sed "s/3\.12/$PY_VER/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
   sed -i.bak "s/3;12/${PY_VER%.*};${PY_VER#*.}/g" build/CMakeCache.txt
@@ -285,8 +294,10 @@ fi
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
 
-case ${PKG_NAME} in
-  libtorch)
+case ${PYTORCH_BUILD_STAGE} in
+  build)
+    # Staging stage: compile libtorch once (the expensive part). The resulting
+    # build tree is cached and reused by the `libtorch` and `pytorch` stages.
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.
     if [[ "$target_platform" == linux-* ]]; then
@@ -296,15 +307,20 @@ case ${PKG_NAME} in
         $PREFIX/bin/python setup.py -q build
     fi
 
+    # Keep the original backed up so the pytorch stage can sed it per python version
+    cp build/CMakeCache.txt build/CMakeCache.txt.orig
+    ;;
+  libtorch)
+    # Install the compiled C++ artifacts (from the cached build tree) into the
+    # libtorch output's prefix. No compilation happens here.
+    # This output has no host deps, so the destination dirs don't exist yet.
+    mkdir -p ${PREFIX}/bin ${PREFIX}/lib ${PREFIX}/include ${PREFIX}/share
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/
     # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
     rsync -a build/lib.*/torch/share/* ${PREFIX}/share/
     mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
     rm ${PREFIX}/lib/libtorch_python.*
-
-    # Keep the original backed up to sed later
-    cp build/CMakeCache.txt build/CMakeCache.txt.orig
 
     if [[ "${cuda_compiler_version}" != "None" ]]; then
         for CHANGE in "activate" "deactivate"
