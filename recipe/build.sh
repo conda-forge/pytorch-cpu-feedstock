@@ -313,6 +313,8 @@ case ${PYTORCH_BUILD_STAGE} in
   libtorch)
     # Install the compiled C++ artifacts (from the cached build tree) into the
     # libtorch output's prefix. No compilation happens here.
+    # This output has no host deps, so the destination dirs don't exist yet.
+    mkdir -p ${PREFIX}/bin ${PREFIX}/lib ${PREFIX}/include ${PREFIX}/share
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
     mv build/lib.*/torch/lib/* ${PREFIX}/lib/
     # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
