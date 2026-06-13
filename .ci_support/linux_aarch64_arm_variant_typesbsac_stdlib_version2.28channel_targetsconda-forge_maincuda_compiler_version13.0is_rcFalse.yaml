@@ -5,11 +5,11 @@ blas_impl:
 c_compiler:
 - gcc
 c_compiler_version:
-- '13'
+- '14'
 c_stdlib:
 - sysroot
 c_stdlib_version:
-- '2.17'
+- '2.28'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -17,11 +17,11 @@ channel_targets:
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.9'
+- '13.0'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '13'
+- '14'
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
 fmt:
@@ -31,7 +31,7 @@ github_actions_labels:
 is_rc:
 - 'False'
 libabseil:
-- '20260107'
+- '20260526'
 libblas:
 - 3.9.* *netlib
 libcblas:
@@ -45,7 +45,7 @@ libmagma_devel:
 libmagma_sparse:
 - 2.10.0
 libprotobuf:
-- 6.33.5
+- 7.35.1
 libtorch:
 - '2.10'
 mkl:
