@@ -223,6 +223,9 @@ outputs:
               - cross-python_${{ target_platform }}
         by_name:
           - python
+          # libtorch is python-agnostic; don't let the staging's python 3.12
+          # leak a python_abi pin onto it (breaks the exact pin from pytorch)
+          - python_abi
           - numpy
           - libmagma_sparse
 
@@ -285,6 +288,9 @@ outputs:
       ignore_run_exports:
         by_name:
           - python
+          # libtorch is python-agnostic; don't let the staging's python 3.12
+          # leak a python_abi pin onto it (breaks the exact pin from pytorch)
+          - python_abi
           - numpy
           - libmagma_sparse
     tests:
