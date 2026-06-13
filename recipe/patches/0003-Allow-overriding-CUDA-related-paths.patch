@@ -3,9 +3,13 @@ From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Wed, 27 Nov 2024 13:47:23 +0100
 Subject: [PATCH 03/23] Allow overriding CUDA-related paths
 
+The second hunk used to extend the env-var forwarding loop in
+tools/setup_helpers/cmake.py to also pass CUDA* variables through to CMake.
+Upstream PR #177640 moved that forwarding loop into
+cmake/EnvVarForwarding.cmake, so apply the same change there instead.
 ---
  cmake/Modules/FindCUDAToolkit.cmake | 2 +-
- tools/setup_helpers/cmake.py        | 2 +-
+ cmake/EnvVarForwarding.cmake        | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cmake/Modules/FindCUDAToolkit.cmake b/cmake/Modules/FindCUDAToolkit.cmake
@@ -21,16 +25,16 @@ index ec9ae530aa6..b7c0bd9fc51 100644
    set(CUDAToolkit_ROOT_DIR "${CMAKE_CUDA_COMPILER_TOOLKIT_ROOT}")
    set(CUDAToolkit_LIBRARY_ROOT "${CMAKE_CUDA_COMPILER_LIBRARY_ROOT}")
    set(CUDAToolkit_VERSION "${CMAKE_CUDA_COMPILER_TOOLKIT_VERSION}")
-diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
-index 88f0fe5d309..753da8f435d 100644
---- a/tools/setup_helpers/cmake.py
-+++ b/tools/setup_helpers/cmake.py
-@@ -315,7 +315,7 @@ class CMake:
-             true_var = additional_options.get(var)
-             if true_var is not None:
-                 build_options[true_var] = val
--            elif var.startswith(("BUILD_", "USE_", "CMAKE_")) or var.endswith(
-+            elif var.startswith(("BUILD_", "USE_", "CMAKE_", "CUDA")) or var.endswith(
-                 ("EXITCODE", "EXITCODE__TRYRUN_OUTPUT")
-             ):
-                 build_options[var] = val
+diff --git a/cmake/EnvVarForwarding.cmake b/cmake/EnvVarForwarding.cmake
+index 1111111..2222222 100644
+--- a/cmake/EnvVarForwarding.cmake
++++ b/cmake/EnvVarForwarding.cmake
+@@ -87,7 +87,7 @@
+     set(_var_name "${CMAKE_MATCH_1}")
+     set(_var_value "${CMAKE_MATCH_2}")
+     # Only forward vars with BUILD_/USE_/CMAKE_ prefix or *EXITCODE* suffix.
+-    string(REGEX MATCH "^(BUILD_|USE_|CMAKE_)" _has_prefix "${_var_name}")
++    string(REGEX MATCH "^(BUILD_|USE_|CMAKE_|CUDA)" _has_prefix "${_var_name}")
+     string(REGEX MATCH "(EXITCODE|EXITCODE__TRYRUN_OUTPUT)$" _has_suffix "${_var_name}")
+     if(NOT _has_prefix AND NOT _has_suffix)
+       continue()
