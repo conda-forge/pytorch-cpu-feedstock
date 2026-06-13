@@ -87,7 +87,13 @@ export CMAKE_BUILD_TYPE=Release
 # (i.e. when cross compiling); forcing one on a native build would over-restrict
 # find_*. (CMAKE_INSTALL_PREFIX is filtered out in patch 0002b, since cmake.py
 # sets its own.)
-CMAKE_ARGS="$(echo "$CMAKE_ARGS" | sed -E "s#(-DCMAKE_FIND_ROOT_PATH=[^[:space:]]*)#\1;${SRC_DIR}#")"
+# NB: CUDA builds receive *two* -DCMAKE_FIND_ROOT_PATH flags (conda's nvcc
+# activation appends a second one with the CUDA targets); cmake uses the last,
+# so append $SRC_DIR to *every* occurrence (g flag). Without it the winning
+# entry omits the source tree and pytorch can't find the bundled oneDNN source
+# ("MKLDNN source files not found!" -> USE_MKLDNN off -> undefined dnnl_graph
+# symbol at import; CPU builds have a single entry and were unaffected).
+CMAKE_ARGS="$(echo "$CMAKE_ARGS" | sed -E "s#(-DCMAKE_FIND_ROOT_PATH=[^[:space:]]*)#\1;${SRC_DIR}#g")"
 export CMAKE_ARGS
 
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
