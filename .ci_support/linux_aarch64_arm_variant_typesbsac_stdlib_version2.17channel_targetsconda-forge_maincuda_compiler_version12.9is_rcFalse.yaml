@@ -1,5 +1,5 @@
 arm_variant_type:
-- tegra
+- sbsa
 blas_impl:
 - generic
 c_compiler:
@@ -9,7 +9,7 @@ c_compiler_version:
 c_stdlib:
 - sysroot
 c_stdlib_version:
-- '2.34'
+- '2.17'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -31,7 +31,7 @@ github_actions_labels:
 is_rc:
 - 'False'
 libabseil:
-- '20260107'
+- '20260526'
 libblas:
 - 3.9.* *netlib
 libcblas:
@@ -45,7 +45,7 @@ libmagma_devel:
 libmagma_sparse:
 - 2.10.0
 libprotobuf:
-- 6.33.5
+- 7.35.1
 libtorch:
 - '2.10'
 mkl:
