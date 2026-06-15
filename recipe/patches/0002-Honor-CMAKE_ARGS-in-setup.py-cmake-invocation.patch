@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Klaus Zimmermann <klaus_zimmermann@gmx.de>
+Date: Fri, 12 Jun 2026 00:00:00 +0000
+Subject: [PATCH] Honor the CMAKE_ARGS environment variable in setup.py's cmake
+ invocation
+
+PyTorch's setup.py builds its own cmake command line in
+tools/setup_helpers/cmake.py and otherwise ignores the CMAKE_ARGS
+environment variable. conda-forge (like scikit-build-core) delivers the
+whole cross-compilation toolchain -- CMAKE_SYSTEM_NAME, CMAKE_OSX_SYSROOT,
+the cross binutils, etc. -- as -D flags in CMAKE_ARGS, and these must reach
+cmake *before* project() runs its compiler detection.
+
+Since PR #177640 moved environment-variable forwarding into
+cmake/EnvVarForwarding.cmake, which is include()d after project(), nothing
+puts CMAKE_ARGS on the command line in time for the setup.py build path, so
+cross-compilation breaks. Honor CMAKE_ARGS here -- the convention used by
+scikit-build-core and conda-forge -- so it lands on the command line before
+project(), matching how every other cmake invocation in the recipe already
+consumes it. Split on spaces to match how the rest of the conda build
+consumes CMAKE_ARGS.
+
+CMAKE_INSTALL_PREFIX is filtered out: cmake.py sets it itself just above
+(the build installs into its own tree, not the user's prefix), so -- like
+scikit-build-core, which filters the options it manages -- CMAKE_ARGS is not
+allowed to override it.
+
+Signed-off-by: Klaus Zimmermann <klaus_zimmermann@gmx.de>
+---
+ tools/setup_helpers/cmake.py | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
+index 1234567..89abcde 100644
+--- a/tools/setup_helpers/cmake.py
++++ b/tools/setup_helpers/cmake.py
+@@ -301,5 +301,17 @@
+         # Reference:
+         # 1. https://cmake.org/cmake/help/latest/manual/cmake.1.html#synopsis
+         # 2. https://stackoverflow.com/a/27169347
++        # conda-forge: PyTorch's setup.py builds its own cmake command line and
++        # ignores $CMAKE_ARGS. Honor it (the scikit-build-core / conda-forge
++        # convention) so conda's cross toolchain reaches cmake before project().
++        # Skip CMAKE_INSTALL_PREFIX, set just above -- like scikit-build-core,
++        # filter the options the build script manages so CMAKE_ARGS can't
++        # override them.
++        args.extend(
++            arg
++            for arg in os.environ.get("CMAKE_ARGS", "").split()
++            if not arg.startswith("-DCMAKE_INSTALL_PREFIX=")
++        )
++
+         args.append(base_dir)
+         self.run(args, env=my_env)

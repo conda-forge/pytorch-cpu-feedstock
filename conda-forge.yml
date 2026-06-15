@@ -1,5 +1,4 @@
 azure:
-  free_disk_space: true
   settings_linux:
     timeoutInMinutes: 1
 bot:
@@ -17,7 +16,6 @@ github:
   branch_name: main
   tooling_branch_name: main
 github_actions:
-  resize_win_partitions: true
   timeout_minutes: 1440
   triggers:
   - push
@@ -29,3 +27,8 @@ provider:
   osx_arm64: github_actions
   win_64: github_actions
 test: native_and_emulated
+workflow_settings:
+  resize_partitions:
+    - value: true
+      os: win
+      provider: github_actions
