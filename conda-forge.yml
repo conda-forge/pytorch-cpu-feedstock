@@ -27,3 +27,5 @@ provider:
   osx_arm64: github_actions
   win_64: github_actions
 test: native_and_emulated
+workflow_settings:
+  free_disk_space: max
