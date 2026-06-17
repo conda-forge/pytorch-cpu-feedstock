@@ -27,10 +27,10 @@ jobs:
             UPLOAD_PACKAGES: True
             build_workspace_dir: D:\\bld\\
             docker_run_args: 
-            free_disk_space: skip
+            free_disk_space: max
             os: windows
             pagefile_size: 0
-            resize_partitions: True
+            resize_partitions: False
             runs_on: ['namespace-profile-16cpu-4x-on-windows-64']
             tools_install_dir: D:\Miniforge
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
@@ -38,16 +38,24 @@ jobs:
             UPLOAD_PACKAGES: True
             build_workspace_dir: D:\\bld\\
             docker_run_args: 
-            free_disk_space: skip
+            free_disk_space: max
             os: windows
             pagefile_size: 0
-            resize_partitions: True
+            resize_partitions: False
             runs_on: ['namespace-profile-16cpu-4x-on-windows-64']
             tools_install_dir: D:\Miniforge
     steps:
 
     - name: Checkout code
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+    - name: Manage disk space
+      env:
+        FREE_DISK_SPACE: ${{ matrix.free_disk_space }}
+        OS: ${{ matrix.os }}
+      shell: bash
+      run: |
+        .scripts/free_disk_space.sh "${FREE_DISK_SPACE}"
     - name: Configure binfmt_misc
       if: matrix.os == 'ubuntu'
       shell: bash
@@ -117,31 +125,6 @@ jobs:
           export IS_PR_BUILD="False"
         fi
         ./.scripts/run_osx_build.sh
-
-    # https://github.com/aktech/cirun-azure-resize-disk
-    - name: Resize all partitions to maximum
-      if: matrix.os == 'windows' && matrix.resize_partitions
-      shell: pwsh
-      run: |
-        Write-Output "=== RESIZING PARTITIONS ==="
-        $disks = Get-Disk | Where-Object PartitionStyle -ne 'RAW'
-
-        foreach ($disk in $disks) {
-            $partitions = Get-Partition -DiskNumber $disk.Number
-            foreach ($partition in $partitions) {
-                try {
-                    $size = Get-PartitionSupportedSize -DiskNumber $disk.Number -PartitionNumber $partition.PartitionNumber
-                    if ($partition.Size -lt $size.SizeMax) {
-                        Write-Output "Resizing Disk $($disk.Number) Partition $($partition.PartitionNumber) from $($partition.Size) to $($size.SizeMax)"
-                        Resize-Partition -DiskNumber $disk.Number -PartitionNumber $partition.PartitionNumber -Size $size.SizeMax -Verbose
-                    } else {
-                        Write-Output "Disk $($disk.Number) Partition $($partition.PartitionNumber) already at max size ($($partition.Size))"
-                    }
-                } catch {
-                    Write-Warning "Failed resizing Disk $($disk.Number) Partition $($partition.PartitionNumber): $_"
-                }
-            }
-        }
 
     - name: Build on windows
       id: build-windows
