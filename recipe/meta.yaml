@@ -385,10 +385,10 @@ outputs:
         - ninja
         - boto3
         - hypothesis
-        # pytest-9 compatibility of test/conftest.py is fixed by patch 0023
+        # pytest 9.0 compatibility of test/conftest.py is fixed by patch 0023
         # (PytestRemovedIn9Warning, see
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/448#issuecomment-3529016115)
-        - pytest
+        - pytest <9.1
         - tabulate
         - pydot
         - pip
