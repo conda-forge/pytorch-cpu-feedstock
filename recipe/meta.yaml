@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
-{% set version = "2.12.0" %}
-{% set build = 1 %}
+{% set version = "2.12.1" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -16,7 +16,7 @@
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.7.0" %}
+{% set triton = "3.7.1" %}
 
 package:
   name: libtorch
@@ -29,7 +29,7 @@ source:
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-    sha256: 7cc1deb309f402ad67e9f45bbe311a40def4db19d66fddb9b01950f9bfc5ccb1
+    sha256: 757145cfd55c7c8c01f58c959f76230641cc67fdd1d8b6a130f93ad1bc116f5f
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
