@@ -77,7 +77,7 @@ source:
       # fails to compile on osx-arm64 metal builds (from AnacondaRecipes)
       - patches/0021-Add-missing-includes-in-c10d-control_plane-Handlers..patch
       # pytest 9 removed the deprecated `path` argument of pytest_pycollect_makemodule
-      # (from AnacondaRecipes); this lets us test with unpinned pytest
+      # (from AnacondaRecipes); this lets us test with pytest 9.0
       - patches/0022-Remove-deprecated-path-parameter-from-pytest_pycolle.patch
       # pytest-xdist cannot serialize torch builtin function objects in
       # unittest subTest metadata
@@ -94,6 +94,8 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  # temporary
+  skip: true  # [not win]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -384,10 +386,10 @@ outputs:
         - ninja
         - boto3
         - hypothesis
-        # pytest-9 compatibility of test/conftest.py is fixed by patch 0023
+        # pytest 9.0 compatibility of test/conftest.py is fixed by patch 0023
         # (PytestRemovedIn9Warning, see
         # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/448#issuecomment-3529016115)
-        - pytest
+        - pytest <9.1
         - tabulate
         - pydot
         - pip
