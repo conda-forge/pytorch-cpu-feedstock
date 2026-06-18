@@ -17,7 +17,7 @@ cxx_compiler:
 fmt:
 - '12.1'
 github_actions_labels:
-- cirun-azure-windows-4xlarge
+- namespace-profile-16cpu-4x-on-windows-64
 is_rc:
 - 'False'
 libabseil:

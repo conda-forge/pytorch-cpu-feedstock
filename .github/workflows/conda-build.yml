@@ -178,36 +178,36 @@ jobs:
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
-            build_workspace_dir: C:\\bld\\
+            build_workspace_dir: D:\\bld\\
             docker_run_args: 
             free_disk_space: skip
             os: windows
             pagefile_size: 0
-            resize_partitions: True
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hca575dce']
-            tools_install_dir: C:\Miniforge
+            resize_partitions: False
+            runs_on: ['namespace-profile-16cpu-4x-on-windows-64']
+            tools_install_dir: D:\Miniforge
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
-            build_workspace_dir: C:\\bld\\
+            build_workspace_dir: D:\\bld\\
             docker_run_args: 
             free_disk_space: skip
             os: windows
             pagefile_size: 0
-            resize_partitions: True
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_h28fca69f']
-            tools_install_dir: C:\Miniforge
+            resize_partitions: False
+            runs_on: ['namespace-profile-16cpu-4x-on-windows-64']
+            tools_install_dir: D:\Miniforge
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
-            build_workspace_dir: C:\\bld\\
+            build_workspace_dir: D:\\bld\\
             docker_run_args: 
             free_disk_space: skip
             os: windows
             pagefile_size: 0
-            resize_partitions: True
-            runs_on: ['cirun-azure-windows-4xlarge--${{ github.run_id }}-win_64_channel_targetsconda-forge_maincu_hc68ac914']
-            tools_install_dir: C:\Miniforge
+            resize_partitions: False
+            runs_on: ['namespace-profile-16cpu-4x-on-windows-64']
+            tools_install_dir: D:\Miniforge
     steps:
 
     - name: Checkout code
@@ -281,31 +281,6 @@ jobs:
           export IS_PR_BUILD="False"
         fi
         ./.scripts/run_osx_build.sh
-
-    # https://github.com/aktech/cirun-azure-resize-disk
-    - name: Resize all partitions to maximum
-      if: matrix.os == 'windows' && matrix.resize_partitions
-      shell: pwsh
-      run: |
-        Write-Output "=== RESIZING PARTITIONS ==="
-        $disks = Get-Disk | Where-Object PartitionStyle -ne 'RAW'
-
-        foreach ($disk in $disks) {
-            $partitions = Get-Partition -DiskNumber $disk.Number
-            foreach ($partition in $partitions) {
-                try {
-                    $size = Get-PartitionSupportedSize -DiskNumber $disk.Number -PartitionNumber $partition.PartitionNumber
-                    if ($partition.Size -lt $size.SizeMax) {
-                        Write-Output "Resizing Disk $($disk.Number) Partition $($partition.PartitionNumber) from $($partition.Size) to $($size.SizeMax)"
-                        Resize-Partition -DiskNumber $disk.Number -PartitionNumber $partition.PartitionNumber -Size $size.SizeMax -Verbose
-                    } else {
-                        Write-Output "Disk $($disk.Number) Partition $($partition.PartitionNumber) already at max size ($($partition.Size))"
-                    }
-                } catch {
-                    Write-Warning "Failed resizing Disk $($disk.Number) Partition $($partition.PartitionNumber): $_"
-                }
-            }
-        }
 
     - name: Build on windows
       id: build-windows
