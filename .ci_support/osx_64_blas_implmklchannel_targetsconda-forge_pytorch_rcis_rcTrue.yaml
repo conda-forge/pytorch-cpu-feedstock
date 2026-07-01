@@ -1,29 +1,45 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '12.0'
+MACOSX_SDK_VERSION:
+- '14.5'
 blas_impl:
 - mkl
 c_compiler:
-- vs2022
+- clang
+c_compiler_version:
+- '19'
 c_stdlib:
-- vs
+- macosx_deployment_target
+c_stdlib_version:
+- '12.0'
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '13.0'
+- None
 cxx_compiler:
-- vs2022
+- clangxx
+cxx_compiler_version:
+- '19'
 fmt:
 - '12.1'
 github_actions_labels:
-- namespace-profile-16cpu-4x-on-windows-64
+- namespace-profile-12cpu-on-osx-arm64
 is_rc:
-- 'False'
+- 'True'
 libabseil:
 - '20260526'
+libblas:
+- 3.9.* *netlib
+libcblas:
+- 3.9.* *netlib
 libcudnn_dev:
 - '9'
+liblapack:
+- 3.9.* *netlib
 libmagma_devel:
 - 2.10.0
 libmagma_sparse:
@@ -31,11 +47,15 @@ libmagma_sparse:
 libprotobuf:
 - 7.35.1
 libtorch:
-- '2.10'
+- '2.11'
+llvm_openmp:
+- '19'
+macos_machine:
+- x86_64-apple-darwin13.4.0
 mkl:
-- '2026'
+- '2023'
 mkl_devel:
-- '2026'
+- '2023'
 numpy:
 - '2'
 orc:
@@ -47,16 +67,14 @@ pin_run_as_build:
 pybind11_abi:
 - '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
-- 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
-- '2.10'
+- '2.11'
 target_platform:
-- win-64
+- osx-64
 zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
 - - channel_targets
   - is_rc
 zlib:
