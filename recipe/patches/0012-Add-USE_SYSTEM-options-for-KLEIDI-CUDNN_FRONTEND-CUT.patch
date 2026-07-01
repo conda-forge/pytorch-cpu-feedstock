@@ -1,7 +1,7 @@
-From ed5cced6b3627a9643687a7da3c162647a1251db Mon Sep 17 00:00:00 2001
+From 8c7be1d3d5832d5d3cd25458daffa8f48094c76f Mon Sep 17 00:00:00 2001
 From: Yukio Siraichi <yukio.siraichi@gmail.com>
 Date: Tue, 30 Sep 2025 01:10:13 +0000
-Subject: [PATCH 12/23] Add USE_SYSTEM options for KLEIDI, CUDNN_FRONTEND,
+Subject: [PATCH 12/20] Add USE_SYSTEM options for KLEIDI, CUDNN_FRONTEND,
  CUTLASS, and FMT
 
 This commit adds CMake options to allow users to use system-installed versions of four libraries instead of the bundled versions
@@ -9,17 +9,17 @@ This commit adds CMake options to allow users to use system-installed versions o
 Fixes #153863
 PR: https://github.com/pytorch/pytorch/pull/166824
 ---
- CMakeLists.txt               |  8 +++++
- aten/src/ATen/CMakeLists.txt | 17 ++++++++--
- cmake/Dependencies.cmake     | 63 +++++++++++++++++++++++++++---------
- cmake/Summary.cmake          |  4 +++
- 4 files changed, 74 insertions(+), 18 deletions(-)
+ CMakeLists.txt               |  8 ++++
+ aten/src/ATen/CMakeLists.txt | 17 +++++++-
+ cmake/Dependencies.cmake     | 83 +++++++++++++++++++++++++-----------
+ cmake/Summary.cmake          |  4 ++
+ 4 files changed, 84 insertions(+), 28 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bdc3d911555..09bb4b535d2 100644
+index a8b655d9cf5..db313ed5afe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -496,6 +496,10 @@ option(USE_SYSTEM_BENCHMARK "Use system-provided google benchmark." OFF)
+@@ -509,6 +509,10 @@ option(USE_SYSTEM_BENCHMARK "Use system-provided google benchmark." OFF)
  option(USE_SYSTEM_ONNX "Use system-provided onnx." OFF)
  option(USE_SYSTEM_XNNPACK "Use system-provided xnnpack." OFF)
  option(USE_SYSTEM_NVTX "Use system-provided nvtx." OFF)
@@ -30,7 +30,7 @@ index bdc3d911555..09bb4b535d2 100644
  option(USE_GOLD_LINKER "Use ld.gold to link" OFF)
  if(USE_SYSTEM_LIBS)
    set(USE_SYSTEM_CPUINFO ON)
-@@ -515,6 +519,10 @@ if(USE_SYSTEM_LIBS)
+@@ -528,6 +532,10 @@ if(USE_SYSTEM_LIBS)
      set(USE_SYSTEM_NCCL ON)
    endif()
    set(USE_SYSTEM_NVTX ON)
@@ -42,10 +42,10 @@ index bdc3d911555..09bb4b535d2 100644
  
  # /Z7 override option When generating debug symbols, CMake default to use the
 diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
-index b632313c57b..27135df65c4 100644
+index e0a54f8e181..57c27e4ec4e 100644
 --- a/aten/src/ATen/CMakeLists.txt
 +++ b/aten/src/ATen/CMakeLists.txt
-@@ -797,8 +797,21 @@ if(USE_CUDA AND NOT USE_ROCM)
+@@ -831,8 +831,21 @@ if(USE_CUDA AND NOT USE_ROCM)
    add_definitions(-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
    add_definitions(-DCUTLASS_ENABLE_SM90_EXTENDED_MMA_SHAPES=1)
    add_definitions(-DCUTE_SM90_EXTENDED_MMA_SHAPES_ENABLED)
@@ -70,10 +70,10 @@ index b632313c57b..27135df65c4 100644
    if($ENV{ATEN_STATIC_CUDA})
      if(CUDA_VERSION VERSION_LESS_EQUAL 12.9)
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index ef74cec001a..aaa1bc83cb0 100644
+index eda03f6bd80..9c494dbdcdb 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -958,7 +958,14 @@ if(USE_CUDNN)
+@@ -983,7 +983,14 @@ if(USE_CUDNN)
    if(CUDNN_VERSION VERSION_LESS 8.5)
      message(FATAL_ERROR "PyTorch needs CuDNN-8.5 or above, but found ${CUDNN_VERSION}. Builds are still possible with `USE_CUDNN=0`")
    endif()
@@ -89,7 +89,7 @@ index ef74cec001a..aaa1bc83cb0 100644
    target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})
  endif()
  
-@@ -1529,7 +1536,7 @@ if(NOT INTERN_BUILD_MOBILE)
+@@ -1572,7 +1579,7 @@ if(NOT INTERN_BUILD_MOBILE)
      message("disabling MKLDNN because USE_MKLDNN is not set")
    endif()
  
@@ -98,7 +98,7 @@ index ef74cec001a..aaa1bc83cb0 100644
      set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
      set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
      set(AT_KLEIDIAI_ENABLED 1)
-@@ -1539,6 +1546,22 @@ if(NOT INTERN_BUILD_MOBILE)
+@@ -1582,6 +1589,22 @@ if(NOT INTERN_BUILD_MOBILE)
      list(APPEND Caffe2_DEPENDENCY_LIBS kleidiai)
      # Recover build options.
      set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
@@ -121,7 +121,7 @@ index ef74cec001a..aaa1bc83cb0 100644
    endif()
  
    if(UNIX AND NOT APPLE)
-@@ -1592,22 +1615,30 @@ endif()
+@@ -1635,33 +1658,41 @@ endif()
  # This was the default behavior before version 12.0.0.
  # Since PyTorch C API depends on it, make it available for projects that
  # depend on PyTorch.
@@ -143,6 +143,11 @@ index ef74cec001a..aaa1bc83cb0 100644
 -# `fmt` is compatible with a superset of the compilers that PyTorch is, it
 -# shouldn't be too bad to just disable the checks.
 -set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
+-
+-# Keep fmt's header-only type layout stable across mixed C++ modes by forcing
+-# one no_unique_address spelling for all translation units.
+-if(MSVC AND NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+-  set(_fmt_no_unique_address "[[msvc::no_unique_address]]")
 +  # Disable compiler feature checks for `fmt`.
 +  #
 +  # CMake compiles a little program to check compiler features. Some of our build
@@ -151,18 +156,34 @@ index ef74cec001a..aaa1bc83cb0 100644
 +  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
 +  # shouldn't be too bad to just disable the checks.
 +  set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
- 
--list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
--set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
++
++  # Keep fmt's header-only type layout stable across mixed C++ modes by forcing
++  # one no_unique_address spelling for all translation units.
++  if(MSVC AND NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
++    set(_fmt_no_unique_address "[[msvc::no_unique_address]]")
++  else()
++    set(_fmt_no_unique_address "[[no_unique_address]]")
++  endif()
++  target_compile_definitions(fmt PUBLIC "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
++  target_compile_definitions(fmt-header-only INTERFACE "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
++  unset(_fmt_no_unique_address)
++
 +  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
 +  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
-+else()
+ else()
+-  set(_fmt_no_unique_address "[[no_unique_address]]")
 +  find_package(fmt REQUIRED)
 +  if(NOT fmt_FOUND)
 +    message(FATAL_ERROR "Cannot find system fmt library. Please install libfmt-dev or set USE_SYSTEM_FMT=OFF")
 +  endif()
 +  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt)
-+endif()
+ endif()
+-target_compile_definitions(fmt PUBLIC "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
+-target_compile_definitions(fmt-header-only INTERFACE "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
+-unset(_fmt_no_unique_address)
+-
+-list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
+-set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
  
  # ---[ Kineto
  # edge profiler depends on KinetoProfiler but it only does cpu

@@ -1,5 +1,5 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
-{% set version = "2.12.1" %}
+{% set version = "2.13.0-rc13" %}
 {% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
@@ -25,7 +25,7 @@ package:
 source:
 {% if "rc" in version %}
   - url: https://download.pytorch.org/source_code/test/pytorch-v{{ version }}.tar.gz
-    sha256: 3035931fff5b79e0300db69b0249e0c9c7ea5b394f451cb80e0280cbc2affcc2
+    sha256: e77c5d8e7fb721625cd009274668d80f588b10958c9432c6a9f78c3fae79448d
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
@@ -58,14 +58,7 @@ source:
       - patches/0013-Fix-building-kineto-against-system-fmt.patch
       - patches/0014-Use-Intel-LLVM-openmp.patch
       - patches/0015-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
-      # backport https://github.com/pytorch/pytorch/pull/180388
-      - patches/0016-Fix-build-with-MAGMA-2.10.0-180388.patch
       - patches/0017-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
-      # fix a test-isolation leak in test_incorrect_abstract_impl that globally
-      # disables autograd dispatch and causes hundreds of spurious
-      # "element 0 of tensors does not require grad" failures
-      # backport https://github.com/pytorch/pytorch/pull/186550
-      - patches/0018-Fix-dispatch-key-guard-leak-in-test_incorrect_abstra.patch
       # escape backslashes/quotes when CMAKE_CXX_FLAGS etc. are baked into
       # macros.h build strings, so the Windows (MSVC) build of caffe2/core/common.cc
       # doesn't choke on backslash paths -> C4129/C2065 'EHsc'
@@ -76,9 +69,6 @@ source:
       # Handlers.cpp uses std::unordered_map / std::vector without including them;
       # fails to compile on osx-arm64 metal builds (from AnacondaRecipes)
       - patches/0021-Add-missing-includes-in-c10d-control_plane-Handlers..patch
-      # pytest 9 removed the deprecated `path` argument of pytest_pycollect_makemodule
-      # (from AnacondaRecipes); this lets us test with pytest 9.0
-      - patches/0022-Remove-deprecated-path-parameter-from-pytest_pycolle.patch
       # pytest-xdist cannot serialize torch builtin function objects in
       # unittest subTest metadata
       - patches/0023-Use-serializable-subtest-labels-in-autograd-test.patch

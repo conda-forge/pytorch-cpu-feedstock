@@ -22,7 +22,7 @@ jobs:
       max-parallel: 50
       matrix:
         include:
-          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
+          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compiler_version12.9is_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -34,7 +34,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compiler_versionNoneis_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -46,7 +46,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+          - CONFIG: linux_64_blas_implgenericc_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compiler_version13.0is_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -58,7 +58,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
+          - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compiler_version12.9is_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -70,7 +70,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+          - CONFIG: linux_64_blas_implmklc_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compiler_versionNoneis_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -82,7 +82,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_64_blas_implmklc_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+          - CONFIG: linux_64_blas_implmklc_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compiler_version13.0is_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -94,7 +94,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
+          - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compiler_version12.9is_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -106,7 +106,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.17channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+          - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.17channel_targetsconda-forge_pytorch_rccuda_compiler_versionNoneis_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -118,7 +118,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.28channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+          - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.28channel_targetsconda-forge_pytorch_rccuda_compiler_version13.0is_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -130,7 +130,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: linux_aarch64_arm_variant_typetegrac_stdlib_version2.34channel_targetsconda-forge_maincuda_compiler_version12.9is_rcFalse
+          - CONFIG: linux_aarch64_arm_variant_typetegrac_stdlib_version2.34channel_targetsconda-forge_pytorch_rccuda_compiler_version12.9is_rcTrue
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
@@ -142,7 +142,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-on-linux-64;container.privileged=true;container.mount-scratch=true']
             tools_install_dir: ~/miniforge3
-          - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_mainis_rcFalse
+          - CONFIG: osx_64_blas_implgenericchannel_targetsconda-forge_pytorch_rcis_rcTrue
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             build_workspace_dir: ~/miniforge3/conda-bld
@@ -153,7 +153,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-12cpu-on-osx-arm64']
             tools_install_dir: ~/miniforge3
-          - CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_mainis_rcFalse
+          - CONFIG: osx_64_blas_implmklchannel_targetsconda-forge_pytorch_rcis_rcTrue
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             build_workspace_dir: ~/miniforge3/conda-bld
@@ -164,7 +164,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-12cpu-on-osx-arm64']
             tools_install_dir: ~/miniforge3
-          - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
+          - CONFIG: osx_arm64_channel_targetsconda-forge_pytorch_rcis_rcTrue
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             build_workspace_dir: ~/miniforge3/conda-bld
@@ -175,7 +175,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-12cpu-on-osx-arm64']
             tools_install_dir: ~/miniforge3
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
+          - CONFIG: win_64_channel_targetsconda-forge_pytorch_rccuda_compiler_version12.8is_rcTrue
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             build_workspace_dir: D:\\bld\\
@@ -186,7 +186,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-4x-on-windows-64']
             tools_install_dir: D:\Miniforge
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.0is_rcFalse
+          - CONFIG: win_64_channel_targetsconda-forge_pytorch_rccuda_compiler_version13.0is_rcTrue
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             build_workspace_dir: D:\\bld\\
@@ -197,7 +197,7 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-16cpu-4x-on-windows-64']
             tools_install_dir: D:\Miniforge
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_versionNoneis_rcFalse
+          - CONFIG: win_64_channel_targetsconda-forge_pytorch_rccuda_compiler_versionNoneis_rcTrue
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             build_workspace_dir: D:\\bld\\

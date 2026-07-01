@@ -1,5 +1,5 @@
 arm_variant_type:
-- tegra
+- sbsa
 blas_impl:
 - generic
 c_compiler:
@@ -9,15 +9,15 @@ c_compiler_version:
 c_stdlib:
 - sysroot
 c_stdlib_version:
-- '2.34'
+- '2.17'
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge main
+- conda-forge pytorch_rc
 cuda_compiler:
 - cuda-nvcc
 cuda_compiler_version:
-- '12.9'
+- None
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -29,7 +29,7 @@ fmt:
 github_actions_labels:
 - namespace-profile-16cpu-on-linux-64
 is_rc:
-- 'False'
+- 'True'
 libabseil:
 - '20260526'
 libblas:
@@ -47,7 +47,7 @@ libmagma_sparse:
 libprotobuf:
 - 7.35.1
 libtorch:
-- '2.10'
+- '2.11'
 mkl:
 - '2026'
 nccl:
@@ -63,13 +63,9 @@ pin_run_as_build:
 pybind11_abi:
 - '11'
 python:
-- 3.10.* *_cpython
-- 3.11.* *_cpython
-- 3.12.* *_cpython
-- 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
-- '2.10'
+- '2.11'
 target_platform:
 - linux-aarch64
 zip_keys:
