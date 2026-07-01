@@ -1,7 +1,7 @@
-From e61f8647571a879e29b66bc67a74c4574dfdfb3b Mon Sep 17 00:00:00 2001
+From ed145635891439d6aa5592779f7bc343a3f46b7e Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
-Subject: [PATCH 09/23] avoid deprecated `find_package(CUDA)` in caffe2 CMake
+Subject: [PATCH 09/20] avoid deprecated `find_package(CUDA)` in caffe2 CMake
  metadata
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,13 +15,13 @@ Signed-off-by: Michał Górny <mgorny@quansight.com>
  cmake/Dependencies.cmake   |   4 +-
  cmake/Summary.cmake        |  10 +--
  cmake/TorchConfig.cmake.in |   2 +-
- cmake/public/cuda.cmake    |  48 ++++----------
+ cmake/public/cuda.cmake    |  40 ++++--------
  cmake/public/utils.cmake   | 127 +++++++++++++++++++++++++++++++++++++
  setup.py                   |   2 +-
- 7 files changed, 153 insertions(+), 50 deletions(-)
+ 7 files changed, 152 insertions(+), 43 deletions(-)
 
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 1e3d0353d75..7f99c5f0347 100644
+index 87d650297e6..b4792f81895 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
 @@ -966,25 +966,25 @@ if(USE_ROCM)
@@ -56,10 +56,10 @@ index 1e3d0353d75..7f99c5f0347 100644
    target_compile_definitions(torch_cuda PRIVATE USE_CUDA)
  
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 2d399948d29..ef74cec001a 100644
+index ebef96f9095..eda03f6bd80 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -964,7 +964,7 @@ endif()
+@@ -989,7 +989,7 @@ endif()
  
  # ---[ nvtx
  if(USE_SYSTEM_NVTX)
@@ -68,7 +68,7 @@ index 2d399948d29..ef74cec001a 100644
  else()
    find_path(nvtx3_dir NAMES nvtx3 PATHS "${PROJECT_SOURCE_DIR}/third_party/NVTX/c/include" NO_DEFAULT_PATH)
  endif()
-@@ -1167,7 +1167,7 @@ if(USE_UCC)
+@@ -1179,7 +1179,7 @@ if(USE_UCC)
  endif()
  
  # ---[ CUB
@@ -129,7 +129,7 @@ index 30136780358..6426211b6bf 100644
    if(TARGET torch::nvtoolsext)
      list(APPEND TORCH_CUDA_LIBRARIES torch::nvtoolsext)
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index 239641d352c..f1149be0f1c 100644
+index a29e95e003a..9e169938fec 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
 @@ -26,8 +26,8 @@ if(NOT MSVC)
@@ -152,28 +152,17 @@ index 239641d352c..f1149be0f1c 100644
  # Pass clang as host compiler, which according to the docs
  # Must be done before CUDA language is enabled, see
  # https://cmake.org/cmake/help/v3.15/variable/CMAKE_CUDA_HOST_COMPILER.html
-@@ -65,24 +63,18 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.12.0)
-   cmake_policy(SET CMP0074 NEW)
+@@ -67,14 +65,14 @@ if(NOT CMAKE_CUDA_COMPILER_VERSION VERSION_EQUAL CUDAToolkit_VERSION)
+                       "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIRS}'")
  endif()
  
--find_package(CUDAToolkit REQUIRED)
-+find_package(CUDAToolkit REQUIRED COMPONENTS cudart nvrtc REQUIRED)
- 
- cmake_policy(POP)
- 
--if(NOT CMAKE_CUDA_COMPILER_VERSION VERSION_EQUAL CUDAToolkit_VERSION)
--  message(FATAL_ERROR "Found two conflicting CUDA versions:\n"
--                      "V${CMAKE_CUDA_COMPILER_VERSION} in '${CUDA_INCLUDE_DIRS}' and\n"
--                      "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIRS}'")
--endif()
--
 -message(STATUS "PyTorch: CUDA detected: " ${CUDA_VERSION})
 -message(STATUS "PyTorch: CUDA nvcc is: " ${CUDA_NVCC_EXECUTABLE})
 -message(STATUS "PyTorch: CUDA toolkit directory: " ${CUDA_TOOLKIT_ROOT_DIR})
 -if(CUDA_VERSION VERSION_LESS 12.1)
 +message(STATUS "PyTorch: CUDA detected: " ${CUDAToolkit_VERSION})
 +message(STATUS "PyTorch: CUDA nvcc is: " ${CUDAToolkit_NVCC_EXECUTABLE})
-+message(STATUS "PyTorch: CUDA toolkit directory: " ${CUDAToolkit_ROOT})
++message(STATUS "PyTorch: CUDA toolkit directory: " ${CUDAToolkit_TOOLKIT_ROOT_DIR})
 +if(CUDAToolkit_VERSION VERSION_LESS 12.1)
    message(FATAL_ERROR "PyTorch requires CUDA 12.1 or above.")
  endif()
@@ -183,7 +172,7 @@ index 239641d352c..f1149be0f1c 100644
    # Sometimes, we may mismatch nvcc with the CUDA headers we are
    # compiling with, e.g., if a ccache nvcc is fed to us by CUDA_NVCC_EXECUTABLE
    # but the PATH is not consistent with CUDA_HOME.  It's better safe
-@@ -106,8 +98,8 @@ if(CUDA_FOUND)
+@@ -98,8 +96,8 @@ if(CUDA_FOUND)
      )
    if(NOT CMAKE_CROSSCOMPILING)
      try_run(run_result compile_result ${PROJECT_RANDOM_BINARY_DIR} ${file}
@@ -194,7 +183,7 @@ index 239641d352c..f1149be0f1c 100644
        RUN_OUTPUT_VARIABLE cuda_version_from_header
        COMPILE_OUTPUT_VARIABLE output_var
        )
-@@ -115,30 +107,14 @@ if(CUDA_FOUND)
+@@ -107,30 +105,14 @@ if(CUDA_FOUND)
        message(FATAL_ERROR "PyTorch: Couldn't determine version from header: " ${output_var})
      endif()
      message(STATUS "PyTorch: Header version is: " ${cuda_version_from_header})
@@ -228,7 +217,7 @@ index 239641d352c..f1149be0f1c 100644
    execute_process(
      COMMAND "${Python_EXECUTABLE}" -c
 diff --git a/cmake/public/utils.cmake b/cmake/public/utils.cmake
-index a667ad55771..d62804ea6f0 100644
+index c0f14d1ff8c..1442aef730b 100644
 --- a/cmake/public/utils.cmake
 +++ b/cmake/public/utils.cmake
 @@ -293,6 +293,133 @@ macro(torch_hip_get_arch_list store_var)
@@ -366,10 +355,10 @@ index a667ad55771..d62804ea6f0 100644
  # Get the XPU arch flags specified by TORCH_XPU_ARCH_LIST.
  # Usage:
 diff --git a/setup.py b/setup.py
-index 41f5ac099db..31edf365bd7 100644
+index bcadb7aacfc..2dc7b35952c 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1260,7 +1260,7 @@ class build_ext(setuptools.command.build_ext.build_ext):
+@@ -917,7 +917,7 @@ class build_ext(setuptools.command.build_ext.build_ext):
          else:
              report("-- Not using cuDNN")
          if cmake_cache_vars["USE_CUDA"]:
