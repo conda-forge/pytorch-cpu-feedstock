@@ -72,6 +72,8 @@ source:
       # pytest-xdist cannot serialize torch builtin function objects in
       # unittest subTest metadata
       - patches/0020-Use-serializable-subtest-labels-in-autograd-test.patch
+      # TODO: upstream this
+      - patches/0021-Set-CPU-flags-via-add_definitions.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
