@@ -1,7 +1,7 @@
 From ed145635891439d6aa5592779f7bc343a3f46b7e Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 30 Jan 2025 08:33:44 +1100
-Subject: [PATCH 09/20] avoid deprecated `find_package(CUDA)` in caffe2 CMake
+Subject: [PATCH 09/21] avoid deprecated `find_package(CUDA)` in caffe2 CMake
  metadata
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

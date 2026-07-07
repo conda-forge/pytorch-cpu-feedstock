@@ -38,7 +38,7 @@ source:
       # forwarding into cmake/EnvVarForwarding.cmake (include()d after project()),
       # which is too late for the setup.py build path; honoring CMAKE_ARGS (as
       # scikit-build-core/conda-forge do) puts it on the command line in time.
-      - patches/0002-Honor-CMAKE_ARGS-in-setup.py-cmake-invocation.patch
+      - patches/0002-Honor-the-CMAKE_ARGS-environment-variable-in-setup.p.patch
       # conda-specific patch, lets us override CUDA paths
       - patches/0003-Allow-overriding-CUDA-related-paths.patch
       # fix BLAS calling convention for openblas
@@ -58,20 +58,20 @@ source:
       - patches/0013-Fix-building-kineto-against-system-fmt.patch
       - patches/0014-Use-Intel-LLVM-openmp.patch
       - patches/0015-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
-      - patches/0017-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
+      - patches/0016-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
       # escape backslashes/quotes when CMAKE_CXX_FLAGS etc. are baked into
       # macros.h build strings, so the Windows (MSVC) build of caffe2/core/common.cc
       # doesn't choke on backslash paths -> C4129/C2065 'EHsc'
-      - patches/0019-Escape-backslashes-quotes-in-macros.h-build-strings-.patch
+      - patches/0017-Escape-backslashes-quotes-in-macros.h-build-strings-.patch
       # support the cuDSS 0.8 API (new cudssDataType_t enum + offsetType arg in
       # cudssMatrixCreateCsr) so we can build against libcudss >=0.8; upstreamable
-      - patches/0020-Update-cuDSS-matrix-create-calls-for-cuDSS-0.8-API.patch
+      - patches/0018-Update-cuDSS-matrix-create-calls-for-cuDSS-0.8-API.patch
       # Handlers.cpp uses std::unordered_map / std::vector without including them;
       # fails to compile on osx-arm64 metal builds (from AnacondaRecipes)
-      - patches/0021-Add-missing-includes-in-c10d-control_plane-Handlers..patch
+      - patches/0019-Add-missing-includes-in-c10d-control_plane-Handlers..patch
       # pytest-xdist cannot serialize torch builtin function objects in
       # unittest subTest metadata
-      - patches/0023-Use-serializable-subtest-labels-in-autograd-test.patch
+      - patches/0020-Use-serializable-subtest-labels-in-autograd-test.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
