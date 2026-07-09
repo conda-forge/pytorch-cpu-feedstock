@@ -95,6 +95,14 @@ if not "%cuda_compiler_version%" == "None" (
 
     set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
 
+    @rem PyTorch has multiple different bits of logic finding CUDA, override
+    @rem all of them.
+    set "CUDAToolkit_BIN_DIR=%BUILD_PREFIX%/Library/bin"
+    set "CUDAToolkit_ROOT_DIR=%LIBRARY_PREFIX%"
+    @rem for CUPTI
+    set "CUDA_TOOLKIT_ROOT_DIR=%LIBRARY_PREFIX%"
+    set "CUDAToolkit_ROOT=%LIBRARY_PREFIX%"
+
     if "%cuda_compiler_version:~0,2%"=="12" (
         set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
     ) else if "%cuda_compiler_version%" == "13.0" (
