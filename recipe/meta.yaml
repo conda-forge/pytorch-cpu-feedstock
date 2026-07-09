@@ -74,6 +74,8 @@ source:
       - patches/0020-Use-serializable-subtest-labels-in-autograd-test.patch
       # TODO: upstream this
       - patches/0021-Set-CPU-flags-via-add_definitions.patch
+      # https://github.com/pytorch/pytorch/pull/189388
+      - patches/0022-Set-Python_SOABI-when-cross-compiling-so-extension-m.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
