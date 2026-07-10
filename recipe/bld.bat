@@ -248,7 +248,6 @@ if "%PKG_NAME%" == "libtorch" (
     @REM Move libtorch_python and remove the other directories afterwards.
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\bin\ %LIBRARY_BIN%\ torch_python.dll
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ torch_python.lib
-    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ _C.lib
     rmdir /s /q %SP_DIR%\torch\lib
     rmdir /s /q %SP_DIR%\torch\bin
     rmdir /s /q %SP_DIR%\torch\share
@@ -259,7 +258,7 @@ if "%PKG_NAME%" == "libtorch" (
     @REM Copy libtorch_python.lib back -- that's much easier than the for loop
     @REM needed to remove everything else.
     mkdir %SP_DIR%\torch\lib
-    robocopy /NP /NFL /NDL /NJH /E /MOV %LIBRARY_LIB%\ %SP_DIR%\torch\lib\ torch_python.lib _C.lib
+    robocopy /NP /NFL /NDL /NJH /E /MOV %LIBRARY_LIB%\ %SP_DIR%\torch\lib\ torch_python.lib
 )
 
 @REM Show the sccache stats.

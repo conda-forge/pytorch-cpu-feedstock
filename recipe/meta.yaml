@@ -431,7 +431,6 @@ outputs:
         - test -f $PREFIX/lib/libtorch_python${SHLIB_EXT}           # [unix]
         - if not exist %LIBRARY_BIN%\torch_python.dll exit 1        # [win]
         - if not exist %SP_DIR%\torch\lib\torch_python.lib exit 1   # [win]
-        - if not exist %SP_DIR%\torch\lib\_C.lib exit 1             # [win]
 
         # the whole test suite takes forever, but we should get a good enough coverage
         # for potential packaging problems by running a fixed subset
