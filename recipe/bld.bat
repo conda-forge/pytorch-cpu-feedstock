@@ -1,6 +1,9 @@
 @echo On
 setlocal enabledelayedexpansion
 
+@REM This is used to detect if it's in the process of building pytorch
+set IN_PYTORCH_BUILD=1
+
 @REM remove pyproject.toml to avoid installing deps from pip
 if EXIST pyproject.toml (
   DEL pyproject.toml
