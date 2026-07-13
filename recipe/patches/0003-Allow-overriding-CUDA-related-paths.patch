@@ -1,30 +1,36 @@
-From 9361e390af81b1f75348d586e61feb16ce506f28 Mon Sep 17 00:00:00 2001
+From 899f6f0d865d238a68c20b641cf7e636a1ecf5ea Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Wed, 27 Nov 2024 13:47:23 +0100
-Subject: [PATCH 03/21] Allow overriding CUDA-related paths
+Subject: [PATCH 03/22] Allow overriding CUDA-related paths
 
 The second hunk used to extend the env-var forwarding loop in
 tools/setup_helpers/cmake.py to also pass CUDA* variables through to CMake.
 Upstream PR #177640 moved that forwarding loop into
 cmake/EnvVarForwarding.cmake, so apply the same change there instead.
 ---
- cmake/EnvVarForwarding.cmake        | 2 +-
+ cmake/EnvVarForwarding.cmake        | 8 ++++++++
  cmake/Modules/FindCUDAToolkit.cmake | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/cmake/EnvVarForwarding.cmake b/cmake/EnvVarForwarding.cmake
-index a31ce6db266..739d2309b7e 100644
+index a31ce6db266..86526892cb3 100644
 --- a/cmake/EnvVarForwarding.cmake
 +++ b/cmake/EnvVarForwarding.cmake
-@@ -87,7 +87,7 @@ foreach(_line IN LISTS _env_lines)
-     set(_var_name "${CMAKE_MATCH_1}")
-     set(_var_value "${CMAKE_MATCH_2}")
-     # Only forward vars with BUILD_/USE_/CMAKE_ prefix or *EXITCODE* suffix.
--    string(REGEX MATCH "^(BUILD_|USE_|CMAKE_)" _has_prefix "${_var_name}")
-+    string(REGEX MATCH "^(BUILD_|USE_|CMAKE_|CUDA)" _has_prefix "${_var_name}")
-     string(REGEX MATCH "(EXITCODE|EXITCODE__TRYRUN_OUTPUT)$" _has_suffix "${_var_name}")
-     if(NOT _has_prefix AND NOT _has_suffix)
-       continue()
+@@ -18,6 +18,14 @@ set(_ENV_PASSTHROUGH
+   CUDA_HOST_COMPILER
+   CUDA_NVCC_EXECUTABLE
+   CUDA_SEPARABLE_COMPILATION
++  # NB: we can't do a blanket CUDA* below since CMake forces all envvars
++  # uppercase on Windows
++  CUDAToolkit_BIN_DIR
++  CUDAToolkit_ROOT_DIR
++  CUDA_TOOLKIT_ROOT_DIR
++  CUDAToolkit_ROOT
++  CUDAToolkit_TARGET_DIR
++  CUDA_VERSION
+   CUDNN_LIBRARY
+   CUDNN_INCLUDE_DIR
+   CUDNN_ROOT
 diff --git a/cmake/Modules/FindCUDAToolkit.cmake b/cmake/Modules/FindCUDAToolkit.cmake
 index ec9ae530aa6..b7c0bd9fc51 100644
 --- a/cmake/Modules/FindCUDAToolkit.cmake
