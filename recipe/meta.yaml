@@ -76,6 +76,8 @@ source:
       - patches/0021-Set-CPU-flags-via-add_definitions.patch
       # https://github.com/pytorch/pytorch/pull/189388
       - patches/0022-Set-Python_SOABI-when-cross-compiling-so-extension-m.patch
+      # conda-forge: disable bundling win32 libraries
+      - patches/0023-Disable-bundling-win32-runtime-libraries.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
