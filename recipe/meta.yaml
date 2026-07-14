@@ -186,6 +186,8 @@ requirements:
     - packaging
   run:
     - libblas * *{{ blas_impl }}        # [blas_impl == "mkl"]
+    # cuda-cupti-dev used to be pinned too widely on Windows
+    - {{ pin_compatible("cuda-cupti", max_pin="x.x.x") }}  # [win and cuda_compiler_version != "None"]
   run_constrained:
     # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
     - pytorch-cpu {{ version }}    # [cuda_compiler_version == "None"]
@@ -348,6 +350,8 @@ outputs:
         - setuptools <82
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
+        # cuda-cupti-dev used to be pinned too widely on Windows
+        - {{ pin_compatible("cuda-cupti", max_pin="x.x.x") }}  # [win and cuda_compiler_version != "None"]
       run_constrained:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
         - pytorch-cpu {{ version }}    # [cuda_compiler_version == "None"]
