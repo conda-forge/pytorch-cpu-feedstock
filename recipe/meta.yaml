@@ -516,6 +516,8 @@ outputs:
         {% set skips = skips ~ " or test_mutable_custom_op_fixed_layout" %}             # [not win]
         # minor inaccuracy on aarch64 (emulation?)
         {% set skips = skips ~ " or (TestNN and test_upsampling_bfloat16)" %}           # [aarch64]
+        {% set skips = skips ~ " or (TestMkldnnCPU and test_conv_deconv_1d_lower_precision_cpu_bfloat16)" %}  # [aarch64]
+        {% set skips = skips ~ " or (TestMkldnnCPU and test_conv_nhwc_lower_precision_cpu_bfloat16)" %}  # [aarch64]
         {% set skips = skips ~ " or (TestLinalgCPU and test_qr_cpu_float32)" %}         # [aarch64]
         # flaky failure: `Exec format error: '$PREFIX/bin/python3.12'`
         {% set skips = skips ~ " or test_terminate_handler_on_crash" %}                 # [aarch64]
