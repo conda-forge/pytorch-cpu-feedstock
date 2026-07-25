@@ -1,7 +1,7 @@
-From 6480aea936f5c366bd7275884abde07c3681abed Mon Sep 17 00:00:00 2001
+From 41b473888c28b8720bf750fc2fef7cc215faaffc Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <isuruf@gmail.com>
 Date: Thu, 31 Jul 2025 12:34:30 -0500
-Subject: [PATCH 14/23] Use Intel/LLVM openmp
+Subject: [PATCH 14/21] Use Intel/LLVM openmp
 
 This make MSVC use __kmp_* symbols available in both libiomp.dll
 and libiomp5md.dll instead of vcomp* symbols which are only in

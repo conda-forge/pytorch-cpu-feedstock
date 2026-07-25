@@ -1,7 +1,7 @@
-From 4443144e3ef6ad7a23cd4685e7240b9415adec1b Mon Sep 17 00:00:00 2001
+From 98bad4513db20ddf10a397ba8c04a7ad58f42554 Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <ifernando@quansight.com>
 Date: Wed, 18 Dec 2024 03:59:00 +0000
-Subject: [PATCH 04/23] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
+Subject: [PATCH 04/21] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
 
 There are two calling conventions for *dotu functions
 
@@ -31,10 +31,10 @@ functional calls.
  1 file changed, 2 insertions(+)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 406097f0c5b..2d399948d29 100644
+index 13c9ea73ad2..ebef96f9095 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -200,6 +200,7 @@ elseif(BLAS STREQUAL "OpenBLAS")
+@@ -219,6 +219,7 @@ elseif(BLAS STREQUAL "OpenBLAS")
    set(BLAS_FOUND 1)
    set(BLAS_LIBRARIES ${OpenBLAS_LIB})
    set(BLAS_CHECK_F2C 1)
@@ -42,7 +42,7 @@ index 406097f0c5b..2d399948d29 100644
  elseif(BLAS STREQUAL "BLIS")
    find_package(BLIS REQUIRED)
    include_directories(SYSTEM ${BLIS_INCLUDE_DIR})
-@@ -223,6 +224,7 @@ elseif(BLAS STREQUAL "MKL")
+@@ -242,6 +243,7 @@ elseif(BLAS STREQUAL "MKL")
      set(BLAS_INFO "mkl")
      set(BLAS_FOUND 1)
      set(BLAS_LIBRARIES ${MKL_LIBRARIES})

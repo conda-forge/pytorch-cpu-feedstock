@@ -1,7 +1,7 @@
-From 46b34be0690c240900b9c4892da775c6e5ef0a93 Mon Sep 17 00:00:00 2001
+From 08b184912949c59d3b53dae069c4d4a23413ae1f Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
-Subject: [PATCH 06/23] use our own PREFIX for include paths etc.
+Subject: [PATCH 06/21] use our own PREFIX for include paths etc.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,10 +63,10 @@ index 5749c67db11..30136780358 100644
  # Library dependencies.
  if(@BUILD_SHARED_LIBS@)
 diff --git a/torch/_inductor/cpp_builder.py b/torch/_inductor/cpp_builder.py
-index c4a801d9ba6..170d02833d7 100644
+index dc8eaee4530..0839bd9abf1 100644
 --- a/torch/_inductor/cpp_builder.py
 +++ b/torch/_inductor/cpp_builder.py
-@@ -1590,10 +1590,12 @@ def get_cpp_torch_options(
+@@ -1683,10 +1683,12 @@ def get_cpp_torch_options(
          + python_include_dirs
          + torch_include_dirs
          + omp_include_dir_paths
@@ -81,10 +81,10 @@ index c4a801d9ba6..170d02833d7 100644
      passthrough_args = (
          sys_libs_passthrough_args + isa_ps_args_build_flags + omp_passthrough_args
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index 3e9d5d3823c..9a040f48200 100644
+index d987e95bed8..4e1f077107d 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
-@@ -1618,31 +1618,37 @@ def include_paths(device_type: str = "cpu", torch_include_dirs=True) -> list[str
+@@ -1727,31 +1727,37 @@ def include_paths(device_type: str = "cpu", torch_include_dirs=True) -> list[str
      Returns:
          A list of include path strings.
      """
