@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
 {% set version = "2.13.0" %}
-{% set build = 0 %}
+{% set build = 1 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -78,6 +78,9 @@ source:
       - patches/0022-Set-Python_SOABI-when-cross-compiling-so-extension-m.patch
       # conda-forge: disable bundling win32 libraries
       - patches/0023-Disable-bundling-win32-runtime-libraries.patch
+      # our headers live in $PREFIX/include, so the MPS Metal shader JIT compiler
+      # must search there too (companion to 0006); fixes torch.compile on MPS
+      - patches/0024-Also-search-the-environment-prefix-include-dir-when-e.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
