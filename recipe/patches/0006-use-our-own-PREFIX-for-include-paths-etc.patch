@@ -1,4 +1,4 @@
-From 08b184912949c59d3b53dae069c4d4a23413ae1f Mon Sep 17 00:00:00 2001
+From 659ca0af015e6637be5c66313feef0ae2c4f2d8c Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
 Subject: [PATCH 06/21] use our own PREFIX for include paths etc.
@@ -29,14 +29,21 @@ Content-Transfer-Encoding: 8bit
   for inductor's JIT mode, not its AOT mode, for which the end user provides a
   <filename>_compile_flags.json file.
 
+- Amended by Mark Harfouche for the MPS backend, which embeds the c10/metal headers
+  into JIT-compiled Metal shaders and only looked in $SP_DIR/torch/include, so every
+  torch.compile on MPS failed; search $PREFIX/include there too.
+
 Co-Authored-By: Daniel Petry <dpetry@anaconda.com>
 Co-Authored-By: Michał Górny <mgorny@quansight.com>
 Co-Authored-By: Tobias Fischer <info@tobiasfischer.info>
+Co-Authored-By: Mark Harfouche <mark@ramonaoptics.com>
 ---
  cmake/TorchConfig.cmake.in     | 13 ++++++++++---
+ torch/_inductor/codegen/mps.py |  6 +++++-
  torch/_inductor/cpp_builder.py |  4 +++-
+ torch/mps/__init__.py          |  7 ++++++-
  torch/utils/cpp_extension.py   | 34 ++++++++++++++++++++--------------
- 3 files changed, 33 insertions(+), 18 deletions(-)
+ 5 files changed, 44 insertions(+), 20 deletions(-)
 
 diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
 index 5749c67db11..30136780358 100644
@@ -62,6 +69,30 @@ index 5749c67db11..30136780358 100644
  
  # Library dependencies.
  if(@BUILD_SHARED_LIBS@)
+diff --git a/torch/_inductor/codegen/mps.py b/torch/_inductor/codegen/mps.py
+index f35f4cb7638..08f48fd1cc9 100644
+--- a/torch/_inductor/codegen/mps.py
++++ b/torch/_inductor/codegen/mps.py
+@@ -6,6 +6,7 @@ import functools
+ import itertools
+ import logging
+ import math
++import sysconfig
+ from pathlib import Path
+ from typing import Any, TYPE_CHECKING
+ 
+@@ -965,7 +966,10 @@ class MetalKernel(SIMDKernel):
+                 ]
+                 header_contents = _embed_headers(
+                     headers,
+-                    [Path(__file__).parent.parent.parent / "include"],
++                    [
++                        Path(__file__).parent.parent.parent / "include",
++                        Path(sysconfig.get_config_var("prefix")) / "include",
++                    ],
+                     OrderedSet(),  # type: ignore[arg-type]
+                 )
+                 code.writeline(header_contents)
 diff --git a/torch/_inductor/cpp_builder.py b/torch/_inductor/cpp_builder.py
 index dc8eaee4530..0839bd9abf1 100644
 --- a/torch/_inductor/cpp_builder.py
@@ -80,6 +111,31 @@ index dc8eaee4530..0839bd9abf1 100644
      libraries = torch_libraries + omp_lib
      passthrough_args = (
          sys_libs_passthrough_args + isa_ps_args_build_flags + omp_passthrough_args
+diff --git a/torch/mps/__init__.py b/torch/mps/__init__.py
+index 8b98d348163..d4bdb63ba44 100644
+--- a/torch/mps/__init__.py
++++ b/torch/mps/__init__.py
+@@ -149,6 +149,8 @@ def compile_shader(source: str):
+         >>> x = torch.zeros(16, device="mps")
+         >>> lib.full(x, 3.14)
+     """
++    import sysconfig
++
+     from pathlib import Path
+ 
+     from torch.utils._cpp_embed_headers import _embed_headers
+@@ -157,7 +159,10 @@ def compile_shader(source: str):
+         raise RuntimeError("MPS is not available")
+     source = _embed_headers(
+         [l + "\n" for l in source.split("\n")],
+-        [Path(__file__).parent.parent / "include"],
++        [
++            Path(__file__).parent.parent / "include",
++            Path(sysconfig.get_config_var("prefix")) / "include",
++        ],
+         set(),
+     )
+     return torch._C._mps_compileShader(source)
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
 index d987e95bed8..4e1f077107d 100644
 --- a/torch/utils/cpp_extension.py
