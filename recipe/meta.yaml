@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
 {% set version = "2.13.0" %}
-{% set build = 0 %}
+{% set build = 1 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -44,7 +44,9 @@ source:
       # fix BLAS calling convention for openblas
       - patches/0004-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
       - patches/0005-Fix-FindOpenBLAS.patch
-      # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include
+      # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include;
+      # this includes the MPS Metal shader JIT compiler, which must search there too for the
+      # c10/metal headers it embeds, otherwise torch.compile on MPS fails
       - patches/0006-use-our-own-PREFIX-for-include-paths-etc.patch
       - patches/0007-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
       - patches/0008-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch         # [win]
