@@ -1,0 +1,29 @@
+From 154282277b7f826fdc340566db2b2b1b8b7ba3fd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@quansight.com>
+Date: Mon, 13 Jul 2026 20:54:15 +0200
+Subject: [PATCH 23/23] Disable bundling win32 runtime libraries
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Beside it being unnecessary for conda-forge, the rules end up mixing
+forward and backward slashes and therefore breaking CMake install rules.
+
+Signed-off-by: Michał Górny <mgorny@quansight.com>
+---
+ cmake/PostBuildSteps.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/PostBuildSteps.cmake b/cmake/PostBuildSteps.cmake
+index 71bd0438c38..e86ea2ac96f 100644
+--- a/cmake/PostBuildSteps.cmake
++++ b/cmake/PostBuildSteps.cmake
+@@ -40,7 +40,7 @@ add_custom_target(merge_compile_commands ALL
+ # The old CI scripts (copy.bat / copy_cpu.bat) copied runtime DLLs into the
+ # source tree before setuptools ran.  With scikit-build-core the wheel is
+ # built from the cmake install prefix, so we install them via cmake instead.
+-if(WIN32 AND BUILD_PYTHON)
++if(FALSE)
+   # OpenMP runtime (libiomp5md.dll) - required by torch_cpu.dll when MKL
+   # threading uses Intel OpenMP.
+   if(MKL_OPENMP_LIBRARY AND MKL_OPENMP_LIBRARY MATCHES "libiomp5md\\.lib$")

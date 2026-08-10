@@ -1,0 +1,21 @@
+From 30fbbe4d33830b8c3819adaeaec2e5e586a5914e Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Sat, 14 Jun 2025 07:34:48 +1100
+Subject: [PATCH 10/21] skip test_norm_matrix_degenerate_shapes on numpy >=2.3
+
+---
+ test/test_linalg.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/test/test_linalg.py b/test/test_linalg.py
+index 745292a7d7e..cb4f0b85cd4 100644
+--- a/test/test_linalg.py
++++ b/test/test_linalg.py
+@@ -2084,6 +2084,7 @@ class TestLinalg(TestCase):
+     @skipIf(np.lib.NumpyVersion(np.__version__) < '2.3.0', 'Numpy changed handling of degenerate inputs in 2.3.0')
+     @skipCUDAIfNoMagmaAndNoLinalgsolver
+     @skipCPUIfNoLapack
++    @unittest.skipIf(np.lib.NumpyVersion(np.__version__) >= "2.3.0", "Error behaviour changed")
+     @dtypes(torch.float, torch.double, torch.cfloat, torch.cdouble)
+     def test_norm_matrix_degenerate_shapes(self, device, dtype):
+         def run_test_case(input, ord, dim, keepdim, should_error):

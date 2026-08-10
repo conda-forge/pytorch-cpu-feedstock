@@ -1,6 +1,9 @@
 @echo On
 setlocal enabledelayedexpansion
 
+@REM This is used to detect if it's in the process of building pytorch
+set IN_PYTORCH_BUILD=1
+
 @REM remove pyproject.toml to avoid installing deps from pip
 if EXIST pyproject.toml (
   DEL pyproject.toml
@@ -94,6 +97,14 @@ if not "%cuda_compiler_version%" == "None" (
     set USE_STATIC_NCCL=0
 
     set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
+
+    @rem PyTorch has multiple different bits of logic finding CUDA, override
+    @rem all of them.
+    set "CUDAToolkit_BIN_DIR=%BUILD_PREFIX%/Library/bin"
+    set "CUDAToolkit_ROOT_DIR=%LIBRARY_PREFIX%"
+    @rem for CUPTI
+    set "CUDA_TOOLKIT_ROOT_DIR=%LIBRARY_PREFIX%"
+    set "CUDAToolkit_ROOT=%LIBRARY_PREFIX%"
 
     if "%cuda_compiler_version:~0,2%"=="12" (
         set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
@@ -239,7 +250,6 @@ if "%PKG_NAME%" == "libtorch" (
     @REM Move libtorch_python and remove the other directories afterwards.
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\bin\ %LIBRARY_BIN%\ torch_python.dll
     robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ torch_python.lib
-    robocopy /NP /NFL /NDL /NJH /E %SP_DIR%\torch\lib\ %LIBRARY_LIB%\ _C.lib
     rmdir /s /q %SP_DIR%\torch\lib
     rmdir /s /q %SP_DIR%\torch\bin
     rmdir /s /q %SP_DIR%\torch\share
@@ -250,7 +260,7 @@ if "%PKG_NAME%" == "libtorch" (
     @REM Copy libtorch_python.lib back -- that's much easier than the for loop
     @REM needed to remove everything else.
     mkdir %SP_DIR%\torch\lib
-    robocopy /NP /NFL /NDL /NJH /E /MOV %LIBRARY_LIB%\ %SP_DIR%\torch\lib\ torch_python.lib _C.lib
+    robocopy /NP /NFL /NDL /NJH /E /MOV %LIBRARY_LIB%\ %SP_DIR%\torch\lib\ torch_python.lib
 )
 
 @REM Show the sccache stats.
