@@ -47,7 +47,7 @@ libmagma_sparse:
 libprotobuf:
 - 7.35.1
 libtorch:
-- '2.10'
+- '2.12'
 llvm_openmp:
 - '19'
 macos_machine:
@@ -59,7 +59,7 @@ mkl_devel:
 numpy:
 - '2'
 orc:
-- 2.3.0
+- 2.3.1
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -73,7 +73,7 @@ python:
 - 3.13.* *_cp313
 - 3.14.* *_cp314
 pytorch:
-- '2.10'
+- '2.12'
 target_platform:
 - osx-64
 zip_keys:
