@@ -1,0 +1,26 @@
+From b5e051e24b7afb2b67b94f4a9947f9c818c4d2e2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Mon, 3 Nov 2025 14:59:04 +0100
+Subject: [PATCH 12/21] Fix building kineto against system fmt
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Michał Górny <mgorny@gentoo.org>
+---
+ cmake/Dependencies.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 956946aafa7..b45e948e168 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1692,7 +1692,7 @@ else()
+   if(NOT fmt_FOUND)
+     message(FATAL_ERROR "Cannot find system fmt library. Please install libfmt-dev or set USE_SYSTEM_FMT=OFF")
+   endif()
+-  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt)
++  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
+ endif()
+ 
+ # ---[ Kineto

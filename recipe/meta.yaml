@@ -33,53 +33,45 @@ source:
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
-      # conda-specific: make setup.py honor $CMAKE_ARGS so conda's cross-compilation
-      # toolchain reaches cmake before project(). Upstream PR #177640 moved env-var
-      # forwarding into cmake/EnvVarForwarding.cmake (include()d after project()),
-      # which is too late for the setup.py build path; honoring CMAKE_ARGS (as
-      # scikit-build-core/conda-forge do) puts it on the command line in time.
-      - patches/0002-Honor-the-CMAKE_ARGS-environment-variable-in-setup.p.patch
       # conda-specific patch, lets us override CUDA paths
-      - patches/0003-Allow-overriding-CUDA-related-paths.patch
+      - patches/0002-Allow-overriding-CUDA-related-paths.patch
       # fix BLAS calling convention for openblas
-      - patches/0004-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
-      - patches/0005-Fix-FindOpenBLAS.patch
+      - patches/0003-Use-BLAS_USE_CBLAS_DOT-for-OpenBLAS-builds.patch
+      - patches/0004-Fix-FindOpenBLAS.patch
       # point to headers that are now living in $PREFIX/include instead of $SP_DIR/torch/include;
       # this includes the MPS Metal shader JIT compiler, which must search there too for the
       # c10/metal headers it embeds, otherwise torch.compile on MPS fails
-      - patches/0006-use-our-own-PREFIX-for-include-paths-etc.patch
-      - patches/0007-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
-      - patches/0008-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch         # [win]
-      - patches/0009-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
+      - patches/0005-use-our-own-PREFIX-for-include-paths-etc.patch
+      - patches/0006-make-ATEN_INCLUDE_DIR-relative-to-TORCH_INSTALL_PREF.patch
+      - patches/0007-remove-DESTINATION-lib-from-CMake-install-TARGETS-di.patch
+      - patches/0008-avoid-deprecated-find_package-CUDA-in-caffe2-CMake-m.patch
       # skip a test that fails with numpy v2.3; still triggers as of pytorch v2.9
-      - patches/0010-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
+      - patches/0009-skip-test_norm_matrix_degenerate_shapes-on-numpy-2.3.patch
       # backport https://github.com/pytorch/pytorch/pull/127702
-      - patches/0011-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
+      - patches/0010-Define-PY_SSIZE_T_CLEAN-before-include-Python.h.patch
       # backport https://github.com/pytorch/pytorch/pull/166824
-      - patches/0012-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
-      - patches/0013-Fix-building-kineto-against-system-fmt.patch
-      - patches/0014-Use-Intel-LLVM-openmp.patch
-      - patches/0015-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch         # [cuda_compiler_version != "None"]
-      - patches/0016-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
+      - patches/0011-Add-USE_SYSTEM-options-for-KLEIDI-CUDNN_FRONTEND-CUT.patch
+      - patches/0012-Fix-building-kineto-against-system-fmt.patch
+      - patches/0013-Use-Intel-LLVM-openmp.patch
+      - patches/0014-for-win-CUDA-remove-USE_CUDA-guard-for-skip-in-compi.patch
+      - patches/0015-Declare-_tryToInferTypeImpl-with-TORCH_PYTHON_API.patch
       # escape backslashes/quotes when CMAKE_CXX_FLAGS etc. are baked into
       # macros.h build strings, so the Windows (MSVC) build of caffe2/core/common.cc
       # doesn't choke on backslash paths -> C4129/C2065 'EHsc'
-      - patches/0017-Escape-backslashes-quotes-in-macros.h-build-strings-.patch
+      - patches/0016-Escape-backslashes-quotes-in-macros.h-build-strings-.patch
       # support the cuDSS 0.8 API (new cudssDataType_t enum + offsetType arg in
       # cudssMatrixCreateCsr) so we can build against libcudss >=0.8; upstreamable
-      - patches/0018-Update-cuDSS-matrix-create-calls-for-cuDSS-0.8-API.patch
+      - patches/0017-Update-cuDSS-matrix-create-calls-for-cuDSS-0.8-API.patch
       # Handlers.cpp uses std::unordered_map / std::vector without including them;
       # fails to compile on osx-arm64 metal builds (from AnacondaRecipes)
-      - patches/0019-Add-missing-includes-in-c10d-control_plane-Handlers..patch
+      - patches/0018-Add-missing-includes-in-c10d-control_plane-Handlers..patch
       # pytest-xdist cannot serialize torch builtin function objects in
       # unittest subTest metadata
-      - patches/0020-Use-serializable-subtest-labels-in-autograd-test.patch
-      # TODO: upstream this
-      - patches/0021-Set-CPU-flags-via-add_definitions.patch
+      - patches/0019-Use-serializable-subtest-labels-in-autograd-test.patch
       # https://github.com/pytorch/pytorch/pull/189388
-      - patches/0022-Set-Python_SOABI-when-cross-compiling-so-extension-m.patch
+      - patches/0020-Set-Python_SOABI-when-cross-compiling-so-extension-m.patch
       # conda-forge: disable bundling win32 libraries
-      - patches/0023-Disable-bundling-win32-runtime-libraries.patch
+      - patches/0021-Disable-bundling-win32-runtime-libraries.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
