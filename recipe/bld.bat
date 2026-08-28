@@ -4,12 +4,6 @@ setlocal enabledelayedexpansion
 @REM This is used to detect if it's in the process of building pytorch
 set IN_PYTORCH_BUILD=1
 
-@REM remove pyproject.toml to avoid installing deps from pip
-if EXIST pyproject.toml (
-  DEL pyproject.toml
-  if %ERRORLEVEL% neq 0 exit 1
-)
-
 @REM The PyTorch test suite includes some symlinks, which aren't resolved on Windows, leading to packaging errors.
 @REM ATTN! These change and have to be updated manually, often with each release.
 @REM (no current symlinks being packaged. Leaving this information here as it took some months to find the issue. Look out
@@ -193,7 +187,7 @@ if EXIST build (
     if %ERRORLEVEL% neq 0 exit 1
 )
 
-%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean --config-settings=--global-option=-q
+%PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean
 if %ERRORLEVEL% neq 0 exit 1
 
 @REM Here we split the build into two parts.

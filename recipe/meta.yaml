@@ -156,7 +156,7 @@ requirements:
     - python 3.12
     - numpy *
     - pip
-    - setuptools <82
+    - scikit-build-core
     - pyyaml
     - requests
     - six
@@ -305,7 +305,7 @@ outputs:
         - python
         - numpy
         - pip
-        - setuptools <82
+        - scikit-build-core
         - pyyaml
         - requests
         - six
@@ -343,7 +343,7 @@ outputs:
         - networkx
         - optree >=0.13.0
         - pybind11
-        - setuptools <82
+        - scikit-build-core
         - sympy >=1.13.3
         - typing_extensions >=4.10.0
         # cuda-cupti-dev used to be pinned too widely on Windows
