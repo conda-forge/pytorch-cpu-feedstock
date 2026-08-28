@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
-{% set version = "2.13.0" %}
-{% set build = 3 %}
+{% set version = "2.14.0-rc10" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -25,7 +25,7 @@ package:
 source:
 {% if "rc" in version %}
   - url: https://download.pytorch.org/source_code/test/pytorch-v{{ version }}.tar.gz
-    sha256: e77c5d8e7fb721625cd009274668d80f588b10958c9432c6a9f78c3fae79448d
+    sha256: 52ab44304711bbbf7bc4a2e191ef26346ae98fdbd2a3791217bf5bc4e5d263ac
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
@@ -84,7 +84,6 @@ source:
 
 build:
   number: {{ build }}
-  skip: true  # [not win]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
