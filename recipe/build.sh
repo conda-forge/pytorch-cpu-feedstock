@@ -13,14 +13,6 @@ export IN_PYTORCH_BUILD=1
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 export PACKAGE_TYPE=conda
 
-# remove pyproject.toml to avoid installing deps from pip
-rm -rf pyproject.toml
-
-# remove runtime pin for setuptools, upstream added it to workaround
-# breakage from transitive dependencies using pkg_resources. we can handle
-# these dependencies directly in conda-forge.
-sed -i -e '/setuptools<82/d' setup.py
-
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
@@ -77,24 +69,6 @@ export CMAKE_GENERATOR=Ninja
 export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
 export CMAKE_PREFIX_PATH=$PREFIX
 export CMAKE_BUILD_TYPE=Release
-
-# PyTorch's setup.py honors $CMAKE_ARGS (see patch
-# 0002b-Honor-CMAKE_ARGS-in-setup.py-cmake-invocation), so conda's flags reach
-# cmake on the command line *before* project() -- which is what cross
-# compilation needs (CMAKE_SYSTEM_NAME, CMAKE_OSX_SYSROOT, the cross binutils,
-# ...). Append $SRC_DIR to CMAKE_FIND_ROOT_PATH so cross find_* can locate things
-# unpacked in the source tree -- but only when conda actually set a root path
-# (i.e. when cross compiling); forcing one on a native build would over-restrict
-# find_*. (CMAKE_INSTALL_PREFIX is filtered out in patch 0002b, since cmake.py
-# sets its own.)
-# NB: CUDA builds receive *two* -DCMAKE_FIND_ROOT_PATH flags (conda's nvcc
-# activation appends a second one with the CUDA targets); cmake uses the last,
-# so append $SRC_DIR to *every* occurrence (g flag). Without it the winning
-# entry omits the source tree and pytorch can't find the bundled oneDNN source
-# ("MKLDNN source files not found!" -> USE_MKLDNN off -> undefined dnnl_graph
-# symbol at import; CPU builds have a single entry and were unaffected).
-CMAKE_ARGS="$(echo "$CMAKE_ARGS" | sed -E "s#(-DCMAKE_FIND_ROOT_PATH=[^[:space:]]*)#\1;${SRC_DIR}#g")"
-export CMAKE_ARGS
 
 export PYTORCH_BUILD_VERSION=$PKG_VERSION
 # Always pass 0 to avoid appending ".post" to version string.
@@ -293,15 +267,26 @@ fi
 echo '${CXX}'=${CXX}
 echo '${PREFIX}'=${PREFIX}
 
+COMMON_PIP_ARGS=(
+    --no-deps --no-build-isolation -v --no-clean
+    -Cbuild.verbose=true
+    "-Ccmake.args=${CMAKE_ARGS// /;}"
+)
+
 case ${PKG_NAME} in
   libtorch)
     # Call setup.py directly to avoid spending time on unnecessarily
     # packing and unpacking the wheel.
-    if [[ "$target_platform" == linux-* ]]; then
+    if [[ "${cuda_compiler_version}" != "None" ]]; then
         # filter out extremely noisy ptxas advisories
-        $PREFIX/bin/python setup.py -q build | stdbuf -oL grep -vE "Advisory: Modifier '\.sp::ordered_metadata'"
+        $PREFIX/bin/python -m pip install -e . "${COMMON_PIP_ARGS[@]}" \
+            | sed "s,${CXX},\$\{CXX\},g" \
+            | sed "s,${PREFIX},\$\{PREFIX\},g" \
+            | stdbuf -oL grep -vE "Advisory: Modifier '\.sp::ordered_metadata'"
     else
-        $PREFIX/bin/python setup.py -q build
+        $PREFIX/bin/python -m pip install -e . "${COMMON_PIP_ARGS[@]}" \
+            | sed "s,${CXX},\$\{CXX\},g" \
+            | sed "s,${PREFIX},\$\{PREFIX\},g"
     fi
 
     mv build/lib.*/torch/bin/* ${PREFIX}/bin/
@@ -325,7 +310,7 @@ case ${PKG_NAME} in
 
     ;;
   pytorch)
-    $PREFIX/bin/python -m pip install . --no-deps --no-build-isolation -v --no-clean --config-settings=--global-option=-q \
+    $PREFIX/bin/python -m pip install . "${COMMON_PIP_ARGS[@]}" \
         | sed "s,${CXX},\$\{CXX\},g" \
         | sed "s,${PREFIX},\$\{PREFIX\},g"
     # Keep this in ${PREFIX}/lib so that the library can be found by
