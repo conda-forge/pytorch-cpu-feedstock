@@ -287,6 +287,8 @@ case ${PKG_NAME} in
             | sed "s,${PREFIX},\$\{PREFIX\},g"
     fi
 
+    find -type f '!' -name '*.whl' -delete
+
     mv build/bin/* ${PREFIX}/bin/
     mv build/lib/* ${PREFIX}/lib/
     # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
