@@ -275,22 +275,20 @@ COMMON_PIP_ARGS=(
 
 case ${PKG_NAME} in
   libtorch)
-    # Call setup.py directly to avoid spending time on unnecessarily
-    # packing and unpacking the wheel.
     if [[ "${cuda_compiler_version}" != "None" ]]; then
         # filter out extremely noisy ptxas advisories
-        $PREFIX/bin/python -m pip install -e . "${COMMON_PIP_ARGS[@]}" \
+        $PREFIX/bin/python -m pip wheel . "${COMMON_PIP_ARGS[@]}" \
             | sed "s,${CXX},\$\{CXX\},g" \
             | sed "s,${PREFIX},\$\{PREFIX\},g" \
             | stdbuf -oL grep -vE "Advisory: Modifier '\.sp::ordered_metadata'"
     else
-        $PREFIX/bin/python -m pip install -e . "${COMMON_PIP_ARGS[@]}" \
+        $PREFIX/bin/python -m pip wheel . "${COMMON_PIP_ARGS[@]}" \
             | sed "s,${CXX},\$\{CXX\},g" \
             | sed "s,${PREFIX},\$\{PREFIX\},g"
     fi
 
-    mv build/lib.*/torch/bin/* ${PREFIX}/bin/
-    mv build/lib.*/torch/lib/* ${PREFIX}/lib/
+    mv build/bin/* ${PREFIX}/bin/
+    mv build/lib/* ${PREFIX}/lib/
     # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
     rsync -a build/lib.*/torch/share/* ${PREFIX}/share/
     mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
