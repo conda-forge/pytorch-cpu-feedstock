@@ -287,14 +287,15 @@ case ${PKG_NAME} in
             | sed "s,${PREFIX},\$\{PREFIX\},g"
     fi
 
-    find -type f '!' -name '*.whl' -delete
-
-    mv build/bin/* ${PREFIX}/bin/
-    mv build/lib/* ${PREFIX}/lib/
+    mkdir _libtorch
+    unzip *.whl -d _libtorch/ torch/{bin,include,lib,share}/'**'
+    mv _libtorch/torch/bin/* ${PREFIX}/bin/
+    mv _libtorch/torch/lib/* ${PREFIX}/lib/
     # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
-    rsync -a build/lib.*/torch/share/* ${PREFIX}/share/
-    mv build/lib.*/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
+    rsync -a _libtorch/torch/share/* ${PREFIX}/share/
+    mv _libtorch/torch/include/{ATen,caffe2,tensorpipe,torch,c10} ${PREFIX}/include/
     rm ${PREFIX}/lib/libtorch_python.*
+    rm -rf _libtorch *.whl
 
     # Keep the original backed up to sed later
     cp build/CMakeCache.txt build/CMakeCache.txt.orig
