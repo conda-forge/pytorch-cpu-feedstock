@@ -288,7 +288,7 @@ case ${PKG_NAME} in
     fi
 
     mkdir _libtorch
-    unzip *.whl -d _libtorch/ torch/{bin,include,lib,share}/'**'
+    python -m zipfile -e *.whl _libtorch/
     mv _libtorch/torch/bin/* ${PREFIX}/bin/
     mv _libtorch/torch/lib/* ${PREFIX}/lib/
     # need to merge these now because we're using system pybind11, meaning the destination directory is not empty
