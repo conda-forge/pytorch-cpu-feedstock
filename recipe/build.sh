@@ -248,7 +248,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
             12.[89])
                 export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
                 ;;
-            13.0)
+            13.*)
                 if [[ "${target_platform}" == "linux-aarch64" ]]; then
                     # No tegra variant from CUDA 13 on, so cover Jetson Orin (8.7) here.
                     # See https://github.com/conda-forge/pytorch-cpu-feedstock/issues/527
