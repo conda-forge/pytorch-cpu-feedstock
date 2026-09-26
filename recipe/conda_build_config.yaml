@@ -22,3 +22,9 @@ github_actions_labels:
 - namespace-profile-16cpu-on-linux-64       # [linux]
 - namespace-profile-12cpu-on-osx-arm64      # [osx]
 - namespace-profile-16cpu-4x-on-windows-64  # [win]
+
+# need to stay on CUDA 12.8 on windows due to https://github.com/pytorch/pytorch/issues/156181
+cuda_compiler_version:  # [win]
+  - None                # [win]
+  - 12.8                # [win]
+  - 13.4                # [win]

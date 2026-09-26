@@ -44,24 +44,28 @@ if "%PKG_NAME%" == "pytorch" (
   @REM Get the full python version string
   for /f "tokens=2" %%a in ('python --version 2^>^&1') do set PY_VERSION_FULL=%%a
 
+  @REM sed -i edits in place, so start from a copy of the pristine cache.
+  copy build\CMakeCache.txt.orig build\CMakeCache.txt
+  if !ERRORLEVEL! neq 0 exit 1
+
   @REM Replace Python312 or python312 with ie Python311 or python311
-  sed "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt.orig > build/CMakeCache.txt
-  if %ERRORLEVEL% neq 0 exit 1
+  sed -i "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt
+  if !ERRORLEVEL! neq 0 exit 1
 
   @REM Replace version string v3.12.8() with ie v3.11.11()
-  sed -i.bak -E "s/v3\.12\.[0-9]+/v!PY_VERSION_FULL!/g" build/CMakeCache.txt
-  if %ERRORLEVEL% neq 0 exit 1
+  sed -i -E "s/v3\.12\.[0-9]+/v!PY_VERSION_FULL!/g" build/CMakeCache.txt
+  if !ERRORLEVEL! neq 0 exit 1
 
   @REM Replace interpreter properties Python;3;12;8;64 with ie Python;3;11;11;64
-  sed -i.bak -E "s/Python;3;12;[0-9]+;64/Python;!PY_VERSION_FULL:.=;!;64/g" build/CMakeCache.txt
-  if %ERRORLEVEL% neq 0 exit 1
+  sed -i -E "s/Python;3;12;[0-9]+;64/Python;!PY_VERSION_FULL:.=;!;64/g" build/CMakeCache.txt
+  if !ERRORLEVEL! neq 0 exit 1
 
   @REM Replace cp312-win_amd64 with ie cp311-win_amd64
-  sed -i.bak "s/cp312/cp%CONDA_PY%/g" build/CMakeCache.txt
-  if %ERRORLEVEL% neq 0 exit 1
+  sed -i "s/cp312/cp%CONDA_PY%/g" build/CMakeCache.txt
+  if !ERRORLEVEL! neq 0 exit 1
 
-  sed -i.bak "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
-  if %ERRORLEVEL% neq 0 exit 1
+  sed -i "s#numpy\\\\core\\\\include#numpy\\\\_core\\\\include#g" build/CMakeCache.txt
+  if !ERRORLEVEL! neq 0 exit 1
 
 ) else (
   @REM For the main script we just build a wheel for so that the C++/CUDA
@@ -108,7 +112,7 @@ if not "%cuda_compiler_version%" == "None" (
 
     if "%cuda_compiler_version:~0,2%"=="12" (
         set "TORCH_CUDA_ARCH_LIST=5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
-    ) else if "%cuda_compiler_version%" == "13.0" (
+    ) else if "%cuda_compiler_version:~0,2%"=="13" (
         set "TORCH_CUDA_ARCH_LIST=7.5;8.0;8.6;9.0;10.0;11.0;12.0+PTX"
         REM c.f. https://github.com/pytorch/pytorch/pull/161316
         set "TORCH_NVCC_FLAGS=!TORCH_NVCC_FLAGS! -compress-mode=size"
@@ -118,7 +122,8 @@ if not "%cuda_compiler_version%" == "None" (
     )
 
     set MAGMA_HOME=%LIBRARY_PREFIX%
-    set "PATH=%CUDA_BIN_PATH%;%PATH%"
+    @REM Only prepend when non-empty to avoid leading semicolon on PATH
+    if not "!CUDA_BIN_PATH!" == "" set "PATH=!CUDA_BIN_PATH!;!PATH!"
     set CUDNN_INCLUDE_DIR=%LIBRARY_PREFIX%\include
     set "CUDA_VERSION=%cuda_compiler_version%"
 ) else (
@@ -172,18 +177,17 @@ set "CXXFLAGS=%CXXFLAGS% %CUDA_CFLAGS%"
 echo "CUDA_CFLAGS=%CUDA_CFLAGS%"
 echo "CXXFLAGS=%CXXFLAGS%"
 
-@REM Configure sccache
-set "CMAKE_C_COMPILER_LAUNCHER=sccache"
-set "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
-set "CMAKE_CUDA_COMPILER_LAUNCHER=sccache"
+@REM Configure ccache. sccache cannot wrap nvcc: 0.17 fails the fatbin combine
+@REM step (mozilla/sccache#2828) and 0.18 fails on PTX-only gencodes
+@REM (mozilla/sccache#2862), both of which break the CUDA compiler check.
+set "CMAKE_C_COMPILER_LAUNCHER=ccache"
+set "CMAKE_CXX_COMPILER_LAUNCHER=ccache"
+set "CMAKE_CUDA_COMPILER_LAUNCHER=ccache"
 
-sccache --stop-server
-sccache --start-server
-if %ERRORLEVEL% neq 0 exit 1
-sccache --zero-stats
+ccache --zero-stats
 if %ERRORLEVEL% neq 0 exit 1
 
-@REM Clear the build from any remaining artifacts. We use sccache to avoid recompiling similar code.
+@REM Clear the build from any remaining artifacts. We use ccache to avoid recompiling similar code.
 if EXIST build (
     cmake --build build --target clean
     if %ERRORLEVEL% neq 0 exit 1
@@ -237,22 +241,34 @@ if "%PKG_NAME%" == "libtorch" (
     popd
     popd
 
-    @REM Keep the original backed up to sed later
+    @REM Keep the original backed up to edit later
     copy build\CMakeCache.txt build\CMakeCache.txt.orig
     if %ERRORLEVEL% neq 0 exit 1
 
     if not "%cuda_compiler_version%" == "None" (
-        sed -e "s/@cf_torch_cuda_arch_list@/%TORCH_CUDA_ARCH_LIST%/g" ^
-            %RECIPE_DIR%\activate.bat > %RECIPE_DIR%\activate-replaced.bat
-        if %ERRORLEVEL% neq 0 exit 1
+        @REM Copy first and substitute in place. A redirect would not do: cmd
+        @REM creates the target before resolving the command, so a missing tool
+        @REM leaves an empty file behind instead of failing.
+        copy %RECIPE_DIR%\activate.bat %RECIPE_DIR%\activate-replaced.bat
+        if !ERRORLEVEL! neq 0 exit 1
+
+        sed -i "s/@cf_torch_cuda_arch_list@/!TORCH_CUDA_ARCH_LIST!/g" %RECIPE_DIR%\activate-replaced.bat
+        if !ERRORLEVEL! neq 0 exit 1
+
+        @REM sed exits 0 when it matches nothing, so assert the value is present.
+        findstr /C:"CF_TORCH_CUDA_ARCH_LIST=!TORCH_CUDA_ARCH_LIST!" %RECIPE_DIR%\activate-replaced.bat >nul
+        if !ERRORLEVEL! neq 0 (
+            echo ERROR: failed to substitute cf_torch_cuda_arch_list
+            exit 1
+        )
 
         mkdir %PREFIX%\etc\conda\activate.d
         copy %RECIPE_DIR%\activate-replaced.bat %PREFIX%\etc\conda\activate.d\libtorch_activate.bat
-        if %ERRORLEVEL% neq 0 exit 1
+        if !ERRORLEVEL! neq 0 exit 1
 
         mkdir %PREFIX%\etc\conda\deactivate.d
         copy %RECIPE_DIR%\deactivate.bat %PREFIX%\etc\conda\deactivate.d\libtorch_deactivate.bat
-        if %ERRORLEVEL% neq 0 exit 1
+        if !ERRORLEVEL! neq 0 exit 1
     )
 
 ) else if "%PKG_NAME%" == "pytorch" (
@@ -272,5 +288,5 @@ if "%PKG_NAME%" == "libtorch" (
     robocopy /NP /NFL /NDL /NJH /E /MOV %LIBRARY_LIB%\ %SP_DIR%\torch\lib\ torch_python.lib
 )
 
-@REM Show the sccache stats.
-sccache --show-stats
+@REM Show the ccache stats.
+ccache --show-stats

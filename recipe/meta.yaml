@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
 {% set version = "2.13.0" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -84,6 +84,7 @@ source:
 
 build:
   number: {{ build }}
+  skip: true  # [not win]
   # This logic allows two rc variants to be defined in the conda_build_config, but only one to actually be built.
   # We want to be able to define two variants in the cbc so we can assign different labels to each in the upload channel
   # (by zipping is_rc with channel_targets). This prevents rc builds being used unless specifically requested.
@@ -131,7 +132,8 @@ requirements:
     - libprotobuf
     - protobuf
     - make      # [linux]
-    - sccache   # [win]
+    - ccache    # [win]
+    - m2-sed    # [win]
     - grep      # [unix]
     - rsync     # [unix]
   host:
@@ -280,7 +282,8 @@ outputs:
         - libprotobuf
         - protobuf
         - make      # [linux]
-        - sccache   # [win]
+        - ccache    # [win]
+        - m2-sed    # [win]
       host:
         - {{ pin_subpackage('libtorch', exact=True) }}
         # GPU requirements
