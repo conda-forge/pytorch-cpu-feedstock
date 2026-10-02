@@ -91,6 +91,10 @@ export Python_ROOT_DIR=$PREFIX
 # (this matches the behavior to our patches)
 export PYTORCH_BLAS_USE_CBLAS_DOT=ON
 
+# search is broken and prepends sysroot to workdir paths
+# let's override it
+CMAKE_ARGS+=" -DIDEEP_INCLUDE_DIR=${PWD}/third_party/ideep/include"
+
 # workaround to stop setup.py from trying to check whether we checked out
 # all submodules (we don't use all of them)
 rm -f .gitmodules
