@@ -337,16 +337,19 @@ outputs:
         # avoid that people without GPUs needlessly download ~0.5-1GB
         - __cuda                            # [cuda_compiler_version != "None"]
         - python
-        # other requirements, see https://github.com/pytorch/pytorch/blame/main/requirements.txt
+        # see https://github.com/pytorch/pytorch/blob/main/tools/metadata/dependencies.py
         - filelock
-        - fsspec
+        - typing_extensions >=4.13.0
+        - setuptools >=77.0.3
+        - sympy >=1.13.3
+        - networkx >=2.5.1
         - jinja2
-        - networkx
+        - fsspec >=0.8.5
+        # other requirements, https://github.com/pytorch/pytorch/blob/main/pyproject.toml
         - optree >=0.13.0
+        # unvendored
         - pybind11
         - scikit-build-core
-        - sympy >=1.13.3
-        - typing_extensions >=4.10.0
         # cuda-cupti-dev used to be pinned too widely on Windows
         - {{ pin_compatible("cuda-cupti", max_pin="x.x.x") }}  # [win and cuda_compiler_version != "None"]
       run_constrained:
