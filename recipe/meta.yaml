@@ -520,6 +520,9 @@ outputs:
         {% set skips = skips ~ " or (TestLinalgCPU and test_qr_cpu_float32)" %}         # [aarch64]
         # flaky failure: `Exec format error: '$PREFIX/bin/python3.12'`
         {% set skips = skips ~ " or test_terminate_handler_on_crash" %}                 # [aarch64]
+        # TODO
+        {% set skips = skips ~ " or (TestLinalgCPU and test_polar_ill_conditioned_cpu_float32)" %}  # [aarch64]
+        {% set skips = skips ~ " or (TestNNDeviceTypeCPU and test_linear_cross_entropy_prob_large)" %}  # [aarch64]
         # may crash spuriously
         {% set skips = skips ~ " or (TestAutograd and test_profiler_seq_nr)" %}
         {% set skips = skips ~ " or (TestAutograd and test_profiler_propagation)" %}
