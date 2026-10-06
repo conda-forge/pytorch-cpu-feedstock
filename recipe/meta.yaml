@@ -72,6 +72,8 @@ source:
       - patches/0020-Set-Python_SOABI-when-cross-compiling-so-extension-m.patch
       # conda-forge: disable bundling win32 libraries
       - patches/0021-Disable-bundling-win32-runtime-libraries.patch
+      # use system protobuf on osx
+      - patches/0022-Disable-building-custom-protobuf-for-macOS.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
