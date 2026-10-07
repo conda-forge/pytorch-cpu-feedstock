@@ -136,12 +136,29 @@ fi
 rm -rf $PREFIX/git
 
 if [[ "${CI}" == "github_actions" ]]; then
-    # jaimerg -- Apr 2026
-    # reduce parallelism to avoid getting OOM-killed on
-    # blacksmith-16vCPU has 64GB on x64 and 48GB on ARM (linux)
-    # blacksmith-16vCPU has 58GB on x64 (windows)
-    # blacksmith-12vCPU has 48GB on ARM (osx)
-    export MAX_JOBS=8
+    # Scale parallelism with the runner, but cap it by available memory to
+    # avoid getting OOM-killed. libtorch memory per job (GB), by build type:
+    #
+    #              | measured at 16-32 jobs | assumed here
+    #   CUDA       | 4.1-5.2                | 7
+    #   no CUDA    | 1.4                    | 3
+    #
+    # MAX_JOBS is the RAM divided by the assumed value, capped at CPU_COUNT.
+    if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
+        gb_per_job=7
+    else
+        gb_per_job=3
+    fi
+    # Decimal GB: a "64GB" runner reports 62.85GiB (~67GB), which GiB would
+    # floor to 62 GB.
+    if [[ "$(uname)" == "Darwin" ]]; then
+        mem_gb=$(( $(sysctl -n hw.memsize) / 1000 / 1000 / 1000 ))
+    else
+        mem_gb=$(awk '/MemTotal/ {print int($2 / 1000 / 1000)}' /proc/meminfo)
+    fi
+    max_jobs_by_mem=$(( mem_gb / gb_per_job ))
+    export MAX_JOBS=$(( max_jobs_by_mem < CPU_COUNT ? max_jobs_by_mem : CPU_COUNT ))
+    export MAX_JOBS=$(( MAX_JOBS > 1 ? MAX_JOBS : 1 ))
 elif [[ "${CI}" == "azure" ]]; then
     export MAX_JOBS=${CPU_COUNT}
 else
@@ -248,7 +265,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
             12.[89])
                 export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;7.5;8.0;8.6;9.0;10.0;12.0+PTX"
                 ;;
-            13.0)
+            13.[01234])
                 if [[ "${target_platform}" == "linux-aarch64" ]]; then
                     # No tegra variant from CUDA 13 on, so cover Jetson Orin (8.7) here.
                     # See https://github.com/conda-forge/pytorch-cpu-feedstock/issues/527
