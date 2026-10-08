@@ -212,6 +212,3 @@ Feedstock Maintainers
 * [@mgorny](https://github.com/mgorny/)
 * [@sodre](https://github.com/sodre/)
 
-
-<!-- dummy commit to enable rerendering -->
-
