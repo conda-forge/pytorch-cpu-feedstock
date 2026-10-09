@@ -175,18 +175,6 @@ jobs:
             resize_partitions: False
             runs_on: ['namespace-profile-12cpu-on-osx-arm64']
             tools_install_dir: ~/miniforge3
-          - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version12.8is_rcFalse
-            STORE_BUILD_ARTIFACTS: False
-            UPLOAD_PACKAGES: True
-            build_platform: win-64
-            build_workspace_dir: D:\\bld\\
-            docker_run_args: 
-            free_disk_space: skip
-            os: windows
-            pagefile_size: 0
-            resize_partitions: False
-            runs_on: ['namespace-profile-16cpu-4x-on-windows-64']
-            tools_install_dir: D:\Miniforge
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.4is_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
