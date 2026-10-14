@@ -75,6 +75,14 @@ set "USE_LITE_PROTO=ON"
 SET "USE_ITT=0"
 SET "USE_NUMA=0"
 
+@REM MSVC forces NNPACK and QNNPACK off, but only after the first configure has already
+@REM enabled pthreadpool for them. Every later configure then disables pthreadpool (dropping
+@REM -DUSE_PTHREADPOOL and the full-path ccache launcher it sets), which changes the compile
+@REM command of nearly every object and makes each pytorch output rebuild all of libtorch.
+@REM Turning them off up front keeps the configuration identical across outputs.
+set "USE_NNPACK=OFF"
+set "USE_PYTORCH_QNNPACK=OFF"
+
 set "USE_OPENMP=ON"
 
 @REM Use our Pybind11, Eigen, sleef
@@ -180,12 +188,6 @@ set "CMAKE_CUDA_COMPILER_LAUNCHER=ccache"
 
 ccache --zero-stats
 if %ERRORLEVEL% neq 0 exit 1
-
-@REM Clear the build from any remaining artifacts. We use ccache to avoid recompiling similar code.
-if EXIST build (
-    cmake --build build --target clean
-    if %ERRORLEVEL% neq 0 exit 1
-)
 
 %PYTHON% -m pip %PIP_ACTION% . --no-build-isolation --no-deps %PIP_VERBOSITY% --no-clean
 if %ERRORLEVEL% neq 0 exit 1
