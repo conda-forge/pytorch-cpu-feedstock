@@ -13,6 +13,16 @@ export IN_PYTORCH_BUILD=1
 # https://github.com/pytorch/pytorch/blob/v2.3.1/setup.py#L341
 export PACKAGE_TYPE=conda
 
+# The compiler activation embeds ${PKG_NAME} into -fdebug-prefix-map; keep the flags
+# identical to the libtorch stage, otherwise ninja recompiles all of libtorch as soon
+# as the first non-3.12 python output reconfigures CMake.
+if [[ "$PKG_NAME" == "pytorch" ]]; then
+  for var in CFLAGS CXXFLAGS DEBUG_CFLAGS DEBUG_CXXFLAGS; do
+    [[ -n "${!var:-}" ]] || continue
+    export "${var}=${!var//\/conda\/pytorch-/\/conda\/libtorch-}"
+  done
+fi
+
 # uncomment to debug cmake build
 # export CMAKE_VERBOSE_MAKEFILE=1
 
