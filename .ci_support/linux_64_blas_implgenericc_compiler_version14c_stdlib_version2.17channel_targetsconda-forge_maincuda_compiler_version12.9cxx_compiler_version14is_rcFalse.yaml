@@ -1,3 +1,5 @@
+DOCKER_PLATFORM:
+- linux/amd64
 blas_impl:
 - generic
 c_compiler:
@@ -29,7 +31,7 @@ github_actions_labels:
 is_rc:
 - 'False'
 libabseil:
-- '20260526'
+- '20260817'
 libblas:
 - 3.9.* *netlib
 libcblas:
