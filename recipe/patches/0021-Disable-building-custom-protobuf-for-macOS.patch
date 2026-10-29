@@ -1,7 +1,7 @@
-From 8be09dd8eea2cff7a86b44fb3059abeef467c66f Mon Sep 17 00:00:00 2001
+From b8adb5bb116492aa94d828d956f41619f0cc347d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@quansight.com>
 Date: Tue, 6 Oct 2026 13:16:00 +0200
-Subject: [PATCH 22/22] Disable building custom protobuf for macOS
+Subject: [PATCH 21/21] Disable building custom protobuf for macOS
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -12,10 +12,10 @@ Signed-off-by: Michał Górny <mgorny@quansight.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8f52eefcb2b..3ddd4bcd754 100644
+index 9cb0dcb4e47..9a8945bfebe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -917,7 +917,8 @@ endif()
+@@ -1073,7 +1073,8 @@ endif()
  # The below means we are cross compiling for arm64 or x86_64 on MacOSX
  if(NOT IOS
     AND CMAKE_SYSTEM_NAME STREQUAL "Darwin"

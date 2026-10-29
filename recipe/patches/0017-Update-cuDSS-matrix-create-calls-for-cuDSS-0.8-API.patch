@@ -1,4 +1,4 @@
-From 4bb41e4f4e36ba9e00b9eab5639aa56da59ac6ec Mon Sep 17 00:00:00 2001
+From ad7f70f14bf8830373c17487880cb78f816c842b Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark@ramonaoptics.com>
 Date: Tue, 9 Jun 2026 08:01:19 -0400
 Subject: [PATCH 17/21] Update cuDSS matrix-create calls for cuDSS 0.8 API
@@ -15,10 +15,10 @@ Signed-off-by: Mark Harfouche <mark@ramonaoptics.com>
  1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/aten/src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu b/aten/src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu
-index 4573a7aacd6..4a0066307ae 100644
+index a5426d18ccb..395638fa4e7 100644
 --- a/aten/src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu
 +++ b/aten/src/ATen/native/sparse/cuda/SparseCsrTensorMath.cu
-@@ -753,10 +753,12 @@ void _apply_sparse_csr_linear_solve(
+@@ -758,10 +758,12 @@ void _apply_sparse_csr_linear_solve(
      scalar_t* values_ptr = values.data_ptr<scalar_t>();
      scalar_t* b_ptr = b.data_ptr<scalar_t>();
      scalar_t* x_ptr = x.data_ptr<scalar_t>();
