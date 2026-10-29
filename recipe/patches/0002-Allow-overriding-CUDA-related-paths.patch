@@ -1,4 +1,4 @@
-From 1793a488d12194f75e148071df17051aeb626d39 Mon Sep 17 00:00:00 2001
+From 5d857fbff12f26954ffe4d05455921305b6573a4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
 Date: Wed, 27 Nov 2024 13:47:23 +0100
 Subject: [PATCH 02/21] Allow overriding CUDA-related paths
@@ -13,10 +13,10 @@ cmake/EnvVarForwarding.cmake, so apply the same change there instead.
  2 files changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/cmake/EnvVarForwarding.cmake b/cmake/EnvVarForwarding.cmake
-index a1a4fdb5a45..fa4b868ef39 100644
+index b86777475be..c8ac37d2394 100644
 --- a/cmake/EnvVarForwarding.cmake
 +++ b/cmake/EnvVarForwarding.cmake
-@@ -128,6 +128,14 @@ set(_ENV_PASSTHROUGH
+@@ -140,6 +140,14 @@ set(_ENV_PASSTHROUGH
    CUDA_HOST_COMPILER
    CUDA_NVCC_EXECUTABLE
    CUDA_SEPARABLE_COMPILATION
