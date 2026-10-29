@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
 {% set version = "2.14.1" %}
-{% set build = 1 %}
+{% set build = 2 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -220,7 +220,7 @@ test:
     # libraries; peculiar formatting to avoid linter false positives about selectors
     {% set torch_libs = [
         "c10", "shm", "torch", "torch_cpu", "torch_global_deps"
-    ] + (cuda_compiler_version != "None" and target_platform.startswith("linux")) * [
+    ] + (cuda_compiler_version != "None" and target_platform in ["linux-64", "linux-aarch64"]) * [
         "torch_cuda_linalg"
     ] + (cuda_compiler_version != "None") * [
         "c10_cuda", "caffe2_nvrtc", "torch_cuda"
