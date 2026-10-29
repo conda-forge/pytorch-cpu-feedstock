@@ -68,12 +68,10 @@ source:
       # pytest-xdist cannot serialize torch builtin function objects in
       # unittest subTest metadata
       - patches/0019-Use-serializable-subtest-labels-in-autograd-test.patch
-      # https://github.com/pytorch/pytorch/pull/189388
-      - patches/0020-Set-Python_SOABI-when-cross-compiling-so-extension-m.patch
       # conda-forge: disable bundling win32 libraries
-      - patches/0021-Disable-bundling-win32-runtime-libraries.patch
+      - patches/0020-Disable-bundling-win32-runtime-libraries.patch
       # use system protobuf on osx
-      - patches/0022-Disable-building-custom-protobuf-for-macOS.patch
+      - patches/0021-Disable-building-custom-protobuf-for-macOS.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:

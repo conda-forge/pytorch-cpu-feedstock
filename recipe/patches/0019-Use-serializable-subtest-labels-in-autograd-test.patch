@@ -1,4 +1,4 @@
-From 4f1ed71d4d5ac923da16259748764178ad65012a Mon Sep 17 00:00:00 2001
+From 0c0f859b3ff23ebd70417d00674086ebfd90ca60 Mon Sep 17 00:00:00 2001
 From: Wolf Vollprecht <w.vollprecht@gmail.com>
 Date: Thu, 11 Jun 2026 19:21:57 +0200
 Subject: [PATCH 19/21] Use serializable subtest labels in autograd test
@@ -11,10 +11,10 @@ serialize before the actual assertions can be reported.
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/test/test_autograd.py b/test/test_autograd.py
-index 1b826448633..bf3c7ada51f 100644
+index 6d83f542d8d..b4965147736 100644
 --- a/test/test_autograd.py
 +++ b/test/test_autograd.py
-@@ -13691,7 +13691,7 @@ class TestAutogradDeviceType(TestCase):
+@@ -13377,7 +13377,7 @@ class TestAutogradDeviceType(TestCase):
      def test_min_max_aminmax_median_backprops_to_all_values(self, device):
          # 1) Test min/max/median/nanmedian on both a non NaN and all NaN tensor
          for f in [torch.min, torch.max, torch.median, torch.nanmedian]:
@@ -23,7 +23,7 @@ index 1b826448633..bf3c7ada51f 100644
                  x1 = torch.tensor(
                      [1.0, 0.0, 1.0, 0.0, 1.0, 0.0], device=device, requires_grad=True
                  )
-@@ -13714,7 +13714,7 @@ class TestAutogradDeviceType(TestCase):
+@@ -13400,7 +13400,7 @@ class TestAutogradDeviceType(TestCase):
              return torch.aminmax(x)[1]
  
          for f in [torch.amin, torch.amax, amax2, amin2]:
