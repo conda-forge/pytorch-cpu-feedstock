@@ -21,7 +21,7 @@ github_actions_labels:
 is_rc:
 - 'False'
 libabseil:
-- '20260526'
+- '20260817'
 libcudnn_dev:
 - '9'
 libmagma_devel:
