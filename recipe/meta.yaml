@@ -72,6 +72,8 @@ source:
       - patches/0020-Disable-bundling-win32-runtime-libraries.patch
       # use system protobuf on osx
       - patches/0021-Disable-building-custom-protobuf-for-macOS.patch
+      # allow different install prefix for CF build
+      - patches/0022-Disable-irrelevant-install-prefix-check.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
