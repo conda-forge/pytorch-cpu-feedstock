@@ -1,4 +1,4 @@
-From 366ef1e927323bbebc24f8a10a94080a48a3f7c0 Mon Sep 17 00:00:00 2001
+From c1522875cb85e3f90a0c6d77904adfabd8a88d7d Mon Sep 17 00:00:00 2001
 From: LWisteria <lwisteria.ao@gmail.com>
 Date: Sun, 2 Jun 2024 19:13:23 +0900
 Subject: [PATCH 10/21] Define PY_SSIZE_T_CLEAN before #include <Python.h>

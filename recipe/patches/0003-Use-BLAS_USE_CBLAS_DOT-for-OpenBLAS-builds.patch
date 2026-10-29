@@ -1,4 +1,4 @@
-From b072af9d07b93a29366e8487baf35cd49c1d40df Mon Sep 17 00:00:00 2001
+From 0da59b4f76bb20df5b6e9842c1c34444e0aed777 Mon Sep 17 00:00:00 2001
 From: Isuru Fernando <ifernando@quansight.com>
 Date: Wed, 18 Dec 2024 03:59:00 +0000
 Subject: [PATCH 03/21] Use BLAS_USE_CBLAS_DOT for OpenBLAS builds
@@ -31,10 +31,10 @@ functional calls.
  1 file changed, 2 insertions(+)
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 2f7c111701e..b23d32b2859 100644
+index b143ff221ae..3d9b7651b82 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -219,6 +219,7 @@ elseif(BLAS STREQUAL "OpenBLAS")
+@@ -199,6 +199,7 @@ elseif(BLAS STREQUAL "OpenBLAS")
    set(BLAS_FOUND 1)
    set(BLAS_LIBRARIES ${OpenBLAS_LIB})
    set(BLAS_CHECK_F2C 1)
@@ -42,7 +42,7 @@ index 2f7c111701e..b23d32b2859 100644
  elseif(BLAS STREQUAL "BLIS")
    find_package(BLIS REQUIRED)
    include_directories(SYSTEM ${BLIS_INCLUDE_DIR})
-@@ -242,6 +243,7 @@ elseif(BLAS STREQUAL "MKL")
+@@ -225,6 +226,7 @@ elseif(BLAS STREQUAL "MKL")
      set(BLAS_INFO "mkl")
      set(BLAS_FOUND 1)
      set(BLAS_LIBRARIES ${MKL_LIBRARIES})
