@@ -597,6 +597,14 @@ outputs:
         {% set skips = skips ~ " or test_LayerNorm_numeric_mps" %}                      # [osx and arm64]
         # marked expectedFailureMPS, but passes on newer macOS: xpasses are failures
         {% set skips = skips ~ " or test_ReplicationPad2d_large_mps" %}                 # [osx and arm64]
+        # F.linear with a bias gives wrong values on the macOS 26.3 Blacksmith runner, with
+        # any build; matmul is correct, as is F.linear on macOS 15.7 and 27
+        {% set skips = skips ~ " or test_linear_cross_entropy_linear_bias_chunked_matches_reference_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_linear_cross_entropy_none_reduction_chunked_matches_reference_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_LinearCrossEntropyLoss_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_transformerdecoder_batch_first_False_mps" %}   # [osx and arm64]
+        {% set skips = skips ~ " or test_transformerdecoder_batch_first_True_mps" %}    # [osx and arm64]
+        {% set skips = skips ~ " or test_transformerdecoderlayer_mps" %}                # [osx and arm64]
         # precision errors
         {% set skips = skips ~ " or test_forward_nn_Linear" %}                          # [osx and arm64]
         {% set skips = skips ~ " or test_forward_nn_TransformerEncoderLayer_train_mode_mps_float16" %}  # [osx and arm64]
