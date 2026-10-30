@@ -595,6 +595,8 @@ outputs:
         {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
         # flaky failure on osx
         {% set skips = skips ~ " or test_LayerNorm_numeric_mps" %}                      # [osx and arm64]
+        # marked expectedFailureMPS, but passes on newer macOS: xpasses are failures
+        {% set skips = skips ~ " or test_ReplicationPad2d_large_mps" %}                 # [osx and arm64]
         # precision errors
         {% set skips = skips ~ " or test_forward_nn_Linear" %}                          # [osx and arm64]
         {% set skips = skips ~ " or test_forward_nn_TransformerEncoderLayer_train_mode_mps_float16" %}  # [osx and arm64]
