@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
-{% set version = "2.14.1" %}
-{% set build = 2 %}
+{% set version = "2.15.0" %}
+{% set build = 0 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -16,7 +16,7 @@
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
 # pytorch and triton are released in tandem, see notes in their release process
 # https://github.com/pytorch/pytorch/blob/main/RELEASE.md#triton-dependency-for-the-release
-{% set triton = "3.7.1" %}
+{% set triton = "3.9.0" %}
 
 package:
   name: libtorch
@@ -29,7 +29,7 @@ source:
 {% else %}
   # The "pytorch-v" tarballs contain submodules; the "pytorch-" ones don't.
   - url: https://github.com/pytorch/pytorch/releases/download/v{{ version }}/pytorch-v{{ version }}.tar.gz
-    sha256: d0ebad9ca4219959b29b7ad9ab6469fe49a3d668f8b5a62dd115f02f3a914447
+    sha256: d0688c9feb1139c6304675c41f4c5fbb8e5b084f19a83d9f95ddcb10ced9e3e7
 {% endif %}
     patches:
       - patches/0001-Force-usage-of-python-3-and-error-without-numpy.patch
@@ -68,12 +68,12 @@ source:
       # pytest-xdist cannot serialize torch builtin function objects in
       # unittest subTest metadata
       - patches/0019-Use-serializable-subtest-labels-in-autograd-test.patch
-      # https://github.com/pytorch/pytorch/pull/189388
-      - patches/0020-Set-Python_SOABI-when-cross-compiling-so-extension-m.patch
       # conda-forge: disable bundling win32 libraries
-      - patches/0021-Disable-bundling-win32-runtime-libraries.patch
+      - patches/0020-Disable-bundling-win32-runtime-libraries.patch
       # use system protobuf on osx
-      - patches/0022-Disable-building-custom-protobuf-for-macOS.patch
+      - patches/0021-Disable-building-custom-protobuf-for-macOS.patch
+      # allow different install prefix for CF build
+      - patches/0022-Disable-irrelevant-install-prefix-check.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -618,6 +618,9 @@ outputs:
         {% set skips = skips ~ " or test_complex_python_literal_backward_cpu" %}         # [py==312]
         # fails with different argument order
         {% set skips = skips ~ " or (test_torchinductor and CpuTests and test_remove_noop)" %}  # [win]
+        # xdist can't serialize CheckpointPolicy
+        {% set skips = skips ~ " or (test_autograd and TestSelectiveActivationCheckpoint and test_save_policies_skip_effect_lookup)" %}
+        {% set skips = skips ~ " or (test_autograd and TestSelectiveActivationCheckpoint and test_selective_checkpoint_preserves_registered_effect)" %}
 
         - export OMP_NUM_THREADS=4      # [unix]
         - export ONEDNN_VERBOSE=all     # [unix]

@@ -1,4 +1,4 @@
-From 120b60009c73a4d11ab56a1ad1230c649721357d Mon Sep 17 00:00:00 2001
+From 658da9dd123e5d98f485ed3a8e2a724e339cf5dd Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 27 Feb 2026 09:33:18 +1100
 Subject: [PATCH 14/21] for win+CUDA, remove USE_CUDA guard for skip in
@@ -16,10 +16,10 @@ Suggested-By: Tobias Fischer <info@tobiasfischer.info>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/torch/csrc/dynamo/compiled_autograd.h b/torch/csrc/dynamo/compiled_autograd.h
-index 4968ee2449a..12114a74204 100644
+index ebb31399807..8448d1bad30 100644
 --- a/torch/csrc/dynamo/compiled_autograd.h
 +++ b/torch/csrc/dynamo/compiled_autograd.h
-@@ -1118,7 +1118,7 @@ struct IValuePacker {
+@@ -1111,7 +1111,7 @@ struct IValuePacker {
    // parsing. See torch::jit::toIValue for more information.
    static at::TypePtr packed_type() {
      // On windows CPU is support compiled autograd.
