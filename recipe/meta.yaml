@@ -226,6 +226,7 @@ test:
     - pkg-config
   files:
     - cmake_test/
+    - check_metal_kernels.sh  # [osx and arm64]
   commands:
     # libraries; peculiar formatting to avoid linter false positives about selectors
     {% set torch_libs = [
@@ -246,7 +247,7 @@ test:
     {% endfor %}
 
     # the Metal 4 kernels, which need a recent Xcode on the build machine
-    - test -n "$(${OTOOL:-otool} -l $PREFIX/lib/libtorch_cpu.dylib | grep 'sectname metal_40')"  # [osx and arm64]
+    - bash check_metal_kernels.sh $PREFIX/lib/libtorch_cpu.dylib  # [osx and arm64]
 
     # CMake files in share
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]

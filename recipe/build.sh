@@ -194,9 +194,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export USE_MKLDNN=0
 
         # `xcrun metal` comes from the active Xcode, and resolves headers from
-        # that Xcode's SDK rather than from CONDA_BUILD_SYSROOT. Runner images may
-        # ship Xcode without the Metal toolchain, and it only becomes usable some
-        # time after the download returns.
+        # that Xcode's SDK unless SDKROOT says otherwise: it ignores
+        # CONDA_BUILD_SYSROOT. Runner images may ship Xcode without the Metal
+        # toolchain, and it only becomes usable some time after the download returns.
         if ! xcrun metal --version >/dev/null 2>&1; then
             xcodebuild -downloadComponent MetalToolchain
             for _ in $(seq 1 30); do
@@ -204,14 +204,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
                 sleep 2
             done
         fi
-        xcrun metal --version
-        # The Metal 4 kernels need the MetalPerformancePrimitives accessors of 26.2+;
-        # fail here rather than after hours of building, in the package tests.
-        metal_sdk_version="$(xcrun --sdk macosx --show-sdk-version)"
-        if [[ "$(printf '26.2\n%s\n' "$metal_sdk_version" | sort -V | head -n 1)" != "26.2" ]]; then
-            echo "Metal 4 kernels need an Xcode with SDK >=26.2, found ${metal_sdk_version}"
-            exit 1
-        fi
+        export SDKROOT="${CONDA_BUILD_SYSROOT}"
+        # Fail here rather than after hours of building, in the package tests.
+        bash "${RECIPE_DIR}/check_metal_requirements.sh"
     fi
 elif [[ ${cuda_compiler_version} != "None" ]]; then
     if [[ "$target_platform" == "linux-aarch64" ]]; then

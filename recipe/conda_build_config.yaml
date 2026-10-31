@@ -1,9 +1,7 @@
 # The Metal 4 / MetalPerformancePrimitives kernels (attention, matmul, conv, linalg)
-# need `xcrun metal` from an Xcode with SDK >=26.2. pytorch selects them at runtime
-# on macOS 26.2+, and the Metal 3.1 kernels otherwise, so the deployment target
-# stays low. No download exists for those SDKs: this needs conda-forge-ci-setup
-# >=4.31 to use the SDK of the runner's default Xcode, and MACOSX_SDK_VERSION has
-# to match that SDK exactly.
+# need a Metal compiler that takes -std=metal4.0, from the runner's Xcode, and an SDK
+# >=26.2. pytorch selects them at runtime on macOS 26.2+, and the Metal 3.1 kernels
+# otherwise, so the deployment target stays low. See recipe/check_metal_requirements.sh.
 MACOSX_SDK_VERSION:         # [osx]
   - 14.5                    # [osx and x86_64]
   - 26.5                    # [osx and arm64]
