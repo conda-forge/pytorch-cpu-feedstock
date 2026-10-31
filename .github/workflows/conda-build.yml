@@ -173,7 +173,7 @@ jobs:
             os: macos
             pagefile_size: 0
             resize_partitions: False
-            runs_on: ['namespace-profile-12cpu-on-osx-arm64']
+            runs_on: ['blacksmith-12vcpu-macos-latest']
             tools_install_dir: ~/miniforge3
           - CONFIG: win_64_channel_targetsconda-forge_maincuda_compiler_version13.4is_rcFalse
             STORE_BUILD_ARTIFACTS: False

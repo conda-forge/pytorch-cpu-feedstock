@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
 {% set version = "2.14.1" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -74,6 +74,13 @@ source:
       - patches/0021-Disable-bundling-win32-runtime-libraries.patch
       # use system protobuf on osx
       - patches/0022-Disable-building-custom-protobuf-for-macOS.patch
+      # backport https://github.com/pytorch/pytorch/pull/196881: don't dispatch to
+      # MetalPerformancePrimitives kernels that were not built into this binary,
+      # or on devices that cannot compile them; adds PYTORCH_MPS_METAL_VERSION
+      - patches/0023-MPS-Introduce-PYTORCH_MPS_METAL_VERSION.patch
+      # backport https://github.com/pytorch/pytorch/pull/195302: SDKs older than
+      # 26.2 accept -std=metal4.0 but lack the accessors the Metal 4 kernels call
+      - patches/0024-Probe-the-MPP-API-in-the-Metal-4.0-capability-check.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
@@ -84,11 +91,14 @@ build:
 {% if "rc" in version %}
   skip: true  # [not is_rc]
 {% else %}
-  skip: true  # [is_rc]
+  skip: true  # [is_rc or linux or win]
 {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
+  # the Xcode whose `xcrun metal` compiles the kernels, if not the xcode-select one
+  script_env:
+    - DEVELOPER_DIR       # [osx]
   missing_dso_whitelist:
     - '*/libcuda.so.*'    # [linux]
     - '*/nvcuda.dll'      # [win]
@@ -216,6 +226,7 @@ test:
     - pkg-config
   files:
     - cmake_test/
+    - check_metal_kernels.sh  # [osx and arm64]
   commands:
     # libraries; peculiar formatting to avoid linter false positives about selectors
     {% set torch_libs = [
@@ -235,6 +246,9 @@ test:
     {% endif %}
     {% endfor %}
 
+    # the Metal 4 kernels, which need a recent Xcode on the build machine
+    - bash check_metal_kernels.sh $PREFIX/lib/libtorch_cpu.dylib  # [osx and arm64]
+
     # CMake files in share
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
     - if not exist %LIBRARY_PREFIX%\share\cmake\Torch\TorchConfig.cmake exit 1  # [win]
@@ -253,6 +267,8 @@ outputs:
       string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
       string: cpu_{{ blas_impl }}_py{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
       detect_binary_files_with_prefix: false
+      script_env:
+        - DEVELOPER_DIR       # [osx]
       run_exports:
         - {{ pin_subpackage('pytorch', max_pin='x.x') }}
         - {{ pin_subpackage('libtorch', max_pin='x.x') }}
@@ -429,6 +445,10 @@ outputs:
         # distributed support is enabled by default on linux; for mac, we enable it manually in build.sh
         - python -c "import torch; assert torch.distributed.is_available()"         # [linux or osx]
         - python -c "import torch; assert torch.backends.mps.is_available()"        # [osx]
+        # these dispatched to Metal 4 kernels missing from the binary, see
+        # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/556
+        - python -c "import torch, torch.nn.functional as F; q = torch.randn(1, 8, 1024, 64, device='mps', dtype=torch.bfloat16); F.scaled_dot_product_attention(q, q, q); torch.mps.synchronize()"  # [osx and arm64]
+        - python -c "import torch; a = torch.randn(256, 256, device='mps'); torch.linalg.solve(a @ a.T + 256 * torch.eye(256, device='mps'), a); torch.mps.synchronize()"  # [osx and arm64]
         - python -c "import torch; assert torch.backends.cuda.is_built()"           # [cuda_compiler_version != "None"]
         - python -c "import torch; assert torch.backends.cudnn.is_available()"      # [cuda_compiler_version != "None"]
         - python -c "import torch; assert torch.backends.cudnn.enabled"             # [cuda_compiler_version != "None"]
@@ -576,6 +596,16 @@ outputs:
         {% set skips = skips ~ " or test_qengine" %}                                    # [osx and arm64]
         # flaky failure on osx
         {% set skips = skips ~ " or test_LayerNorm_numeric_mps" %}                      # [osx and arm64]
+        # marked expectedFailureMPS, but passes on newer macOS: xpasses are failures
+        {% set skips = skips ~ " or test_ReplicationPad2d_large_mps" %}                 # [osx and arm64]
+        # F.linear with a bias gives wrong values on the macOS 26.3 Blacksmith runner, with
+        # any build; matmul is correct, as is F.linear on macOS 15.7 and 27
+        {% set skips = skips ~ " or test_linear_cross_entropy_linear_bias_chunked_matches_reference_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_linear_cross_entropy_none_reduction_chunked_matches_reference_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_non_contiguous_tensors_nn_LinearCrossEntropyLoss_mps" %}  # [osx and arm64]
+        {% set skips = skips ~ " or test_transformerdecoder_batch_first_False_mps" %}   # [osx and arm64]
+        {% set skips = skips ~ " or test_transformerdecoder_batch_first_True_mps" %}    # [osx and arm64]
+        {% set skips = skips ~ " or test_transformerdecoderlayer_mps" %}                # [osx and arm64]
         # precision errors
         {% set skips = skips ~ " or test_forward_nn_Linear" %}                          # [osx and arm64]
         {% set skips = skips ~ " or test_forward_nn_TransformerEncoderLayer_train_mode_mps_float16" %}  # [osx and arm64]

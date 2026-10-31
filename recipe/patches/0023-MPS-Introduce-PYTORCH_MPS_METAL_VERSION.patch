@@ -1,0 +1,178 @@
+From a2f26c4536f5375290ade51f8f4fbfe8a5eb5947 Mon Sep 17 00:00:00 2001
+From: Nikita Shulga <nikita.shulga@gmail.com>
+Date: Sat, 12 Sep 2026 12:17:19 -0700
+Subject: [PATCH] [MPS] Introduce `PYTORCH_MPS_METAL_VERSION` (#196881)
+
+Virtualized macOS exposes an `Apple Paravirtual device` that advertises no Apple GPU family at all, but `has_mpp()` only checked the OS version, so PyTorch handed it MetalPerformancePrimitives kernels whose pipelines it cannot build. Gate `has_mpp()` on `is_apple_family_or_newer(APPLE_7_PLUS)` so that device takes the Metal 3 path instead. Gate it on `CAN_BUILD_METAL_4` too, since the OS-only check likewise stayed true when the Metal toolchain could not compile the Metal 4.0 shaders and kernels_40.metallib was therefore never embedded into libtorch_cpu.
+
+Also add `PYTORCH_MPS_METAL_VERSION` env var to choose between Metal 3 and Metal 4 by hand: `PYTORCH_MPS_METAL_VERSION=3.1` loads the Metal 3 shader library, compiles JIT shaders as Metal 3.1 and disables MPP even on macOS 26. The request is honored as-is rather than clamped to what the host supports, so asking for a version the toolchain cannot compile fails loudly instead of silently falling back. `metal_language_version()` resolves it once and drives the JIT language version, `has_mpp()` and the bundled library section, so those three cannot drift apart.
+
+Test Plan: On MacOS-26.6 run the following
+
+```
+PYTORCH_MPS_METAL_VERSION=3.1 python test/test_mps.py -k linalg
+PYTORCH_MPS_METAL_VERSION=3.1 python test/test_mps.py -k conv
+PYTORCH_MPS_METAL_VERSION=3.1 python test/test_mps.py TestSDPA
+```
+
+Reproduced and fixed on a GitHub macos-26 runner (macOS 26.6.2, Apple M1 (Virtual)). Same probes, no env var set, only the commit differs: cholesky_ex, MultivariateNormal, linalg.solve and conv3d all fail before the family check and all pass after it. https://github.com/malfet/deleteme/actions/runs/34714683806
+
+All four failures come from the same MPP instantiation, `matmul2d_descriptor<64, 32, -1, true>` with `execution_simdgroups<2>`; the dynamic K extent is what the paravirtual compiler rejects with `unsupported deferred-static-alloca-size`.
+
+Fixes https://github.com/pytorch/pytorch/issues/196582
+
+Authored with assistance from Claude Code.
+Pull Request resolved: https://github.com/pytorch/pytorch/pull/196881
+Approved by: https://github.com/Skylion007
+---
+ aten/src/ATen/mps/MPSDevice.h              | 16 +++++++-
+ aten/src/ATen/mps/MPSDevice.mm             | 48 +++++++++++++++++++++-
+ aten/src/ATen/native/mps/OperationUtils.mm | 14 ++-----
+ docs/source/mps_environment_variables.md   |  1 +
+ 4 files changed, 65 insertions(+), 14 deletions(-)
+
+diff --git a/aten/src/ATen/mps/MPSDevice.h b/aten/src/ATen/mps/MPSDevice.h
+index 39651b49fafc1..6497498fb1d94 100644
+--- a/aten/src/ATen/mps/MPSDevice.h
++++ b/aten/src/ATen/mps/MPSDevice.h
+@@ -31,6 +31,14 @@ enum class MacOSVersion : uint32_t {
+   MACOS_27_0,
+ };
+ 
++// Metal language version to compile shaders with
++// Values match MTLLanguageVersion
++enum class MetalLanguageVersion : uint32_t {
++  METAL_3_1 = (3 << 16) + 1,
++  METAL_3_2 = (3 << 16) + 2, // allows lambdas in shader code
++  METAL_4_0 = (4 << 16) + 0, // allows tensor template arguments
++};
++
+ // Helper enum for GPU-family-gated workarounds
+ enum class AppleGPUFamily : uint32_t {
+   APPLE_7_PLUS = 1007, // M1
+@@ -92,7 +100,13 @@ class TORCH_API MPSDevice {
+ TORCH_API bool is_available();
+ TORCH_API bool is_macos_at_least(MacOSVersion version);
+ TORCH_API bool is_apple_family_or_newer(AppleGPUFamily family);
+-// Whether MetalPerformancePrimitives (cooperative tensors) is usable;
++// Metal language version to compile shaders with. Derived from the OS version,
++// but PYTORCH_MPS_METAL_VERSION overrides it outright, so requesting a version
++// the host cannot provide fails rather than silently falling back
++TORCH_API MetalLanguageVersion metal_language_version();
++// Whether MetalPerformancePrimitives (cooperative tensors) is usable, i.e. the
++// OS is new enough, the Metal 4.0 shaders were compiled into this binary and
++// PYTORCH_MPS_METAL_VERSION did not ask for an older language version
+ TORCH_API bool has_mpp();
+ TORCH_API at::Allocator* GetMPSAllocator();
+ 
+diff --git a/aten/src/ATen/mps/MPSDevice.mm b/aten/src/ATen/mps/MPSDevice.mm
+index 0f83a7cf7c6e3..8ee387257b1ef 100644
+--- a/aten/src/ATen/mps/MPSDevice.mm
++++ b/aten/src/ATen/mps/MPSDevice.mm
+@@ -4,6 +4,7 @@
+ #include <ATen/mps/MPSDevice.h>
+ #include <ATen/mps/MPSStream.h>
+ #include <ATen/native/mps/MPSGraphSequoiaOps.h>
++#include <c10/util/env.h>
+ 
+ namespace at::mps {
+ 
+@@ -125,9 +126,52 @@ bool is_apple_family_or_newer(AppleGPUFamily family) {
+   return [MPSDevice::getInstance()->device() supportsFamily:mtl_family];
+ }
+ 
++// MetalLanguageVersion mirrors the SDK enum so that compileLibrary can hand it
++// straight to setLanguageVersion:; keep the two spellings from drifting apart
++static_assert(static_cast<uint32_t>(MetalLanguageVersion::METAL_3_1) == MTLLanguageVersion3_1);
++static_assert(static_cast<uint32_t>(MetalLanguageVersion::METAL_3_2) == MTLLanguageVersion3_2);
++static_assert(static_cast<uint32_t>(MetalLanguageVersion::METAL_4_0) == MTLLanguageVersion4_0);
++
++MetalLanguageVersion metal_language_version() {
++  static const MetalLanguageVersion rc = []() {
++    if (const auto env_val = c10::utils::get_env("PYTORCH_MPS_METAL_VERSION")) {
++      // MTLLanguageVersion is a closed enum, so match its spellings rather than
++      // parse an arbitrary major.minor. The request is honored as-is: asking for
++      // a version the host cannot compile should fail loudly, not fall back.
++      if (*env_val == "3.1") {
++        return MetalLanguageVersion::METAL_3_1;
++      }
++      if (*env_val == "3.2") {
++        return MetalLanguageVersion::METAL_3_2;
++      }
++      if (*env_val == "4.0") {
++        return MetalLanguageVersion::METAL_4_0;
++      }
++      TORCH_WARN("Ignoring PYTORCH_MPS_METAL_VERSION=", *env_val, ", expected 3.1, 3.2 or 4.0");
++    }
++    if (is_macos_at_least(MacOSVersion::MACOS_26_0)) {
++      return MetalLanguageVersion::METAL_4_0;
++    }
++    if (is_macos_at_least(MacOSVersion::MACOS_15_0)) {
++      return MetalLanguageVersion::METAL_3_2;
++    }
++    return MetalLanguageVersion::METAL_3_1;
++  }();
++  return rc;
++}
++
+ bool has_mpp() {
+-  // MetalPerformancePrimitives matmul2d (cooperative tensors) needs macOS 26.2+
+-  return is_macos_at_least(MacOSVersion::MACOS_26_2);
++#if !defined(CAN_BUILD_METAL_4) && !defined(PYTORCH_JIT_COMPILE_SHADERS)
++  // Metal toolchain used to build this binary could not compile the Metal 4.0
++  // shaders, so kernels_40.metallib is not embedded into libtorch_cpu
++  return false;
++#endif
++  // MetalPerformancePrimitives needs macOS 26.2+ and shaders compiled with Metal 4.0
++  // Also check device family, it's older than M1 on virtualized Mac and it fails to
++  // JIT-compile MPP, even though rest of Metal 4 feature work fine
++  // https://github.com/pytorch/pytorch/issues/196582
++  return is_macos_at_least(MacOSVersion::MACOS_26_2) && metal_language_version() >= MetalLanguageVersion::METAL_4_0 &&
++      is_apple_family_or_newer(AppleGPUFamily::APPLE_7_PLUS);
+ }
+ 
+ } // namespace at::mps
+diff --git a/aten/src/ATen/native/mps/OperationUtils.mm b/aten/src/ATen/native/mps/OperationUtils.mm
+index 177b293c3f0dd..b649388df622e 100644
+--- a/aten/src/ATen/native/mps/OperationUtils.mm
++++ b/aten/src/ATen/native/mps/OperationUtils.mm
+@@ -817,15 +817,7 @@ void executeMPSAllocatorCallback(void* ptr, EventType event) override {}
+   MTLCompileOptions* options = compile_options;
+   if (!options) {
+     options = [[MTLCompileOptions new] autorelease];
+-    if (is_macos_at_least(MacOSVersion::MACOS_26_0)) {
+-      // Metal-4.0 allows tensor template arguments
+-      [options setLanguageVersion:MTLLanguageVersion4_0];
+-    } else if (is_macos_at_least(MacOSVersion::MACOS_15_0)) {
+-      // Metal-3.2 allows lambdas in shader code
+-      [options setLanguageVersion:MTLLanguageVersion3_2];
+-    } else {
+-      [options setLanguageVersion:MTLLanguageVersion3_1];
+-    }
++    [options setLanguageVersion:static_cast<MTLLanguageVersion>(metal_language_version())];
+     if (is_macos_at_least(MacOSVersion::MACOS_15_0)) {
+       options.mathMode = fast_math ? MTLMathModeFast : MTLMathModeSafe;
+       options.mathFloatingPointFunctions =
+@@ -923,8 +915,8 @@ void executeMPSAllocatorCallback(void* ptr, EventType event) override {}
+       NSError* error = nil;
+ #ifdef CAN_BUILD_METAL_4
+       // kernels_40.metallib is built with -mmacos-version-min=26.2 (MPP
+-      // cooperative-tensor ABI), so only load it on 26.2+.
+-      const auto section_name = is_macos_at_least(MacOSVersion::MACOS_26_2) ? "metal_40" : "metal_basic";
++      // cooperative-tensor ABI) and holds the only kernels has_mpp() gates.
++      const auto section_name = has_mpp() ? "metal_40" : "metal_basic";
+ #else
+       const auto section_name = "metal_basic";
+ #endif
+diff --git a/docs/source/mps_environment_variables.md b/docs/source/mps_environment_variables.md
+index 93c3b94879c03..c2c2f6a77f5ee 100644
+--- a/docs/source/mps_environment_variables.md
++++ b/docs/source/mps_environment_variables.md
+@@ -13,6 +13,7 @@
+ | `PYTORCH_MPS_LOW_WATERMARK_RATIO` | Low watermark ratio for MPS allocator. Default is 1.4 (unified) or 1.0 (discrete). |
+ | `PYTORCH_MPS_FAST_MATH`         | If `1`, enables fast math for MPS kernels. See section 1.6.3 in the [Metal Shading Language Spec](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf). |
+ | `PYTORCH_MPS_PREFER_METAL`      | If `1`, uses metal kernels instead of MPS Graph APIs. Used for matmul. |
++| `PYTORCH_MPS_METAL_VERSION`     | Caps the Metal language version used by the MPS backend, given as `major.minor` (e.g. `3.1`). Setting it below `4.0` loads the Metal 3 shader library and disables the MetalPerformancePrimitives kernels, even on macOS 26. |
+ | `PYTORCH_ENABLE_MPS_FALLBACK`   | If `1`, falls back to CPU when MPS ops aren't supported. |
+ 
+ ```{note}

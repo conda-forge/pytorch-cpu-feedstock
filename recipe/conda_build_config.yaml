@@ -1,5 +1,10 @@
+# The Metal 4 / MetalPerformancePrimitives kernels (attention, matmul, conv, linalg)
+# need a Metal compiler that takes -std=metal4.0, from the runner's Xcode, and an SDK
+# >=26.2. pytorch selects them at runtime on macOS 26.2+, and the Metal 3.1 kernels
+# otherwise, so the deployment target stays low. See recipe/check_metal_requirements.sh.
 MACOSX_SDK_VERSION:         # [osx]
-  - 14.5                    # [osx]
+  - 14.5                    # [osx and x86_64]
+  - 26.5                    # [osx and arm64]
 
 channel_targets:
   - conda-forge main
@@ -21,7 +26,8 @@ blas_impl:
 github_actions_labels:
 - depot-ubuntu-24.04-32                     # [linux and x86_64]
 - depot-ubuntu-24.04-arm-32                 # [linux and aarch64]
-- namespace-profile-12cpu-on-osx-arm64      # [osx]
+- namespace-profile-12cpu-on-osx-arm64      # [osx and x86_64]
+- blacksmith-12vcpu-macos-latest            # [osx and arm64]
 - namespace-profile-16cpu-4x-on-windows-64  # [win]
 
 # CUDA 12.8 and 12.9 both fail on Windows

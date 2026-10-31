@@ -192,6 +192,21 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # MKLDNN did not support on Apple M1 at the time support Apple M1
         # was added. Revisit later
         export USE_MKLDNN=0
+
+        # `xcrun metal` comes from the active Xcode, and resolves headers from
+        # that Xcode's SDK unless SDKROOT says otherwise: it ignores
+        # CONDA_BUILD_SYSROOT. Runner images may ship Xcode without the Metal
+        # toolchain, and it only becomes usable some time after the download returns.
+        if ! xcrun metal --version >/dev/null 2>&1; then
+            xcodebuild -downloadComponent MetalToolchain
+            for _ in $(seq 1 30); do
+                xcrun metal --version >/dev/null 2>&1 && break
+                sleep 2
+            done
+        fi
+        export SDKROOT="${CONDA_BUILD_SYSROOT}"
+        # Fail here rather than after hours of building, in the package tests.
+        bash "${RECIPE_DIR}/check_metal_requirements.sh"
     fi
 elif [[ ${cuda_compiler_version} != "None" ]]; then
     if [[ "$target_platform" == "linux-aarch64" ]]; then
