@@ -105,6 +105,11 @@ export PYTORCH_BLAS_USE_CBLAS_DOT=ON
 # let's override it
 CMAKE_ARGS+=" -DIDEEP_INCLUDE_DIR=${PWD}/third_party/ideep/include"
 
+if [[ "${target_platform}" == "osx-arm64" ]]; then
+    # pytorch otherwise builds without the Metal 4 kernels, with no error
+    CMAKE_ARGS+=" -DREQUIRE_METAL_40=ON"
+fi
+
 # workaround to stop setup.py from trying to check whether we checked out
 # all submodules (we don't use all of them)
 rm -f .gitmodules

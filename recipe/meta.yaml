@@ -74,6 +74,11 @@ source:
       - patches/0021-Disable-bundling-win32-runtime-libraries.patch
       # use system protobuf on osx
       - patches/0022-Disable-building-custom-protobuf-for-macOS.patch
+      # backport https://github.com/pytorch/pytorch/pull/195302: SDKs older than
+      # 26.2 accept -std=metal4.0 but lack the accessors the Metal 4 kernels call
+      - patches/0024-Probe-the-MPP-API-in-the-Metal-4.0-capability-check.patch
+      # fail at configure, rather than build without the Metal 4 kernels
+      - patches/0025-Add-REQUIRE_METAL_40-to-fail-when-Metal-4-kernels-ca.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:

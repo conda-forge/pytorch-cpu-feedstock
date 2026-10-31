@@ -1,0 +1,43 @@
+From c5f04403a34d872ab68b22f49e50bd2b9b30dc1b Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Sat, 31 Oct 2026 10:15:34 -0400
+Subject: [PATCH] Add REQUIRE_METAL_40 to fail when Metal 4 kernels cannot be
+ built
+
+If the Metal 4.0 check fails, the build carries on without those kernels. The
+result passes its tests on any machine that does not select them, including CI
+with virtual GPUs, while users on macOS 26.2+ get errors at runtime. Packagers
+have no way to see this short of reading the configure log.
+
+With -DREQUIRE_METAL_40=ON, configure stops and prints the compiler's error. It
+is off by default, so nothing changes otherwise.
+---
+ cmake/Metal.cmake | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/cmake/Metal.cmake b/cmake/Metal.cmake
+index e50707b..910d5dc 100644
+--- a/cmake/Metal.cmake
++++ b/cmake/Metal.cmake
+@@ -112,6 +112,18 @@ if(NOT CAN_COMPILE_METAL_FOUND)
+     set(CAN_COMPILE_METAL_FOUND YES CACHE INTERNAL "Run check for shader compiler")
+ endif()
+ 
++# Without the Metal 4 kernels the build still succeeds, and passes its tests on
++# any machine that does not select them. Packagers can ask for a failure instead.
++option(REQUIRE_METAL_40 "Fail at configure if the Metal 4 kernels cannot be built" OFF)
++if(REQUIRE_METAL_40 AND NOT CAN_COMPILE_METAL_40)
++    message(FATAL_ERROR "REQUIRE_METAL_40 is set, but the Metal 4 kernels cannot be "
++                        "built. They need a compiler that takes -std=metal4.0 and "
++                        "an SDK >=26.2. xcrun metal finds the compiler in the active "
++                        "Xcode, and the SDK through SDKROOT or else in that Xcode, "
++                        "and it ignores CMAKE_OSX_SYSROOT and CONDA_BUILD_SYSROOT.\n"
++                        "${XCRUN_OUTPUT}")
++endif()
++
+ if(NOT USE_PYTORCH_METAL)
+     return()
+ endif()
+-- 
+2.55.0
+
