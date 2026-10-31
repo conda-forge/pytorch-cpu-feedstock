@@ -84,7 +84,7 @@ build:
 {% if "rc" in version %}
   skip: true  # [not is_rc]
 {% else %}
-  skip: true  # [is_rc]
+  skip: true  # [is_rc or linux or win or x86_64]
 {% endif %}
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
