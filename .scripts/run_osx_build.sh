@@ -46,8 +46,8 @@ chmod +x "${MICROMAMBA_EXE}"
 
 echo Creating environment
 "${MICROMAMBA_EXE}" create --yes --root-prefix "${MAMBA_ROOT_PREFIX}" --prefix "${MINIFORGE_HOME}" \
-    --override-channels --channel mark.harfouche --channel conda-forge --strict-channel-priority \
-    pip python=3.14 conda-build mark.harfouche::conda-forge-ci-setup=4.30.0 "conda-build>=26.3"
+    --override-channels --channel conda-forge --strict-channel-priority \
+    pip python=3.14 conda-build conda-forge-ci-setup=4 "conda-build>=26.3"
 echo "Moving pkgs cache from ${MAMBA_ROOT_PREFIX} to ${MINIFORGE_HOME}"
 mv "${MAMBA_ROOT_PREFIX}/pkgs" "${MINIFORGE_HOME}"
 
@@ -107,6 +107,14 @@ else
         exit 1
     fi
 fi
+
+# TEST ONLY: conda-forge-ci-setup PR 452, which downloads SDKs from Apple's CDN
+ci_setup_url=https://raw.githubusercontent.com/chrisburr/conda-forge-ci-setup-feedstock/39e5473762f45c4665eb7fd627a73c6787f32de7/recipe
+mkdir -p "${MINIFORGE_HOME}/share/conda-forge-ci-setup"
+curl -fsSL -o "${MINIFORGE_HOME}/bin/download_osx_sdk.sh" "${ci_setup_url}/download_osx_sdk.sh"
+curl -fsSL -o "${MINIFORGE_HOME}/bin/unpack_pkg.py" "${ci_setup_url}/unpack_pkg.py"
+curl -fsSL -o "${MINIFORGE_HOME}/share/conda-forge-ci-setup/macosx_sdks_cdn.json" "${ci_setup_url}/macosx_sdks_cdn.json"
+curl -fsSL -o "${MINIFORGE_HOME}/share/conda-forge-ci-setup/macosx_sdks_legacy.json" "${ci_setup_url}/macosx_sdks_legacy.json"
 
 echo Running build setup
 source run_conda_forge_build_setup
