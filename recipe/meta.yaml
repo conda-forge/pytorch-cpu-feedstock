@@ -74,6 +74,8 @@ source:
       - patches/0021-Disable-building-custom-protobuf-for-macOS.patch
       # allow different install prefix for CF build
       - patches/0022-Disable-irrelevant-install-prefix-check.patch
+      # restore removed include; could be CF specific or upstream
+      - patches/0023-Partially-revert-Drop-unused-includes-in-aten-194960.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:

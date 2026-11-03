@@ -1,0 +1,23 @@
+From 4ebb5a717c8d59c71f94e98cfcf71ad90abbfa53 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@quansight.com>
+Date: Tue, 3 Nov 2026 16:07:50 +0100
+Subject: [PATCH 23/23] Partially revert "Drop unused includes in aten
+ (#194960)"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Michał Górny <mgorny@quansight.com>
+---
+ aten/src/ATen/native/cuda/linalg/CudssHandlePool.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/aten/src/ATen/native/cuda/linalg/CudssHandlePool.cpp b/aten/src/ATen/native/cuda/linalg/CudssHandlePool.cpp
+index 5e8bcf5f69d..60480ae8819 100644
+--- a/aten/src/ATen/native/cuda/linalg/CudssHandlePool.cpp
++++ b/aten/src/ATen/native/cuda/linalg/CudssHandlePool.cpp
+@@ -1,3 +1,4 @@
++#include <ATen/cuda/CUDAContext.h>
+ #include <ATen/cuda/detail/DeviceThreadHandles.h>
+ 
+ #if defined(USE_CUDSS)
