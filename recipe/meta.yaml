@@ -647,6 +647,11 @@ outputs:
         # xdist can't serialize CheckpointPolicy
         {% set skips = skips ~ " or (test_autograd and TestSelectiveActivationCheckpoint and test_save_policies_skip_effect_lookup)" %}
         {% set skips = skips ~ " or (test_autograd and TestSelectiveActivationCheckpoint and test_selective_checkpoint_preserves_registered_effect)" %}
+        # aarch64 (emulation?)
+        {% set skips = skips ~ " or (test_linalg and TestGroupedMMCPU and test_grouped_gemm_strided)" %}  # [aarch64]
+        {% set skips = skips ~ " or (test_mkldnn and TestMkldnn and float16)" %}  # [aarch64]
+        {% set skips = skips ~ " or (test_mkldnn and TestMkldnn and test_lstm)" %}  # [aarch64]
+        {% set skips = skips ~ " or (test_mkldnn and TestMkldnn and test_fb_fc_packed)" %}  # [aarch64]
 
         - export OMP_NUM_THREADS=4      # [unix]
         - export ONEDNN_VERBOSE=all     # [unix]
