@@ -41,7 +41,6 @@ Current release info
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libtorch-green.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libtorch.svg)](https://anaconda.org/conda-forge/libtorch) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch-green.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch.svg)](https://anaconda.org/conda-forge/pytorch) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--cpu-green.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-cpu.svg)](https://anaconda.org/conda-forge/pytorch-cpu) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--gpu-green.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-gpu.svg)](https://anaconda.org/conda-forge/pytorch-gpu) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pytorch--tests-green.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytorch-tests.svg)](https://anaconda.org/conda-forge/pytorch-tests) |
 
 Installing pytorch-cpu
@@ -61,7 +60,7 @@ How to use
 <summary>With conda</summary>
 
 ```
-conda install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
+conda install libtorch pytorch pytorch-cpu pytorch-tests
 ```
 
 </details>
@@ -70,7 +69,7 @@ conda install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
 <summary>With mamba</summary>
 
 ```
-mamba install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
+mamba install libtorch pytorch pytorch-cpu pytorch-tests
 ```
 
 </details>
@@ -80,9 +79,9 @@ mamba install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
 
 ```
 # for adding to your local project
-pixi add libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
+pixi add libtorch pytorch pytorch-cpu pytorch-tests
 # for installing globally
-pixi global install libtorch pytorch pytorch-cpu pytorch-gpu pytorch-tests
+pixi global install libtorch pytorch pytorch-cpu pytorch-tests
 ```
 
 </details>
