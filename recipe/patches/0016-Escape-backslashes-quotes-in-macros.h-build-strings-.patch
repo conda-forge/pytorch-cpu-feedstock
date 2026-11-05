@@ -1,4 +1,4 @@
-From 34cc2863c807f976855e58d0a126315056a80dab Mon Sep 17 00:00:00 2001
+From 85e0b344073633face099a3e40c37c2bafb0c367 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark@ramonaoptics.com>
 Date: Mon, 8 Jun 2026 01:08:14 +0000
 Subject: [PATCH 16/21] Escape backslashes/quotes in macros.h build strings
@@ -22,7 +22,7 @@ Signed-off-by: Mark Harfouche <mark@ramonaoptics.com>
  1 file changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/cmake/Codegen.cmake b/cmake/Codegen.cmake
-index ca7ed49de6a..c2f6cb9e93f 100644
+index 0774f69eb41..42d27157c6a 100644
 --- a/cmake/Codegen.cmake
 +++ b/cmake/Codegen.cmake
 @@ -43,9 +43,22 @@ execute_process(

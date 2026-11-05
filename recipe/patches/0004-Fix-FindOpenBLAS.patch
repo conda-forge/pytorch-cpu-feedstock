@@ -1,4 +1,4 @@
-From 39c164ec7377e2fbb2a7fd24e79bb6036af1bc94 Mon Sep 17 00:00:00 2001
+From 72ea9761a3a880a443ad99a9367f50496cd74c3f Mon Sep 17 00:00:00 2001
 From: Bas Zalmstra <bas@prefix.dev>
 Date: Thu, 16 May 2024 10:46:49 +0200
 Subject: [PATCH 04/21] Fix FindOpenBLAS
