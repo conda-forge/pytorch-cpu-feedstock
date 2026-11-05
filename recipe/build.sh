@@ -192,6 +192,17 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # MKLDNN did not support on Apple M1 at the time support Apple M1
         # was added. Revisit later
         export USE_MKLDNN=0
+
+        # `xcrun metal` ignores CONDA_BUILD_SYSROOT, and reads SDKROOT
+        export SDKROOT="${CONDA_BUILD_SYSROOT}"
+        # pytorch builds without its Metal kernels, with no error, if it cannot
+        # find the Metal compiler. That comes from the active Xcode, which may
+        # lack the optional Metal Toolchain component.
+        if ! xcrun metal --version >/dev/null 2>&1 || ! xcrun metallib --version >/dev/null 2>&1; then
+            echo "xcrun cannot find metal or metallib. Install the Metal Toolchain with:"
+            echo "    xcodebuild -downloadComponent MetalToolchain"
+            exit 1
+        fi
     fi
 elif [[ ${cuda_compiler_version} != "None" ]]; then
     if [[ "$target_platform" == "linux-aarch64" ]]; then
