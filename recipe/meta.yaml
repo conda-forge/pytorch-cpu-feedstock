@@ -418,6 +418,9 @@ outputs:
         # - pytest-shard
         # for cmake_test
         - cmake
+        # FindPython3 Development needs libpython3.X.so, which python 3.15
+        # no longer pulls in on linux (python <3.15 depends on libpython)
+        - libpython                 # [linux]
         - cuda-nvrtc-dev            # [cuda_compiler_version != "None"]
         - nvtx-c                    # [cuda_compiler_version != "None"]
         # not required upstream, but useful
