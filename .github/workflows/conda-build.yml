@@ -22,7 +22,18 @@ jobs:
       max-parallel: 50
       matrix:
         include:
-          - CONFIG: osx_arm64_channel_targetsconda-forge_mainis_rcFalse
+          - CONFIG: osx_arm64_c_stdlib_version13.0channel_targetsconda-forge_mainis_rcFalse
+            STORE_BUILD_ARTIFACTS: False
+            UPLOAD_PACKAGES: True
+            build_workspace_dir: ~/miniforge3/conda-bld
+            docker_run_args: 
+            free_disk_space: skip
+            os: macos
+            pagefile_size: 0
+            resize_partitions: False
+            runs_on: ['namespace-profile-12cpu-on-osx-arm64']
+            tools_install_dir: ~/miniforge3
+          - CONFIG: osx_arm64_c_stdlib_version26.0channel_targetsconda-forge_mainis_rcFalse
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             build_workspace_dir: ~/miniforge3/conda-bld
