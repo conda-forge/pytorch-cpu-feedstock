@@ -1,4 +1,4 @@
-From d918293f7f9cb14849ca5ff1b74d3e764450fbc9 Mon Sep 17 00:00:00 2001
+From 13294a61e3466755fa846a848eb5267c9f54bc52 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 23 Jan 2025 22:58:14 +1100
 Subject: [PATCH 05/21] use our own PREFIX for include paths etc.
@@ -46,7 +46,7 @@ Co-Authored-By: Mark Harfouche <mark@ramonaoptics.com>
  5 files changed, 44 insertions(+), 20 deletions(-)
 
 diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
-index deb4b28c327..cbbc31ed4ad 100644
+index 3f01bcb05bc..0ecf6614a7f 100644
 --- a/cmake/TorchConfig.cmake.in
 +++ b/cmake/TorchConfig.cmake.in
 @@ -53,9 +53,16 @@ else()
@@ -70,7 +70,7 @@ index deb4b28c327..cbbc31ed4ad 100644
  # Library dependencies.
  if(@BUILD_SHARED_LIBS@)
 diff --git a/torch/_inductor/codegen/mps.py b/torch/_inductor/codegen/mps.py
-index a7c654bdae2..9fd94cf8e56 100644
+index faf859b5c6f..0151206375a 100644
 --- a/torch/_inductor/codegen/mps.py
 +++ b/torch/_inductor/codegen/mps.py
 @@ -6,6 +6,7 @@ import functools
@@ -81,7 +81,7 @@ index a7c654bdae2..9fd94cf8e56 100644
  from pathlib import Path
  from typing import Any, TYPE_CHECKING
  
-@@ -984,7 +985,10 @@ class MetalKernel(SIMDKernel):
+@@ -1075,7 +1076,10 @@ class MetalKernel(SIMDKernel):
                  ]
                  header_contents = _embed_headers(
                      headers,
@@ -94,10 +94,10 @@ index a7c654bdae2..9fd94cf8e56 100644
                  )
                  code.writeline(header_contents)
 diff --git a/torch/_inductor/cpp_builder.py b/torch/_inductor/cpp_builder.py
-index abb14bc180f..7ccaacdd13a 100644
+index 87c4fe99a1e..c7dd4c4abaf 100644
 --- a/torch/_inductor/cpp_builder.py
 +++ b/torch/_inductor/cpp_builder.py
-@@ -1751,10 +1751,12 @@ def get_cpp_torch_options(
+@@ -1864,10 +1864,12 @@ def get_cpp_torch_options(
          + python_include_dirs
          + torch_include_dirs
          + omp_include_dir_paths
@@ -112,7 +112,7 @@ index abb14bc180f..7ccaacdd13a 100644
      passthrough_args = (
          sys_libs_passthrough_args + isa_ps_args_build_flags + omp_passthrough_args
 diff --git a/torch/mps/__init__.py b/torch/mps/__init__.py
-index 8b98d348163..d4bdb63ba44 100644
+index a7e1ab56e8c..7391ecd25b2 100644
 --- a/torch/mps/__init__.py
 +++ b/torch/mps/__init__.py
 @@ -149,6 +149,8 @@ def compile_shader(source: str):
@@ -123,24 +123,24 @@ index 8b98d348163..d4bdb63ba44 100644
 +
      from pathlib import Path
  
-     from torch.utils._cpp_embed_headers import _embed_headers
-@@ -157,7 +159,10 @@ def compile_shader(source: str):
-         raise RuntimeError("MPS is not available")
+     from torch._utils_internal import get_file_path
+@@ -162,7 +164,10 @@ def compile_shader(source: str):
+     # the installed distribution.
      source = _embed_headers(
          [l + "\n" for l in source.split("\n")],
--        [Path(__file__).parent.parent / "include"],
+-        [Path(get_file_path("torch")) / "include"],
 +        [
-+            Path(__file__).parent.parent / "include",
++            Path(get_file_path("torch")) / "include",
 +            Path(sysconfig.get_config_var("prefix")) / "include",
 +        ],
          set(),
      )
      return torch._C._mps_compileShader(source)
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index 98eeda72902..5ec720f2226 100644
+index 8d23e6eb12f..f8551d5a00a 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
-@@ -1737,31 +1737,37 @@ def include_paths(device_type: str = "cpu", torch_include_dirs=True) -> list[str
+@@ -1789,31 +1789,37 @@ def include_paths(device_type: str = "cpu", torch_include_dirs=True) -> list[str
      Returns:
          A list of include path strings.
      """
