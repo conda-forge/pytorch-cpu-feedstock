@@ -1,0 +1,35 @@
+From 9d6e885e0a91e0885ea3cb64c033794a3e2c1f18 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Sun, 8 Nov 2026 20:07:19 -0500
+Subject: [PATCH] [MPS] Accept Metal devices that only report MTLGPUFamilyMac2
+
+pytorch/pytorch#197200 replaced the deprecated MTLGPUFamilyMac2 with
+MTLGPUFamilyApple7 in the MPS device check, as a rename. It is not one:
+the "Apple Paravirtual device" in macOS virtual machines (GitHub Actions,
+Blacksmith and other CI runners) supports Mac2 but not Apple7, so
+pytorch 2.15 no longer finds an MPS device there, while 2.14 ran MPS on
+it. Accept either family.
+
+https://github.com/pytorch/pytorch/commit/b9b185d257451d477af44bc257ef20df218a4e22
+---
+ aten/src/ATen/mps/MPSDevice.mm | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/aten/src/ATen/mps/MPSDevice.mm b/aten/src/ATen/mps/MPSDevice.mm
+index ac2d01f..b74c518 100644
+--- a/aten/src/ATen/mps/MPSDevice.mm
++++ b/aten/src/ATen/mps/MPSDevice.mm
+@@ -22,7 +22,12 @@ MPSDevice::MPSDevice() : _mtl_device(nil) {
+   NSArray* devices = [MTLCopyAllDevices() autorelease];
+   for (unsigned long i = 0; i < [devices count]; i++) {
+     id<MTLDevice> device = devices[i];
+-    if (![device supportsFamily:MTLGPUFamilyApple7]) {
++    // MTLGPUFamilyMac2 is deprecated in the macOS 27 SDK, but the paravirtual
++    // GPU of macOS VMs (e.g. CI runners) only reports Mac2, not Apple7.
++#pragma clang diagnostic push
++#pragma clang diagnostic ignored "-Wdeprecated-declarations"
++    if (![device supportsFamily:MTLGPUFamilyApple7] && ![device supportsFamily:MTLGPUFamilyMac2]) {
++#pragma clang diagnostic pop
+       // Exclude devices that does not support Metal 2.0
+       // Virtualised MPS device on MacOS 12.6 should fail this check
+       TORCH_WARN("Skipping device ", [[device name] UTF8String], " that does not support Metal 2.0");

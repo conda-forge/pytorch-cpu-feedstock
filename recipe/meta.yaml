@@ -76,6 +76,9 @@ source:
       - patches/0022-Disable-irrelevant-install-prefix-check.patch
       # restore removed include; could be CF specific or upstream
       - patches/0023-Partially-revert-Drop-unused-includes-in-aten-194960.patch
+      # MTLGPUFamilyMac2 -> MTLGPUFamilyApple7 in pytorch/pytorch#197200 dropped the
+      # paravirtual GPU of macOS VMs (CI runners); not upstreamed yet
+      - patches/0024-MPS-Accept-Metal-devices-that-only-report-MTLGPUFamilyMac2.patch  # [osx]
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
