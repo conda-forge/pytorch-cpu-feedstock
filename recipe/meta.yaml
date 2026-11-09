@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
 {% set version = "2.14.1" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -11,6 +11,15 @@
 
 {% if blas_impl == "mkl" %}
 {% set build = build + 100 %}
+{% endif %}
+
+# osx-arm64 is built per Metal tier (see conda_build_config.yaml). As in
+# mlx-feedstock, encode the deployment target's major version in the build
+# number (13.0 -> 13xx, 26.0 -> 26xx), so the build string shows the `__osx`
+# bound and the solver prefers the macOS 26 tier wherever it is installable.
+# osx-arm64 has no mkl or CUDA variants, so this cannot collide with them.
+{% if target_platform == "osx-arm64" %}
+{% set build = (c_stdlib_version|string).split(".")[0]|int * 100 + build %}
 {% endif %}
 
 # see https://github.com/pytorch/pytorch/blame/v{{ version }}/.ci/docker/ci_commit_pins/triton.txt
@@ -248,7 +257,7 @@ test:
     {% endfor %}
 
     # the Metal 4 kernels, which need a recent Xcode on the build machine
-    - otool -l $PREFIX/lib/libtorch_cpu.dylib | grep -q 'sectname metal_40'  # [osx and arm64]
+    - otool -l $PREFIX/lib/libtorch_cpu.dylib | grep -q 'sectname metal_40'  # [osx and arm64 and c_stdlib_version == "26.0"]
 
     # CMake files in share
     - test -f $PREFIX/share/cmake/Torch/TorchConfig.cmake                       # [linux]
