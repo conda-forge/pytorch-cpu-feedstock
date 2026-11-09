@@ -1,9 +1,20 @@
-# namespace runners have XCode 16 which only has metal 3
-# pytorch needs at least metal 4 to compile newer features
-# So we moved up the SDK (keeping the runtime the same)
-# while moving to blacksmith runners that have xcode 26.6
+# osx-arm64 is built once per Metal tier, see
+# https://github.com/conda-forge/pytorch-cpu-feedstock/issues/562
+# - macOS 13.0+: Metal 3.1 kernels only (namespace runners have Xcode 16,
+#   which cannot compile Metal 4); MPS still works on macOS 26.2+ through the
+#   PYTORCH_MPS_METAL_VERSION backport, which never dispatches to Metal 4
+#   kernels that are not in the binary
+# - macOS 26.0+: also the Metal 4 / MetalPerformancePrimitives kernels; built
+#   with the 26.5 SDK on blacksmith runners, whose Xcode has a Metal 4 compiler
+# stdlib('c') turns c_stdlib_version into a `__osx >=<version>` run requirement,
+# and meta.yaml gives the 26.0 tier a higher build number so the solver
+# prefers it wherever it is installable.
+c_stdlib_version:           # [osx and arm64]
+  - 13.0                    # [osx and arm64]
+  - 26.0                    # [osx and arm64]
 MACOSX_SDK_VERSION:         # [osx]
   - 14.5                    # [osx and x86_64]
+  - 14.5                    # [osx and arm64]
   - 26.5                    # [osx and arm64]
 
 channel_targets:
@@ -16,6 +27,10 @@ zip_keys:
   -
     - channel_targets
     - is_rc
+  -                         # [osx and arm64]
+    - c_stdlib_version      # [osx and arm64]
+    - MACOSX_SDK_VERSION    # [osx and arm64]
+    - github_actions_labels # [osx and arm64]
 
 blas_impl:
   - mkl                         # [x86_64]
@@ -27,6 +42,7 @@ github_actions_labels:
 - depot-ubuntu-24.04-32                     # [linux and x86_64]
 - depot-ubuntu-24.04-arm-32                 # [linux and aarch64]
 - namespace-profile-12cpu-on-osx-arm64      # [osx and x86_64]
+- namespace-profile-12cpu-on-osx-arm64      # [osx and arm64]
 - blacksmith-12vcpu-macos-latest            # [osx and arm64]
 - namespace-profile-16cpu-4x-on-windows-64  # [win]
 
