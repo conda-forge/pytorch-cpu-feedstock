@@ -11,7 +11,9 @@ option(WITH_TORCH_PYTHON "Build with torch_python" OFF)
 
 if(WITH_TORCH_PYTHON)
   if(WIN32)
-    set(libtorch_base_path $ENV{PREFIX}/Lib/site-packages/torch)
+    # site-packages moved from Lib/site-packages to lib/python/site-packages
+    # with python 3.15 on Windows; SP_DIR (set by conda-build) knows which
+    file(TO_CMAKE_PATH "$ENV{SP_DIR}/torch" libtorch_base_path)
   else()
     set(libtorch_base_path $ENV{PREFIX})
   endif()
