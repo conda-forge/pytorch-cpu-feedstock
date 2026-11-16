@@ -79,6 +79,9 @@ source:
       # MTLGPUFamilyMac2 -> MTLGPUFamilyApple7 in pytorch/pytorch#197200 dropped the
       # paravirtual GPU of macOS VMs (CI runners); not upstreamed yet
       - patches/0024-MPS-Accept-Metal-devices-that-only-report-MTLGPUFamilyMac2.patch  # [osx]
+      # conda-forge's python 3.15 on Windows keeps Python.h in include/python (its
+      # 'nt_conda' scheme); cpp_extension forced the 'nt' scheme; not upstreamed yet
+      - patches/0025-cpp_extension-use-the-default-sysconfig-scheme-for-Python.h-on-Windows.patch
       - patches_submodules/tensorpipe/0001-switch-away-from-find_package-CUDA.patch
 
 build:
