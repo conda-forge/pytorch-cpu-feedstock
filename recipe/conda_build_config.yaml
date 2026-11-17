@@ -2,8 +2,11 @@
 # pytorch needs at least metal 4 to compile newer features
 # So we moved up the SDK (keeping the runtime the same)
 # while moving to blacksmith runners that have xcode 26.6
+# osx-64 has no Metal 4 kernels to gain, so it stays on main's namespace runners
+# with the oldest SDK pytorch 2.15 compiles with (MTLLanguageVersion3_2 needs 15)
 MACOSX_SDK_VERSION:         # [osx]
-  - 26.5                    # [osx]
+  - 15.5                    # [osx and x86_64]
+  - 26.5                    # [osx and arm64]
 
 channel_targets:
   - conda-forge main
@@ -25,7 +28,8 @@ blas_impl:
 github_actions_labels:
 - depot-ubuntu-24.04-32                     # [linux and x86_64]
 - depot-ubuntu-24.04-arm-32                 # [linux and aarch64]
-- blacksmith-12vcpu-macos-latest            # [osx]
+- namespace-profile-12cpu-on-osx-arm64      # [osx and x86_64]
+- blacksmith-12vcpu-macos-latest            # [osx and arm64]
 - namespace-profile-16cpu-4x-on-windows-64  # [win]
 
 # CUDA 12.8 and 12.9 both fail on Windows
