@@ -104,6 +104,14 @@ if not "%cuda_compiler_version%" == "None" (
 
     set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
 
+    @REM pytorch appends to CMAKE_CUDA_FLAGS before enable_language(CUDA), so the
+    @REM first configure (libtorch) caches CMake's Windows default CUDA flags without
+    @REM using them, and every later configure (each pytorch output) picks them up.
+    @REM That changes the nvcc command of every CUDA object and recompiles all of
+    @REM torch_cuda (~2.5h) in the first pytorch output. Setting the defaults up front
+    @REM (forwarded as a cache entry by cmake/EnvVarForwarding.cmake) keeps them stable.
+    set "CMAKE_CUDA_FLAGS=-D_WINDOWS -Xcompiler=/EHsc"
+
     @rem PyTorch has multiple different bits of logic finding CUDA, override
     @rem all of them.
     set "CUDAToolkit_BIN_DIR=%BUILD_PREFIX%/Library/bin"
