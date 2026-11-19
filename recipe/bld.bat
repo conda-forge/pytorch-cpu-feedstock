@@ -15,10 +15,21 @@ set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
 
-@REM Reduce job count on cirun-azure-windows-2xlarge to avoid being OOM-killed.
-if "%CI%" == "github_actions" (
-    SET MAX_JOBS=4
-)
+@REM Scale parallelism with the runner, but cap it by available memory to avoid
+@REM getting OOM-killed, using the same GB per job as build.sh (7 for CUDA, 3
+@REM otherwise). The old fixed value of 4 was for cirun-azure-windows-2xlarge
+@REM and left most of the 16 cores of the Namespace runner idle.
+if not "%CI%" == "github_actions" goto :max_jobs_done
+set "GB_PER_JOB=3"
+if not "%cuda_compiler_version%" == "None" set "GB_PER_JOB=7"
+@REM Decimal GB, as in build.sh.
+for /f %%m in ('powershell -NoProfile -Command "[math]::Floor((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1e9)"') do set "MEM_GB=%%m"
+if not defined MEM_GB set "MEM_GB=16"
+set /a MAX_JOBS=MEM_GB / GB_PER_JOB
+if %MAX_JOBS% gtr %NUMBER_OF_PROCESSORS% set "MAX_JOBS=%NUMBER_OF_PROCESSORS%"
+if %MAX_JOBS% lss 1 set "MAX_JOBS=1"
+echo Using MAX_JOBS=%MAX_JOBS% (%MEM_GB% GB RAM, %GB_PER_JOB% GB per job, %NUMBER_OF_PROCESSORS% CPUs)
+:max_jobs_done
 
 @REM Setup BLAS
 if "%blas_impl%" == "generic" (
