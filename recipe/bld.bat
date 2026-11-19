@@ -42,6 +42,14 @@ if "%PKG_NAME%" == "pytorch" (
   copy build\CMakeCache.txt.orig build\CMakeCache.txt
   if !ERRORLEVEL! neq 0 exit 1
 
+  @REM The python headers keep the mtime from when their package was extracted,
+  @REM so ninja does not always see that python changed between outputs and can
+  @REM reuse objects compiled against the previous python (e.g. py312 after py311
+  @REM linked a stale python311.lib pragma). Every python-dependent target
+  @REM (torch_python, _C, nnapi_backend) lives in torch/CMakeLists.txt, so drop
+  @REM their objects and rebuild them for each python.
+  for /d %%d in (build\caffe2\torch\CMakeFiles\*.dir) do rmdir /s /q "%%d"
+
   @REM Replace Python312 or python312 with ie Python311 or python311
   sed -i "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt
   if !ERRORLEVEL! neq 0 exit 1
