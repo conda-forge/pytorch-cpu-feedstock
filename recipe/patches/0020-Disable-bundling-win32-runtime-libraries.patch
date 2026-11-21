@@ -1,7 +1,7 @@
-From 1e139492a72a32938a8dc3322a630885943dccdc Mon Sep 17 00:00:00 2001
+From f8eb50e27a8120de9cc552f3d0bedc1e043d168d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@quansight.com>
 Date: Mon, 13 Jul 2026 20:54:15 +0200
-Subject: [PATCH 21/21] Disable bundling win32 runtime libraries
+Subject: [PATCH 20/21] Disable bundling win32 runtime libraries
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -15,7 +15,7 @@ Signed-off-by: Michał Górny <mgorny@quansight.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cmake/PostBuildSteps.cmake b/cmake/PostBuildSteps.cmake
-index 71bd0438c38..e86ea2ac96f 100644
+index 341eb98ab9d..dc5ac27b451 100644
 --- a/cmake/PostBuildSteps.cmake
 +++ b/cmake/PostBuildSteps.cmake
 @@ -40,7 +40,7 @@ add_custom_target(merge_compile_commands ALL
