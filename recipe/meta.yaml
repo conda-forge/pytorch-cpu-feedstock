@@ -487,6 +487,9 @@ outputs:
         {% set skips = skips ~ " or test_lstm_cpu" %}                                   # [aarch64]
         {% set skips = skips ~ " or test_remove_no_ops_cpu" %}                          # [aarch64]
         {% set skips = skips ~ " or test_weight_norm_bwd_cpu" %}                        # [aarch64]
+        # fbgemm fp16 kernels SIGILL on aarch64 runners without SVE; upstream marks it
+        # xfailIf(IS_ARM64 and not IS_CPU_EXT_SVE_SUPPORTED), but a crash kills the worker
+        {% set skips = skips ~ " or (TestNN and test_fb_fc_packed)" %}                 # [aarch64]
         # ... for float16
         {% set skips = skips ~ " or (_cpu_float16 and (dummy_for_consistency_below"%}   # [aarch64]
             {% set skips = skips ~ " or test_activations_bfloat16_half_cpu" %}          # [aarch64]
