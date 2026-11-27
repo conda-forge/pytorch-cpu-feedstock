@@ -1,6 +1,6 @@
 # if you wish to build release candidate number X, append the version string with "-rcX"
 {% set version = "2.14.1" %}
-{% set build = 3 %}
+{% set build = 4 %}
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
@@ -93,8 +93,6 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
-  # https://github.com/conda-forge/pytorch-cpu-feedstock/pull/557#issuecomment-6660054006
-  skip: true  # [not (osx and arm64)]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -489,6 +487,9 @@ outputs:
         {% set skips = skips ~ " or test_lstm_cpu" %}                                   # [aarch64]
         {% set skips = skips ~ " or test_remove_no_ops_cpu" %}                          # [aarch64]
         {% set skips = skips ~ " or test_weight_norm_bwd_cpu" %}                        # [aarch64]
+        # fbgemm fp16 kernels SIGILL on aarch64 runners without SVE; upstream marks it
+        # xfailIf(IS_ARM64 and not IS_CPU_EXT_SVE_SUPPORTED), but a crash kills the worker
+        {% set skips = skips ~ " or (TestNN and test_fb_fc_packed)" %}                 # [aarch64]
         # ... for float16
         {% set skips = skips ~ " or (_cpu_float16 and (dummy_for_consistency_below"%}   # [aarch64]
             {% set skips = skips ~ " or test_activations_bfloat16_half_cpu" %}          # [aarch64]
