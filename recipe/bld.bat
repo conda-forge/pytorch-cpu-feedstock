@@ -21,10 +21,21 @@ set PYTORCH_BUILD_VERSION=%PKG_VERSION%
 @REM https://github.com/conda-forge/pytorch-cpu-feedstock/issues/315
 set PYTORCH_BUILD_NUMBER=0
 
-@REM Reduce job count on cirun-azure-windows-2xlarge to avoid being OOM-killed.
-if "%CI%" == "github_actions" (
-    SET MAX_JOBS=4
-)
+@REM Scale parallelism with the runner, but cap it by available memory to avoid
+@REM getting OOM-killed, using the same GB per job as build.sh (7 for CUDA, 3
+@REM otherwise). The old fixed value of 4 was for cirun-azure-windows-2xlarge
+@REM and left most of the 16 cores of the Namespace runner idle.
+if not "%CI%" == "github_actions" goto :max_jobs_done
+set "GB_PER_JOB=3"
+if not "%cuda_compiler_version%" == "None" set "GB_PER_JOB=7"
+@REM Decimal GB, as in build.sh.
+for /f %%m in ('powershell -NoProfile -Command "[math]::Floor((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1e9)"') do set "MEM_GB=%%m"
+if not defined MEM_GB set "MEM_GB=16"
+set /a MAX_JOBS=MEM_GB / GB_PER_JOB
+if %MAX_JOBS% gtr %NUMBER_OF_PROCESSORS% set "MAX_JOBS=%NUMBER_OF_PROCESSORS%"
+if %MAX_JOBS% lss 1 set "MAX_JOBS=1"
+echo Using MAX_JOBS=%MAX_JOBS% (%MEM_GB% GB RAM, %GB_PER_JOB% GB per job, %NUMBER_OF_PROCESSORS% CPUs)
+:max_jobs_done
 
 @REM Setup BLAS
 if "%blas_impl%" == "generic" (
@@ -47,6 +58,14 @@ if "%PKG_NAME%" == "pytorch" (
   @REM sed -i edits in place, so start from a copy of the pristine cache.
   copy build\CMakeCache.txt.orig build\CMakeCache.txt
   if !ERRORLEVEL! neq 0 exit 1
+
+  @REM The python headers keep the mtime from when their package was extracted,
+  @REM so ninja does not always see that python changed between outputs and can
+  @REM reuse objects compiled against the previous python (e.g. py312 after py311
+  @REM linked a stale python311.lib pragma). Every python-dependent target
+  @REM (torch_python, _C, nnapi_backend) lives in torch/CMakeLists.txt, so drop
+  @REM their objects and rebuild them for each python.
+  for /d %%d in (build\caffe2\torch\CMakeFiles\*.dir) do rmdir /s /q "%%d"
 
   @REM Replace Python312 or python312 with ie Python311 or python311
   sed -i "s/\([Pp]ython\)312/\1%CONDA_PY%/g" build/CMakeCache.txt
@@ -101,6 +120,14 @@ if not "%cuda_compiler_version%" == "None" (
     set USE_STATIC_NCCL=0
 
     set "TORCH_NVCC_FLAGS=-Xfatbin -compress-all"
+
+    @REM pytorch appends to CMAKE_CUDA_FLAGS before enable_language(CUDA), so the
+    @REM first configure (libtorch) caches CMake's Windows default CUDA flags without
+    @REM using them, and every later configure (each pytorch output) picks them up.
+    @REM That changes the nvcc command of every CUDA object and recompiles all of
+    @REM torch_cuda (~2.5h) in the first pytorch output. Setting the defaults up front
+    @REM (forwarded as a cache entry by cmake/EnvVarForwarding.cmake) keeps them stable.
+    set "CMAKE_CUDA_FLAGS=-D_WINDOWS -Xcompiler=/EHsc"
 
     @rem PyTorch has multiple different bits of logic finding CUDA, override
     @rem all of them.
