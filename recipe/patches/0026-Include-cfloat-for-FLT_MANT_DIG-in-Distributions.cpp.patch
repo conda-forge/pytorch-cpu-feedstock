@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Sat, 28 Nov 2026 09:28:37 -0500
+Subject: [PATCH] Include <cfloat> for FLT_MANT_DIG in Distributions.cpp
+
+pytorch/pytorch#204153 added a use of FLT_MANT_DIG to
+aten/src/ATen/native/Distributions.cpp without including <cfloat>. It
+only compiled because another header pulled it in. With clang/libc++ 22
+on osx-arm64, nothing does any more:
+
+  Distributions.cpp:553:55: error: use of undeclared identifier 'FLT_MANT_DIG'
+
+Include the header directly. pytorch main has the same code, so this
+should be sent upstream.
+---
+ aten/src/ATen/native/Distributions.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/aten/src/ATen/native/Distributions.cpp b/aten/src/ATen/native/Distributions.cpp
+index 4f6708e..977d356 100644
+--- a/aten/src/ATen/native/Distributions.cpp
++++ b/aten/src/ATen/native/Distributions.cpp
+@@ -4,6 +4,7 @@
+ #include <ATen/TensorIterator.h>
+ #include <ATen/TensorOperators.h>
+ #include <c10/util/Exception.h>
++#include <cfloat>
+ #include <optional>
+ 
+ #include <ATen/CPUGeneratorImpl.h>
+-- 
+2.56.0
+

@@ -1,0 +1,43 @@
+From 250add36736e7885f93a104fc0b1b1b2d5e67703 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Mon, 16 Nov 2026 09:00:47 -0500
+Subject: [PATCH] cpp_extension: use the default sysconfig scheme for Python.h
+ on Windows
+
+_write_ninja_file_to_build_library() forces the 'nt' scheme on Windows when
+looking up the directory of Python.h. conda-forge's python 3.15 for Windows
+installs its headers to include/python and registers that layout as its
+default 'nt_conda' scheme, while 'nt' still points to {installed_base}/Include,
+which does not exist. Every JIT-built C++ extension then fails with
+
+  fatal error C1083: Cannot open include file: 'Python.h'
+
+The 'posix_prefix' override on other platforms works around a macOS problem
+and is kept. On python <3.15 the default Windows scheme is 'nt', so nothing
+changes there.
+---
+ torch/utils/cpp_extension.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
+index 8d23e6e..a1c825a 100644
+--- a/torch/utils/cpp_extension.py
++++ b/torch/utils/cpp_extension.py
+@@ -3057,7 +3057,13 @@ def _write_ninja_file_to_build_library(path,
+     # sysconfig.get_path('include') gives us the location of Python.h
+     # Explicitly specify 'posix_prefix' scheme on non-Windows platforms to workaround error on some MacOS
+     # installations where default `get_path` points to non-existing `/Library/Python/M.m/include` folder
+-    python_include_path = sysconfig.get_path('include', scheme='nt' if IS_WINDOWS else 'posix_prefix')
++    # On Windows use the interpreter's default scheme: conda-forge's python >=3.15
++    # installs headers to include/python through its own 'nt_conda' scheme, and
++    # the stock 'nt' scheme would point to the non-existent Include folder
++    if IS_WINDOWS:
++        python_include_path = sysconfig.get_path('include')
++    else:
++        python_include_path = sysconfig.get_path('include', scheme='posix_prefix')
+     if python_include_path is not None:
+         system_includes.append(python_include_path)
+ 
+-- 
+2.56.0
+
